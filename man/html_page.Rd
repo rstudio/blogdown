@@ -1,0 +1,30 @@
+% Please edit documentation in R/format.R
+\name{html_page}
+\alias{html_page}
+\title{An R Markdown output format for \pkg{blogdown} web pages}
+\usage{
+html_page(..., number_sections = FALSE, self_contained = FALSE, highlight = NULL)
+}
+\arguments{
+\item{..., number_sections, self_contained, highlight}{Arguments passed to
+\code{bookdown::html_document2()}.}
+}
+\description{
+This function is a simple wrapper of \code{bookdown::\link{html_document2}()}
+with different default arguments, and more importantly, a special HTML
+template designed only for \pkg{blogdown} to render R Markdown to HTML pages
+that can be processed by Hugo.
+}
+\details{
+The HTML output is not a complete HTML document, and only meaningful to
+\pkg{blogdown} (it will be post-processed to render valid HTML pages). The
+only purpose of this output format is for users to change options in YAML.
+
+The fact that it is based on \pkg{bookdown} means most \pkg{bookdown}
+features are supported, such as numbering and cross-referencing
+figures/tables.
+}
+\references{
+See Chapter 2 of the \pkg{bookdown} book for the Markdown syntax:
+  \url{https://bookdown.org/yihui/bookdown}
+}

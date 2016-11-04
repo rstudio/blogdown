@@ -1,0 +1,37 @@
+% Please edit documentation in R/install.R
+\name{install_hugo}
+\alias{install_hugo}
+\title{Install Hugo}
+\usage{
+install_hugo(version = "latest", use_brew = TRUE, force = FALSE)
+}
+\arguments{
+\item{version}{The Hugo version number, e.g., \code{0.17}; the special value
+\code{latest} means the latest version (fetched from Github releases).}
+
+\item{use_brew}{Whether to use Homebrew (\url{https://brew.sh}) on macOS to
+install Hugo (recommended because it is much easier to manage packages).
+Note Homebrew will be automatically installed if it has not been installed.}
+
+\item{force}{Whether to install Hugo even if it has already been installed.
+This may be useful when upgrading Hugo (if you use Homebrew, run the
+command \command{brew update && brew upgrade} instead).}
+}
+\description{
+Download the appropriate Hugo executable for your platform from Github and
+try to copy it to a system directory so \pkg{blogdown} can run the
+\command{hugo} command to build a site.
+}
+\details{
+This function tries to install Hugo to \code{Sys.getenv('APPDATA')} on
+Windows, \file{~/Library/Application Support} on macOS, and \file{~/bin/} on
+other platforms (such as Linux). If these directories are not writable, the
+package directory \file{Hugo} of \pkg{blogdown} will be used. If it still
+fails, you have to install Hugo by yourself and make sure it can be found via
+the environment variable \code{PATH}.
+
+This is just a helper function and may fail to choose the correct Hugo
+executable for your operating system, especially if you are not on Windows or
+Mac or a major Linux distribution. When in doubt, read the Hugo documentation
+and install it by yourself: \url{https://gohugo.io}.
+}
