@@ -1,3 +1,17 @@
+#' Live preview a site
+#'
+#' Calls \code{servr::\link{httw}()} to watch for changes in the site, rebuild
+#' the site if necessary, and refresh the page automatically.
+#' @param ... Arguments passed to \code{servr::httw()}.
+#' @export
+serve_site = function(...) {
+  render_pages()
+  servr::httw(site.dir = publish_dir(), handler = function(...) {
+    # re-generate only if Rmd/md or config files were updated
+    if (length(grep('[.](R?md|toml|yaml)$', c(...)))) render_pages()
+  }, ...)
+}
+
 pkg_file = function(..., mustWork = TRUE) {
   system.file(..., package = 'blogdown', mustWork = mustWork)
 }

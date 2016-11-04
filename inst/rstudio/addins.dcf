@@ -1,0 +1,4 @@
+Name: Live Preview Site
+Description: Run blogdown::serve_site() to live preview a website.
+Binding: serve_site
+Interactive: true
