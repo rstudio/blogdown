@@ -36,3 +36,56 @@ download2 = function(url, ...) {
 
   download.file(url, method = method, ...)
 }
+
+opts = knitr:::new_defaults()
+
+load_config = function() {
+  config = opts$get('config')
+
+  # read config only if it has been updated
+  read_config = function(f, parser) {
+    if (!is.null(time <- attr(config, 'config_time')) &&
+        time == file.info(f)[, 'mtime']) return(config)
+    config = parser(f)
+    attr(config, 'config_time') = file.info(f)[, 'mtime']
+    opts$set(config = config)
+    config
+  }
+
+  if (file.exists('config.yaml'))
+    return(read_config('config.yaml', bookdown:::yaml_utf8))
+
+  if (file.exists('config.toml'))
+    return(read_config('config.toml', parse_toml))
+
+  stop(
+    'Cannot find the configuration file config.yaml or config.toml of the website'
+  )
+}
+
+# not TOML parser in R yet, so a simple version that only reads top-level options
+parse_toml = function(f) {
+  x = readUTF8(f)
+  z = list()
+  # strings
+  r = '^([[:alnum:]]+?)\\s*=\\s*"([^"]*?)"\\s*$'
+  y = grep(r, x, value = TRUE)
+  z[gsub(r, '\\1', y)] = as.list(gsub(r, '\\2', y))
+  # boolean
+  r = '^([[:alnum:]]+?)\\s*=\\s*(true|false)\\s*$'
+  y = grep(r, x, value = TRUE)
+  z[gsub(r, '\\1', y)] = as.list(as.logical(gsub(r, '\\2', y)))
+  # numbers
+  r = '^([[:alnum:]]+?)\\s*=\\s*([0-9.]+)\\s*$'
+  y = grep(r, x, value = TRUE)
+  z[gsub(r, '\\1', y)] = as.list(as.numeric(gsub(r, '\\2', y)))
+  z
+}
+
+get_config = function(field, default, config = load_config()) {
+  config[[field]] %n% default
+}
+
+publish_dir = function(config = load_config()) {
+  get_config('publishdir', 'public', config)
+}
