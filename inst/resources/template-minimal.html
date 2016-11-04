@@ -1,0 +1,70 @@
+
+<!-- BLOGDOWN-BODY-BEFORE
+$for(include-before)$
+$include-before$
+$endfor$
+
+$if(toc)$
+<div id="$idprefix$TOC">
+$toc$
+</div>
+$endif$
+/BLOGDOWN-BODY-BEFORE -->
+
+$body$
+
+$for(include-after)$
+$include-after$
+$endfor$
+
+$if(math)$
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "$if(mathjax)$$mathjax$$else$https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML$endif$";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+$endif$
+
+<!-- BLOGDOWN-HEAD
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+$if(highlighting-css)$
+  <style type="text/css">
+$highlighting-css$
+  </style>
+$endif$
+
+$for(css)$
+  <link rel="stylesheet" href="$css$" type="text/css" />
+$endfor$
+
+$if(highlightjs)$
+<link rel="stylesheet"
+      href="$highlightjs$/$if(highlightjs-theme)$$highlightjs-theme$$else$default$endif$.css"
+      $if(html5)$$else$type="text/css" $endif$/>
+<script src="$highlightjs$/highlight.js"></script>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+$endif$
+
+$if(pagedtablejs)$
+<link rel="stylesheet" href="$pagedtablejs$/css/pagedtable.css"
+      $if(html5)$$else$type="text/css" $endif$/>
+<script src="$pagedtablejs$/js/pagedtable.js"></script>
+$endif$
+
+/BLOGDOWN-HEAD -->
