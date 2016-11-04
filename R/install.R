@@ -126,4 +126,10 @@ find_exec = function(cmd, dir) {
   path.expand(path)
 }
 
-find_hugo = function() find_exec('hugo', 'Hugo')
+find_hugo = local({
+  path = NULL  # cache the path to hugo
+  function() {
+    if (is.null(path)) path <<- find_exec('hugo', 'Hugo')
+    path
+  }
+})
