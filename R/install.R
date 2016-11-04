@@ -104,7 +104,7 @@ bin_paths = function(dir = 'Hugo') {
   } else {
     path = '~/bin'
   }
-  path = c(path, system.file(dir, package = getPackageName()))
+  path = c(path, pkg_file(dir, mustWork = FALSE))
   path
 }
 

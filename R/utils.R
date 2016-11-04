@@ -1,5 +1,5 @@
-pkg_file = function(...) {
-  system.file(..., package = getPackageName(), mustWork = TRUE)
+pkg_file = function(..., mustWork = TRUE) {
+  system.file(..., package = 'blogdown', mustWork = mustWork)
 }
 
 # only copy files/dirs if they exist
