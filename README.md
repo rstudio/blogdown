@@ -8,7 +8,7 @@ A open-source (GPL-3) R package to generate static websites based on [R Markdown
 devtools::install_github('rstudio/blogdown')
 ```
 
-If you are not familiar with Hugo and do not want to read the Hugo [installation instructions](https://gohugo.io/overview/installing/), you may use the helper function `blogdown::install_hugo()` to install Hugo.
+If you are not familiar with Hugo or the `PATH` variable, or do not want to read the Hugo [installation instructions](https://gohugo.io/overview/installing/), you may use the helper function `blogdown::install_hugo()` to install Hugo.
 
 Once you have installed Hugo, you may create a new site via `blogdown::new_site()` under an _empty_ directory. It will create a skeleton site, download a Hugo theme from Github,  add some sample content, launch a web browser and you will see the new site. The sample blog post `hello-world.Rmd` should be opened automatically, and you can edit it. The website will be automatically rebuilt and the page will be refreshed after you save the file.
 
