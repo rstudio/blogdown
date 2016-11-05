@@ -1,5 +1,6 @@
 export(html_page)
 export(install_hugo)
+export(install_theme)
 export(new_content)
 export(new_site)
 export(serve_site)
