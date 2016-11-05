@@ -9,6 +9,7 @@ cache:
 env:
   global:
     - R_PKG="$(basename $TRAVIS_REPO_SLUG)" R_KNITR_OPTIONS="knitr.chunk.tidy=TRUE" PATH=$HOME/bin:$PATH
+    - secure: TIMcYQrgiu/F2wOQzKeREUSrqf5vPOKn2jPS1F22gDfm5TpmRAskb5LO1W8nz8jyzFzMcwlN8fLfs3jM904taTTHAsbnXKn4fNVv0iwOBlyzKVuFUFLCot7RBBDXpra/vsTKSr4LY5WW7hWi1k4zAbYyvpXvsiYTVoEIJf7oIcm5MYITjERvCLVgyXNIrbjvO3iRstnuzXYjmH21GR9yNta0dJ0P07vF8sWOyQmekpTDIw45xlOfAgNDVGLwRoJALCZeU3pZwigf2hKbSULJDxWAQ9qOBmhTGpjaKo0sj+5EYBz/qH0gX9QZSZm1JUlb3kevI0lbCh8tg+fVQffgpoN1/gdR/RIUybocANLRVe7Vljp3WLezgsDovdItjzERFdVCcVXk1MZfqgs2J+++eY0XuHKCN35dYd1TuL31Pu5lJuPigXJBQ18ljAlEveW+SBW1KHPz8SlIrDli3JMl631istntRD5lpfmBbzy0nm66t5k/1zlWMrC5m7l90alUQEdoErb81Uym1zYR3jZMyuoCLE9saatoIuH5Rr1PUG4BDigahI4l/At/EzTK1YtwEmj6dRIQfxUgZHku/7GuCmK7/sZUY8yBTYveFLxnWpy8Bfr6V23PFfWsPSwfVvJup36IMSf9CAUPpv+nXeMID25xTFsIBXd2EjAPwJw5Dlc=
 
 repos:
   XRAN: http://yihui.name/xran
@@ -19,3 +20,6 @@ before_install:
 
 before_script:
   - "[ -x \"$HOME/bin/hugo\" ] || Rscript -e \"blogdown::install_hugo()\""
+
+after_success:
+  - "(wget -q -O - http://yihui.name/xran/r-xran | bash)"
