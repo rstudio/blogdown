@@ -53,6 +53,7 @@ new_site = function(
   if (sample) {
     dir_create(file.path('content', 'post'))
     file.copy(pkg_file('resources', 'hello-world.Rmd'), 'content/post/')
+    if (interactive()) open_file('content/post/hello-world.Rmd')
   }
   if (is.character(theme)) in_dir('themes', {
     zipfile = sprintf('%s.zip', basename(theme))

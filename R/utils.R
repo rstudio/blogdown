@@ -103,3 +103,8 @@ get_config = function(field, default, config = load_config()) {
 publish_dir = function(config = load_config()) {
   get_config('publishdir', 'public', config)
 }
+
+# use RStudio to open the file if possible
+open_file = function(x) {
+  tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
+}
