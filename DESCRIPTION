@@ -10,7 +10,12 @@ Description: Write blog posts and web pages in R Markdown. This package uses the
 License: GPL-3
 Imports:
     rmarkdown,
-    bookdown
+    bookdown,
+    knitr,
+    servr
+Suggests:
+  testit,
+  rstudioapi
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
