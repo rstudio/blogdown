@@ -80,6 +80,11 @@ install_theme = function(theme, theme_example = FALSE) {
     }
     file.rename(zipdir, gsub('-master$', '', zipdir))
     unlink(zipfile)
+    message(
+      "Do not forget to change the 'theme' option in '",
+      existing_files(c('config.toml', 'config.yaml'), first = TRUE), "' to \"",
+      basename(theme), '"'
+    )
   })
 }
 
