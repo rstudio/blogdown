@@ -1,0 +1,21 @@
+language: r
+sudo: false
+cache:
+  packages: yes
+  directories:
+    - $HOME/bin
+    - $TRAVIS_BUILD_DIR/docs
+
+env:
+  global:
+    - R_PKG="$(basename $TRAVIS_REPO_SLUG)" R_KNITR_OPTIONS="knitr.chunk.tidy=TRUE" PATH=$HOME/bin:$PATH
+
+repos:
+  XRAN: http://yihui.name/xran
+
+before_install:
+  - "wget -q http://yihui.name/xran/.gitconfig -O ~/.gitconfig"
+  - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
+
+before_script:
+  - "[ -x \"$HOME/bin/hugo\" ] || Rscript -e \"blogdown::install_hugo()\""
