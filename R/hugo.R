@@ -50,11 +50,23 @@ new_site = function(
   ) != 0) return(invisible())
 
   owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
+  install_theme(theme, theme_example)
+
   if (sample) {
     dir_create(file.path('content', 'post'))
     file.copy(pkg_file('resources', 'hello-world.Rmd'), 'content/post/')
     if (interactive()) open_file('content/post/hello-world.Rmd')
   }
+  if (serve) serve_site()
+}
+
+#' Install a Hugo theme from Github
+#'
+#' Download the specified theme from Github and install to the \file{themes}
+#' directory. Available themes are listed at \url{http://themes.gohugo.io}.
+#' @inheritParams new_site
+#' @export
+install_theme = function(theme, theme_example = FALSE) {
   if (is.character(theme)) in_dir('themes', {
     zipfile = sprintf('%s.zip', basename(theme))
     download2(
@@ -69,8 +81,8 @@ new_site = function(
     file.rename(zipdir, gsub('-master$', '', zipdir))
     unlink(zipfile)
   })
-  if (serve) serve_site()
 }
+
 
 #' @param path The path to the new file.
 #' @param format The format of the configuration file or the frontmatter of the
