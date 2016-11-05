@@ -78,8 +78,7 @@ load_config = function() {
 }
 
 # not TOML parser in R yet, so a simple version that only reads top-level options
-parse_toml = function(f) {
-  x = readUTF8(f)
+parse_toml = function(f, x = readUTF8(f)) {
   z = list()
   # strings
   r = '^([[:alnum:]]+?)\\s*=\\s*"([^"]*?)"\\s*$'
