@@ -19,6 +19,7 @@ before_install:
   - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
 
 before_script:
+  - R CMD INSTALL .
   - "[ -x \"$HOME/bin/hugo\" ] || Rscript -e \"blogdown::install_hugo()\""
 
 after_success:
