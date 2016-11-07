@@ -53,14 +53,7 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
   if (is_windows()) {
     files = utils::unzip(download_zip('Windows'))
   } else if (is_osx()) {
-    if (use_brew) {
-      if (Sys.which('brew') == '') system2(
-        '/usr/bin/ruby',
-        '-e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
-      )
-      system2('brew', 'install hugo', stdout = FALSE)
-      return(invisible())
-    }
+    if (use_brew) return(invisible(brew_hugo()))
     files = utils::unzip(download_zip('MacOS'))
   } else {
     # might be Linux; good luck
@@ -91,6 +84,16 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
     paste(dirs, collapse = ', ')
   )
   message('Hugo has been installed to ', normalizePath(destdir))
+}
+
+brew_hugo = function() {
+  install = function() system2('brew', 'install hugo', stdout = FALSE)
+  status = 1  # reinstall Homebrew if `brew install hugo` failed
+  if (Sys.which('brew') == '' || (status <- install()) != 0) system2(
+    '/usr/bin/ruby',
+    '-e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+  )
+  if (status != 0) install()
 }
 
 # possible locations of the Hugo executable
