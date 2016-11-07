@@ -67,7 +67,11 @@ new_site = function(
 #' @inheritParams new_site
 #' @export
 install_theme = function(theme, theme_example = FALSE) {
-  if (is.character(theme)) in_dir('themes', {
+  if (!is.character(theme) || length(theme) != 1 || !grepl('^[^/]+/[^/]+$', theme)) {
+    warning("'theme' must be a character string of the form 'user/repo'")
+    return(invisible())
+  }
+  in_dir('themes', {
     zipfile = sprintf('%s.zip', basename(theme))
     download2(
       sprintf('https://github.com/%s/archive/master.zip', theme), zipfile, mode = 'wb'
