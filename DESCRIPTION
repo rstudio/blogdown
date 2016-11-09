@@ -12,13 +12,13 @@ Imports:
     rmarkdown,
     bookdown,
     knitr,
-    servr
+    servr (>= 0.4.1)
 Suggests:
   testit,
   rstudioapi
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
-Remotes: rstudio/bookdown, yihui/servr
 SystemRequirements: Hugo (https://gohugo.io) and Pandoc (http://pandoc.org)
+Remotes: rstudio/bookdown
 RoxygenNote: 5.0.1
