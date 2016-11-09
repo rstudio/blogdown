@@ -19,6 +19,6 @@ Suggests:
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
-SystemRequirements: Hugo (https://gohugo.io)
 Remotes: rstudio/bookdown, yihui/servr
+SystemRequirements: Hugo (https://gohugo.io) and Pandoc (http://pandoc.org)
 RoxygenNote: 5.0.1
