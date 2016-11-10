@@ -17,9 +17,9 @@ hugo_build = function(config = load_config()) {
 #' ...)}.
 #' @param dir The directory of the new site.
 #' @param force Whether to create a new site in an existing directory. The
-#'   default value is \code{TRUE} if none of the files/directories to be
-#'   generated exist in this directory, otherwise \code{FALSE}, to make sure
-#'   your existing files are not overwritten.
+#'   default value is \code{TRUE} if the \code{dir} directory is empty or only
+#'   contain hidden files and RStudio project (\file{*.Rproj}) files, otherwise
+#'   \code{FALSE}, to make sure your existing files are not overwritten.
 #' @param sample Whether to add sample content. Hugo creates an empty site by
 #'   default, but this function adds sample content by default).
 #' @param theme A Hugo theme on Github (a chararacter string of the form
@@ -37,11 +37,7 @@ new_site = function(
   theme = 'dim0627/hugo_theme_robust', theme_example = TRUE, serve = TRUE
 ) {
   if (missing(force)) {
-    force = FALSE
-    files = intersect(
-      list.files(dir),
-      c('archetypes', 'config.toml', 'content', 'data', 'layouts', 'static', 'themes')
-    )
+    files = grep('[.]Rproj$', list.files(dir), invert = TRUE)
     force = length(files) == 0
   }
   if (hugo_cmd(
