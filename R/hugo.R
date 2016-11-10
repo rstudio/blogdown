@@ -93,12 +93,12 @@ install_theme = function(theme, theme_example = FALSE) {
 #' @param format The format of the configuration file or the frontmatter of the
 #'   new (R) Markdown file.
 #' @param kind The content type to create.
-#' @param editor Whether to open the new file after creating it. By default, it
-#'   is opened in an interactive R session.
+#' @param open Whether to open the new file after creating it. By default, it is
+#'   opened in an interactive R session.
 #' @export
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
-new_content = function(path, format = 'yaml', kind = NA, editor = interactive()) {
+new_content = function(path, format = 'yaml', kind = NA, open = interactive()) {
   hugo_cmd(c('new', shQuote(path), '-f', format, if (!is.na(kind)) c('-k', kind)))
-  if (interactive()) file.edit(file.path(get_config('contentdir', 'content'), path))
+  if (open) open_file(file.path(get_config('contentdir', 'content'), path))
 }
