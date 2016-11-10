@@ -87,7 +87,7 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
 }
 
 brew_hugo = function() {
-  install = function() system2('brew', 'install hugo', stdout = FALSE)
+  install = function() system2('brew', 'install hugo')
   status = 1  # reinstall Homebrew if `brew install hugo` failed
   if (Sys.which('brew') == '' || (status <- install()) != 0) system2(
     '/usr/bin/ruby',
