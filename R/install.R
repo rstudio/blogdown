@@ -112,7 +112,7 @@ bin_paths = function(dir = 'Hugo') {
 }
 
 # find an executable from PATH, APPDATA, system.file(), ~/bin, etc
-find_exec = function(cmd, dir) {
+find_exec = function(cmd, dir, info = '') {
   path = Sys.which(cmd)
   if (path != "") return(path)
 
@@ -123,8 +123,7 @@ find_exec = function(cmd, dir) {
   }
 
   if (path == '') stop(
-    cmd, ' not found. If it is installed, please make sure the executable ',
-    'can be found via the PATH variable.'
+    cmd, ' not found. ', info
   )
   path.expand(path)
 }
@@ -132,7 +131,9 @@ find_exec = function(cmd, dir) {
 find_hugo = local({
   path = NULL  # cache the path to hugo
   function() {
-    if (is.null(path)) path <<- find_exec('hugo', 'Hugo')
+    if (is.null(path)) path <<- find_exec(
+      'hugo', 'Hugo', 'You can install it via blogdown::install_hugo()'
+    )
     path
   }
 })
