@@ -18,8 +18,15 @@ pkg_file = function(..., mustWork = TRUE) {
 
 # only copy files/dirs if they exist
 file.copy2 = function(from, to, ...) {
-  i = file.exists(from)
-  file.copy(from[i], if (length(to) == 1) to else to[i], ...)
+  i = file.exists(from); from = from[i]
+  if (length(from) == 0) return()
+  if (length(to) > 1) {
+    to = to[i]
+    if (length(unique(to)) == 1) to = unique(to)
+  }
+  if (length(to) == 1) {
+    file.copy(from, to, ...)
+  } else mapply(file.copy, from, to, ...)
 }
 
 is_windows = function() .Platform$OS.type == 'windows'
