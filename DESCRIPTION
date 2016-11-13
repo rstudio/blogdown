@@ -12,6 +12,7 @@ Imports:
     rmarkdown,
     bookdown,
     knitr,
+    yaml (>= 2.1.14),
     servr (>= 0.4.1)
 Suggests:
   testit,

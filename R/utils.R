@@ -74,7 +74,7 @@ load_config = function() {
   }
 
   if (file.exists('config.yaml'))
-    return(read_config('config.yaml', bookdown:::yaml_utf8))
+    return(read_config('config.yaml', yaml::yaml.load_file))
 
   if (file.exists('config.toml'))
     return(read_config('config.toml', parse_toml))
