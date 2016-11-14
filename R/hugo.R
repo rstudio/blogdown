@@ -67,6 +67,9 @@ install_theme = function(theme, theme_example = FALSE) {
     warning("'theme' must be a character string of the form 'user/repo'")
     return(invisible())
   }
+  if (!dir_exists('themes')) stop(
+    "The 'themes' directory does not exist. Did you create a new site via new_site()?"
+  )
   in_dir('themes', {
     zipfile = sprintf('%s.zip', basename(theme))
     download2(
