@@ -34,7 +34,7 @@ hugo_build = function(config = load_config()) {
 #'   site}.
 new_site = function(
   dir = '.', force, format = 'yaml', sample = TRUE,
-  theme = 'dim0627/hugo_theme_robust', theme_example = TRUE, serve = TRUE
+  theme = 'yihui/hugo-future-imperfect', theme_example = TRUE, serve = TRUE
 ) {
   if (missing(force)) {
     files = grep('[.]Rproj$', list.files(dir), invert = TRUE)
