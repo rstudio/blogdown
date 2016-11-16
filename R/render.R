@@ -40,7 +40,7 @@ encode_paths = function(x, deps, parent) {
   x
 }
 
-decode_paths = function(x, dcur) {
+decode_paths = function(x, dcur, env) {
   # dfig = file.path(deps, 'figure-html', fsep = '/')
   r = '(<img src|<script src|<link href)="#####([.][.]/[^"]+_files/[^"]+)"'
   m = gregexpr(r, x)
@@ -55,7 +55,7 @@ decode_paths = function(x, dcur) {
     d2 = dirname(file.path(dcur, d1))
     lapply(d2, dir_create)
     file.copy2(path[i], d2, overwrite = TRUE)
-    unlink(path[i])
+    env$files = c(env$files, path[i])
     path[i] = d1
 
     # process JS/CSS dependencies
@@ -63,11 +63,11 @@ decode_paths = function(x, dcur) {
     d3 = gsub('^(.+_files/[^/]+)/.+', '\\1', path[i])
     dir_create('rmarkdown-libs')
     file.copy2(d3, 'rmarkdown-libs/', recursive = TRUE, overwrite = TRUE)
-    unlink(d3, recursive = TRUE)
+    env$files = c(env$files, d3)
     up = paste(rep('../', length(gregexpr('/', dcur)[[1]])), collapse = '')
     path[i] = gsub('^.+_files/', paste0(up, 'rmarkdown-libs/'), path[i])
 
-    lapply(unique(d0), bookdown:::clean_empty_dir)
+    env$dirs = c(env$dirs, unique(d0))
 
     paste0(gsub(r, '\\1="', p), path, '"')
   })
@@ -76,10 +76,15 @@ decode_paths = function(x, dcur) {
 
 process_pages = function() {
   files = list.files('.', '[.]html$', recursive = TRUE, full.names = TRUE)
-  for (f in files) process_page(f)
+  # collect a list of dependencies to be cleaned up (e.g. figure/foo.png, libs/jquery.js)
+  clean = new.env(parent = emptyenv())
+  clean$files = clean$dirs = NULL
+  for (f in files) process_page(f, clean)
+  unlink(unique(clean$files), recursive = TRUE)
+  lapply(unique(clean$dirs), bookdown:::clean_empty_dir)
 }
 
-process_page = function(f) {
+process_page = function(f, env) {
   x = readUTF8(f)
   i1 = grep('<!-- BLOGDOWN-BODY-BEFORE', x)
   if (length(i1) == 0) return()
@@ -94,6 +99,6 @@ process_page = function(f) {
     i6 = grep('</head>', x)[1]
     x[i6] = paste0(h, '\n', x[i6])
   }
-  x = decode_paths(x, dirname(f))
+  x = decode_paths(x, dirname(f), env)
   writeUTF8(x, f)
 }
