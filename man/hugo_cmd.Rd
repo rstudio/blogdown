@@ -5,7 +5,7 @@
 \title{Run Hugo commands}
 \usage{
 new_site(dir = ".", force, format = "yaml", sample = TRUE, 
-    theme = "dim0627/hugo_theme_robust", theme_example = TRUE, 
+    theme = "yihui/hugo-future-imperfect", theme_example = TRUE, 
     serve = TRUE)
 
 new_content(path, format = "yaml", kind = NA, open = interactive())
