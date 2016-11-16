@@ -2,6 +2,7 @@
 title: "Hello World"
 author: "Frida Gomam"
 date: 2015-07-23T21:13:14-05:00
+categories: ["R"]
 ---
 
 ```{r setup, include=FALSE}
