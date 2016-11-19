@@ -1,3 +1,8 @@
+#' @param ... Arguments to be passed to \code{system2('hugo', ...)}, e.g.
+#'   \code{new_content(path)} is basically \code{hugo_cmd(c('new', path))} (i.e.
+#'   run the command \command{hugo new path}).
+#' @export
+#' @describeIn hugo_cmd Run an arbitrary Hugo command.
 hugo_cmd = function(...) {
   system2(find_hugo(), ...)
 }

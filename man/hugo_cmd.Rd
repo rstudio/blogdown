@@ -1,9 +1,12 @@
 % Please edit documentation in R/hugo.R
-\name{new_site}
+\name{hugo_cmd}
+\alias{hugo_cmd}
 \alias{new_content}
 \alias{new_site}
 \title{Run Hugo commands}
 \usage{
+hugo_cmd(...)
+
 new_site(dir = ".", force, format = "yaml", sample = TRUE, 
     theme = "yihui/hugo-future-imperfect", theme_example = TRUE, 
     serve = TRUE)
@@ -11,6 +14,10 @@ new_site(dir = ".", force, format = "yaml", sample = TRUE,
 new_content(path, format = "yaml", kind = NA, open = interactive())
 }
 \arguments{
+\item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
+\code{new_content(path)} is basically \code{hugo_cmd(c('new', path))} (i.e.
+run the command \command{hugo new path}).}
+
 \item{dir}{The directory of the new site.}
 
 \item{force}{Whether to create a new site in an existing directory. The
@@ -45,6 +52,8 @@ Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 }
 \section{Functions}{
 \itemize{
+\item \code{hugo_cmd}: Run an arbitrary Hugo command.
+
 \item \code{new_site}: Create a new site (skeleton) via \command{hugo new
 site}.
 
