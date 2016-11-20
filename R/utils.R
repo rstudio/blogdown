@@ -42,13 +42,13 @@ download2 = function(url, ...) {
 
   # if non-Windows, check for libcurl/curl/wget/lynx, call download.file with
   # appropriate method
-  if (Sys.which('wget') != '') {
-    method = 'wget'
-  } else if (Sys.which('curl') != '') {
+  if (Sys.which('curl') != '') {
     method = 'curl'
     # curl needs to add a -L option to follow redirects
     opts = options(download.file.extra = paste('-L', getOption('download.file.extra')))
     on.exit(options(opts), add = TRUE)
+  } else if (Sys.which('wget') != '') {
+    method = 'wget'
   } else if (Sys.which('lynx') != '') {
     method = 'lynx'
   } else {
