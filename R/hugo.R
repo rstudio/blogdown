@@ -99,8 +99,10 @@ new_site = function(
 #' Download the specified theme from Github and install to the \file{themes}
 #' directory. Available themes are listed at \url{http://themes.gohugo.io}.
 #' @inheritParams new_site
+#' @param update_config Whether to update the \code{theme} option in the site
+#'   configurations.
 #' @export
-install_theme = function(theme, theme_example = FALSE) {
+install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
   if (!is.character(theme) || length(theme) != 1 || !grepl('^[^/]+/[^/]+$', theme)) {
     warning("'theme' must be a character string of the form 'user/repo'")
     return(invisible())
@@ -122,6 +124,7 @@ install_theme = function(theme, theme_example = FALSE) {
     file.rename(zipdir, gsub('-master$', '', zipdir))
     unlink(zipfile)
   })
+  if (update_config) return(change_config('theme', sprintf('"%s"', basename(theme))))
   message(
     "Do not forget to change the 'theme' option in '",
     find_config(), "' to \"", basename(theme), '"'
