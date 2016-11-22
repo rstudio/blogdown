@@ -3,7 +3,7 @@
 \alias{install_theme}
 \title{Install a Hugo theme from Github}
 \usage{
-install_theme(theme, theme_example = FALSE)
+install_theme(theme, theme_example = FALSE, update_config = TRUE)
 }
 \arguments{
 \item{theme}{A Hugo theme on Github (a chararacter string of the form
@@ -11,6 +11,9 @@ install_theme(theme, theme_example = FALSE)
 
 \item{theme_example}{Whether to copy the example in the \file{exampleSite}
 directory if it exists in the theme. Not all themes provide example sites.}
+
+\item{update_config}{Whether to update the \code{theme} option in the site
+configurations.}
 }
 \description{
 Download the specified theme from Github and install to the \file{themes}
