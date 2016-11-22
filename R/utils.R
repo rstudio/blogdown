@@ -5,10 +5,10 @@
 #' @param ... Arguments passed to \code{servr::httw()}.
 #' @export
 serve_site = function(...) {
-  render_pages()
+  build_site(TRUE)
   servr::httw(site.dir = publish_dir(), handler = function(...) {
     # re-generate only if Rmd/md or config files were updated
-    if (length(grep('[.](R?md|toml|yaml)$', c(...)))) render_pages()
+    if (length(grep('[.](R?md|toml|yaml)$', c(...)))) build_site(TRUE)
   }, ...)
 }
 

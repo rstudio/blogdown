@@ -9,11 +9,44 @@ hugo_cmd = function(...) {
 
 # build a Hugo site using / as the basedir, and theme in config.yaml if
 # configured (otherwise use the first dir under /themes/)
-hugo_build = function(config = load_config()) {
+hugo_build = function(config = load_config(), serve = FALSE) {
+  if (serve) {
+    oconf = change_config('relativeurls', 'true')
+    on.exit(writeUTF8(oconf$text, oconf$file), add = TRUE)
+  }
   hugo_cmd(c(
-    '-b', "/", '-t',
+    if (serve) c('-b', '/'), '-t',
     get_config('theme', list.files(get_config('themesdir', 'themes', config))[1], config)
   ))
+}
+
+# in theory, we should use environment variables HUGO_FOO, but it does seem to
+# really work (e.g. HUGO_RELATIVEURLS does not work), so we have to physically
+# write the config into config.toml/yaml using change_config() below
+reset_env = function(name, value) {
+  if (is.na(value)) Sys.unsetenv(name) else Sys.setenv(name, value)
+}
+
+change_config = function(name, value) {
+  f = find_config()
+  x = readUTF8(f)
+  if (f == 'config.toml') {
+    r = sprintf('^%s\\s*=.+', name)
+    v = paste(name, value, sep = ' = ')
+  } else if (f == 'config.yaml') {
+    r = sprintf('^%s\\s*:.+', name)
+    v = paste(name, value, sep = ': ')
+  }
+  i = grep(r, x)
+  if (length(i) > 1) stop("Duplicate configuration for '", name, "' in ", f)
+  x0 = x
+  if (length(i) == 1) {
+    x[i] = v     # replace old config and write out
+  } else {
+    x = c(v, x)  # append new config and write out
+  }
+  writeUTF8(x, f)
+  invisible(list(text = x0, file = f))
 }
 
 #' Run Hugo commands
