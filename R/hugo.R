@@ -91,8 +91,7 @@ install_theme = function(theme, theme_example = FALSE) {
   })
   message(
     "Do not forget to change the 'theme' option in '",
-    existing_files(c('config.toml', 'config.yaml'), first = TRUE), "' to \"",
-    basename(theme), '"'
+    find_config(), "' to \"", basename(theme), '"'
   )
 }
 

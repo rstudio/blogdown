@@ -73,15 +73,21 @@ load_config = function() {
     config
   }
 
+  find_config()
+
   if (file.exists('config.yaml'))
     return(read_config('config.yaml', yaml::yaml.load_file))
 
   if (file.exists('config.toml'))
     return(read_config('config.toml', parse_toml))
+}
 
-  stop(
+find_config = function() {
+  f = existing_files(c('config.toml', 'config.yaml'), first = TRUE)
+  if (length(f) == 0) stop(
     'Cannot find the configuration file config.yaml or config.toml of the website'
   )
+  f
 }
 
 # not TOML parser in R yet, so a simple version that only reads top-level options
