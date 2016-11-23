@@ -1,3 +1,4 @@
+export(build_site)
 export(html_page)
 export(hugo_cmd)
 export(install_hugo)

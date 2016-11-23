@@ -10,6 +10,7 @@
 #'   \code{baseurl} will be set to \code{/}, and \code{relativeurls} will be set
 #'   to \code{true}. If \code{FALSE}, default configurations of the website will
 #'   be used.
+#' @export
 build_site = function(serve = FALSE) {
   config = load_config()
   files = list.files(
