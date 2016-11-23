@@ -7,7 +7,7 @@
 \usage{
 hugo_cmd(...)
 
-new_site(dir = ".", force, format = "yaml", sample = TRUE, 
+new_site(dir = ".", force, format = "toml", sample = TRUE, 
     theme = "yihui/hugo-future-imperfect", theme_example = TRUE, 
     serve = TRUE)
 

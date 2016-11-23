@@ -71,7 +71,7 @@ change_config = function(name, value) {
 #' @describeIn hugo_cmd Create a new site (skeleton) via \command{hugo new
 #'   site}.
 new_site = function(
-  dir = '.', force, format = 'yaml', sample = TRUE,
+  dir = '.', force, format = 'toml', sample = TRUE,
   theme = 'yihui/hugo-future-imperfect', theme_example = TRUE, serve = TRUE
 ) {
   if (missing(force)) {
