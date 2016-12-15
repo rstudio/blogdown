@@ -6,7 +6,7 @@ Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name")
     )
 Description: Write blog posts and web pages in R Markdown. This package uses the
-    static site generator Hugo (https://gohugo.io).
+    static site generator Hugo (<https://gohugo.io>).
 License: GPL-3
 Imports:
     rmarkdown,
@@ -20,5 +20,5 @@ Suggests:
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
-SystemRequirements: Hugo (https://gohugo.io) and Pandoc (http://pandoc.org)
+SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<http://pandoc.org>)
 RoxygenNote: 5.0.1
