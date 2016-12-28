@@ -142,8 +142,8 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 #' @export
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
-new_content = function(path, kind = NA, open = interactive()) {
-  hugo_cmd(c('new', shQuote(path), '-f yaml', if (!is.na(kind)) c('-k', kind)))
+new_content = function(path, kind = 'default', open = interactive()) {
+  hugo_cmd(c('new', shQuote(path), '-f yaml', c('-k', kind)))
   if (open) open_file(content_file(path))
 }
 
@@ -169,7 +169,7 @@ content_file = function(path) file.path(get_config('contentdir', 'content'), pat
 #'   'Your Name')} so that the author field is automatically filled out when
 #'   creating a new post.
 new_post = function(
-  title, kind = NA, open = interactive(), author = getOption('blogdown.author'),
+  title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
   rmd = getOption('blogdown.use.rmd', TRUE)
 ) {
   isfile = grepl('[.]R?md$', title)

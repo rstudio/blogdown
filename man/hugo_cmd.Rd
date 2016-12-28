@@ -12,10 +12,11 @@ new_site(dir = ".", force, format = "toml", sample = TRUE,
     theme = "yihui/hugo-future-imperfect", theme_example = TRUE, 
     serve = TRUE)
 
-new_content(path, kind = NA, open = interactive())
+new_content(path, kind = "default", open = interactive())
 
-new_post(title, kind = NA, open = interactive(), author = getOption("blogdown.author"), 
-    rmd = getOption("blogdown.use.rmd", TRUE))
+new_post(title, kind = "default", open = interactive(), 
+    author = getOption("blogdown.author"), rmd = getOption("blogdown.use.rmd", 
+        TRUE))
 }
 \arguments{
 \item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
