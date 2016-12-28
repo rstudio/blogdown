@@ -186,8 +186,12 @@ new_post = function(
     if (!is.na(i)) x[i] = paste('title:', shQuote(title, 'cmd'))
   }
   if (!is.null(author)) {
+    author = paste('author:', shQuote(author, 'cmd'))
     i = grep('^author: ', x)[1]
-    if (!is.na(i)) x[i] = paste('author:', shQuote(author, 'cmd'))
+    if (is.na(i)) {
+      i = grep('^---\\s*$', x)[2]
+      if (!is.na(i)) x[i] = paste(author, '---', sep = '\n')
+    } else x[i] = author
   }
   writeUTF8(x, file)
   if (open) open_file(file)
