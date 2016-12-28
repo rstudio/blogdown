@@ -120,3 +120,7 @@ publish_dir = function(config = load_config()) {
 open_file = function(x) {
   tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
 }
+
+dash_filename = function(string) {
+  tolower(gsub('^-+|-+$', '', gsub('[^/[:alnum:]]+', '-', string)))
+}
