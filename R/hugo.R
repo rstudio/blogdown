@@ -135,7 +135,7 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 }
 
 
-#' @param path The path to the new file.
+#' @param path The path to the new file under the \file{content} directory.
 #' @param kind The content type to create.
 #' @param open Whether to open the new file after creating it. By default, it is
 #'   opened in an interactive R session.
@@ -144,5 +144,51 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 #'   (e.g. a post or a page).
 new_content = function(path, kind = NA, open = interactive()) {
   hugo_cmd(c('new', shQuote(path), '-f yaml', if (!is.na(kind)) c('-k', kind)))
-  if (open) open_file(file.path(get_config('contentdir', 'content'), path))
+  if (open) open_file(content_file(path))
+}
+
+content_file = function(path) file.path(get_config('contentdir', 'content'), path)
+
+#' @param title The title or filename of the post. If it contains an extension
+#'   \file{.Rmd} or \file{.md}, it will be treated as the filename of the post,
+#'   otherwise it is supposed to be the title of the post, and the actual
+#'   filename will be automatically generated from the title by replacing
+#'   non-alphanumeric characters with dashes, e.g. \code{title = 'Hello World'}
+#'   may create a file \file{content/post/2016-12-28-hello-world.Rmd}. The
+#'   current date of the form \code{YYYY-mm-dd} will be prepended if the
+#'   filename does not start with a date.
+#' @param author The author of the post.
+#' @param rmd Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
+#'   file.
+#' @export
+#' @describeIn hugo_cmd A wrapper function to create a new (R) Markdown post
+#'   under the \file{content/post/} directory via \code{new_content()}. If your
+#'   post will not contain any R code chunks, you can set \code{rmd = FALSE} or
+#'   the global option \code{options(blogdown.use.rmd = FALSE)} in your
+#'   \file{~/.Rprofile}. Similarly, you can set \code{options(blogdown.author =
+#'   'Your Name')} so that the author field is automatically filled out when
+#'   creating a new post.
+new_post = function(
+  title, kind = NA, open = interactive(), author = getOption('blogdown.author'),
+  rmd = getOption('blogdown.use.rmd', TRUE)
+) {
+  isfile = grepl('[.]R?md$', title)
+  file = if (isfile) title else paste0(dash_filename(title), ifelse(rmd, '.Rmd', '.md'))
+  d = dirname(file); f = basename(file)
+  if (!grepl('^\\d{4}-\\d{2}-\\d{2}-', f))
+    f = paste(format(Sys.Date(),'%Y-%m-%d'), f, sep = '-')
+  file = file.path('post', if (d == '.') f else file.path(d, f))
+  new_content(file, kind, FALSE)
+  file = content_file(file)
+  x = readUTF8(file)
+  if (!isfile) {
+    i = grep('^title: ', x)[1]
+    if (!is.na(i)) x[i] = paste('title:', shQuote(title, 'cmd'))
+  }
+  if (!is.null(author)) {
+    i = grep('^author: ', x)[1]
+    if (!is.na(i)) x[i] = paste('author:', shQuote(author, 'cmd'))
+  }
+  writeUTF8(x, file)
+  if (open) open_file(file)
 }
