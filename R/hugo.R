@@ -58,6 +58,9 @@ change_config = function(name, value) {
 #'   default value is \code{TRUE} if the \code{dir} directory is empty or only
 #'   contain hidden files and RStudio project (\file{*.Rproj}) files, otherwise
 #'   \code{FALSE}, to make sure your existing files are not overwritten.
+#' @param format The format of the configuration file. Note that the frontmatter
+#'   of the new (R) Markdown file created by \code{new_content()} always uses
+#'   YAML instead of TOML.
 #' @param sample Whether to add sample content. Hugo creates an empty site by
 #'   default, but this function adds sample content by default).
 #' @param theme A Hugo theme on Github (a chararacter string of the form
@@ -133,15 +136,13 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 
 
 #' @param path The path to the new file.
-#' @param format The format of the configuration file or the frontmatter of the
-#'   new (R) Markdown file.
 #' @param kind The content type to create.
 #' @param open Whether to open the new file after creating it. By default, it is
 #'   opened in an interactive R session.
 #' @export
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
-new_content = function(path, format = 'yaml', kind = NA, open = interactive()) {
-  hugo_cmd(c('new', shQuote(path), '-f', format, if (!is.na(kind)) c('-k', kind)))
+new_content = function(path, kind = NA, open = interactive()) {
+  hugo_cmd(c('new', shQuote(path), '-f yaml', if (!is.na(kind)) c('-k', kind)))
   if (open) open_file(file.path(get_config('contentdir', 'content'), path))
 }
