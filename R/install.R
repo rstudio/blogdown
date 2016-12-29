@@ -125,7 +125,7 @@ find_exec = function(cmd, dir, info = '') {
   if (path == '') stop(
     cmd, ' not found. ', info, call. = FALSE
   )
-  path.expand(path)
+  normalizePath(path)
 }
 
 find_hugo = local({
