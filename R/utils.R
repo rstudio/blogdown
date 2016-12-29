@@ -38,7 +38,9 @@ is_linux = function() Sys.info()[['sysname']] == 'Linux'
 # https://stat.ethz.ch/pipermail/r-devel/2016-June/072852.html
 download2 = function(url, ...) {
   if (is_windows())
-    return(download.file(url, method = 'wininet', ...))
+    return(tryCatch(download.file(url, method = 'wininet', ...), error = function(e) {
+      download.file(url, ...)  # try default method if wininet fails
+    }))
 
   # if non-Windows, check for libcurl/curl/wget/lynx, call download.file with
   # appropriate method
