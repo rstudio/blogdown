@@ -183,7 +183,7 @@ new_post = function(
   x = readUTF8(file)
   if (!isfile) {
     i = grep('^title: ', x)[1]
-    if (!is.na(i)) x[i] = paste('title:', shQuote(title, 'cmd'))
+    if (!is.na(i)) x[i] = paste('title:', shQuote(basename(title), 'cmd'))
   }
   if (!is.null(author)) {
     author = paste('author:', shQuote(author, 'cmd'))
