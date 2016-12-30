@@ -9,7 +9,7 @@
 hugo_cmd(...)
 
 new_site(dir = ".", force, format = "toml", sample = TRUE, 
-    theme = "yihui/hugo-future-imperfect", theme_example = TRUE, 
+    theme = "yihui/hugo-lithium-theme", theme_example = TRUE, 
     serve = TRUE)
 
 new_content(path, kind = "default", open = interactive())
