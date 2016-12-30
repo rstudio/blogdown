@@ -18,7 +18,7 @@ The function `blogdown::serve_site()` may be the most frequently used function i
 
 You may not be satisfied with the default site created from `new_site()`. There are two things you may want to do after your first successful experiment with **blogdown**:
 
-1. Pick a Hugo theme that you like from http://themes.gohugo.io. All you need is its Github user and repository name. For example, if you like the [Ghostwriter theme](https://github.com/jbub/ghostwriter), you can install it via `blogdown::install_theme('jbub/ghostwriter')`.
+1. Pick a Hugo theme that you like from http://themes.gohugo.io. All you need is its Github user and repository name. For example, if you like the [Ghostwriter theme](http://themes.gohugo.io/ghostwriter/), you can install it via `blogdown::install_theme('jbub/ghostwriter')` (other themes possibly of interest: [simple-a](https://github.com/AlexFinn/simple-a), [hugo-academic](https://github.com/gcushen/hugo-academic), [hugo-future-imperfect](https://github.com/jpescador/hugo-future-imperfect), [hugo-tranquilpeak-theme](https://github.com/kakawait/hugo-tranquilpeak-theme), ...).
 2. Add more content (pages or posts), or migrate your existing website.
 
 The full documentation of this package is still under development. If you do not want to wait, you can read the Hugo documentation, which can be a little overwhelming if you have no experience with static site generators. Note although Hugo supports TOML, YAML, and JSON in the front matter of Markdown files, R Markdown only supports YAML, so you have to use YAML in `*.Rmd` files. Feel free to use other formats in plain Markdown files (`*.md`).
