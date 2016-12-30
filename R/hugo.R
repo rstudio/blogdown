@@ -80,6 +80,7 @@ new_site = function(
   if (missing(force)) {
     files = grep('[.]Rproj$', list.files(dir), invert = TRUE)
     force = length(files) == 0
+    if (!force) warning("The directory '", dir, "' is not empty")
   }
   if (hugo_cmd(
     c('new site', shQuote(dir), if (force) '--force', '-f', format),
