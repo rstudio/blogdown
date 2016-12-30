@@ -1,8 +1,9 @@
 ---
-title: "Hello World"
+title: "Hello R Markdown"
 author: "Frida Gomam"
 date: 2015-07-23T21:13:14-05:00
 categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +26,7 @@ fit
 
 You can also embed plots. See Figure \@ref(fig:pie) for example:
 
-```{r pie, fig.cap='A fancy pie chart.'}
+```{r pie, fig.cap='A fancy pie chart.', tidy=FALSE}
 par(mar = c(0, 1, 0, 1))
 pie(
   c(280, 60, 20),

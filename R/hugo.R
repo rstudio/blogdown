@@ -91,8 +91,8 @@ new_site = function(
 
   if (sample) {
     dir_create(file.path('content', 'post'))
-    file.copy(pkg_file('resources', 'hello-world.Rmd'), 'content/post/')
-    if (interactive()) open_file('content/post/hello-world.Rmd')
+    file.copy(pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd'), 'content/post/')
+    if (interactive()) open_file('content/post/2015-07-23-r-rmarkdown.Rmd')
   }
   if (serve) serve_site()
 }
