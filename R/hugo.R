@@ -164,14 +164,13 @@ content_file = function(path) file.path(get_config('contentdir', 'content'), pat
 #' @export
 #' @describeIn hugo_cmd A wrapper function to create a new (R) Markdown post
 #'   under the \file{content/post/} directory via \code{new_content()}. If your
-#'   post will not contain any R code chunks, you can set \code{rmd = FALSE} or
-#'   the global option \code{options(blogdown.use.rmd = FALSE)} in your
-#'   \file{~/.Rprofile}. Similarly, you can set \code{options(blogdown.author =
-#'   'Your Name')} so that the author field is automatically filled out when
-#'   creating a new post.
+#'   post will use R code chunks, you can set \code{rmd = TRUE} or the global
+#'   option \code{options(blogdown.use.rmd = TRUE)} in your \file{~/.Rprofile}.
+#'   Similarly, you can set \code{options(blogdown.author = 'Your Name')} so
+#'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
-  rmd = getOption('blogdown.use.rmd', TRUE)
+  rmd = getOption('blogdown.use.rmd', FALSE)
 ) {
   isfile = grepl('[.]R?md$', title)
   file = if (isfile) title else paste0(dash_filename(title), ifelse(rmd, '.Rmd', '.md'))
