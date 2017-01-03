@@ -9,13 +9,13 @@ hugo_cmd = function(...) {
 
 # build a Hugo site using / as the basedir, and theme in config.yaml if
 # configured (otherwise use the first dir under /themes/)
-hugo_build = function(config = load_config(), serve = FALSE) {
-  if (serve) {
+hugo_build = function(config = load_config(), local = FALSE) {
+  if (local) {
     oconf = change_config('relativeurls', 'true')
     on.exit(writeUTF8(oconf$text, oconf$file), add = TRUE)
   }
   hugo_cmd(c(
-    if (serve) c('-b', '/'), '-t',
+    if (local) c('-b', '/', '-D'), '-t',
     get_config('theme', list.files(get_config('themesdir', 'themes', config))[1], config)
   ))
 }

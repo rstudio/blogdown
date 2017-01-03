@@ -5,13 +5,13 @@
 #'
 #' You can use \code{\link{serve_site}()} to preview your website locally, and
 #' \code{build_site()} to build the site for publishing.
-#' @param serve Whether to build the website locally to be served via
+#' @param local Whether to build the website locally to be served via
 #'   \code{\link{serve_site}()}. If \code{TRUE}, the site configurations
 #'   \code{baseurl} will be set to \code{/}, and \code{relativeurls} will be set
 #'   to \code{true}. If \code{FALSE}, default configurations of the website will
 #'   be used.
 #' @export
-build_site = function(serve = FALSE) {
+build_site = function(local = FALSE) {
   config = load_config()
   files = list.files(
     'content', '[.]Rmd$', ignore.case = TRUE, recursive = TRUE, full.names = TRUE
@@ -34,7 +34,7 @@ build_site = function(serve = FALSE) {
     x = encode_paths(x, paste0(knitr:::sans_ext(f), '_files'), d)
     writeUTF8(c(bookdown:::fetch_yaml(readUTF8(f)), '', x), html)
   })
-  hugo_build(config, serve)
+  hugo_build(config, local)
   in_dir(publish_dir(config), process_pages())
   invisible()
 }
