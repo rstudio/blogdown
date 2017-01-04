@@ -23,4 +23,4 @@ before_script:
   - "[ -x \"$HOME/bin/hugo\" ] || Rscript -e \"blogdown::install_hugo()\""
 
 after_success:
-  - "(curl -L http://yihui.name/xran/r-xran | bash)"
+  - "(curl -L https://yihui.name/xran/r-xran | bash)"
