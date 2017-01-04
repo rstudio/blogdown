@@ -24,6 +24,15 @@ build_site = function(local = FALSE) {
 
   if (getOption('knitr.use.cwd', FALSE)) knitr::opts_knit$set(root.dir = getwd())
 
+  # copy by-products from /blogdown/ to /content/
+  lib1 = by_products(files)  # /content/.../foo_(files|cache) dirs and foo.html
+  lib2 = gsub('^content', 'blogdown', lib1)  # /blogdown/.../foo_(files|cache)
+  for (i in seq_along(lib2)) if (dir_exists(lib2[i])) {
+    file.copy(lib2[i], dirname(lib1[i]), recursive = TRUE)
+  } else if (file.exists(lib2[i])) {
+    file.rename(lib2[i], lib1[i])
+  }
+
   for (f in files) in_dir(d <- dirname(f), {
     f = basename(f)
     html = with_ext(f, 'html')
@@ -34,8 +43,21 @@ build_site = function(local = FALSE) {
     x = encode_paths(x, paste0(knitr:::sans_ext(f), '_files'), d)
     writeUTF8(c(bookdown:::fetch_yaml(readUTF8(f)), '', x), html)
   })
+
+  # copy (new) by-products from /content/ to /blogdown/ to make the source
+  # directory clean (only .Rmd stays there)
+  for (i in seq_along(lib1)) if (dir_exists(lib1[i])) {
+    dir_create(dirname(lib2[i]))
+    file.copy(lib1[i], dirname(lib2[i]), recursive = TRUE)
+  }
+
   hugo_build(config, local)
   in_dir(publish_dir(config), process_pages())
+
+  i = file.exists(lib1)
+  file.rename(lib1[i], lib2[i])  # use file.rename() to preserve mtime of .html
+  unlink(lib1, recursive = TRUE)
+
   invisible()
 }
 
@@ -55,7 +77,6 @@ encode_paths = function(x, deps, parent) {
 }
 
 decode_paths = function(x, dcur, env) {
-  # dfig = file.path(deps, 'figure-html', fsep = '/')
   r = '(<img src|<script src|<link href)="#####([.][.]/[^"]+_files/[^"]+)"'
   m = gregexpr(r, x)
   regmatches(x, m) = lapply(regmatches(x, m), function(p) {

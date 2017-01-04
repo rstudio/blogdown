@@ -126,3 +126,8 @@ open_file = function(x) {
 dash_filename = function(string) {
   tolower(gsub('^-+|-+$', '', gsub('[^/[:alnum:]]+', '-', string)))
 }
+
+by_products = function(x) {
+  sx = knitr:::sans_ext(x)
+  c(paste0(sx, '_files'), paste0(sx, '_cache'), paste0(sx, '.html'))
+}
