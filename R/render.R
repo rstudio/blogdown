@@ -54,7 +54,7 @@ build_site = function(local = FALSE) {
   hugo_build(config, local)
   in_dir(publish_dir(config), process_pages())
 
-  i = file.exists(lib1)
+  i = file_test('-f', lib1)
   file.rename(lib1[i], lib2[i])  # use file.rename() to preserve mtime of .html
   unlink(lib1, recursive = TRUE)
 
@@ -109,8 +109,24 @@ decode_paths = function(x, dcur, env) {
   x
 }
 
+decode_paths_xml = function(x) {
+  r1 = '(&lt;img src=&#34;)#####[.][.]/.+?_files/figure-html/'
+  if (length(grep(r1, x)) == 0) return(x)
+  m = gregexpr(r1, x)
+  z = regmatches(x, m)
+  r2 = '^\\s*<link>(.+)</link>\\s*$'
+  l = NULL
+  for (i in seq_along(x)) {
+    if (grepl(r2, x[i])) l = gsub(r2, '\\1', x[i])
+    if (is.null(l) || length(z[[i]]) == 0) next
+    z[[i]] = paste0(gsub(r1, '\\1', z[[i]]), l, 'figures/')
+  }
+  regmatches(x, m) = z
+  x
+}
+
 process_pages = function() {
-  files = list.files('.', '[.]html$', recursive = TRUE, full.names = TRUE)
+  files = list.files('.', '[.](ht|x)ml$', recursive = TRUE, full.names = TRUE)
   # collect a list of dependencies to be cleaned up (e.g. figure/foo.png, libs/jquery.js)
   clean = new.env(parent = emptyenv())
   clean$files = clean$dirs = NULL
@@ -121,6 +137,10 @@ process_pages = function() {
 
 process_page = function(f, env) {
   x = readUTF8(f)
+  if (grepl('[.]xml$', f)) {
+    x = decode_paths_xml(x)
+    return(writeUTF8(x, f))
+  }
   i1 = grep('<!-- BLOGDOWN-BODY-BEFORE', x)
   if (length(i1) == 0) return()
   i2 = grep('/BLOGDOWN-BODY-BEFORE -->', x)
