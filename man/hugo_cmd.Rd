@@ -8,8 +8,8 @@
 \usage{
 hugo_cmd(...)
 
-new_site(dir = ".", force, format = "toml", sample = TRUE, 
-    theme = "yihui/hugo-lithium-theme", theme_example = TRUE, 
+new_site(dir = ".", install_hugo = TRUE, format = "toml", 
+    sample = TRUE, theme = "yihui/hugo-lithium-theme", theme_example = TRUE, 
     serve = TRUE)
 
 new_content(path, kind = "default", open = interactive())
@@ -23,12 +23,10 @@ new_post(title, kind = "default", open = interactive(),
 \code{new_content(path)} is basically \code{hugo_cmd(c('new', path))} (i.e.
 run the command \command{hugo new path}).}
 
-\item{dir}{The directory of the new site.}
+\item{dir}{The directory of the new site. It should be empty or only contain
+hidden files and RStudio project (\file{*.Rproj}) files.}
 
-\item{force}{Whether to create a new site in an existing directory. The
-default value is \code{TRUE} if the \code{dir} directory is empty or only
-contain hidden files and RStudio project (\file{*.Rproj}) files, otherwise
-\code{FALSE}, to make sure your existing files are not overwritten.}
+\item{install_hugo}{Whether to install Hugo automatically if it is not found.}
 
 \item{format}{The format of the configuration file. Note that the frontmatter
 of the new (R) Markdown file created by \code{new_content()} always uses
@@ -75,7 +73,7 @@ Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 \item \code{hugo_cmd}: Run an arbitrary Hugo command.
 
 \item \code{new_site}: Create a new site (skeleton) via \command{hugo new
-site}.
+site}. The directory of the new site should be empty,
 
 \item \code{new_content}: Create a new (R) Markdown file via \command{hugo new}
 (e.g. a post or a page).
