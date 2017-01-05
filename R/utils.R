@@ -110,12 +110,13 @@ parse_toml = function(f, x = readUTF8(f)) {
   z
 }
 
+# option names may be case insensitive
 get_config = function(field, default, config = load_config()) {
-  config[[field]] %n% default
+  config[[field]] %n% config[[match(tolower(field), tolower(names(config)))]] %n% default
 }
 
 publish_dir = function(config = load_config()) {
-  get_config('publishdir', 'public', config)
+  get_config('publishDir', 'public', config)
 }
 
 # use RStudio to open the file if possible

@@ -16,7 +16,7 @@ hugo_build = function(config = load_config(), local = FALSE) {
   }
   hugo_cmd(c(
     if (local) c('-b', '/', '-D'), '-t',
-    get_config('theme', list.files(get_config('themesdir', 'themes', config))[1], config)
+    get_config('theme', list.files(get_config('themesDir', 'themes', config))[1], config)
   ))
 }
 
@@ -146,7 +146,7 @@ new_content = function(path, kind = 'default', open = interactive()) {
   if (open) open_file(content_file(path))
 }
 
-content_file = function(path) file.path(get_config('contentdir', 'content'), path)
+content_file = function(path) file.path(get_config('contentDir', 'content'), path)
 
 #' @param title The title or filename of the post. If it contains an extension
 #'   \file{.Rmd} or \file{.md}, it will be treated as the filename of the post,
