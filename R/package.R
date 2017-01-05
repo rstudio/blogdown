@@ -1,7 +1,14 @@
 #' @import utils
 
 with_ext = bookdown:::with_ext
-readUTF8 = bookdown:::readUTF8
+readUTF8 = function(f) {
+  s = file.info(f)$size
+  if (s == 0) return(character(0))
+  x = readChar(f, s, useBytes = TRUE)
+  Encoding(x) = 'UTF-8'
+  strsplit(x, '\n', fixed = TRUE)[[1]]
+}
+
 writeUTF8 = bookdown:::writeUTF8
 dir_exists = bookdown:::dir_exists
 dir_create = bookdown:::dir_create
