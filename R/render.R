@@ -60,6 +60,7 @@ build_site = function(local = FALSE) {
   in_dir(publish_dir(config), process_pages(local))
 
   i = file_test('-f', lib1)
+  lapply(unique(dirname(lib2[i])), dir_create)
   file.rename(lib1[i], lib2[i])  # use file.rename() to preserve mtime of .html
   unlink(lib1, recursive = TRUE)
 
