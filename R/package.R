@@ -17,3 +17,7 @@ existing_files = bookdown:::existing_files
 attr = knitr:::attr
 in_dir = knitr:::in_dir
 `%n%` = knitr:::`%n%`
+
+blogdown_skeleton = function(path, ...) {
+  new_site(dir = path, ..., serve = FALSE)
+}

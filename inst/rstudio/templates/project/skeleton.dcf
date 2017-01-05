@@ -1,2 +1,27 @@
-Title: Blogdown Project
+Title: Website using blogdown
 Binding: blogdown_skeleton
+Subtitle: Create a new website using Hugo and blogdown
+Caption: Create a new website using Hugo and blogdown
+OpenFiles: config.toml
+
+Parameter: install_hugo
+Widget: CheckboxInput
+Label: Install Hugo automatically
+Default: On
+
+Parameter: sample
+Widget: CheckboxInput
+Label: Add sample blog posts
+Default: On
+
+Parameter: theme
+Widget: TextInput
+Label: Hugo theme
+Default: yihui/hugo-lithium-theme
+Position: right
+
+Parameter: theme_example
+Widget: CheckboxInput
+Label: Add the example site of the theme
+Default: On
+Position: right
