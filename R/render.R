@@ -10,6 +10,11 @@
 #'   \code{baseurl} will be set to \code{/}, and \code{relativeurls} will be set
 #'   to \code{true}. If \code{FALSE}, default configurations of the website will
 #'   be used.
+#' @note When \code{local = TRUE}, RSS feeds (typically the files name
+#'   \code{index.xml} under the \file{public} directory) will not be
+#'   post-processed to save time, which means if you have Rmd posts that contain
+#'   R plots, these plots will not work. Since \code{local = TRUE} is only for
+#'   previewing a website locally, you may not care about RSS feeds.
 #' @export
 build_site = function(local = FALSE) {
   config = load_config()
@@ -52,7 +57,7 @@ build_site = function(local = FALSE) {
   }
 
   hugo_build(config, local)
-  in_dir(publish_dir(config), process_pages())
+  in_dir(publish_dir(config), process_pages(local))
 
   i = file_test('-f', lib1)
   file.rename(lib1[i], lib2[i])  # use file.rename() to preserve mtime of .html
@@ -125,19 +130,22 @@ decode_paths_xml = function(x) {
   x
 }
 
-process_pages = function() {
-  files = list.files('.', '[.](ht|x)ml$', recursive = TRUE, full.names = TRUE)
+process_pages = function(local = FALSE) {
+  files = list.files(
+    '.', if (local) '[.]html$' else '[.](ht|x)ml$', recursive = TRUE,
+    full.names = TRUE
+  )
   # collect a list of dependencies to be cleaned up (e.g. figure/foo.png, libs/jquery.js)
   clean = new.env(parent = emptyenv())
   clean$files = clean$dirs = NULL
-  for (f in files) process_page(f, clean)
+  for (f in files) process_page(f, clean, local)
   unlink(unique(clean$files), recursive = TRUE)
   lapply(unique(clean$dirs), bookdown:::clean_empty_dir)
 }
 
-process_page = function(f, env) {
+process_page = function(f, env, local = FALSE) {
   x = readUTF8(f)
-  if (grepl('[.]xml$', f)) {
+  if (!local && grepl('[.]xml$', f)) {
     x = decode_paths_xml(x)
     return(writeUTF8(x, f))
   }
