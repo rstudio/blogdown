@@ -3,11 +3,12 @@
 \alias{html_page}
 \title{An R Markdown output format for \pkg{blogdown} web pages}
 \usage{
-html_page(..., number_sections = FALSE, self_contained = FALSE, highlight = NULL)
+html_page(..., number_sections = FALSE, self_contained = FALSE)
 }
 \arguments{
-\item{..., number_sections, self_contained, highlight}{Arguments passed to
-\code{bookdown::html_document2()}.}
+\item{..., number_sections, self_contained}{Arguments passed to
+\code{bookdown::html_document2()} (note the options \code{theme},
+\code{highlight}, and \code{template} are not supported).}
 }
 \description{
 This function is a simple wrapper of \code{bookdown::\link{html_document2}()}

@@ -12,15 +12,16 @@
 #' The fact that it is based on \pkg{bookdown} means most \pkg{bookdown}
 #' features are supported, such as numbering and cross-referencing
 #' figures/tables.
-#' @param ...,number_sections,self_contained,highlight Arguments passed to
-#'   \code{bookdown::html_document2()}.
+#' @param ...,number_sections,self_contained Arguments passed to
+#'   \code{bookdown::html_document2()} (note the options \code{theme},
+#'   \code{highlight}, and \code{template} are not supported).
 #' @references See Chapter 2 of the \pkg{bookdown} book for the Markdown syntax:
 #'   \url{https://bookdown.org/yihui/bookdown}
 #' @export
 html_page = function(
-  ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL
+  ..., number_sections = FALSE, self_contained = FALSE
 ) bookdown::html_document2(
   ..., number_sections = number_sections, theme = NULL,
-  self_contained = self_contained, highlight = highlight,
+  self_contained = self_contained, highlight = NULL,
   template = pkg_file('resources', 'template-minimal.html')
 )
