@@ -7,8 +7,9 @@
 serve_site = function(...) {
   build_site(TRUE)
   servr::httw(site.dir = publish_dir(), handler = function(...) {
-    # re-generate only if Rmd/md or config files were updated
-    if (length(grep('[.](R?md|toml|yaml)$', c(...)))) build_site(TRUE)
+    # re-generate only if Rmd/md or config files or layouts were updated
+    if (length(grep('^(themes|layouts)/|[.](R?md|toml|yaml)$', c(...))))
+      build_site(TRUE)
   }, ...)
 }
 
