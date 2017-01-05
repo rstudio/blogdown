@@ -53,11 +53,9 @@ change_config = function(name, value) {
 #'
 #' Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 #' ...)}.
-#' @param dir The directory of the new site.
-#' @param force Whether to create a new site in an existing directory. The
-#'   default value is \code{TRUE} if the \code{dir} directory is empty or only
-#'   contain hidden files and RStudio project (\file{*.Rproj}) files, otherwise
-#'   \code{FALSE}, to make sure your existing files are not overwritten.
+#' @param dir The directory of the new site. It should be empty or only contain
+#'   hidden files and RStudio project (\file{*.Rproj}) files.
+#' @param install_hugo Whether to install Hugo automatically if it is not found.
 #' @param format The format of the configuration file. Note that the frontmatter
 #'   of the new (R) Markdown file created by \code{new_content()} always uses
 #'   YAML instead of TOML.
@@ -72,16 +70,15 @@ change_config = function(name, value) {
 #'   and themes: \url{http://themes.gohugo.io}.
 #' @export
 #' @describeIn hugo_cmd Create a new site (skeleton) via \command{hugo new
-#'   site}.
+#'   site}. The directory of the new site should be empty,
 new_site = function(
-  dir = '.', force, format = 'toml', sample = TRUE,
+  dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
   theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = TRUE
 ) {
-  if (missing(force)) {
-    files = grep('[.]Rproj$', list.files(dir), invert = TRUE)
-    force = length(files) == 0
-    if (!force) warning("The directory '", dir, "' is not empty")
-  }
+  files = grep('[.]Rproj$', list.files(dir), invert = TRUE)
+  force = length(files) == 0
+  if (!force) warning("The directory '", dir, "' is not empty")
+  if (install_hugo) tryCatch(find_hugo(), error = function(e) install_hugo())
   if (hugo_cmd(
     c('new site', shQuote(dir), if (force) '--force', '-f', format),
     stdout = FALSE
