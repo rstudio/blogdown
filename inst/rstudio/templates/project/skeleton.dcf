@@ -18,10 +18,8 @@ Parameter: theme
 Widget: TextInput
 Label: Hugo theme
 Default: yihui/hugo-lithium-theme
-Position: right
 
 Parameter: theme_example
 Widget: CheckboxInput
 Label: Add the example site of the theme
 Default: On
-Position: right
