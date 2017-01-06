@@ -6,7 +6,8 @@ readUTF8 = function(f) {
   if (s == 0) return(character(0))
   x = readChar(f, s, useBytes = TRUE)
   Encoding(x) = 'UTF-8'
-  strsplit(x, '\n', fixed = TRUE)[[1]]
+  x = strsplit(x, '\n', fixed = TRUE)[[1]]
+  gsub('\r$', '', x)
 }
 
 writeUTF8 = bookdown:::writeUTF8
