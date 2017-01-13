@@ -53,7 +53,13 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
   if (is_windows()) {
     files = utils::unzip(download_zip('Windows'))
   } else if (is_osx()) {
-    if (use_brew) return(invisible(brew_hugo()))
+    if (use_brew) {
+      if (brew_hugo() == 0) return()
+      warning(
+        'Failed to use Homebrew to install Hugo. ',
+        'I will try to download the Hugo binary directly and install it.'
+      )
+    }
     files = utils::unzip(download_zip('MacOS'))
   } else {
     # might be Linux; good luck
@@ -93,7 +99,7 @@ brew_hugo = function() {
     '/usr/bin/ruby',
     '-e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
   )
-  if (status != 0) install()
+  if (status == 0) status else install()
 }
 
 # possible locations of the Hugo executable
