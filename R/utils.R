@@ -133,3 +133,7 @@ by_products = function(x) {
   sx = knitr:::sans_ext(x)
   c(paste0(sx, '_files'), paste0(sx, '_cache'), paste0(sx, '.html'))
 }
+
+new_post_addin = function() {
+  sys.source(pkg_file('scripts', 'new_post.R'))
+}

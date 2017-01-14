@@ -2,3 +2,8 @@ Name: Live Preview Site
 Description: Run blogdown::serve_site() to live preview a website.
 Binding: serve_site
 Interactive: true
+
+Name: New Post
+Description: Create a new post with blogdown::new_post().
+Binding: new_post_addin
+Interactive: true
