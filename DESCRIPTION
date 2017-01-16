@@ -16,6 +16,8 @@ Imports:
     servr (>= 0.4.1)
 Suggests:
   testit,
+  shiny,
+  miniUI,
   rstudioapi
 LazyData: true
 URL: https://github.com/rstudio/blogdown

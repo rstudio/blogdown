@@ -137,3 +137,23 @@ by_products = function(x) {
 new_post_addin = function() {
   sys.source(pkg_file('scripts', 'new_post.R'))
 }
+
+scan_meta = function(fields = c('categories', 'tags'), dir = 'content') {
+  res = list()
+  files = list.files(dir, '[.][Rr]?md$', recursive = TRUE, full.names = TRUE)
+  if (length(files) == 0) return(res)
+  meta = lapply(files, function(f) {
+    yaml = fetch_yaml(readUTF8(f))
+    if (length(yaml) == 0) return()
+    yaml = yaml[-c(1, length(yaml))]
+    if (length(yaml) == 0) return()
+    tryCatch(yaml::yaml.load(paste(yaml, collapse = '\n')), error = function(e) {
+      warning("Cannot parse the YAML metadata in '", f, "'")
+      NULL
+    })
+  })
+  for (i in fields) {
+    res[[i]] = sort(unique(unlist(lapply(meta, `[[`, i))))
+  }
+  res
+}
