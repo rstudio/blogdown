@@ -15,8 +15,8 @@ new_site(dir = ".", install_hugo = TRUE, format = "toml",
 new_content(path, kind = "default", open = interactive())
 
 new_post(title, kind = "default", open = interactive(), 
-    author = getOption("blogdown.author"), rmd = getOption("blogdown.use.rmd", 
-        FALSE))
+    author = getOption("blogdown.author"), categories = NULL, 
+    tags = NULL, rmd = getOption("blogdown.use.rmd", FALSE))
 }
 \arguments{
 \item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
@@ -60,6 +60,10 @@ current date of the form \code{YYYY-mm-dd} will be prepended if the
 filename does not start with a date.}
 
 \item{author}{The author of the post.}
+
+\item{categories}{A character vector of category names.}
+
+\item{tags}{A character vector of tag names.}
 
 \item{rmd}{Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
 file.}
