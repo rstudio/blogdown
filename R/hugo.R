@@ -170,7 +170,7 @@ new_post = function(
   categories = NULL, tags = NULL,
   rmd = getOption('blogdown.use.rmd', FALSE)
 ) {
-  isfile = grepl('[.]R?md$', title)
+  isfile = grepl('[.][Rr]?md$', title)
   file = if (isfile) title else paste0(dash_filename(title), ifelse(rmd, '.Rmd', '.md'))
   d = dirname(file); f = basename(file)
   if (!grepl('^\\d{4}-\\d{2}-\\d{2}-', f))
