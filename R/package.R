@@ -3,6 +3,7 @@
 with_ext = bookdown:::with_ext
 readUTF8 = function(f) {
   s = file.info(f)$size
+  if (is.na(s)) stop('File ', f, ' does not exist')
   if (s == 0) return(character(0))
   x = readChar(f, s, useBytes = TRUE)
   Encoding(x) = 'UTF-8'
