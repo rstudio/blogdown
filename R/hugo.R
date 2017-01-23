@@ -183,7 +183,7 @@ new_post = function(
     i = grep('^title: ', x)[1]
     if (!is.na(i)) x[i] = paste('title:', shQuote(basename(title), 'cmd'))
   }
-  meta = list(author = author, categories = categories, tags = tags)
+  meta = list(author = author, categories = as.list(categories), tags = as.list(tags))
   for (field in c('author', 'categories', 'tags')) {
     value = meta[[field]]
     if (length(value) >= 1 && !identical(value, '')) {
