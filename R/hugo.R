@@ -15,7 +15,7 @@ hugo_build = function(config = load_config(), local = FALSE) {
     on.exit(writeUTF8(oconf$text, oconf$file), add = TRUE)
   }
   hugo_cmd(c(
-    if (local) c('-b', '/', '-D'), '-t',
+    if (local) c('-b', '/', '-D', '-F'), '-t',
     get_config('theme', list.files(get_config('themesDir', 'themes', config))[1], config)
   ))
 }
