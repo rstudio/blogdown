@@ -10,7 +10,7 @@
 #'   \code{baseurl} will be set to \code{/}, and \code{relativeurls} will be set
 #'   to \code{true}. If \code{FALSE}, default configurations of the website will
 #'   be used.
-#' @note When \code{local = TRUE}, RSS feeds (typically the files name
+#' @note When \code{local = TRUE}, RSS feeds (typically the files named
 #'   \code{index.xml} under the \file{public} directory) will not be
 #'   post-processed to save time, which means if you have Rmd posts that contain
 #'   R plots, these plots will not work. Since \code{local = TRUE} is only for
