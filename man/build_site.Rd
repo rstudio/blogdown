@@ -21,7 +21,7 @@ You can use \code{\link{serve_site}()} to preview your website locally, and
 \code{build_site()} to build the site for publishing.
 }
 \note{
-When \code{local = TRUE}, RSS feeds (typically the files name
+When \code{local = TRUE}, RSS feeds (typically the files named
   \code{index.xml} under the \file{public} directory) will not be
   post-processed to save time, which means if you have Rmd posts that contain
   R plots, these plots will not work. Since \code{local = TRUE} is only for
