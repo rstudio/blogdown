@@ -138,6 +138,10 @@ new_post_addin = function() {
   sys.source(pkg_file('scripts', 'new_post.R'))
 }
 
+update_cat_addin = function() {
+  sys.source(pkg_file('scripts', 'update_categories.R'))
+}
+
 scan_meta = function(fields = c('categories', 'tags'), dir = 'content') {
   res = list()
   files = list.files(dir, '[.][Rr]?md$', recursive = TRUE, full.names = TRUE)

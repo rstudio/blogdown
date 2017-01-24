@@ -7,3 +7,8 @@ Name: New Post
 Description: Create a new post with blogdown::new_post().
 Binding: new_post_addin
 Interactive: true
+
+Name: Update Categories/Tags
+Description: Update the categories and/or tags of the current blog post.
+Binding: update_cat_addin
+Interactive: true
