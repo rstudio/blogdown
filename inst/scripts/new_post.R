@@ -2,18 +2,18 @@ local({
   tags = htmltools::tags
   txt_input = function(..., width = '100%') shiny::textInput(..., width = width)
   sel_input = function(...) shiny::selectizeInput(
-    ..., width = '95%', multiple = TRUE, options = list(create = TRUE)
+    ..., width = '98%', multiple = TRUE, options = list(create = TRUE)
   )
   meta = blogdown:::scan_meta()
   shiny::runGadget(
     miniUI::miniPage(miniUI::miniContentPanel(
       txt_input('title', 'Title', placeholder = 'Post Title'),
       shiny::fillRow(
-        txt_input('author', 'Author', getOption('blogdown.author', ''), width = '95%'),
-        shiny::dateInput('date', 'Date', Sys.Date(), width = '95%'),
+        txt_input('author', 'Author', getOption('blogdown.author', ''), width = '98%'),
+        shiny::dateInput('date', 'Date', Sys.Date(), width = '98%'),
         txt_input(
           'subdir', 'Subdirectory', getOption('blogdown.subdir', ''),
-          '(optional)', width = '95%'
+          '(optional)', width = '98%'
         ),
         height = '70px'
       ),
