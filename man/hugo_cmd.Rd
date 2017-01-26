@@ -16,7 +16,8 @@ new_content(path, kind = "default", open = interactive())
 
 new_post(title, kind = "default", open = interactive(), 
     author = getOption("blogdown.author"), categories = NULL, 
-    tags = NULL, rmd = getOption("blogdown.use.rmd", FALSE))
+    tags = NULL, date = Sys.Date(), file = NULL, subdir = getOption("blogdown.subdir"), 
+    rmd = getOption("blogdown.use.rmd", FALSE))
 }
 \arguments{
 \item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
@@ -50,14 +51,7 @@ directory if it exists in the theme. Not all themes provide example sites.}
 \item{open}{Whether to open the new file after creating it. By default, it is
 opened in an interactive R session.}
 
-\item{title}{The title or filename of the post. If it contains an extension
-\file{.Rmd} or \file{.md}, it will be treated as the filename of the post,
-otherwise it is supposed to be the title of the post, and the actual
-filename will be automatically generated from the title by replacing
-non-alphanumeric characters with dashes, e.g. \code{title = 'Hello World'}
-may create a file \file{content/post/2016-12-28-hello-world.Rmd}. The
-current date of the form \code{YYYY-mm-dd} will be prepended if the
-filename does not start with a date.}
+\item{title}{The title of the post.}
 
 \item{author}{The author of the post.}
 
@@ -65,8 +59,20 @@ filename does not start with a date.}
 
 \item{tags}{A character vector of tag names.}
 
+\item{date}{The date of the post.}
+
+\item{file}{The filename of the post. By default, the filename will be
+automatically generated from the title by replacing non-alphanumeric
+characters with dashes, e.g. \code{title = 'Hello World'} may create a file
+\file{content/post/2016-12-28-hello-world.md}. The date of the form
+\code{YYYY-mm-dd} will be prepended if the filename does not start with a
+date.}
+
+\item{subdir}{If specified (not \code{NULL}), the post will be generated
+under a subdirectory under \file{content/post/}.}
+
 \item{rmd}{Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
-file.}
+file. Ignored if \code{file} has been specified.}
 }
 \description{
 Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
