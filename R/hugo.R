@@ -156,6 +156,7 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #' @param author The author of the post.
 #' @param categories A character vector of category names.
 #' @param tags A character vector of tag names.
+#' @param date The date of the post.
 #' @param rmd Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
 #'   file.
 #' @export
@@ -167,7 +168,7 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
-  categories = NULL, tags = NULL,
+  categories = NULL, tags = NULL, date = Sys.Date(),
   rmd = getOption('blogdown.use.rmd', FALSE)
 ) {
   isfile = grepl('[.][Rr]?md$', title)
@@ -183,8 +184,11 @@ new_post = function(
     i = grep('^title: ', x)[1]
     if (!is.na(i)) x[i] = paste('title:', shQuote(basename(title), 'cmd'))
   }
-  meta = list(author = author, categories = as.list(categories), tags = as.list(tags))
-  for (field in c('author', 'categories', 'tags')) {
+  meta = list(
+    author = author, categories = as.list(categories),
+    tags = as.list(tags), date = format(date)
+  )
+  for (field in c('author', 'categories', 'tags', 'date')) {
     value = meta[[field]]
     if (length(value) >= 1 && !identical(value, '')) {
       value = gsub('\\s+$', '', yaml::as.yaml(meta[field], indent.mapping.sequence = TRUE))
