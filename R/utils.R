@@ -183,7 +183,8 @@ split_yaml_body = function(x) {
   n = length(x)
   if (n < 2 || length(i) < 2 || (i[1] > 1 && !knitr:::is_blank(x[seq(i[1] - 1)]))) {
     list(yaml = character(), body = x)
-  } else {
-    list(yaml = x[i[1]:i[2]], body = if (i[2] == n) character() else x[(i[2] + 1):n])
-  }
+  } else list(
+    yaml = x[i[1]:i[2]], yaml_range = i[1:2],
+    body = if (i[2] == n) character() else x[(i[2] + 1):n]
+  )
 }

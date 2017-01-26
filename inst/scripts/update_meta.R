@@ -1,30 +1,53 @@
 local({
   tags = htmltools::tags
+  txt_input = function(..., width = '100%') shiny::textInput(..., width = width)
   sel_input = function(...) shiny::selectizeInput(
-    ..., width = '95%', multiple = TRUE, options = list(create = TRUE)
+    ..., width = '100%', multiple = TRUE, options = list(create = TRUE)
   )
   meta = blogdown:::scan_meta()
+
+  ctxt = rstudioapi::getSourceEditorContext(); txt = ctxt$contents
+  res = blogdown:::split_yaml_body(txt); yml = res$yaml; rng = res$yaml_range
+  if ((n <- length(yml)) < 2) return(
+    warning("The current document does not seem to contain YAML metadata", call. = FALSE)
+  )
+  rstudioapi::setSelectionRanges(list(c(rng[1] + 1, 1, rng[2], 1)))
   slct = rstudioapi::getSourceEditorContext()$selection[[1]]
-  x0 = if (slct$text != '') yaml::yaml.load(slct$text)
-  x1 = x0[['categories']]; x2 = x0[['tags']]
-  n1 = length(x1); n2 = length(x2)
+
+  yml = if (n > 2) yaml::yaml.load(paste(yml[-c(1, n)], collapse = '\n'))
+  if (length(yml) == 0) yml = list()
+  if (is.null(yml[['title']])) yml$title = ''
+  if (is.null(yml[['author']])) yml$author = getOption('blogdown.author', '')
+  if (is.null(yml[['date']])) yml$date = Sys.Date()
 
   shiny::runGadget(
     miniUI::miniPage(miniUI::miniContentPanel(
-      if (n1 > 0 || n2 == 0) sel_input(
-        'cat', 'Categories', sort(unique(c(x1, meta$categories))), selected = x1
+      txt_input('title', 'Title', yml[['title']], placeholder = 'Post Title'),
+      shiny::fillRow(
+        txt_input('author', 'Author', yml[['author']], width = '99%'),
+        shiny::dateInput('date', 'Date', yml[['date']], width = '99%'),
+        height = '80px'
       ),
-      if (n2 > 0 || n1 == 0) sel_input(
-        'tag', 'Tags', sort(unique(c(x2, meta$tags))), selected = x2
+      sel_input(
+        'cat', 'Categories', sort(unique(c(yml[['categories']], meta$categories))),
+        selected = yml[['categories']]
       ),
+      sel_input(
+        'tag', 'Tags', sort(unique(c(yml[['tags']], meta$tags))), selected = yml[['tags']]
+      ),
+      shiny::fillRow(tags$div(), height = '20px'),
       miniUI::gadgetTitleBar(NULL)
     )),
     server = function(input, output) {
       shiny::observeEvent(input$done, {
-        res = list(categories = input$cat, tags = input$tag)
-        for (i in names(res)) res[[i]] = if (length(res[[i]]) > 0) as.list(res[[i]])
-        if (length(res)) rstudioapi::modifyRange(
-          slct$range, yaml::as.yaml(res, indent.mapping.sequence = TRUE)
+        res = list(
+          title = input$title, author = input$author, date = format(input$date),
+          categories = input$cat, tags = input$tag
+        )
+        yml = c(res, yml[setdiff(names(yml), names(res))])
+        for (i in c('categories', 'tags')) yml[[i]] = if (length(yml[[i]]) > 0) as.list(yml[[i]])
+        rstudioapi::modifyRange(
+          slct$range, yaml::as.yaml(yml, indent.mapping.sequence = TRUE)
         )
         shiny::stopApp()
       })
@@ -32,7 +55,8 @@ local({
         shiny::stopApp()
       })
     },
-    stopOnCancel = FALSE, viewer = shiny::dialogViewer('Update Categories/Tags', height = 100)
+    stopOnCancel = FALSE,
+    viewer = shiny::dialogViewer('Update YAML metadata', 500, 400)
   )
 
 })
