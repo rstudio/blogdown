@@ -48,6 +48,7 @@ local({
         if (empty_title()) return(
           warning('The post title should not be empty!', call. = FALSE)
         )
+        if (is.null(getOption('blogdown.author'))) options(blogdown.author = input$author)
         blogdown::new_post(
           input$title, author = input$author, rmd = input$format == 'R Markdown',
           categories = input$cat, tags = input$tag, file = input$file,
