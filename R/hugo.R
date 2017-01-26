@@ -180,25 +180,16 @@ new_post = function(
   new_content(file, kind, FALSE)
   file = content_file(file)
   x = readUTF8(file)
-  if (!isfile) {
-    i = grep('^title: ', x)[1]
-    if (!is.na(i)) x[i] = paste('title:', shQuote(basename(title), 'cmd'))
-  }
-  meta = list(
-    author = author, categories = as.list(categories),
-    tags = as.list(tags), date = format(date)
-  )
-  for (field in c('author', 'categories', 'tags', 'date')) {
-    value = meta[[field]]
-    if (length(value) >= 1 && !identical(value, '')) {
-      value = gsub('\\s+$', '', yaml::as.yaml(meta[field], indent.mapping.sequence = TRUE))
-      i = grep(sprintf('^%s: ', field), x)[1]
-      if (is.na(i)) {
-        i = grep('^---\\s*$', x)[2]
-        if (!is.na(i)) x = append(x, value, i - 1)
-      } else x[i] = value
-    }
-  }
-  writeUTF8(x, file)
+  res = split_yaml_body(x)
+  if ((n <- length(yml <- res$yaml)) > 2) {
+    meta1 = yaml::yaml.load(paste(yml[-c(1, n)], collapse = '\n'))
+    meta2 = list(
+      title = title, author = author, date = format(date),
+      categories = as.list(categories), tags = as.list(tags)
+    )
+    meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
+    yml = yaml::as.yaml(meta1, indent.mapping.sequence = TRUE)
+    writeUTF8(c('---', sub('\\s+$', '', yml), '---', res$body), file)
+  } else warning("Could not detect YAML metadata in the post '", file, "'")
   if (open) open_file(file)
 }
