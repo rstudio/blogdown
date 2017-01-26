@@ -23,4 +23,5 @@ in_dir = knitr:::in_dir
 
 blogdown_skeleton = function(path, ...) {
   new_site(dir = path, ..., serve = FALSE)
+  writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), file.path(path, 'index.Rmd'))
 }
