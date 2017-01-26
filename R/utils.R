@@ -6,9 +6,13 @@
 #' @export
 serve_site = function(...) {
   build_site(TRUE)
-  servr::httw(site.dir = publish_dir(), handler = function(...) {
+  pdir = publish_dir(); n = nchar(pdir)
+  servr::httw(site.dir = pdir, handler = function(...) {
+    files = c(...)
+    # exclude changes in the publish dir
+    files = files[substr(files, 1, n) != pdir]
     # re-generate only if Rmd/md or config files or layouts were updated
-    if (length(grep('^(themes|layouts)/|[.](R?md|toml|yaml)$', c(...))))
+    if (length(grep('^(themes|layouts)/|[.](R?md|toml|yaml)$', files)))
       build_site(TRUE)
   }, ...)
 }
