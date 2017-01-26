@@ -32,6 +32,7 @@ build_site = function(local = FALSE) {
   # copy by-products from /blogdown/ to /content/
   lib1 = by_products(files)  # /content/.../foo_(files|cache) dirs and foo.html
   lib2 = gsub('^content', 'blogdown', lib1)  # /blogdown/.../foo_(files|cache)
+  # TODO: it may be faster to file.rename() than file.copy()
   for (i in seq_along(lib2)) if (dir_exists(lib2[i])) {
     file.copy(lib2[i], dirname(lib1[i]), recursive = TRUE)
   } else if (file.exists(lib2[i])) {
@@ -57,7 +58,8 @@ build_site = function(local = FALSE) {
   }
 
   hugo_build(config, local)
-  in_dir(publish_dir(config), process_pages(local))
+  root = getwd()
+  in_dir(publish_dir(config), process_pages(local, root))
 
   i = file_test('-f', lib1)
   lapply(unique(dirname(lib2[i])), dir_create)
@@ -76,18 +78,18 @@ render_page = function(input) {
 encode_paths = function(x, deps, parent) {
   if (!dir_exists(deps)) return(x)
   # find the dependencies referenced in HTML, add a marker ##### to their paths
-  # (../ because future .html will be processed in_dir('public'))
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
-  x = gsub(r, paste0('\\1\\2#####../', parent, '/\\3'), x)
+  x = gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x)
   x
 }
 
-decode_paths = function(x, dcur, env) {
-  r = '(<img src|<script src|<link href)="#####([.][.]/[^"]+_files/[^"]+)"'
+decode_paths = function(x, dcur, env, root) {
+  r = '(<img src|<script src|<link href)="#####([^"]+_files/[^"]+)"'
   m = gregexpr(r, x)
   regmatches(x, m) = lapply(regmatches(x, m), function(p) {
     if (length(p) == 0) return(p)
     path = gsub(r, '\\2', p)
+    path = file.path(root, path)
     d0 = gsub('^(.+_files)/.+', '\\1', path)
 
     # process figure paths
@@ -115,8 +117,8 @@ decode_paths = function(x, dcur, env) {
   x
 }
 
-decode_paths_xml = function(x) {
-  r1 = '(&lt;img src=&#34;)#####[.][.]/.+?_files/figure-html/'
+decode_paths_xml = function(x, root) {
+  r1 = '(&lt;img src=&#34;)#####.+?_files/figure-html/'
   if (length(grep(r1, x)) == 0) return(x)
   m = gregexpr(r1, x)
   z = regmatches(x, m)
@@ -131,7 +133,7 @@ decode_paths_xml = function(x) {
   x
 }
 
-process_pages = function(local = FALSE) {
+process_pages = function(local = FALSE, root) {
   files = list.files(
     '.', if (local) '[.]html$' else '[.](ht|x)ml$', recursive = TRUE,
     full.names = TRUE
@@ -139,15 +141,15 @@ process_pages = function(local = FALSE) {
   # collect a list of dependencies to be cleaned up (e.g. figure/foo.png, libs/jquery.js)
   clean = new.env(parent = emptyenv())
   clean$files = clean$dirs = NULL
-  for (f in files) process_page(f, clean, local)
+  for (f in files) process_page(f, clean, local, root)
   unlink(unique(clean$files), recursive = TRUE)
   lapply(unique(clean$dirs), bookdown:::clean_empty_dir)
 }
 
-process_page = function(f, env, local = FALSE) {
+process_page = function(f, env, local = FALSE, root) {
   x = readUTF8(f)
   if (!local && grepl('[.]xml$', f)) {
-    x = decode_paths_xml(x)
+    x = decode_paths_xml(x, root)
     return(writeUTF8(x, f))
   }
   i1 = grep('<!-- BLOGDOWN-BODY-BEFORE', x)
@@ -163,6 +165,6 @@ process_page = function(f, env, local = FALSE) {
     i6 = grep('</head>', x)[1]
     x[i6] = paste0(h, '\n', x[i6])
   }
-  x = decode_paths(x, dirname(f), env)
+  x = decode_paths(x, dirname(f), env, root)
   writeUTF8(x, f)
 }
