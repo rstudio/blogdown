@@ -130,7 +130,7 @@ open_file = function(x) {
 }
 
 dash_filename = function(string) {
-  tolower(gsub('^-+|-+$', '', gsub('[^/[:alnum:]]+', '-', string)))
+  tolower(gsub('^-+|-+$', '', gsub('[^[:alnum:]]+', '-', string)))
 }
 
 by_products = function(x) {

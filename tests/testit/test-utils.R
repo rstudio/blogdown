@@ -14,5 +14,5 @@ assert(
 assert(
   'dash_filename() creates a filename by replacing non-alnum chars with -',
   dash_filename(c('foo Bar', 'foo/bar  !@ hi', '() foo/hello WORLD')) %==%
-    c('foo-bar', 'foo/bar-hi', 'foo/hello-world')
+    c('foo-bar', 'foo-bar-hi', 'foo-hello-world')
 )
