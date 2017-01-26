@@ -12,6 +12,8 @@ blogdown_site = function(input, ...) {
     name = basename(getwd()),
     output_dir = output_dir,
     render = render,
-    clean = function() {}
+    clean = function() {
+      c('blogdown', output_dir)
+    }
   )
 }
