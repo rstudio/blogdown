@@ -142,8 +142,8 @@ new_post_addin = function() {
   sys.source(pkg_file('scripts', 'new_post.R'))
 }
 
-update_cat_addin = function() {
-  sys.source(pkg_file('scripts', 'update_categories.R'))
+update_meta_addin = function() {
+  sys.source(pkg_file('scripts', 'update_meta.R'))
 }
 
 scan_meta = function(fields = c('categories', 'tags'), dir = 'content') {
