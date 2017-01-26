@@ -145,20 +145,21 @@ new_content = function(path, kind = 'default', open = interactive()) {
 
 content_file = function(path) file.path(get_config('contentDir', 'content'), path)
 
-#' @param title The title or filename of the post. If it contains an extension
-#'   \file{.Rmd} or \file{.md}, it will be treated as the filename of the post,
-#'   otherwise it is supposed to be the title of the post, and the actual
-#'   filename will be automatically generated from the title by replacing
-#'   non-alphanumeric characters with dashes, e.g. \code{title = 'Hello World'}
-#'   may create a file \file{content/post/2016-12-28-hello-world.Rmd}. The
-#'   current date of the form \code{YYYY-mm-dd} will be prepended if the
-#'   filename does not start with a date.
+#' @param title The title of the post.
 #' @param author The author of the post.
 #' @param categories A character vector of category names.
 #' @param tags A character vector of tag names.
 #' @param date The date of the post.
+#' @param file The filename of the post. By default, the filename will be
+#'   automatically generated from the title by replacing non-alphanumeric
+#'   characters with dashes, e.g. \code{title = 'Hello World'} may create a file
+#'   \file{content/post/2016-12-28-hello-world.md}. The date of the form
+#'   \code{YYYY-mm-dd} will be prepended if the filename does not start with a
+#'   date.
+#' @param subdir If specified (not \code{NULL}), the post will be generated
+#'   under a subdirectory under \file{content/post/}.
 #' @param rmd Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
-#'   file.
+#'   file. Ignored if \code{file} has been specified.
 #' @export
 #' @describeIn hugo_cmd A wrapper function to create a new (R) Markdown post
 #'   under the \file{content/post/} directory via \code{new_content()}. If your
@@ -168,16 +169,12 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
-  categories = NULL, tags = NULL, date = Sys.Date(),
-  rmd = getOption('blogdown.use.rmd', FALSE)
+  categories = NULL, tags = NULL, date = Sys.Date(), file = NULL,
+  subdir = getOption('blogdown.subdir'), rmd = getOption('blogdown.use.rmd', FALSE)
 ) {
-  isfile = grepl('[.][Rr]?md$', title)
-  file = if (isfile) title else paste0(dash_filename(title), ifelse(rmd, '.Rmd', '.md'))
-  d = dirname(file); f = basename(file)
-  if (!grepl('^\\d{4}-\\d{2}-\\d{2}-', f))
-    f = paste(format(Sys.Date(),'%Y-%m-%d'), f, sep = '-')
-  file = file.path('post', if (d == '.') f else file.path(d, f))
+  file = post_filename(title, file, subdir, rmd, date)
   new_content(file, kind, FALSE)
+
   file = content_file(file)
   x = readUTF8(file)
   res = split_yaml_body(x)
@@ -191,5 +188,6 @@ new_post = function(
     yml = yaml::as.yaml(meta1, indent.mapping.sequence = TRUE)
     writeUTF8(c('---', sub('\\s+$', '', yml), '---', res$body), file)
   } else warning("Could not detect YAML metadata in the post '", file, "'")
+
   if (open) open_file(file)
 }

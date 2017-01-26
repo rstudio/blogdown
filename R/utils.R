@@ -133,6 +133,17 @@ dash_filename = function(string) {
   tolower(gsub('^-+|-+$', '', gsub('[^[:alnum:]]+', '-', string)))
 }
 
+post_filename = function(title, file, subdir, rmd, date) {
+  auto = is.null(file)
+  if (auto) file = paste0(dash_filename(title), ifelse(rmd, '.Rmd', '.md'))
+  d = dirname(file); f = basename(file)
+  if (!is.null(subdir) && subdir != '') d = if (d == '.') subdir else file.path(subdir, d)
+  # FIXME: this \\d{4} will be problematic in about 8000 years
+  if (!grepl('^\\d{4}-\\d{2}-\\d{2}-', f)) f = paste(format(date), f, sep = '-')
+  file = if (d == '.') f else file.path(d, f)
+  if (auto) file.path('post', file) else file
+}
+
 by_products = function(x) {
   sx = knitr:::sans_ext(x)
   c(paste0(sx, '_files'), paste0(sx, '_cache'), paste0(sx, '.html'))
