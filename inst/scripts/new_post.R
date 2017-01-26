@@ -22,6 +22,9 @@ local({
     )),
     server = function(input, output) {
       shiny::observeEvent(input$done, {
+        if (grepl('^\\s*$', input$title)) return(
+          warning('The post title should not be empty!', call. = FALSE)
+        )
         blogdown::new_post(
           input$title, author = input$author, rmd = input$format == 'R Markdown',
           categories = input$cat, tags = input$tag
