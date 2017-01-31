@@ -172,7 +172,7 @@ new_post = function(
   categories = NULL, tags = NULL, date = Sys.Date(), file = NULL,
   subdir = getOption('blogdown.subdir'), rmd = getOption('blogdown.use.rmd', FALSE)
 ) {
-  file = post_filename(title, file, subdir, rmd, date)
+  if (is.null(file)) file = post_filename(title, subdir, rmd, date)
   new_content(file, kind, FALSE)
 
   file = content_file(file)
