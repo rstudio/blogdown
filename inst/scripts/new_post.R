@@ -40,13 +40,13 @@ local({
       shiny::observe({
         if (!empty_title()) shiny::updateTextInput(
           session, 'file', value = blogdown:::post_filename(
-            input$title, NULL, input$subdir, input$format == 'R Markdown', input$date
+            input$title, input$subdir, input$format == 'R Markdown', input$date
           )
         )
       })
       shiny::observeEvent(input$done, {
-        if (empty_title()) return(
-          warning('The post title should not be empty!', call. = FALSE)
+        if (grepl('^\\s*$', input$file)) return(
+          warning('The filename is empty!', call. = FALSE)
         )
         if (is.null(getOption('blogdown.author'))) options(blogdown.author = input$author)
         blogdown::new_post(
