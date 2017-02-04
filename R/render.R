@@ -57,7 +57,7 @@ build_site = function(local = FALSE) {
 
   hugo_build(config, local)
   root = getwd()
-  in_dir(publish_dir(config), process_pages(local, root))
+  if (length(files)) in_dir(publish_dir(config), process_pages(local, root))
 
   i = file_test('-f', lib1)
   lapply(unique(dirname(lib2[i])), dir_create)
