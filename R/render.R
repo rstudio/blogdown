@@ -18,10 +18,8 @@
 #' @export
 build_site = function(local = FALSE) {
   config = load_config()
-  files = list.files(
-    'content', '[.]Rmd$', ignore.case = TRUE, recursive = TRUE, full.names = TRUE
-  )
-  # exclude Rmd that starts with _
+  files = list.files('content', '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
+  # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
   files = files[grep('^_', basename(files), invert = TRUE)]
   # do not allow special characters in filenames so dependency names are more
   # predictable, e.g. foo_files/
