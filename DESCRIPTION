@@ -23,4 +23,4 @@ LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<http://pandoc.org>)
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.0
