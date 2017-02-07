@@ -69,7 +69,7 @@ build_site = function(local = FALSE) {
 
 render_page = function(input) {
   args = c(pkg_file('scripts', 'render_page.R'), input)
-  if (bookdown:::Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
+  if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
 }
 
 # given the content of a .html file, encode the figure paths (to be restored
