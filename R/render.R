@@ -40,8 +40,8 @@ build_site = function(local = FALSE) {
   for (f in files) in_dir(d <- dirname(f), {
     f = basename(f)
     html = with_ext(f, 'html')
-    # do not recompile Rmd if html output is newer
-    if (file_test('-nt', html, f)) next
+    # do not recompile Rmd if html is newer when building for local preview
+    if (local && file_test('-nt', html, f)) next
     render_page(f)
     x = readUTF8(html)
     x = encode_paths(x, paste0(knitr:::sans_ext(f), '_files'), d)
