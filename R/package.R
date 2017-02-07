@@ -15,7 +15,7 @@ writeUTF8 = bookdown:::writeUTF8
 dir_exists = bookdown:::dir_exists
 dir_create = bookdown:::dir_create
 existing_files = bookdown:::existing_files
-fetch_yaml = bookdown:::fetch_yaml
+fetch_yaml = function(f) bookdown:::fetch_yaml(readUTF8(f))
 
 attr = knitr:::attr
 in_dir = knitr:::in_dir

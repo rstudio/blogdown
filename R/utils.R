@@ -161,7 +161,7 @@ scan_meta = function(fields = c('categories', 'tags'), dir = 'content') {
   files = list.files(dir, '[.][Rr]?md$', recursive = TRUE, full.names = TRUE)
   if (length(files) == 0) return(res)
   meta = lapply(files, function(f) {
-    yaml = fetch_yaml(readUTF8(f))
+    yaml = fetch_yaml(f)
     if (length(yaml) == 0) return()
     yaml = yaml[-c(1, length(yaml))]
     if (length(yaml) == 0) return()
@@ -186,4 +186,16 @@ split_yaml_body = function(x) {
     yaml = x[i[1]:i[2]], yaml_range = i[1:2],
     body = if (i[2] == n) character() else x[(i[2] + 1):n]
   )
+}
+
+fetch_yaml2 = function(f) {
+  yaml = fetch_yaml(f)
+  n = length(yaml)
+  if (n < 2) return()
+  if (n == 2 || length(grep(knitr::all_patterns$md$inline.code, yaml)) == 0)
+    return(yaml)
+  res = local({
+    knitr::knit(text = yaml[-c(1, n)], quiet = TRUE)
+  })
+  c('---', res, '---')
 }

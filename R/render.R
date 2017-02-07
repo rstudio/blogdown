@@ -45,7 +45,7 @@ build_site = function(local = FALSE) {
     render_page(f)
     x = readUTF8(html)
     x = encode_paths(x, paste0(knitr:::sans_ext(f), '_files'), d)
-    writeUTF8(c(bookdown:::fetch_yaml(readUTF8(f)), '', x), html)
+    writeUTF8(c(fetch_yaml2(f), '', x), html)
   })
 
   # copy (new) by-products from /content/ to /blogdown/ to make the source
