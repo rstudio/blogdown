@@ -143,9 +143,15 @@ post_filename = function(title, subdir, rmd, date) {
   file.path('post', file)
 }
 
-by_products = function(x) {
+expand_grid = function(...) {
+  expand.grid(..., KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+}
+
+by_products = function(x, suffix = c('_files', '_cache', '.html')) {
   sx = knitr:::sans_ext(x)
-  c(paste0(sx, '_files'), paste0(sx, '_cache'), paste0(sx, '.html'))
+  if (length(suffix) == 1) return(paste0(sx, suffix))
+  ma = expand_grid(suffix, sx)
+  if (nrow(ma) > 0) paste0(ma[, 2], ma[, 1])
 }
 
 new_post_addin = function() {
