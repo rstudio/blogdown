@@ -151,11 +151,11 @@ process_page = function(f, env, local = FALSE, root) {
     x = decode_paths_xml(x, root)
     return(writeUTF8(x, f))
   }
-  i1 = grep('<!-- BLOGDOWN-BODY-BEFORE', x)
+  i1 = grep('<!-- BLOGDOWN-BODY-BEFORE -->', x)
   if (length(i1) == 0) return()
-  i2 = grep('/BLOGDOWN-BODY-BEFORE -->', x)
-  i3 = grep('<!-- BLOGDOWN-HEAD', x)
-  i4 = grep('/BLOGDOWN-HEAD -->', x)
+  i2 = grep('<!-- /BLOGDOWN-BODY-BEFORE -->', x)
+  i3 = grep('<!-- BLOGDOWN-HEAD -->', x)
+  i4 = grep('<!-- /BLOGDOWN-HEAD -->', x)
   i5 = (i3 + 1):(i4 - 1)
   h = paste(x[i5], collapse = '\n')
   x = x[-c(i1, i2, i3, i4, i5)]
