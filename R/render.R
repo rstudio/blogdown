@@ -159,6 +159,8 @@ process_page = function(f, env, local = FALSE, root) {
   i5 = (i3 + 1):(i4 - 1)
   h = paste(x[i5], collapse = '\n')
   x = x[-c(i1, i2, i3, i4, i5)]
+  # if you have provided a token in your Hugo template, I'll use it, otherwise I
+  # will insert the head code introduced by HTML dependencies before </head>
   i6 = grep('<!-- RMARKDOWN-HEADER -->', x)
   if (length(i6) == 1) x[i6] = h else {
     i6 = grep('</head>', x)[1]
