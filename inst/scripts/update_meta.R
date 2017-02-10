@@ -47,7 +47,7 @@ local({
         yml = c(res, yml[setdiff(names(yml), names(res))])
         for (i in c('categories', 'tags')) yml[[i]] = if (length(yml[[i]]) > 0) as.list(yml[[i]])
         rstudioapi::modifyRange(
-          slct$range, yaml::as.yaml(yml, indent.mapping.sequence = TRUE)
+          slct$range, blogdown:::as.yaml(yml, .trim_ws = FALSE)
         )
         shiny::stopApp()
       })

@@ -211,9 +211,9 @@ fetch_yaml2 = function(f) {
   c('---', res, '---')
 }
 
-as.yaml = function(...) {
+as.yaml = function(..., .trim_ws = TRUE) {
   res = yaml::as.yaml(..., indent.mapping.sequence = TRUE)
-  sub('\\s+$', '', res)
+  if (.trim_ws) sub('\\s+$', '', res) else res
 }
 
 append_yaml = function(x, value = list()) {
