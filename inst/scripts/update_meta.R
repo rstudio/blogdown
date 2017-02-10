@@ -29,11 +29,12 @@ local({
         height = '80px'
       ),
       sel_input(
-        'cat', 'Categories', sort(unique(c(yml[['categories']], meta$categories))),
+        'cat', 'Categories', blogdown:::sort2(unique(c(yml[['categories']], meta$categories))),
         selected = yml[['categories']]
       ),
       sel_input(
-        'tag', 'Tags', sort(unique(c(yml[['tags']], meta$tags))), selected = yml[['tags']]
+        'tag', 'Tags', blogdown:::sort2(unique(c(yml[['tags']], meta$tags))),
+        selected = yml[['tags']]
       ),
       shiny::fillRow(tags$div(), height = '20px'),
       miniUI::gadgetTitleBar(NULL)

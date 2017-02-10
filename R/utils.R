@@ -182,7 +182,7 @@ scan_meta = function(fields = c('categories', 'tags'), dir = 'content') {
     })
   })
   for (i in fields) {
-    res[[i]] = sort(unique(unlist(lapply(meta, `[[`, i))))
+    res[[i]] = sort2(unique(unlist(lapply(meta, `[[`, i))))
   }
   res
 }
@@ -230,4 +230,10 @@ filter_list = function(x) {
     if (length(x[[i]]) == 0 || identical(x[[i]], '')) x[[i]] = NULL
   }
   x
+}
+
+# prevent sort(NULL), which will trigger a warning "is.na() applied to non-(list
+# or vector) of type 'NULL'"
+sort2 = function(x, ...) {
+  if (length(x) == 0) x else sort(x, ...)
 }
