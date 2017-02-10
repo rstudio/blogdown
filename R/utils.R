@@ -143,6 +143,11 @@ post_filename = function(title, subdir, rmd, date) {
   file.path('post', file)
 }
 
+run_script = function(script, ...) {
+  if (file.exists(script) && Rscript(c(shQuote(script), ...)) != 0)
+    stop('Failed to run ', script)
+}
+
 expand_grid = function(...) {
   expand.grid(..., KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
 }
