@@ -223,3 +223,11 @@ append_yaml = function(x, value = list()) {
   if (length(res$yaml) == 0) return(x)
   append(x, value, res$yaml_range[2] - 1)
 }
+
+# filter out empty elements in a list
+filter_list = function(x) {
+  for (i in names(x)) {
+    if (length(x[[i]]) == 0 || identical(x[[i]], '')) x[[i]] = NULL
+  }
+  x
+}

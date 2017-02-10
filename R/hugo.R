@@ -185,7 +185,7 @@ new_post = function(
       categories = as.list(categories), tags = as.list(tags)
     )
     meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
-    yml = as.yaml(meta1)
+    yml = as.yaml(filter_list(meta1))
     writeUTF8(c('---', yml, '---', res$body), file)
   } else warning("Could not detect YAML metadata in the post '", file, "'")
 
