@@ -205,3 +205,16 @@ fetch_yaml2 = function(f) {
   })
   c('---', res, '---')
 }
+
+as.yaml = function(...) {
+  res = yaml::as.yaml(..., indent.mapping.sequence = TRUE)
+  sub('\\s+$', '', res)
+}
+
+append_yaml = function(x, value = list()) {
+  if (length(value) == 0) return(x)
+  value = as.yaml(value)
+  res = split_yaml_body(x)
+  if (length(res$yaml) == 0) return(x)
+  append(x, value, res$yaml_range[2] - 1)
+}
