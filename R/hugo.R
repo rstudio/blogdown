@@ -9,7 +9,7 @@ hugo_cmd = function(...) {
 
 # build a Hugo site using / as the basedir, and theme in config.yaml if
 # configured (otherwise use the first dir under /themes/)
-hugo_build = function(config = load_config(), local = FALSE) {
+hugo_build = function(local = FALSE, config = load_config()) {
   if (FALSE) {
     oconf = change_config('relativeurls', 'true')
     on.exit(writeUTF8(oconf$text, oconf$file), add = TRUE)

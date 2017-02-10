@@ -1,22 +1,57 @@
 #' Build a website
 #'
 #' Compile all Rmd files, build the site through Hugo, and post-process HTML
-#' files generated from Rmd (e.g. fix figure paths).
+#' files generated from Rmd if necessary (e.g. fix figure paths).
 #'
 #' You can use \code{\link{serve_site}()} to preview your website locally, and
 #' \code{build_site()} to build the site for publishing.
+#'
+#' For the \code{method} argument: \code{method = "html"} means to render all
+#' Rmd files to HTML via \code{\link{rmarkdown::render}()} (which means Markdown
+#' is processed through Pandoc), copy all external dependencies generated from R
+#' code chunks, including images and HTML dependencies, to the website output
+#' directory (e.g. \file{public/}), and fix their paths in the HTML output
+#' because the relative locations of the \file{.html} file and its dependencies
+#' may have changed.
+#'
+#' \code{method = "html_raw"} is similar to \code{method = "html"}, and the
+#' major differences are: (1) the HTML files under the \file{public} directory
+#' are not post-processed to fix image or dependency paths (so it is faster to
+#' build a site); (2) the \code{"html"} method moves all output files from the
+#' \file{content} directory to the \file{blogdown} directory to keep the
+#' \file{content} directory clean, so you won't see files or directories like
+#' \code{foo.html}, \code{foo_files/}, or \code{foo_cache/}, whereas the
+#' \code{"html_raw"} method does not move any \code{*.html} files (only
+#' \code{*_files/} and \code{*_cache/} directories are moved). HTML widgets may
+#' not work well when \code{method = 'html_raw'}.
+#'
+#' For all rendering methods, a custom R script \file{R/build.R} will be
+#' executed if you have provided it under the root directory of the website
+#' (e.g. you can compile Rmd to Markdown through \code{\link{knitr::knit}()} and
+#' build the side via \code{\link{hugo_cmd}()}). \code{method = "custom"} means
+#' it is entirely up to this R script how a website is rendered. The script is
+#' executed via command line \command{Rscript "R/build.R"}, which means it is
+#' executed in a separate R session. The value of the argument \code{local} is
+#' passed to the command line (you can retrieve the command-line arguments via
+#' \code{\link{commandArgs}(TRUE)}).
 #' @param local Whether to build the website locally to be served via
-#'   \code{\link{serve_site}()}. If \code{TRUE}, the site configurations
-#'   \code{baseurl} will be set to \code{/}, and \code{relativeurls} will be set
-#'   to \code{true}. If \code{FALSE}, default configurations of the website will
-#'   be used.
-#' @note When \code{local = TRUE}, RSS feeds (typically the files named
-#'   \code{index.xml} under the \file{public} directory) will not be
-#'   post-processed to save time, which means if you have Rmd posts that contain
-#'   R plots, these plots will not work. Since \code{local = TRUE} is only for
-#'   previewing a website locally, you may not care about RSS feeds.
+#'   \code{\link{serve_site}()}.
+#' @param method Different methods to build a website (each with pros and cons).
+#'   See Details. The value of this argument will be obtained from the global
+#'   option \code{getOption('blogdown.method')} when it is set.
+#' @note For \code{method = "html"}, when \code{local = TRUE}, the site
+#'   configurations \code{baseurl} will be set to \code{/} temporarily, and RSS
+#'   feeds (typically the files named \code{index.xml} under the \file{public}
+#'   directory) will not be post-processed to save time, which means if you have
+#'   Rmd posts that contain R plots, these plots will not work in RSS feeds.
+#'   Since \code{local = TRUE} is only for previewing a website locally, you may
+#'   not care about RSS feeds. To build a website for production, you should
+#'   always call \code{build_site(local = FALSE)}.
 #' @export
-build_site = function(local = FALSE) {
+build_site = function(local = FALSE, method = c('html', 'html_raw', 'custom')) {
+  if (missing(method)) method = getOption('blogdown.method', method)
+  method = match.arg(method)
+
   config = load_config()
   files = list.files('content', '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
   # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
@@ -27,9 +62,26 @@ build_site = function(local = FALSE) {
 
   if (getOption('knitr.use.cwd', FALSE)) knitr::opts_knit$set(root.dir = getwd())
 
-  # copy by-products from /blogdown/ to /content/
-  lib1 = by_products(files)  # /content/.../foo_(files|cache) dirs and foo.html
+  run_script('R/build.R', as.character(local))
+
+  if (method != 'custom') {
+    build_rmds(files, config, local, method == 'html_raw')
+  }
+
+  invisible()
+}
+
+build_rmds = function(files, config, local, raw = FALSE) {
+  if (length(files) == 0) return(hugo_build(config, local))
+
+  # copy by-products {/content/.../foo_(files|cache) dirs and foo.html} from
+  # /blogdown/ or /static/ to /content/
+  lib1 = by_products(files, c('_files', '_cache', if (!raw) '.html'))
   lib2 = gsub('^content', 'blogdown', lib1)  # /blogdown/.../foo_(files|cache)
+  if (raw) {
+    i = grep('_files$', lib2)
+    lib2[i] = gsub('^blogdown', 'static', lib2[i])  # _files are copied to /static
+  }
   # TODO: it may be faster to file.rename() than file.copy()
   for (i in seq_along(lib2)) if (dir_exists(lib2[i])) {
     file.copy(lib2[i], dirname(lib1[i]), recursive = TRUE)
@@ -44,27 +96,26 @@ build_site = function(local = FALSE) {
     if (local && file_test('-nt', html, f)) next
     render_page(f)
     x = readUTF8(html)
-    x = encode_paths(x, paste0(knitr:::sans_ext(f), '_files'), d)
+    x = encode_paths(x, by_products(f, '_files'), d, raw)
     writeUTF8(c(fetch_yaml2(f), '', x), html)
   })
 
-  # copy (new) by-products from /content/ to /blogdown/ to make the source
-  # directory clean (only .Rmd stays there)
+  # copy (new) by-products from /content/ to /blogdown/ or /static to make the
+  # source directory clean (e.g. only .Rmd stays there when method = 'html')
   for (i in seq_along(lib1)) if (dir_exists(lib1[i])) {
     dir_create(dirname(lib2[i]))
     file.copy(lib1[i], dirname(lib2[i]), recursive = TRUE)
   }
 
-  hugo_build(config, local)
-  root = getwd()
-  if (length(files)) in_dir(publish_dir(config), process_pages(local, root))
-
-  i = file_test('-f', lib1)
-  lapply(unique(dirname(lib2[i])), dir_create)
-  file.rename(lib1[i], lib2[i])  # use file.rename() to preserve mtime of .html
+  hugo_build(local, config)
+  if (!raw) {
+    root = getwd()
+    in_dir(publish_dir(config), process_pages(local, root))
+    i = file_test('-f', lib1)
+    lapply(unique(dirname(lib2[i])), dir_create)
+    file.rename(lib1[i], lib2[i])  # use file.rename() to preserve mtime of .html
+  }
   unlink(lib1, recursive = TRUE)
-
-  invisible()
 }
 
 render_page = function(input) {
@@ -72,13 +123,19 @@ render_page = function(input) {
   if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
 }
 
-# given the content of a .html file, encode the figure paths (to be restored
-# later) and move other dependencies to /public/rmarkdown-libs/
-encode_paths = function(x, deps, parent) {
+# given the content of a .html file: (1) if method = 'html', encode the figure
+# paths (to be restored later), and other dependencies will be moved to
+# /public/rmarkdown-libs/; (2) if method = 'html_raw', replace content/*_files/
+# with /*_files/ since these dirs have been moved to /static/
+encode_paths = function(x, deps, parent, raw) {
   if (!dir_exists(deps)) return(x)
   # find the dependencies referenced in HTML, add a marker ##### to their paths
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
-  x = gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x)
+  x = if (raw) {
+    gsub(r, paste0('\\1\\2', gsub('^content', '', parent), '/\\3'), x)
+  } else {
+    gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x)
+  }
   x
 }
 
