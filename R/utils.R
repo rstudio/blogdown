@@ -121,7 +121,16 @@ get_config = function(field, default, config = load_config()) {
 }
 
 publish_dir = function(config = load_config()) {
-  get_config('publishDir', 'public', config)
+  publish_dir_tmp() %n% get_config('publishDir', 'public', config)
+}
+
+# only a temporary workaround for the RStudio IDE issue: when a large number of
+# files are changed, the IDE will not be responsive for quite a few seconds
+publish_dir_tmp = function() {
+  d = getOption('blogdown.publishDir')
+  if (is.null(d)) return()
+  if (is.function(d)) d = d(getwd())
+  if (is.character(d)) d
 }
 
 # use RStudio to open the file if possible
