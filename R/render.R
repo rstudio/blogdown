@@ -73,7 +73,7 @@ build_site = function(local = FALSE, method = c('html', 'html_raw', 'custom')) {
 }
 
 build_rmds = function(files, config, local, raw = FALSE) {
-  if (length(files) == 0) return(hugo_build(config, local))
+  if (length(files) == 0) return(hugo_build(local, config))
 
   # copy by-products {/content/.../foo_(files|cache) dirs and foo.html} from
   # /blogdown/ or /static/ to /content/
