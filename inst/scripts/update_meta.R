@@ -16,6 +16,7 @@ local({
 
   yml = if (n > 2) yaml::yaml.load(paste(yml[-c(1, n)], collapse = '\n'))
   if (length(yml) == 0) yml = list()
+  yml = blogdown:::filter_list(yml)
   if (is.null(yml[['title']])) yml$title = ''
   if (is.null(yml[['author']])) yml$author = getOption('blogdown.author', '')
   if (is.null(yml[['date']])) yml$date = Sys.Date()
