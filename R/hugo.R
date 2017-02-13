@@ -173,6 +173,7 @@ new_post = function(
   subdir = getOption('blogdown.subdir'), rmd = getOption('blogdown.use.rmd', FALSE)
 ) {
   if (is.null(file)) file = post_filename(title, subdir, rmd, date)
+  file = gsub('^\\s+|\\s+$', '', file)  # trim (accidental) white spaces
   new_content(file, kind, FALSE)
 
   file = content_file(file)
