@@ -54,7 +54,8 @@ change_config = function(name, value) {
 #' Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 #' ...)}.
 #' @param dir The directory of the new site. It should be empty or only contain
-#'   hidden files and RStudio project (\file{*.Rproj}) files.
+#'   hidden files, RStudio project (\file{*.Rproj}) files, \file{LICENSE},
+#'   and/or \file{README}/\file{README.md}.
 #' @param install_hugo Whether to install Hugo automatically if it is not found.
 #' @param format The format of the configuration file. Note that the frontmatter
 #'   of the new (R) Markdown file created by \code{new_content()} always uses
@@ -75,7 +76,8 @@ new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
   theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = TRUE
 ) {
-  files = grep('[.]Rproj$', list.files(dir), invert = TRUE)
+  files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)
+  files = setdiff(files, c('LICENSE', 'README', 'README.md'))
   force = length(files) == 0
   if (!force) warning("The directory '", dir, "' is not empty")
   if (install_hugo) tryCatch(find_hugo(), error = function(e) install_hugo())
