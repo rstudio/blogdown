@@ -26,7 +26,8 @@ new_post(title, kind = "default", open = interactive(),
 run the command \command{hugo new path}).}
 
 \item{dir}{The directory of the new site. It should be empty or only contain
-hidden files and RStudio project (\file{*.Rproj}) files.}
+hidden files, RStudio project (\file{*.Rproj}) files, \file{LICENSE},
+and/or \file{README}/\file{README.md}.}
 
 \item{install_hugo}{Whether to install Hugo automatically if it is not found.}
 
