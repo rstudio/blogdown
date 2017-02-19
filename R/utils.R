@@ -152,6 +152,13 @@ post_filename = function(title, subdir, rmd, date) {
   file.path('post', file)
 }
 
+# give a filename, return a slug by removing the date and extension
+post_slug = function(x) {
+  gsub('^\\d{4}-\\d{2}-\\d{2}-|[.][[:alnum:]]+$', '', basename(x))
+}
+
+trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)
+
 run_script = function(script, ...) {
   if (file.exists(script) && Rscript(c(shQuote(script), ...)) != 0)
     stop('Failed to run ', script)

@@ -26,6 +26,7 @@ local({
         txt_input('file', 'Filename', '', 'automatically generated (edit if you want)'),
         height = '70px'
       ),
+      shiny::fillRow(txt_input('slug', 'Slug', '', '(optional)'), height = '70px'),
       shiny::fillRow(
         shiny::radioButtons(
           'format', 'Format', c('Markdown', 'R Markdown'), inline = TRUE,
@@ -44,6 +45,11 @@ local({
           )
         )
       })
+      shiny::observe({
+        if (!grepl('^\\s*$', input$file)) shiny::updateTextInput(
+          session, 'slug', value = blogdown:::post_slug(input$file)
+        )
+      })
       shiny::observeEvent(input$done, {
         if (grepl('^\\s*$', input$file)) return(
           warning('The filename is empty!', call. = FALSE)
@@ -52,7 +58,7 @@ local({
         blogdown::new_post(
           input$title, author = input$author, rmd = input$format == 'R Markdown',
           categories = input$cat, tags = input$tag, file = input$file,
-          subdir = input$subdir, date = input$date
+          slug = input$slug, subdir = input$subdir, date = input$date
         )
         shiny::stopApp()
       })
@@ -60,6 +66,6 @@ local({
         shiny::stopApp()
       })
     },
-    stopOnCancel = FALSE, viewer = shiny::dialogViewer('New Post', height = 430)
+    stopOnCancel = FALSE, viewer = shiny::dialogViewer('New Post', height = 500)
   )
 })

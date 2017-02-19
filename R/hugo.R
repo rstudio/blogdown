@@ -158,6 +158,7 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   \file{content/post/2016-12-28-hello-world.md}. The date of the form
 #'   \code{YYYY-mm-dd} will be prepended if the filename does not start with a
 #'   date.
+#' @param slug The slug of the post.
 #' @param subdir If specified (not \code{NULL}), the post will be generated
 #'   under a subdirectory under \file{content/post/}.
 #' @param rmd Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
@@ -171,11 +172,12 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
-  categories = NULL, tags = NULL, date = Sys.Date(), file = NULL,
+  categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = '',
   subdir = getOption('blogdown.subdir'), rmd = getOption('blogdown.use.rmd', FALSE)
 ) {
   if (is.null(file)) file = post_filename(title, subdir, rmd, date)
-  file = gsub('^\\s+|\\s+$', '', file)  # trim (accidental) white spaces
+  file = trim_ws(file)  # trim (accidental) white spaces
+  slug = trim_ws(slug)
   new_content(file, kind, FALSE)
 
   file = content_file(file)
@@ -184,7 +186,7 @@ new_post = function(
   if ((n <- length(yml <- res$yaml)) > 2) {
     meta1 = yaml::yaml.load(paste(yml[-c(1, n)], collapse = '\n'))
     meta2 = list(
-      title = title, author = author, date = format(date),
+      title = title, author = author, date = format(date), slug = slug,
       categories = as.list(categories), tags = as.list(tags)
     )
     meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
