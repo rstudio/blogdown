@@ -2,12 +2,18 @@
 % Please edit documentation in R/hugo.R
 \name{hugo_cmd}
 \alias{hugo_cmd}
+\alias{hugo_version}
+\alias{hugo_build}
 \alias{new_site}
 \alias{new_content}
 \alias{new_post}
 \title{Run Hugo commands}
 \usage{
 hugo_cmd(...)
+
+hugo_version()
+
+hugo_build(local = FALSE, config = load_config())
 
 new_site(dir = ".", install_hugo = TRUE, format = "toml", 
     sample = TRUE, theme = "yihui/hugo-lithium-theme", theme_example = TRUE, 
@@ -17,13 +23,21 @@ new_content(path, kind = "default", open = interactive())
 
 new_post(title, kind = "default", open = interactive(), 
     author = getOption("blogdown.author"), categories = NULL, 
-    tags = NULL, date = Sys.Date(), file = NULL, subdir = getOption("blogdown.subdir"), 
-    rmd = getOption("blogdown.use.rmd", FALSE))
+    tags = NULL, date = Sys.Date(), file = NULL, slug = "", 
+    subdir = getOption("blogdown.subdir"), rmd = getOption("blogdown.use.rmd", 
+        FALSE))
 }
 \arguments{
 \item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
 \code{new_content(path)} is basically \code{hugo_cmd(c('new', path))} (i.e.
 run the command \command{hugo new path}).}
+
+\item{local}{Whether to build the site for local preview (if \code{TRUE}, all
+drafts and future posts will also be built, and the site configuration
+\code{baseurl} will be set to \code{/} temporarily).}
+
+\item{config}{A list of the site configurations (by default, read from
+\file{config.toml} or \file{config.yaml}).}
 
 \item{dir}{The directory of the new site. It should be empty or only contain
 hidden files, RStudio project (\file{*.Rproj}) files, \file{LICENSE},
@@ -70,6 +84,8 @@ characters with dashes, e.g. \code{title = 'Hello World'} may create a file
 \code{YYYY-mm-dd} will be prepended if the filename does not start with a
 date.}
 
+\item{slug}{The slug of the post.}
+
 \item{subdir}{If specified (not \code{NULL}), the post will be generated
 under a subdirectory under \file{content/post/}.}
 
@@ -83,6 +99,13 @@ Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 \section{Functions}{
 \itemize{
 \item \code{hugo_cmd}: Run an arbitrary Hugo command.
+
+\item \code{hugo_version}: Return the version number of Hugo if possible, which is
+extracted from the output of \code{hugo_cmd('version')}.
+
+\item \code{hugo_build}: Build a plain Hugo website. Note that the function
+\code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
+via \code{hugo_build()} to build the site.
 
 \item \code{new_site}: Create a new site (skeleton) via \command{hugo new
 site}. The directory of the new site should be empty,

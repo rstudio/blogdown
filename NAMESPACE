@@ -2,7 +2,9 @@
 
 export(build_site)
 export(html_page)
+export(hugo_build)
 export(hugo_cmd)
+export(hugo_version)
 export(install_hugo)
 export(install_theme)
 export(new_content)
