@@ -7,8 +7,26 @@ hugo_cmd = function(...) {
   system2(find_hugo(), ...)
 }
 
-# build a Hugo site using / as the basedir, and theme in config.yaml if
-# configured (otherwise use the first dir under /themes/)
+#' @export
+#' @describeIn hugo_cmd Return the version number of Hugo if possible, which is
+#'   extracted from the output of \code{hugo_cmd('version')}.
+hugo_version = function() {
+  x = hugo_cmd('version', stdout = TRUE)
+  r = '^.* v([0-9.]{2,}) .*$'
+  if (grepl(r, x)) return(as.numeric_version(gsub(r, '\\1', x)))
+  warning('Cannot extract the version number from Hugo:')
+  cat(x, sep = '\n')
+}
+
+#' @param local Whether to build the site for local preview (if \code{TRUE}, all
+#'   drafts and future posts will also be built, and the site configuration
+#'   \code{baseurl} will be set to \code{/} temporarily).
+#' @param config A list of the site configurations (by default, read from
+#'   \file{config.toml} or \file{config.yaml}).
+#' @export
+#' @describeIn hugo_cmd Build a plain Hugo website. Note that the function
+#'   \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
+#'   via \code{hugo_build()} to build the site.
 hugo_build = function(local = FALSE, config = load_config()) {
   if (FALSE) {
     oconf = change_config('relativeurls', 'true')
