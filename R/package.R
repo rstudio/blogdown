@@ -23,6 +23,7 @@ in_dir = knitr:::in_dir
 `%n%` = knitr:::`%n%`
 
 blogdown_skeleton = function(path, ...) {
+  opts = options(blogdown.open_sample = FALSE); on.exit(options(opts), add = TRUE)
   new_site(dir = path, ..., serve = FALSE)
   writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), file.path(path, 'index.Rmd'))
 }

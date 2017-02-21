@@ -110,7 +110,8 @@ new_site = function(
   if (sample) {
     dir_create(file.path('content', 'post'))
     file.copy(pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd'), 'content/post/')
-    if (interactive()) open_file('content/post/2015-07-23-r-rmarkdown.Rmd')
+    if (interactive() && getOption('blogdown.open_sample', TRUE))
+      open_file('content/post/2015-07-23-r-rmarkdown.Rmd')
   }
   if (serve) serve_site()
 }
