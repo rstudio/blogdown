@@ -143,6 +143,10 @@ After you have found a satisfactory theme, you need to figure out its Github use
 
 If you do not understand HTML, CSS, or JavaScript, and have no experience with Hugo themes or templates, it may take you about 10 minutes to get started with your new website, since you can basically accept everything you are given (such as the default theme). If you do have the knowledge and experience, it may take you several days to get started. Hugo is really powerful. Be cautious with power.
 
+## The R Markdown output format {#output-format}
+
+`blogdown::html_page`
+
 ## Different rendering methods {#methods}
 
 `blogdown::build_site()`
