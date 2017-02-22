@@ -1,0 +1,79 @@
+--- 
+title: "blogdown: Creating Websites with R Markdown"
+author: "Yihui Xie & Amber Thomas"
+date: "`r Sys.Date()`"
+documentclass: krantz
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+colorlinks: yes
+graphics: yes
+lot: yes
+lof: yes
+fontsize: 12pt
+monofont: "Source Code Pro"
+monofontoptions: "Scale=0.7"
+site: bookdown::bookdown_site
+description: "A guide to creating websites with R Markdown and the R package blogdown."
+url: 'https\://bookdown.org/yihui/blogdown/'
+github-repo: rstudio/blogdown
+#cover-image: images/cover.jpg
+---
+
+```{r setup, include=FALSE}
+options(
+  htmltools.dir.version = FALSE, formatR.indent = 2,
+  width = 55, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE
+)
+
+lapply(c(), function(pkg) {
+  if (system.file(package = pkg) == '') install.packages(pkg)
+})
+```
+
+# Preface {-}
+
+In the summer of 2012, the first author of this book (Yihui) did his internship at the AT&T Labs Research, where he attended a talk given by Carlos Scheidegger (https://cscheid.net), and Carlos said something along the lines "if you don't have a website nowadays, you don't exist." Later Yihui paraphrased it as:
+
+> "I web, therefore I am ~~a spiderman~~."
+
+Carlos's words resonated very well with Yihui, although they were a little exaggerative. A well designed and maintained website can be extremely helpful for other people to know you, and you do not need to wait for suitable chances at conferences or other occasions to introduce yourself in person to other people. On the other hand, a website is also highly useful for yourself to keep track of what you have done and thought. Sometimes you may go back to a certain old post of yours to relearn the tricks or methods you once mastered in the past but have forgotten.
+
+We introduce an R package, **blogdown**, in this short book, to teach you how to create websites using R Markdown and Hugo. If you have experience with creating websites, you may naturally ask what the benefits of using R Markdown are, and how **blogdown** is different with existing popular website platforms, such as WordPress. There are two major highlights of **blogdown**:
+
+1. It produces a static website, meaning the website only consists of static files such as HTML, CSS, JavaScript, and images, etc. You can host the website on any web servers (see Chapter \@ref(deployment) for details). The website does not require server-side scripts such as PHP or databases like WordPress does. It is just one folder of static files. We will explain more benefits of static websites in Chapter \@ref(hugo), when we introduce the static website generator Hugo.
+
+1. The website is generated from R Markdown documents (R is optional, i.e., you can use plain Markdown documents without R code chunks). This brings a huge amount of benefits, especially if your website is related to data analysis or (R) programming. Being able to use Markdown implies simplicity and more importantly, _portability_ (e.g., you are giving yourself the chance to convert your blog posts to PDF and publish to journals or even books in the future). R Markdown gives you the benefits of dynamic documents --- all your results, such as tables, graphics, and inline values, can be computed and rendered dynamically from R code, hence the results you present on your website are more likely to be reproducible. An additional yet important benefit of using R Markdown is that you will be able to write technical documents easily, due to the fact that **blogdown** inherits the HTML output format from **bookdown** [@xie2016]. For example, it is possible to write LaTeX math equations, BibTeX citations, and even theorems and proofs if you want.
+
+Please do not be misled by the word "blog" in the package name: **blogdown** is for general-purpose websites, and not only for blogs. For example, both authors of this book have their personal websites, where you can find information about their projects, blogs, package documentations, and so on.^[Yihui's homepage is at https://yihui.name. He writes blog posts in both Chinese (https://yihui.name/cn/) and English (https://yihui.name/en/), and documents his software packages such as **knitr** (https://yihui.name/knitr/). Occasionally he also writes articles like https://yihui.name/rlp/ when he has found interesting topics but does not bother a formal journal submission. Amber's homepage is at https://proquestionasker.github.io. Similarly, you can find her blog and project pages.] All their pages are built from **blogdown** and Hugo.
+
+```{r fig.align='center', echo=FALSE, eval=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://www.crcpress.com/product/isbn/9781138700109'}
+knitr::include_graphics('images/cover.jpg', dpi = NA)
+```
+
+The online version of this book is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+## Software information and conventions {#software-info .unnumbered}
+
+The R session information when compiling this book is shown below:
+
+```{r include=FALSE}
+requireNamespace("blogdown")
+# only show versions of very relevant packages
+sessionInfo = function() {
+  res = utils::sessionInfo()
+  loaded = res$loadedOnly
+  res$loadedOnly = loaded[intersect(names(loaded), c(
+    'blogdown', 'bookdown', 'knitr', 'rmarkdown', 'htmltools'
+  ))]
+  res
+}
+```
+
+```{r}
+sessionInfo()
+```
+
+We do not add prompts (`>` and `+`) to R source code in this book, and we comment out the text output with two hashes `##` by default, as you can see from the R session information above. This is for your convenience when you want to copy and run the code (the text output will be ignored since it is commented out). Package names are in bold text (e.g., **rmarkdown**), and inline code and filenames are formatted in a typewriter font (e.g., `knitr::knit('foo.Rmd')`). Function names are followed by parentheses (e.g., `blogdown::serve_site()`). The double-colon operator `::` means accessing an object from a package.
+
+A trailing slash often indicates a directory name, e.g., `content/` means a directory named `content` instead of a file named `content`. A leading slash in a path indicates the root directory of the website, e.g., `/static/css/style.css` means the file `static/css/style.css` under the root directory of your website project instead of your operating system.

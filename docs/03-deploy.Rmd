@@ -1,0 +1,23 @@
+# Deployment
+
+## Updog
+
+The simplest solution: store the website in Dropbox, and point Updog to the folder. Done.
+
+## Netlify + Github
+
+Precompile Rmd files, push to Github, and let Netlify build the site using Hugo and deploy.
+
+rbind
+
+## Github pages
+
+Prebuild the website to HTML, and publish the `public` folder to the `user.github.io` repo, `gh-pages` or the `docs` folder.
+
+## Travis + Github
+
+Build the website on Travis, and publish to Github automatically.
+
+## Travis + Amazon S3
+
+https://docs.travis-ci.com/user/deployment/s3/

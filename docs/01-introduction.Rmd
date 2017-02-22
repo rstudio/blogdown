@@ -1,0 +1,154 @@
+\mainmatter
+
+# Get Started
+
+In this chapter, we show how to create a simple website from scratch. The website will contain a home page, an "About" page, one R Markdown post, and a plain Markdown post. You will learn the basic concepts for creating websites with **blogdown**. For beginners, we recommend that you get started with the RStudio IDE, but it is not really required. The RStudio IDE can make a few things easier, but you are free to use any editors if you do not care about the extra benefits in RStudio.
+
+## Installation
+
+We assume you have already installed R (https://www.r-project.org) and the RStudio IDE (https://www.rstudio.com). Next we need to install the **blogdown** package in R. Currently it is only available on Github (still a beta version), and you can install it using the **devtools** package:
+
+```{r eval=FALSE}
+if (!requireNamespace("devtools")) install.packages('devtools')
+devtools::install_github('rstudio/blogdown')
+```
+
+Since **blogdown** is based on the static site generator Hugo (https://gohugo.io), you also need to install Hugo. There is a helper function in **blogdown** to download and install it automatically on major operating systems (Windows, macOS, and Linux):
+
+```{r eval=FALSE}
+blogdown::install_hugo()
+```
+
+By default, it installs the latest version of Hugo, but you can choose a specific version if you want.
+
+For macOS users, `install_hugo()` uses the package manager Homebrew (https://brew.sh), which is the recommended way to install Hugo, but if you do not prefer installing or using Homebrew, you can call `blogdown::install_hugo(use_brew = FALSE)`.^[If you are not a software developer, the benefits of Homebrew may not be so obvious.] If you have never installed Homebrew before, the installation may take one or two minutes. If the installation fails for any reason,^[One possible reason for the failure might be that you do not have Xcode Command Line Tools, and you can try the command `xcode-select --install` in the Terminal.] `install_hugo()` will automatically retry with `use_brew = FALSE`.
+
+## A quick example
+
+From our experience, Hugo's documentation may be a little daunting to read and digest for beginners.^[One day Yihui was almost ready to kill himself when he was trying to figure out how `_index.md` works by reading the documentation over and over again, and desperately searching in the Hugo forum.] For example, its "Quickstart" guide has 12 steps, and you can easily get lost if you have not used a static website generator before. For **blogdown**, we hope users of all levels can at least get started as quickly as possible. There are many things you may want to tweak for the website later, but the first step is actually fairly simple: create a new project under a new directory in the RStudio IDE (`File -> New Project`), and call the function:
+
+```{r eval=FALSE}
+blogdown::new_site()
+```
+
+Then wait for this function to create a new site, download the default theme, add some sample posts, open them, build the site, and launch it in the RStudio Viewer, so you can immediately preview it. If you do not use the RStudio IDE, you need to make sure you are currently under an empty directory,^[Check the output of `list.files('.')` in R, and make sure it does not include files other than `LICENSE`, the RStudio project file (`*.Rproj`), `README` or `README.md`.] and `new_site()` will do the same thing but the website will be launched in your web browser instead of the RStudio Viewer.
+
+Now you should see a bunch of directories and files under the RStudio project or your current working directory. Before we explain these new directories and files, let's introduce an important and helpful technology first: _LiveReload._ This means your website will be automatically rebuilt and reloaded in your web browser^[You can also think the RStudio Viewer as a web browser.] whenever you modify any source file of your website and save it. Basically once you launch the website in a web browser, you will not need to build it explicitly. All you need to do is to edit the source files, such as R Markdown documents, and there is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()` based on the R package **servr**.^[Hugo has its own LiveReload implementation, but we did not take advantage of it in **blogdown** because Hugo does not know how to compile R Markdown documents.]
+
+The `new_site()` function has several arguments, and you may check out its R help page (`?blogdown::new_site`) for details. A minimal default theme named "hugo-lithium-theme" is provided as the default theme of the new site,^[You can find its source on Github: https://github.com/yihui/hugo-lithium-theme. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.] and you can see what it looks like in Figure \@ref(fig:lithium).
+
+```{r lithium, fig.cap='The homepage of the default new site.', echo=FALSE, fig.align='center', out.width='90%'}
+knitr::include_graphics('images/lithium-theme.png')
+```
+
+You have to know three most basic concepts for a Hugo-based website:
+
+1. The configuration file `config.toml`, in which you can specify some global settings for your site. Even if you do not know what TOML is at this point (it will be introduced in Chapter \@ref(hugo)), you may still be able to change some obvious settings. For example, you may see configurations like these in `config.toml`:
+
+    ```js
+    baseurl = "/"
+    relativeurls = true
+    languageCode = "en-us"
+    title = "A Hugo website"
+    theme = "hugo-lithium-theme"
+
+    [[menu.main]]
+        name = "About"
+        url = "/about/"
+    [[menu.main]]
+        name = "GitHub"
+        url = "https://github.com/rstudio/blogdown"
+    [[menu.main]]
+        name = "Twitter"
+        url = "https://twitter.com/rstudio"
+    ```
+
+    You can change the website title, e.g., `title = "My own cool website"`, and update the Github and Twitter URLs.
+
+1. The content directory (by default, `content/`). This is where you write the R Markdown or Markdown source files for your posts and pages. Under `content/` of the default site, you can see `about.md` and a `post/` directory containing a few posts. The organization of the content directory is up to you. You can have arbitrary files and directories there, depending on the website structure you want.
+
+1. The publishing directory (by default, `public/`). Your website will be generated to this directory. Typically it contains a lot of `*.html` files and dependencies like `*.css`, `*.js`, and images. You can upload everything under `public/` to any web server that can serve static websites, and your website will be up and running. There are many options for publishing static websites, and we will talk more about them in Chapter \@ref(deployment) if you are not familiar with deploying websites.
+
+If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! 
+
+## RStudio addins
+
+There are a few essential RStudio addins to make it easy to edit and preview your website, and you can find them from the menu "Addins" on the RStudio toolbar:
+
+- "Live Preview Site": it calls `blogdown::serve_site()` to continuously serve your website locally so you can live previewing it. This function will block your R console by default, meaning you will not be able to use your R console once you start this local web server. If you do not want this behavior, set the option `options(servr.daemon = TRUE)` before you click this addin or call the function `serve_site()`, so that the server is daemonized and will not block your R console. However, please note that the daemonized server is experimental (especially for Windows users).^[If you run into problems with the daemonized server, one workaround is to call `blogdown::serve_site()` in a seperate R session, and you can preview your website in your web browser but can still edit the website in RStudio.]
+
+- "New Post": it provides a dialog box for you to enter the metadata of your blog post, including the title, author, date, and so on. See Figure \@ref(fig:new-post) for an example. This addin actually calls the function `blogdown::new_post()` under the hood, but does a few things automatically:
+
+    - As you type the title of the post, it will generate a filename for you, and you can edit it if you do not like the automatically generated one. In fact, you can also use this addin to create normal pages under any directories under `/content/`. For example, if you want to add a resume page, you can change the filename to `resume.md` from the default `post/YYYY-mm-dd-resume.md`.
+
+    - You can select the date from a calendar widget provided in Shiny.
+
+    - It will scan the categories and tags of existing posts, so when you want to input categories or tags, you can select them from the dropdown menus, or create new ones.
+    
+    - After a new post is created, it will be automatically opened, so you can start writing the content immediately.
+
+- "Update Metadata": it allows you to update the YAML metadata of the currently opened post. See Figure \@ref(fig:update-meta) for an example. The main advantage of this addin is that you can select categories and tags from dropdown menus instead of having to remember them.
+
+```{r new-post, fig.cap='Create a new post using the RStudio addin.', fig.align='center', out.width='80%', echo=FALSE}
+knitr::include_graphics('images/new-post.png')
+```
+
+```{r update-meta, fig.cap='Update the metadata of an existing post using the RStudio addin.', fig.align='center', out.width='70%', echo=FALSE}
+knitr::include_graphics('images/update-meta.png')
+```
+
+With these addins, you should rarely need to run any R commands manually after you have set up your website, since all your posts will be automatically compiled whenever you create a new post or modify an existing post due to the LiveReload feature.
+
+## Global options
+
+Depending on your personal preferences, you can set a few global options before you work on your website. These options should be set using `options(name = value)`, and currently available options are presented in Table \@ref(tab:global-options).
+
+```{r global-options, echo=FALSE}
+knitr::kable(matrix(c(
+  'servr.daemon', 'FALSE', 'whether to use a daemonized server',
+  'blogdown.author', '', 'the default author of new posts',
+  'blogdown.use.rmd', 'FALSE', 'whether to default new post format to R Markdown',
+  'blogdown.subdir', '', 'a subdirectory under /content/post/'
+), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
+```
+
+We recommend that you set these options in your R startup profile file. You can check out the help page `?Rprofile` for more details, and here is a simplified introduction. A startup profile file is basically an R script that is executed when your R session is started. This is a perfect place to set global options, so you do not need to type these options again every time you start a new R session. You can use a global profile file `~/.Rprofile`, or a per-project file `.Rprofile` under the root directory of your RStudio project. The former will be applied to all R sessions that you start, unless you have provided the latter to override it. The easiest way to create such a file is to use `file.edit()` in RStudio, e.g.,
+
+```{r eval=FALSE}
+file.edit('~/.Rprofile')
+```
+
+Suppose you always prefer the daemonized server, and want the author of new posts to be "John Doe" by default, you can set these options in the profile file:
+
+```{r eval=FALSE}
+options(servr.daemon = TRUE, blogdown.author = 'John Doe')
+```
+
+A nice consequence of setting these options is that when you use the RStudio addin "New Post", the fields "Author", "Subdirectory", and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
+
+## Other themes
+
+In the beginning, you will probably spend much time on looking for a Hugo theme that you like from the collection listed at http://themes.gohugo.io, if you care a lot about the appearance of your website. Please note that not all themes have been tested against **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason.
+
+After you have found a satisfactory theme, you need to figure out its Github user name and repository name, then either install the theme via `blogdown::install_theme()`, or just create a new site under another new directory and pass the Github repository name to the `theme` argument of `new_site()`. We recommend that you use the second approach, because Hugo themes could be very complicated and the usage of each theme can be very different and highly dependent on `config.toml`. If you use `new_site()` instead of `install_theme()`, the default example `config.toml` of the theme will be copied to the root directory of your website, so you can edit it immediately, otherwise you will have to read the documentation of the theme carefully to know how to properly write a `config.toml` by yourself. To save you some time, we list a few themes below that match our taste:
+
+- Simple/minimal themes: [simple-a](https://github.com/AlexFinn/simple-a), and [ghostwriter](https://github.com/jbub/ghostwriter).
+
+- Sophisticated themes: [hugo-academic](https://github.com/gcushen/hugo-academic) (strongly recommended for users in academia), [hugo-future-imperfect](https://github.com/jpescador/hugo-future-imperfect), and [hugo-tranquilpeak-theme](https://github.com/kakawait/hugo-tranquilpeak-theme).
+
+    ```{r eval=FALSE}
+    # for example, create a new site with the academic theme
+    blogdown::new_site(theme = 'gcushen/hugo-academic')
+    ```
+
+If you do not understand HTML, CSS, or JavaScript, and have no experience with Hugo themes or templates, it may take you about 10 minutes to get started with your new website, since you can basically accept everything you are given (such as the default theme). If you do have the knowledge and experience, it may take you several days to get started. Hugo is really powerful. Be cautious with power.
+
+## Different rendering methods {#methods}
+
+`blogdown::build_site()`
+
+`html`
+
+`html_raw`
+
+`custom`

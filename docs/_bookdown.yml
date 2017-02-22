@@ -1,0 +1,10 @@
+book_filename: blogdown
+repo: https://github.com/rstudio/blogdown/
+output_dir: _book
+clean: [packages.bib, blogdown.bbl]
+language:
+  label:
+    fig: "FIGURE "
+    tab: "TABLE "
+  ui:
+    chapter_name: "Chapter "

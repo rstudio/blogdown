@@ -1,0 +1,55 @@
+# Hugo
+
+What is a static site generator?
+
+What is Hugo?
+
+Why Hugo?
+
+- fast
+- easy to install (single binary)
+- a big community (Github)
+
+Although we think Hugo is a fantastic static site generator, there is really one and only one important but missing feature: the support for R Markdown. That is basically the whole point of the **blogdown** package. This missing feature means that you cannot easily generate results using R code on your web pages, since you can only use static Markdown documents. Besides, you have to use Hugo's choice of the Markdown engine named "Blackfriday" instead of the more powerful Pandoc.^[There is a feature request in Hugo's repository that has been three years old: https://github.com/spf13/hugo/issues/234, and it seems that it will not be implemented in the near future.]
+
+What does a typical file and directory structure look like?
+
+- config.toml
+- content
+- static
+- themes
+- layouts
+
+## Configuration
+
+## Content
+
+### YAML metadata
+
+### Differences between Markdown and R Markdown
+
+Blackfriday vs Pandoc
+
+## Themes
+
+### The default theme
+
+### A few examples
+
+### Managing themes
+
+```bash
+git submodule add \
+  https://github.com/yihui/hugo-lithium-theme.git \
+  themes/hugo-lithium-theme
+git submodule foreach git pull origin master
+```
+
+### Creating a theme
+
+## Custom layouts
+
+## Static files
+
+## Other directories
+

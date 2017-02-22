@@ -1,0 +1,11 @@
+# Other Generators
+
+custom build `blogdown::build_site(method = "custom")`
+
+## Jekyll
+
+## Hexo
+
+## Default site generator in rmarkdown {#rmd-website}
+
+`rmarkdown::default_site()`
