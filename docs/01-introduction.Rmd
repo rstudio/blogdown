@@ -108,7 +108,8 @@ knitr::kable(matrix(c(
   'servr.daemon', 'FALSE', 'whether to use a daemonized server',
   'blogdown.author', '', 'the default author of new posts',
   'blogdown.use.rmd', 'FALSE', 'default new post format to R Markdown?',
-  'blogdown.subdir', '', 'a subdirectory under /content/post/'
+  'blogdown.subdir', '', 'a subdirectory under /content/post/',
+  'blogdown.method', 'html', 'the rendering method for R Markdown'
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
 ```
 
@@ -125,6 +126,8 @@ options(servr.daemon = TRUE, blogdown.author = 'John Doe')
 ```
 
 A nice consequence of setting these options is that when you use the RStudio addin "New Post", the fields "Author", "Subdirectory", and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
+
+The option `blogdown.method` is explained in Section \@ref(methods).
 
 ## R Markdown vs Markdown {#output-format}
 
@@ -187,7 +190,11 @@ At the moment, not all features of `rmarkdown::html_document` are supported in *
 
 ## Different rendering methods {#methods}
 
-`blogdown::build_site()`
+If your website does not contain any Rmd files, it is very straightforward to render it --- just a system call to the `hugo` command. When your website contains Rmd files, **blogdown** has provided three different rendering methods to compile these Rmd files. A website can be built using the function `blogdown::build_site()`:
+
+```{r eval=FALSE, code=formatR::usage(blogdown::build_site, output=FALSE)}
+```
+
 
 `html`
 
