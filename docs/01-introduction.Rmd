@@ -126,6 +126,75 @@ options(servr.daemon = TRUE, blogdown.author = 'John Doe')
 
 A nice consequence of setting these options is that when you use the RStudio addin "New Post", the fields "Author", "Subdirectory", and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
 
+## R Markdown vs Markdown {#output-format}
+
+When you create a new post, you have to decide whether you want to use R Markdown or plain Markdown, as you can see from Figure \@ref(fig:new-post). The main differences are:
+
+1. You cannot execute any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```` ```{r} ````). However, you can still embed R code in plain Markdown using the syntax for fenced code blocks ```` ```r ```` (note there are no curly braces `{}`). Such code blocks will not be executed, and may be suitable for pure demonstration purposes. Below is an example of an R code chunk in R Markdown:
+
+
+    ````markdown
+    `r ''````{r cool-plot, fig.width='80%', fig.cap='A cool plot.'}
+    plot(cars, pch = 20)  # not really cool
+    ```
+    ````
+    
+    And here is an example of an R code block in plain Markdown:
+    
+    ````markdown
+    ```r
+    1 + 1  # not executed
+    ```
+    ````
+
+2. A plain Markdown post is rendered to HTML through [Blackfriday](https://gohugo.io/overview/configuration/) (a package written in the Go language and adopted by Hugo), and an R Markdown document is compiled through the **rmarkdown** package and Pandoc.
+
+There are many differences in syntax between Blackfriday's Markdown and Pandoc's Markdown. For example, you can write a task list with Blackfriday but not with Pandoc:
+
+```markdown
+- [x] Write an R package.
+- [ ] Write a book.
+- [ ] ...
+- [ ] Profit!
+```
+
+Similarly, Blackfriday does not support LaTeX math and Pandoc does. We have added the MathJax support to the default theme ([hugo-lithium-theme](https://github.com/yihui/hugo-lithium-theme)) in **blogdown** to render LaTeX math on HTML pages, but there is a caveat for plain Markdown posts: you have to include inline math expressions in a pair of escaped parentheses inside a pair of backticks `` `\(math\)` ``, e.g., `` `\(S_n = \sum_{i=1}^n X_i\)` ``. Math expressions of the display style have to be written in `` `$$math$$` ``. For R Markdown posts, you can use `$math$` for inline math expressions, and `$$math$$` for display-style expressions.^[The reason that we need the backticks for plain Markdown documents is that we have to prevent the LaTeX code from being interpreted as Markdown. Backticks will make sure the inner content is not translated to HTML, e.g., `` `$$x *y* z$$` `` will be converted to `<code>$$x *y* z$$</code>`. Without the backticks, it will be converted to `$$x <em>y</em> z$$`, which is not a valid LaTeX math expressions for MathJax. Similar issues can arise when you have other special characters like underscores in your math expressions.]
+
+If you find it is pain to have to remember the differences between R Markdown and Markdown, a conservative choice is to always use R Markdown, even if your document does not contain any R code chunks. Pandoc's Markdown is much richer than Blackfriday, and there are only a small number of features unavailable in Pandoc but present in Blackfriday. The main disadvantages of using R Markdown are:
+
+1. You may sacrafice some speed in rendering the website, but this may not be noticeable due to a caching mechanism in **blogdown** (more on this in Section \@ref(methods)). Hugo is very fast when processing plain Markdown files, and typically it should take less than one second to render a few hundreds Markdown files.
+
+1. You may have some intermediate HTML files in the source directory of your website, because **blogdown** has to call **rmarkdown** to pre-render `*.Rmd` files `*.html`. You will also have intermediate folders for figures (`*_files/`) and cache (`*_cache/`) if you have plot output in R code chunks or have enabled **knitr**'s caching. Unless you care a lot about the "cleanness" of the source repository of your website (especially when you use a version control tool like GIT), these intermediate files should not matter.
+
+For any R Markdown documents (not specific to **blogdown**), you have to specify an output format. There are many possible output formats in the **rmarkdown** package (such as `html_document` and `pdf_document`) and other extension packages (such as `tufte::tufte_html` and `bookdown::gitbook`). Of course, the output format for websites should be HTML. We have provided an output format function `blogdown::html_page` in **blogdown**, and all R Markdown files are rendered using this format. It is based on the output format `bookdown::html_document2`, which means it has inheritted a lot of features from **bookdown** in additional to features in Pandoc. For example, you can number and cross-reference math equations, figures, tables, and theorems, etc. See @xie2016 for more details on the syntax.
+
+Note that the output format `bookdown::html_document2` in turn inherits from `rmarkdown::html_document`, so you need to see the help page `?rmarkdown::html_document` for all possible options for the format `blogdown::html_page`. If you want to change the default values of the options of this output format, you can add an `output` field to your YAML metadata. For example, we can add a table of contents to a page, set the figure width to be 6 inches, and use the `svg` device for plots by setting these options in YAML:
+
+```yaml
+---
+title: "My Awesome Post"
+author: "John Doe"
+date: "2017-02-14"
+output:
+  blogdown::html_page:
+    toc: true
+    fig_width: 6
+    dev: "svg"
+---
+```
+
+At the moment, not all features of `rmarkdown::html_document` are supported in **blogdown**, such as `df_print`, `code_folding`, `code_download`, `theme`, `highlight`,^[Syntax highlighting can be added through the JavaScript highlight.js. See \@ref(how-to) for details.] and so on.
+
+## Different rendering methods {#methods}
+
+`blogdown::build_site()`
+
+`html`
+
+`html_raw`
+
+`custom`
+
 ## Other themes
 
 In the beginning, you will probably spend much time on looking for a Hugo theme that you like from the collection listed at http://themes.gohugo.io, if you care a lot about the appearance of your website. Please note that not all themes have been tested against **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason.
@@ -142,17 +211,3 @@ After you have found a satisfactory theme, you need to figure out its Github use
     ```
 
 If you do not understand HTML, CSS, or JavaScript, and have no experience with Hugo themes or templates, it may take you about 10 minutes to get started with your new website, since you can basically accept everything you are given (such as the default theme). If you do have the knowledge and experience, it may take you several days to get started. Hugo is really powerful. Be cautious with power.
-
-## The R Markdown output format {#output-format}
-
-`blogdown::html_page`
-
-## Different rendering methods {#methods}
-
-`blogdown::build_site()`
-
-`html`
-
-`html_raw`
-
-`custom`
