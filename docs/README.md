@@ -1,0 +1,3 @@
+To compile this book, open `index.Rmd` in the RStudio IDE, install the **blogdown** package from Github, and click the RStudio Addin "Preview Book". You should be able to preview the HTML version of the book.
+
+It is trickier to compile it to PDF. You need to install LaTeX. Then download and install three fonts from [Google Fonts](https://fonts.google.com/?query=source&selection.family=Alegreya|Alegreya+SC|Source+Code+Pro): Alegreya, Alegreya SC, and Source Code Pro. Run `make pdf` (if `make` is available) or `Rscript _render.R "bookdown::pdf_book"` in the `docs/` directory. Install LaTeX packages if missing. Run `sudo tlmgr update --all --self && sudo fmtutil-sys --all` if you see other problems. If these two steps do not fix the problem, please let Yihui know.
