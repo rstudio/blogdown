@@ -12,7 +12,16 @@
 \renewcommand{\bottomfraction}{0.8}
 \renewcommand{\floatpagefraction}{0.75}
 
-\renewcommand{\textquotesingle}{'}
+\DeclareTextSymbol{\textquotesingle}     \UnicodeEncodingName{"0027}
+\DeclareTextSymbol{\textasciigrave}     \UnicodeEncodingName{"0060}
+\let\OldCircum\^
+\def\^#1{%
+  \ifx\relax#1\relax
+    \textasciicircum
+  \else
+    \OldCircum#1%
+  \fi
+}
 
 \renewenvironment{quote}{\begin{VF}}{\end{VF}}
 \let\oldhref\href
