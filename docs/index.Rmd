@@ -33,6 +33,8 @@ lapply(c(), function(pkg) {
 
 # Preface {-}
 
+> **WARNING**: this book is still under development. It will be updated from day to day. The **blogdown** package is still a beta version, so please use both the package and this book with caution until this warning is removed. We will try not to introduce breaking changes in **blogdown** from now on, but there is no guarantee.
+
 In the summer of 2012, the first author of this book (Yihui) did his internship at the AT&T Labs Research, where he attended a talk given by Carlos Scheidegger (https://cscheid.net), and Carlos said something along the lines "if you don't have a website nowadays, you don't exist." Later Yihui paraphrased it as:
 
 > "I web, therefore I am ~~a spiderman~~."
