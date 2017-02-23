@@ -22,13 +22,18 @@ What does a typical file and directory structure look like?
 
 ## Configuration
 
+TOML syntax
+
 ## Content
 
 ### YAML metadata
 
-### Differences between Markdown and R Markdown
 
-Blackfriday vs Pandoc
+### Body
+
+See Section \@ref(output-formats) for differences between R Markdown and plain Markdown.
+
+shortcode
 
 ## Themes
 
@@ -45,11 +50,25 @@ git submodule add \
 git submodule foreach git pull origin master
 ```
 
-### Creating a theme
+## Templates
+
+### A minimal example
+
+### How-to
+
+syntax highlighting via highlight.js
+
+math support through MathJax
+
+the edit button
 
 ## Custom layouts
 
+override a subset of files in the theme
+
 ## Static files
+
+copied to `public/`
 
 ## Other directories
 
