@@ -85,7 +85,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
     lib2[i] = gsub('^blogdown', 'static', lib2[i])  # _files are copied to /static
   }
   # TODO: it may be faster to file.rename() than file.copy()
-  for (i in seq_along(lib2)) if (file.exists(lib2[i])) {
+  for (i in seq_along(lib2)) if (file_exists(lib2[i])) {
     file.rename(lib2[i], lib1[i])
   } else dir_copy(lib2[i], lib1[i])
 
@@ -108,7 +108,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
   if (!raw) {
     root = getwd()
     in_dir(publish_dir(config), process_pages(local, root))
-    i = file_test('-f', lib1)
+    i = file_exists(lib1)
     lapply(unique(dirname(lib2[i])), dir_create)
     file.rename(lib1[i], lib2[i])  # use file.rename() to preserve mtime of .html
   }

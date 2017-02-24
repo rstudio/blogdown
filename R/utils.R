@@ -34,6 +34,9 @@ file.copy2 = function(from, to, ...) {
   } else mapply(file.copy, from, to, ...)
 }
 
+# make sure it is a file instead of an existing dir
+file_exists = function(x) file_test('-f', x)
+
 dir_copy = function(from, to) {
   if (dir_exists(from)) {
     dir_create(dirname(to))
@@ -89,10 +92,10 @@ load_config = function() {
 
   find_config()
 
-  if (file.exists('config.yaml'))
+  if (file_exists('config.yaml'))
     return(read_config('config.yaml', yaml::yaml.load_file))
 
-  if (file.exists('config.toml'))
+  if (file_exists('config.toml'))
     return(read_config('config.toml', parse_toml))
 }
 
@@ -167,7 +170,7 @@ post_slug = function(x) {
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)
 
 run_script = function(script, ...) {
-  if (file.exists(script) && Rscript(c(shQuote(script), ...)) != 0)
+  if (file_exists(script) && Rscript(c(shQuote(script), ...)) != 0)
     stop('Failed to run ', script)
 }
 
