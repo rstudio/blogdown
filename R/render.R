@@ -6,24 +6,24 @@
 #' You can use \code{\link{serve_site}()} to preview your website locally, and
 #' \code{build_site()} to build the site for publishing.
 #'
-#' For the \code{method} argument: \code{method = "html"} means to render all
-#' Rmd files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which
-#' means Markdown is processed through Pandoc), copy all external dependencies
-#' generated from R code chunks, including images and HTML dependencies, to the
-#' website output directory (e.g. \file{public/}), and fix their paths in the
-#' HTML output because the relative locations of the \file{.html} file and its
-#' dependencies may have changed.
+#' For the \code{method} argument: \code{method = "html_encoded"} means to
+#' render all Rmd files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()}
+#' (which means Markdown is processed through Pandoc), copy all external
+#' dependencies generated from R code chunks, including images and HTML
+#' dependencies, to the website output directory (e.g. \file{public/}), and fix
+#' their paths in the HTML output because the relative locations of the
+#' \file{.html} file and its dependencies may have changed.
 #'
-#' \code{method = "html_raw"} is similar to \code{method = "html"}, and the
+#' \code{method = "html"} is similar to \code{method = "html_encoded"}, and the
 #' major differences are: (1) the HTML files under the \file{public} directory
 #' are not post-processed to fix image or dependency paths (so it is faster to
-#' build a site); (2) the \code{"html"} method moves all output files from the
-#' \file{content} directory to the \file{blogdown} directory to keep the
-#' \file{content} directory clean, so you won't see files or directories like
-#' \code{foo.html}, \code{foo_files/}, or \code{foo_cache/}, whereas the
-#' \code{"html_raw"} method does not move any \code{*.html} files (only
+#' build a site); (2) the \code{"html_encoded"} method moves all output files
+#' from the \file{content} directory to the \file{blogdown} directory to keep
+#' the \file{content} directory clean, so you won't see files or directories
+#' like \code{foo.html}, \code{foo_files/}, or \code{foo_cache/}, whereas the
+#' \code{"html"} method does not move any \code{*.html} files (only
 #' \code{*_files/} and \code{*_cache/} directories are moved). HTML widgets may
-#' not work well when \code{method = 'html_raw'}.
+#' not work well when \code{method = 'html'}.
 #'
 #' For all rendering methods, a custom R script \file{R/build.R} will be
 #' executed if you have provided it under the root directory of the website
@@ -40,7 +40,7 @@
 #' @param method Different methods to build a website (each with pros and cons).
 #'   See Details. The value of this argument will be obtained from the global
 #'   option \code{getOption('blogdown.method')} when it is set.
-#' @note For \code{method = "html"}, when \code{local = TRUE}, the site
+#' @note For \code{method = "html_encoded"}, when \code{local = TRUE}, the site
 #'   configurations \code{baseurl} will be set to \code{/} temporarily, and RSS
 #'   feeds (typically the files named \code{index.xml} under the \file{public}
 #'   directory) will not be post-processed to save time, which means if you have
@@ -49,7 +49,7 @@
 #'   not care about RSS feeds. To build a website for production, you should
 #'   always call \code{build_site(local = FALSE)}.
 #' @export
-build_site = function(local = FALSE, method = c('html', 'html_raw', 'custom')) {
+build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom')) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
 
@@ -66,12 +66,13 @@ build_site = function(local = FALSE, method = c('html', 'html_raw', 'custom')) {
   run_script('R/build.R', as.character(local))
 
   if (method != 'custom') {
-    build_rmds(files, config, local, method == 'html_raw')
+    build_rmds(files, config, local, method == 'html')
   }
 
   invisible()
 }
 
+# raw indicates paths of dependencies are not encoded in the HTML output
 build_rmds = function(files, config, local, raw = FALSE) {
   if (length(files) == 0) return(hugo_build(local, config))
 
@@ -102,7 +103,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
   })
 
   # copy (new) by-products from /content/ to /blogdown/ or /static to make the
-  # source directory clean (e.g. only .Rmd stays there when method = 'html')
+  # source directory clean (e.g. only .Rmd stays there when method = 'html_encoded')
   for (i in seq_along(lib1)) if (dir_exists(lib1[i])) {
     dir_create(dirname(lib2[i]))
     file.copy(lib1[i], dirname(lib2[i]), recursive = TRUE)
@@ -124,10 +125,10 @@ render_page = function(input) {
   if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
 }
 
-# given the content of a .html file: (1) if method = 'html', encode the figure
-# paths (to be restored later), and other dependencies will be moved to
-# /public/rmarkdown-libs/; (2) if method = 'html_raw', replace content/*_files/
-# with /*_files/ since these dirs have been moved to /static/
+# given the content of a .html file: (1) if method = 'html_encoded', encode the
+# figure paths (to be restored later), and other dependencies will be moved to
+# /public/rmarkdown-libs/; (2) if method = 'html', replace content/*_files/ with
+# /*_files/ since these dirs have been moved to /static/
 encode_paths = function(x, deps, parent, raw) {
   if (!dir_exists(deps)) return(x)
   # find the dependencies referenced in HTML, add a marker ##### to their paths
