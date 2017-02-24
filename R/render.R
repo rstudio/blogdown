@@ -102,7 +102,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
 
   # copy (new) by-products from /content/ to /blogdown/ or /static to make the
   # source directory clean (e.g. only .Rmd stays there when method = 'html_encoded')
-  for (i in seq_along(lib1)) dir_copy(lib1[i], lib2[i])
+  dirs_copy(lib1, lib2)
 
   hugo_build(local, config)
   if (!raw) {

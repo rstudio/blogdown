@@ -44,6 +44,14 @@ dir_copy = function(from, to) {
   }
 }
 
+dirs_copy = function(from, to) {
+  n = length(from); if (n == 0) return()
+  if (length(to) != n) stop(
+    'The number of source dirs must be equal to the number of target dirs'
+  )
+  for (i in seq_len(n)) dir_copy(from[i], to[i])
+}
+
 is_windows = function() .Platform$OS.type == 'windows'
 is_osx = function() Sys.info()[['sysname']] == 'Darwin'
 is_linux = function() Sys.info()[['sysname']] == 'Linux'
