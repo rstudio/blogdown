@@ -34,6 +34,13 @@ file.copy2 = function(from, to, ...) {
   } else mapply(file.copy, from, to, ...)
 }
 
+dir_copy = function(from, to) {
+  if (dir_exists(from)) {
+    dir_create(dirname(to))
+    file.copy(from, dirname(to), recursive = TRUE)
+  }
+}
+
 is_windows = function() .Platform$OS.type == 'windows'
 is_osx = function() Sys.info()[['sysname']] == 'Darwin'
 is_linux = function() Sys.info()[['sysname']] == 'Linux'

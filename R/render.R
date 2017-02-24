@@ -85,11 +85,9 @@ build_rmds = function(files, config, local, raw = FALSE) {
     lib2[i] = gsub('^blogdown', 'static', lib2[i])  # _files are copied to /static
   }
   # TODO: it may be faster to file.rename() than file.copy()
-  for (i in seq_along(lib2)) if (dir_exists(lib2[i])) {
-    file.copy(lib2[i], dirname(lib1[i]), recursive = TRUE)
-  } else if (file.exists(lib2[i])) {
+  for (i in seq_along(lib2)) if (file.exists(lib2[i])) {
     file.rename(lib2[i], lib1[i])
-  }
+  } else dir_copy(lib2[i], lib1[i])
 
   for (f in files) in_dir(d <- dirname(f), {
     f = basename(f)
@@ -104,10 +102,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
 
   # copy (new) by-products from /content/ to /blogdown/ or /static to make the
   # source directory clean (e.g. only .Rmd stays there when method = 'html_encoded')
-  for (i in seq_along(lib1)) if (dir_exists(lib1[i])) {
-    dir_create(dirname(lib2[i]))
-    file.copy(lib1[i], dirname(lib2[i]), recursive = TRUE)
-  }
+  for (i in seq_along(lib1)) dir_copy(lib1[i], lib2[i])
 
   hugo_build(local, config)
   if (!raw) {
