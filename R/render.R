@@ -89,6 +89,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
     file.rename(lib2[i], lib1[i])
   } else dir_copy(lib2[i], lib1[i])
 
+  root = getwd()
   for (f in files) in_dir(d <- dirname(f), {
     f = basename(f)
     html = with_ext(f, 'html')
@@ -96,7 +97,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
     if (local && file_test('-nt', html, f)) next
     render_page(f)
     x = readUTF8(html)
-    x = encode_paths(x, by_products(f, '_files'), d, raw)
+    x = encode_paths(x, by_products(f, '_files'), d, raw, root)
     writeUTF8(c(fetch_yaml2(f), '', x), html)
   })
 
@@ -106,7 +107,6 @@ build_rmds = function(files, config, local, raw = FALSE) {
 
   hugo_build(local, config)
   if (!raw) {
-    root = getwd()
     in_dir(publish_dir(config), process_pages(local, root))
     i = file_exists(lib1)
     lapply(unique(dirname(lib2[i])), dir_create)
@@ -122,17 +122,36 @@ render_page = function(input) {
 
 # given the content of a .html file: (1) if method = 'html_encoded', encode the
 # figure paths (to be restored later), and other dependencies will be moved to
-# /public/rmarkdown-libs/; (2) if method = 'html', replace content/*_files/ with
-# /*_files/ since these dirs have been moved to /static/
-encode_paths = function(x, deps, parent, raw) {
+# /public/rmarkdown-libs/; (2) if method = 'html', replace
+# content/*_files/figure-html with /*_files/figure-html since this dir will be
+# moved to /static/, and move the rest of dirs under content/*_files/ to
+# /static/rmarkdown-libs/ (HTML dependencies), so all posts share the same libs
+# (otherwise each post has its own dependencies, and there will be a lot of
+# duplicated libs when HTML widgets are used extensively in a website)
+
+# example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
+# parent = 'content/post'; root = ~/Websites/Frida/
+encode_paths = function(x, deps, parent, raw = TRUE, root) {
   if (!dir_exists(deps)) return(x)
   # find the dependencies referenced in HTML, add a marker ##### to their paths
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
-  x = if (raw) {
-    gsub(r, paste0('\\1\\2', gsub('^content', '', parent), '/\\3'), x)
-  } else {
-    gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x)
-  }
+  if (!raw) return(gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x))
+
+  # remove special tokens
+  i = grep('<!-- /?BLOGDOWN-(HEAD|BODY-BEFORE) -->', x)
+  if (length(i)) x = x[-i]
+  # move figures to /static/path/to/post/foo_files/figure-html
+  r1 = paste0(r, '(figure-html/)')
+  x = gsub(r1, paste0('\\1\\2', gsub('^content', '', parent), '/\\3\\4'), x)
+  # move other HTML dependencies to /static/rmarkdown-libs/
+  r2 = paste0(r, '([^/]+)/')
+  x2 = grep(r2, x, value = TRUE)
+  if (length(x2) == 0) return(x)
+  libs = unique(gsub(r2, '\\3\\4', unlist(regmatches(x2, gregexpr(r2, x2)))))
+  x = gsub(r2, '\\1\\2/rmarkdown-libs/\\4/', x)
+  to = file.path(root, 'static', 'rmarkdown-libs', basename(libs))
+  dirs_copy(libs, to)
+  unlink(libs, recursive = TRUE)
   x
 }
 
