@@ -119,15 +119,12 @@ bin_paths = function(dir = 'Hugo') {
 
 # find an executable from PATH, APPDATA, system.file(), ~/bin, etc
 find_exec = function(cmd, dir, info = '') {
-  path = Sys.which(cmd)
-  if (path != "") return(path)
-
   for (d in bin_paths(dir)) {
     exec = if (is_windows()) paste0(cmd, ".exe") else cmd
     path = file.path(d, exec)
     if (utils::file_test("-x", path)) break else path = ''
   }
-
+  if (path == '') path = Sys.which(cmd)
   if (path == '') stop(
     cmd, ' not found. ', info, call. = FALSE
   )
