@@ -109,14 +109,15 @@ knitr::kable(matrix(c(
   'blogdown.author', '', 'the default author of new posts',
   'blogdown.use.rmd', 'FALSE', 'default new post format to R Markdown?',
   'blogdown.subdir', '', 'a subdirectory under /content/post/',
-  'blogdown.method', 'html', 'the rendering method for R Markdown'
+  'blogdown.method', 'html', 'the building method for R Markdown'
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
 ```
 
-We recommend that you set these options in your R startup profile file. You can check out the help page `?Rprofile` for more details, and here is a simplified introduction. A startup profile file is basically an R script that is executed when your R session is started. This is a perfect place to set global options, so you do not need to type these options again every time you start a new R session. You can use a global profile file `~/.Rprofile`, or a per-project file `.Rprofile` under the root directory of your RStudio project. The former will be applied to all R sessions that you start, unless you have provided the latter to override it. The easiest way to create such a file is to use `file.edit()` in RStudio, e.g.,
+We recommend that you set these options in your R startup profile file. You can check out the help page `?Rprofile` for more details, and here is a simplified introduction. A startup profile file is basically an R script that is executed when your R session is started. This is a perfect place to set global options, so you do not need to type these options again every time you start a new R session. You can use a global profile file `~/.Rprofile`,^[The tilde `~` denotes your home directory in your system.] or a per-project file `.Rprofile` under the root directory of your RStudio project. The former will be applied to all R sessions that you start, unless you have provided the latter to override it. The easiest way to create such a file is to use `file.edit()` in RStudio, e.g.,
 
 ```{r eval=FALSE}
 file.edit('~/.Rprofile')
+# or file.edit('.Rprofile')
 ```
 
 Suppose you always prefer the daemonized server, and want the author of new posts to be "John Doe" by default, you can set these options in the profile file:
@@ -169,7 +170,7 @@ If you find it is pain to have to remember the differences between R Markdown an
 
 1. You may have some intermediate HTML files in the source directory of your website, because **blogdown** has to call **rmarkdown** to pre-render `*.Rmd` files `*.html`. You will also have intermediate folders for figures (`*_files/`) and cache (`*_cache/`) if you have plot output in R code chunks or have enabled **knitr**'s caching. Unless you care a lot about the "cleanness" of the source repository of your website (especially when you use a version control tool like GIT), these intermediate files should not matter.
 
-For any R Markdown documents (not specific to **blogdown**), you have to specify an output format. There are many possible output formats in the **rmarkdown** package (such as `html_document` and `pdf_document`) and other extension packages (such as `tufte::tufte_html` and `bookdown::gitbook`). Of course, the output format for websites should be HTML. We have provided an output format function `blogdown::html_page` in **blogdown**, and all R Markdown files are rendered using this format. It is based on the output format `bookdown::html_document2`, which means it has inheritted a lot of features from **bookdown** in additional to features in Pandoc. For example, you can number and cross-reference math equations, figures, tables, and theorems, etc. See @xie2016 for more details on the syntax.
+For any R Markdown documents (not specific to **blogdown**), you have to specify an output format. There are many possible output formats in the **rmarkdown** package (such as `html_document` and `pdf_document`) and other extension packages (such as `tufte::tufte_html` and `bookdown::gitbook`). Of course, the output format for websites should be HTML. We have provided an output format function `blogdown::html_page` in **blogdown**, and all R Markdown files are rendered using this format. It is based on the output format `bookdown::html_document2`, which means it has inheritted a lot of features from **bookdown** in additional to features in Pandoc. For example, you can number and cross-reference math equations, figures, tables, and theorems, etc. See Chapter 2 of the **bookdown** book [@xie2016] for more details on the syntax.
 
 Note that the output format `bookdown::html_document2` in turn inherits from `rmarkdown::html_document`, so you need to see the help page `?rmarkdown::html_document` for all possible options for the format `blogdown::html_page`. If you want to change the default values of the options of this output format, you can add an `output` field to your YAML metadata. For example, we can add a table of contents to a page, set the figure width to be 6 inches, and use the `svg` device for plots by setting these options in YAML:
 
@@ -188,25 +189,68 @@ output:
 
 At the moment, not all features of `rmarkdown::html_document` are supported in **blogdown**, such as `df_print`, `code_folding`, `code_download`, `theme`, `highlight`,^[Syntax highlighting can be added through the JavaScript highlight.js. See \@ref(how-to) for details.] and so on.
 
-## Different rendering methods {#methods}
+If your code chunk has graphics output, we recommend that you avoid special characters like spaces in the chunk label. Ideally, you should only use alphanumeric characters and dashes, e.g., ```` ```{r, my-label}```` instead of ```` ```{r, my label}````.
+
+## Different building methods {#methods}
 
 If your website does not contain any Rmd files, it is very straightforward to render it --- just a system call to the `hugo` command. When your website contains Rmd files, **blogdown** has provided three different rendering methods to compile these Rmd files. A website can be built using the function `blogdown::build_site()`:
 
 ```{r eval=FALSE, code=formatR::usage(blogdown::build_site, output=FALSE)}
 ```
 
+As mentioned in Section \@ref(global-options), the default value of the `method` argument is determined by the global option `blogdown.method`, and you can set this option in `.Rprofile`.
 
-`html`
+Both `html` and `html_encoded` use `rmarkdown::render()` to render Rmd files to HTML, and the technical differences between them are:
 
-`html_raw`
+1. `method = 'html'` renders `*.Rmd` to `*.html`, and keeps the `*.html` output file under the same directory as `*.Rmd`; `method = 'html_encoded'` will move `*.html` to the directory `/blogdown/`.
 
-`custom`
+1. An Rmd file may generate two directories for figures (`*_files/`) and cache (`*_cache/`), respectively, if you have plot output or HTML widgets [@R-htmlwidgets] in your R code chunks, or enabled the chunk option `cache = TRUE` for caching. In the figure directory, there will be a subdirectory `figure-html/` that contains your plot output files, and possibly other subdirectories containing HTML dependencies from HTML widgets (e.g., `jquery/`). For `method = 'html'`, it moves the figure directory to `/static/`, and the cache directory to `/blogdown/`. For `method = 'html_encoded'`, all output files and directories are moved to `/blogdown/`, including figures, cache, and `*.html`.
+
+1. The name of the method `'html_encoded'` comes from the fact that the paths of R plot files and HTML widgets are first encoded in the `*.html` output, then Hugo is called to build the website, and finally all HTML files under the `/public/` directory are post-processed to decode the paths. The main reason for this trouble is that it is not easy to predict where a certain page will be rendered in the `/public/` directory,^[For example, a source file `/content/about.md` may be rendered to `/public/about/index.html`, and `/content/post/2017-02-14-hello.Rmd` could be rendered to `/public/2017/02/14/hello/index.html` (the content of the post could also be used in `/public/categories/index.html`). It dependes on the rules for permanent links you set for Hugo.] so the relative paths of figures and widgets may fail to work after a site is rendered, and they need to be resolved by post-processing. By comparison, `method = 'html'` does not need post-processing due to the fact that the relative paths will be resolved to absolute paths at the pre-processing stage.
+
+We must have successfully confused you now, but do not worry. You do not have to understand these technical details, unless you want to help us with hacking. For an average user, you only need to know the pros and cons of the two methods.
+
+- For `method = 'html'`:
+
+    - Your `/content/` directory may not be completely clean, since it also contains `*.html` files.
+    
+    - If you use HTML widgets in Rmd, the HTML pages may not conform to W3C standards,^[W3C stands for World Wide Web Consortium: https://www.w3.org. In case you are really curious: the problem with `method = 'html'` for HTML widgets is that CSS styles may be declared in the `<body>` tag.] but the widgets will be most likely to work well anyway.
+    
+    - If your website is supposed to be placed in a subdirectory under a domain name (e.g., `http://example.com/my-project/`) when it is published, you must use `relativeurls = true` in `config.toml`.
+    
+    - Besides these relatively minor disadvantages, the major advantage of `method = 'html'` is that your website is ready to be compiled by Hugo _alone_ after you have compiled it through **blogdown** once, because there is no need to use R or **blogdown** to post-process the website like `method = 'html_encoded'`. This advantage gives you the freedom to use deploying services like Netlify (Chapter \@ref(deployment)), where neither R nor **blogdown** is not available, but Hugo is. It is also much faster than `'html_encoded'.`
+
+- For `method = 'html_encoded'`:
+
+    - Your `/content/` directory is free of output files.
+    
+    - The HTML files under `/public/` should conform to standards.
+    
+    - There is no need to adjust the `relativeurls` option.
+    
+    - The disadvantages are: rendering the website is dependent on **blogdown** all the time, and it is relatively slow.^[It should not be too bad. Typically a website can be rendered in a few seconds.]
+
+There is a caching mechanism in `build_site()` to speed up building your website: an Rmd file will not be recompiled when its `*.html` output file is newer (this test is done through comparing file modification times). If you want to force `build_site()` to recompile the Rmd file even if it is older than the HTML output, you need to delete the HTML output, or edit the Rmd file.
+
+No matter which method you choose to use, `build_site()` will always look for an R script `/R/build.R` and execute it if it exists. This gives you the complete freedom to do anything you want for the website. For example, you can call `knitr::knit()` to compile Rmd to Markdown (`*.md`) in this R script instead of using `rmarkdown::render()`. This feature is designed for advanced users who are really familiar with the **knitr** package^[Honestly, it was originally designed for Yihui himself to build his own website, but he realized this feature could actually free users from Hugo. For example, it is possible to use Jekyll (another popular static site generator) with **blogdown**, too.] and Hugo or other static website generators (see Chapter \@ref(other-generators)).
+
+For `method = 'custom'`, you are completely on your own and should be responsible for building the website using `/R/build.R`; `build_site()` will not call `rmarkdown::render()` or Hugo at all in this case.
+
+The argument `local` of `build_site()` indicates whether you want to build the website for local preview or publishing. In the former mode (`local = TRUE`), a few Hugo options are temporarily changed when building the site:
+
+- `baseurl` is set to `/`, which means the root URL is `/`, even if you have set it to another value like `http://example.com/` in `config.toml`. This is because we do not really want the URLs in our website to have the actual base URL when previewing the website locally (e.g., you may be offline and cannot connect to `http://example.com/`).
+
+- Posts and pages with the options `draft: true` and/or `future: true` in the YAML metadata are always rendered, i.e., drafts and posts with future publication dates are rendered in the local preview mode.
+
+In the latter mode (`local = FALSE`), no options are modified, and all your options set in `config.toml` and YAML metadata are respected.
+
+The function `blogdown::serve_site()` calls `blogdown::build_site(local = TRUE)`. Even if the website generated by `serve_site()` under `/public/` is a functional website, we still recommend that you call `blogdown::build_site(local = FALSE)`^[You can omit `local = FALSE` since it is the default.] before you publish the `/public/` folder. If your drafts and future posts contain (time-)sensitive information, you are strongly recommended to delete the `/public/` directory before you rebuild the site for publishing every time, because Hugo never deletes it, and your sensitive information may be rendered by a certain `build_site(local = TRUE)` call last time and left in the directory. If the website is really important, and you need to make sure you absolutely will not screw up anything every time you publish it, put the `/public/` directory under version control, so you have a chance to see which files were changed before you publish the new site.
 
 ## Other themes
 
 In the beginning, you will probably spend much time on looking for a Hugo theme that you like from the collection listed at http://themes.gohugo.io, if you care a lot about the appearance of your website. Please note that not all themes have been tested against **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason.
 
-After you have found a satisfactory theme, you need to figure out its Github user name and repository name, then either install the theme via `blogdown::install_theme()`, or just create a new site under another new directory and pass the Github repository name to the `theme` argument of `new_site()`. We recommend that you use the second approach, because Hugo themes could be very complicated and the usage of each theme can be very different and highly dependent on `config.toml`. If you use `new_site()` instead of `install_theme()`, the default example `config.toml` of the theme will be copied to the root directory of your website, so you can edit it immediately, otherwise you will have to read the documentation of the theme carefully to know how to properly write a `config.toml` by yourself. To save you some time, we list a few themes below that match our taste:
+After you have found a satisfactory theme, you need to figure out its Github user name and repository name, then either install the theme via `blogdown::install_theme()`, or just create a new site under another new directory and pass the Github repository name to the `theme` argument of `new_site()`. We recommend that you use the second approach, because Hugo themes could be very complicated and the usage of each theme can be very different and highly dependent on `config.toml`. If you use `new_site()` instead of `install_theme()`, the default sample `config.toml` of the theme will be copied to the root directory of your website, so you can edit it immediately, otherwise you will have to read the documentation of the theme carefully to know how to properly write a `config.toml` by yourself. To save you some time, we list a few themes below that match our taste:
 
 - Simple/minimal themes: [simple-a](https://github.com/AlexFinn/simple-a), and [ghostwriter](https://github.com/jbub/ghostwriter).
 
