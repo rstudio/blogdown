@@ -31,7 +31,7 @@ TOML syntax
 
 ### Body
 
-See Section \@ref(output-formats) for differences between R Markdown and plain Markdown.
+See Section \@ref(output-format) for differences between R Markdown and plain Markdown.
 
 shortcode
 

@@ -1,6 +1,6 @@
 # Other Generators
 
-custom build `blogdown::build_site(method = "custom")`
+We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Baiscally you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show how you can possibly work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package, and we will introduce it in Section \@ref(rmd-website).
 
 ## Jekyll
 
@@ -8,4 +8,22 @@ custom build `blogdown::build_site(method = "custom")`
 
 ## Default site generator in rmarkdown {#rmd-website}
 
-`rmarkdown::default_site()`
+Before **blogdown** was invented, there was actually a relatively simple way to render websites using **rmarkdown**. The structure of the website has to be a flat directory of Rmd files (no subdirectories for Rmd files) and a configuration file in which you can specify a navigation bar for all your pages and output format options.
+
+You can find more information about this site generator in its documentation at http://rmarkdown.rstudio.com/rmarkdown_websites.html, and we are not going to repeat the documentation here, but just want to highlight the major differences between the default site generator in **rmarkdown** and other specialized site generators like Hugo:
+
+- The **rmarkdown** site generator requires all Rmd files to be under the root directory. Hugo has no constraints on the site structure, and you can create arbitrary directories and files under `/content/`.
+
+- Hugo is a general-purpose site generator that is highly customizable, and there are a lot of things that **rmarkdown**'s default site generator does not support, e.g., RSS feeds, metadata especially common in blogs such as categories and tags, customizing permanent links for certain pages.
+
+There are still legitimate reasons to choose the **rmarkdown** default site generator, even though it does not appear to be as powerful as Hugo, including:
+
+- You are familiar with generating single-page HTML output from R Markdown, and all you want is to extend this to generating multiple pages from multiple Rmd files.
+
+- It suffices to use a flat directory of Rmd files. You do not write a blog or need RSS feeds.
+
+- You prefer the Bootstrap styles. In theory, you can also apply Bootstrap styles to Hugo websites, but it will require you to learn more about Hugo. Bootstrap is well supported in **rmarkdown**, and you can spend more time on the configurations instead of learning the technical details about how it works.
+
+- There are certain features in **rmarkdown** HTML output missing in **blogdown**. For example, currently you cannot easily print data frames as paged tables, add a floating table of contents, or fold/unfold code blocks dynamically in the output of **blogdown**. All these could be implemented via JavaScript and CSS, but it is certainly not as simple as specifying a few options in **rmarkdown** like `toc_float: true`.
+
+Please note that the **rmarkdown** site generator is extensible, too. For example, the **bookdown** package [@R-bookdown] is essentially a custom site generator to generate books as websites. 
