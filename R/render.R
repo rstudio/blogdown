@@ -94,7 +94,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
     f = basename(f)
     html = with_ext(f, 'html')
     # do not recompile Rmd if html is newer when building for local preview
-    if (local && file_test('-nt', html, f)) next
+    if (local && !require_rebuild(html, f)) next
     render_page(f)
     x = readUTF8(html)
     x = encode_paths(x, by_products(f, '_files'), d, raw, root)

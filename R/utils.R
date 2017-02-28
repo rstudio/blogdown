@@ -52,6 +52,13 @@ dirs_copy = function(from, to) {
   for (i in seq_len(n)) dir_copy(from[i], to[i])
 }
 
+# when html output file does not exist, or html is older than Rmd, or the first
+# line of the HTML is not --- (meaning it is not produced from build_rmds() but
+# possibly from clicking the Knit button)
+require_rebuild = function(html, rmd) {
+  !file_exists(html) || file_test('-ot', html, rmd) || (readLines(html, n = 1) != '---')
+}
+
 is_windows = function() .Platform$OS.type == 'windows'
 is_osx = function() Sys.info()[['sysname']] == 'Darwin'
 is_linux = function() Sys.info()[['sysname']] == 'Linux'
