@@ -134,9 +134,16 @@ find_exec = function(cmd, dir, info = '') {
 find_hugo = local({
   path = NULL  # cache the path to hugo
   function() {
-    if (is.null(path)) path <<- find_exec(
-      'hugo', 'Hugo', 'You can install it via blogdown::install_hugo()'
-    )
+    if (is.null(path)) {
+      path <<- find_exec(
+        'hugo', 'Hugo', 'You can install it via blogdown::install_hugo()'
+      )
+      ver = hugo_version()
+      if (is.numeric_version(ver) && ver < '0.18') stop(
+        'Found Hugo at ', path, ' but the version is too low (', ver, '). ',
+        'You may try blogdown::install_hugo(force = TRUE).'
+      )
+    }
     path
   }
 })
