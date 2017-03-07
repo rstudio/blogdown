@@ -114,12 +114,24 @@ load_config = function() {
     return(read_config('config.toml', parse_toml))
 }
 
-find_config = function() {
+find_config = function(error = TRUE) {
   f = existing_files(c('config.toml', 'config.yaml'), first = TRUE)
-  if (length(f) == 0) stop(
+  if (length(f) == 0 && error) stop(
     'Cannot find the configuration file config.yaml or config.toml of the website'
   )
   f
+}
+
+# figure out the possible root directory of the website
+site_root = function() {
+  while (length(find_config(FALSE)) == 0) {
+    w1 = getwd(); w2 = dirname(w1)
+    if (w1 == w2) stop(
+      'Cannot find a website under the current working directory or upper-level directories'
+    )
+    setwd('..')
+  }
+  getwd()
 }
 
 # not TOML parser in R yet, so a simple version that only reads top-level options
