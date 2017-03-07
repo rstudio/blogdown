@@ -12,7 +12,7 @@ local({
         txt_input('author', 'Author', getOption('blogdown.author', ''), width = '98%'),
         shiny::dateInput('date', 'Date', Sys.Date(), width = '98%'),
         txt_input(
-          'subdir', 'Subdirectory', getOption('blogdown.subdir', ''),
+          'subdir', 'Subdirectory', getOption('blogdown.subdir', 'post'),
           '(optional)', width = '98%'
         ),
         height = '70px'

@@ -170,11 +170,12 @@ dash_filename = function(string) {
 post_filename = function(title, subdir, rmd, date) {
   file = paste0(dash_filename(title), ifelse(rmd, '.Rmd', '.md'))
   d = dirname(file); f = basename(file)
-  if (!is.null(subdir) && subdir != '') d = if (d == '.') subdir else file.path(subdir, d)
+  if (is.null(subdir) || subdir == '') subdir = '.'
+  d = if (d == '.') subdir else file.path(subdir, d)
+  d = gsub('/+$', '', d)
   # FIXME: this \\d{4} will be problematic in about 8000 years
   if (!grepl('^\\d{4}-\\d{2}-\\d{2}-', f)) f = paste(format(date), f, sep = '-')
-  file = if (d == '.') f else file.path(d, f)
-  file.path('post', file)
+  gsub('^([.]/)+', '', file.path(d, f))
 }
 
 # give a filename, return a slug by removing the date and extension

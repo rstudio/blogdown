@@ -179,7 +179,8 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   date.
 #' @param slug The slug of the post.
 #' @param subdir If specified (not \code{NULL}), the post will be generated
-#'   under a subdirectory under \file{content/post/}.
+#'   under a subdirectory under \file{content/}. It can be a nested subdirectory
+#'   like \file{post/joe/}.
 #' @param rmd Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
 #'   file. Ignored if \code{file} has been specified.
 #' @export
@@ -192,7 +193,7 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
   categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = '',
-  subdir = getOption('blogdown.subdir'), rmd = getOption('blogdown.use.rmd', FALSE)
+  subdir = getOption('blogdown.subdir', 'post'), rmd = getOption('blogdown.use.rmd', FALSE)
 ) {
   if (is.null(file)) file = post_filename(title, subdir, rmd, date)
   file = trim_ws(file)  # trim (accidental) white spaces
