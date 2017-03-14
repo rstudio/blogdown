@@ -30,7 +30,7 @@ local({
       shiny::fillRow(
         shiny::radioButtons(
           'format', 'Format', c('Markdown', 'R Markdown'), inline = TRUE,
-          selected = ifelse(getOption('blogdown.use.rmd', FALSE), 'R Markdown', 'Markdown')
+          selected = ifelse(getOption('blogdown.rmd', FALSE), 'R Markdown', 'Markdown')
         ),
         height = '70px'
       ),

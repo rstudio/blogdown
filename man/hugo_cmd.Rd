@@ -24,7 +24,7 @@ new_content(path, kind = "default", open = interactive())
 new_post(title, kind = "default", open = interactive(), 
     author = getOption("blogdown.author"), categories = NULL, 
     tags = NULL, date = Sys.Date(), file = NULL, slug = "", 
-    subdir = getOption("blogdown.subdir"), rmd = getOption("blogdown.use.rmd", 
+    subdir = getOption("blogdown.subdir", "post"), rmd = getOption("blogdown.rmd", 
         FALSE))
 }
 \arguments{
@@ -87,7 +87,8 @@ date.}
 \item{slug}{The slug of the post.}
 
 \item{subdir}{If specified (not \code{NULL}), the post will be generated
-under a subdirectory under \file{content/post/}.}
+under a subdirectory under \file{content/}. It can be a nested subdirectory
+like \file{post/joe/}.}
 
 \item{rmd}{Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
 file. Ignored if \code{file} has been specified.}
@@ -116,7 +117,7 @@ site}. The directory of the new site should be empty,
 \item \code{new_post}: A wrapper function to create a new (R) Markdown post
 under the \file{content/post/} directory via \code{new_content()}. If your
 post will use R code chunks, you can set \code{rmd = TRUE} or the global
-option \code{options(blogdown.use.rmd = TRUE)} in your \file{~/.Rprofile}.
+option \code{options(blogdown.rmd = TRUE)} in your \file{~/.Rprofile}.
 Similarly, you can set \code{options(blogdown.author = 'Your Name')} so
 that the author field is automatically filled out when creating a new post.
 }}
