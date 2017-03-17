@@ -14,7 +14,7 @@ Once you have installed Hugo, you may create a new site via `blogdown::new_site(
 
 If you use RStudio, you can create a new RStudio project for your website, and generate the new site in the project (the new project will contain a `*.Rproj` file but that is fine).
 
-The function `blogdown::serve_site()` may be the most frequently used function in this package. It builds the website, loads it into your web browser, and automatically refreshes the browser when you update the Markdown or R Markdown files. Do no use the command line `hugo server` to build or serve the site. It only understands plain Markdown files, and cannot build R Markdown. If you do not want `serve_site()` to block your R session, you can set the option `options(servr.daemon = TRUE)` first.
+The function `blogdown::serve_site()` may be the most frequently used function in this package. It builds the website, loads it into your web browser, and automatically refreshes the browser when you update the Markdown or R Markdown files. Do not use the command line `hugo server` to build or serve the site. It only understands plain Markdown files, and cannot build R Markdown. If you do not want `serve_site()` to block your R session, you can set the option `options(servr.daemon = TRUE)` first.
 
 You may not be satisfied with the default site created from `new_site()`. There are two things you may want to do after your first successful experiment with **blogdown**:
 
