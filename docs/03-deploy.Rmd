@@ -1,14 +1,24 @@
 # Deployment
 
-## Updog
+Since the website is basically a folder containing static files, it is much easier to deploy than websites that require dynamic server-side languages such as PHP or databases. All you need is to upload the files to a server, and usually your website will be up and running shortly. The key question is which web server you want to use If you do not have your own server, you may try the ones listed in this chapter. Most of them are free (except Amazon S3), or at least provide free plans. Disclaimer: the authors of this book are not affiliated with any of these services or companies, and there is no guarantee that these services will be provided forever.^[It is very likely to find other similar services if you use your search engine.] 
 
-The simplest solution: store the website in Dropbox, and point Updog to the folder. Done.
+Considering the cost and friendliness to beginners, we currently recommend [Netlify](https://www.netlify.com). It provides a free plan that actually has quite a lot of useful features. If you have no experience in publishing websites before, just log in using your Github account or other accounts, drag the `public/` folder built by **blogdown** for your website to the web page, and your website will be online in a few seconds with a random subdomain name of the form `xxxx.netlify.com` provided by Netlify (you can customize it). You can easily automate this process, and see Section \@ref(netlify) for more details.
 
-## Netlify + Github
+The second easiest solution may be [Updog](https://updog.co). It features the Dropbox integration. Publishing a website can be as easy as copying the files under the `public/` folder of your **blogdown** website to a Dropbox folder. The free plan of Updog only provides limited features, but its Pro plan only requires a one-time payment, and you will have access to much richer features.
+
+If you do not mind using command-line tools or are familiar with GIT/Github, you can certainly consider services like Github pages, Travis CI, or Amazon S3 to build or host your websites. No matter which service you use, please keep in mind that none of them can really lock you and you are always free to change the service. As we have mentioned before, one great advantage of **blogdown** is that your website will be a folder of static files that you can move to any web server.
+
+## Netlify
+
+
 
 Precompile Rmd files, push to Github, and let Netlify build the site using Hugo and deploy.
 
 rbind
+
+## Updog
+
+The simplest solution: store the website in Dropbox, and point Updog to the folder. Done.
 
 ## Github pages
 
