@@ -1,39 +1,33 @@
 # Hugo
 
-In this chapter, we will introduce [Hugo](https://gohugo.io), the static site generator on which `blogdown` is based. 
+In this chapter, we will introduce [Hugo](https://gohugo.io), the static site generator on which **blogdown** is based. 
 
-"Static site generator" refers to the way that a website's content is generated. On dynamically generated sites, the content is rendered every time a user visits the site. Alternatively, on statically generated sites, the content is only rendered when the content changes, making it ready to access when a user visits the site^[More information here: https://gohugo.io/overview/introduction/]. 
+"Static site generator" refers to the way that a website's content is generated. On dynamically generated sites, the content updates and is rendered every time a user visits the site. Alternatively, on statically generated sites the content is pre-rendered and the content only updates when the creator explicitly changes it^[More information here: https://gohugo.io/overview/introduction/]. 
 
-Hugo is one example of a static site generator. It provides the framework for a variety of website types including, but certainly not limited to, blogs.
-
-We're fans of Hugo because it's
-
-- fast
-- easy to install (single binary)
-- a big community (Github)
+Hugo is one example of a static site generator. It provides the framework for a variety of website types including, but certainly not limited to, blogs. We are fans of Hugo for many reasons but there are a few that stand out. Unlike other static site generators, Hugo doesn't require any dependencies, making it very quick and easy to install on most operating systems. It was also designed to render hundreds of pages of content faster than comparable static site generators and can reportedly render a single page in approximately 1 millisecond. Lastly, the community of Hugo users is very active both on the Hugo discussion boards^[https://discuss.gohugo.io/] and on GitHub^[https://github.com/spf13/hugo/issues].
 
 Although we think Hugo is a fantastic static site generator, there is really one and only one important but missing feature: the support for R Markdown. That is basically the whole point of the **blogdown** package. This missing feature means that you cannot easily generate results using R code on your web pages, since you can only use static Markdown documents. Besides, you have to use Hugo's choice of the Markdown engine named "Blackfriday" instead of the more powerful Pandoc.^[There is a feature request in Hugo's repository that has been three years old: https://github.com/spf13/hugo/issues/234, and it seems that it will not be implemented in the near future.]
 
 
 Hugo uses a consistent file and folder structure to create your website.  The rest of this chapter will give more detail on the following files and folders:
 
-- config.toml
-- content
-- static
-- themes
-- layouts
+- `config.toml`
+- `content\`
+- `static\`
+- `themes\`
+- `layouts\`
 
-```{r lithium, fig.cap='Files and Folders created when you create a new_site() using blogdown', echo=FALSE, fig.align='center', out.width='90%'}
+```{r folders, fig.cap='Files and Folders created when you create a new_site() using blogdown', echo=FALSE, fig.align='center', out.width='90%', eval = FALSE}
 knitr::include_graphics('images/folder-structure.png')
 ```
 
 ## Configuration
 
-The first file that Hugo uses to generate a website is the configuration or config file. It's worth mentioning here that technically speaking, Hugo could generate your website without a config file if your files and folders are in the correct locations. Regardless, Hugo will look for a config file in the root directory of your website, so it's best to make sure that you have one. Generally speaking, this is the only file that Hugo expects to be in the root directory. 
+The first file that Hugo uses to generate a website is the configuration or `config` file. It is worth mentioning here that technically speaking, Hugo could generate your website without a `config` file if your files and folders are in the correct locations. Regardless, Hugo will look for a `config` file in the root directory of your website, so it is best to make sure that you have one. Generally speaking, this is the only file that Hugo expects to be in the root directory. 
 
-As its name suggests, the config file is where you tell Hugo exactly how to render your webpage and display your menus. It's also the location of other global parameters like links to your social networks, your site's name, and the base URL for your website. 
+As its name suggests, the `config` file is where you tell Hugo exactly how to render your webpage and display your menus. It is also the location of other global parameters like links to your social networks, your site's name, and the base URL for your website. 
 
-When generating your site, Hugo will search for a file called config.toml first. If it doesn't find one, it will continue to search for either config.yaml or config.json. Since most themes automatically generate a config.toml file, we will discuss that here. 
+When generating your site, Hugo will search for a file called `config.toml` first. If it doesn't find one, it will continue to search for either `config.yaml` or `config.json`. Since most themes automatically generate a `config.toml` file, we will discuss that here. 
 
 ### TOML Syntax
 
@@ -45,24 +39,24 @@ key = value
 
 When you want to edit a configuration in the TOML file, simply change the value. Values that are character strings should be in quotes, whereas boolean values should be lowercase and bare. 
 
-For example, if you want to give your website the title "My Awesome Site", but disable the feature to pluralize list titles (i.e., turn 'post' to 'posts') you may have the following entries in your config.toml file.
+For example, if you want to give your website the title "My Awesome Site", but disable the feature to pluralize list titles (i.e., turn 'post' to 'posts') you may have the following entries in your `config.toml` file.
 
 ```js
 title = "My Awesome Site"
 
 pluralizeListTitles = false
 ```
-Most of your website's global variables are entered in the config.toml file in exactly this manner. 
+Most of your website's global variables are entered in the `config.toml` file in exactly this manner. 
 
-Further into your config file you may notice some values in brackets like this:
+Further into your `config` file you may notice some values in brackets like this:
 
 ```js
 [social]
-    github          = "https://github.com/rstudio/blogdown"
-    twitter         = "https://twitter.com/rstudio"
+    github  = "https://github.com/rstudio/blogdown"
+    twitter = "https://twitter.com/rstudio"
 ```
 
-This is a table in the TOML language and Hugo uses them to fill in information on other pages within your site. For instance, the above table will be populate the Site.Social variable in the templates (more information on this in [section 2.4](##Templates))
+This is a table in the TOML language and Hugo uses them to fill in information on other pages within your site. For instance, the above table will populate the Site.Social variable in your site's templates (more information on this in Section \@ref(templates)).
 
 Lastly, you may find some values in double brackets like this:
 
@@ -80,9 +74,9 @@ Lastly, you may find some values in double brackets like this:
     url = "/about"
 ```
 
-In TOML, double brackets are used to indicate an array of tables. Hugo interprets this information as a menu. If the code above was found in a config.toml file, the resulting website would have links to a blog, categories, and about page in the site's main menu. The location and styling of that menu is specified elsewhere, but the names of each menu's choices and the links to each section are defined here. 
+In TOML, double brackets are used to indicate an array of tables. Hugo interprets this information as a menu. If the code above was found in a `config.toml` file, the resulting website would have links to Blog, Categories, and About pages in the site's main menu. The location and styling of that menu is specified elsewhere, but the names of each menu's choices and the links to each section are defined here. 
  
-The config.toml file varies between each theme. Make sure that when you choose a theme, you read its documentation thoroughly to get an understanding of what each of the configuration options does (more on themes in section [2.3](##Themes))
+The `config.toml` file varies between each theme. Make sure that when you choose a theme, you read its documentation thoroughly to get an understanding of what each of the configuration options does (more on themes in Section \@ref(themes)).
 
 
 ## Content
