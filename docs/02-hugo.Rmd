@@ -12,12 +12,12 @@ Although we think Hugo is a fantastic static site generator, there is really one
 Hugo uses a consistent file and folder structure to create your website.  The rest of this chapter will give more detail on the following files and folders:
 
 - `config.toml`
-- `content\`
-- `static\`
-- `themes\`
-- `layouts\`
+- `content/`
+- `static/`
+- `themes/`
+- `layouts/`
 
-```{r folders, fig.cap='Files and Folders created when you create a new_site() using blogdown', echo=FALSE, fig.align='center', out.width='90%', eval = FALSE}
+```{r folders, fig.cap='Files and Folders created when you create a new site using **blogdown**', echo=FALSE, fig.align='center', out.width='90%'}
 knitr::include_graphics('images/folder-structure.png')
 ```
 
