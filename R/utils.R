@@ -291,3 +291,23 @@ filter_list = function(x) {
 sort2 = function(x, ...) {
   if (length(x) == 0) x else sort(x, ...)
 }
+
+# on Windows, try system2(), system(), and shell() in turn, and see which
+# succeeds, then remember it (https://github.com/rstudio/blogdown/issues/82)
+if (is_windows()) system2 = function(command, args = character(), ...) {
+  cmd = paste(c(shQuote(command), args), collapse = ' ')
+  shell2 = function() shell(cmd, mustWork = TRUE, ...)
+
+  i = getOption('blogdown.windows.shell', 'system2')
+  if (i == 'shell') return(shell2())
+  if (i == 'system') return(system(cmd, ...))
+
+  if ((res <- base::system2(command, args, ...)) == 0) return(invisible(res))
+
+  if ((res <- system(cmd, ...)) == 0) {
+    options(blogdown.windows.shell = 'system')
+  } else if ((res <- shell2()) == 0) {
+    options(blogdown.windows.shell = 'shell')
+  }
+  invisible(res)
+}
