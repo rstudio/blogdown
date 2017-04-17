@@ -103,7 +103,7 @@ brew_hugo = function() {
 }
 
 # possible locations of the Hugo executable
-bin_paths = function(dir = 'Hugo') {
+bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) {
   if (is_windows()) {
     path = Sys.getenv('APPDATA', '')
     path = if (dir_exists(path)) file.path(path, dir)
@@ -113,13 +113,13 @@ bin_paths = function(dir = 'Hugo') {
   } else {
     path = '~/bin'
   }
-  path = c(path, pkg_file(dir, mustWork = FALSE))
+  path = c(extra_path, path, pkg_file(dir, mustWork = FALSE))
   path
 }
 
 # find an executable from PATH, APPDATA, system.file(), ~/bin, etc
-find_exec = function(cmd, dir, info = '', extra_path = NULL) {
-  for (d in c(extra_path, bin_paths(dir))) {
+find_exec = function(cmd, dir, info = '') {
+  for (d in bin_paths(dir)) {
     exec = if (is_windows()) paste0(cmd, ".exe") else cmd
     path = file.path(d, exec)
     if (utils::file_test("-x", path)) break else path = ''
@@ -139,8 +139,7 @@ find_hugo = local({
   function() {
     if (is.null(path)) {
       path <<- find_exec(
-        'hugo', 'Hugo', 'You can install it via blogdown::install_hugo()',
-        getOption('blogdown.hugo')
+        'hugo', 'Hugo', 'You can install it via blogdown::install_hugo()'
       )
       ver = hugo_version()
       if (is.numeric_version(ver) && ver < '0.18') stop(
