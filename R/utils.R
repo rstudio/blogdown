@@ -324,3 +324,15 @@ if (is_windows()) system2 = function(command, args = character(), stdout = '', .
   }
   invisible(res)
 }
+
+# replace random HTML widgets IDs with incremental numbers
+clean_widget_html = function(x) {
+  r = '(?<=id="htmlwidget-)[a-z0-9]{10,}(?=")'
+  m = gregexpr(r, x, perl = TRUE)
+  id = unique(unlist(regmatches(x, m)))
+  for (i in seq_along(id)) {
+    r = sprintf(' (id|data-for)(="htmlwidget-)%s(")', id[i])
+    x = gsub(r, sprintf(' \\1\\2%d\\3', i), x)
+  }
+  x
+}

@@ -110,7 +110,9 @@ knitr::kable(matrix(c(
   'blogdown.rmd', 'FALSE', 'default new post format to Rmd?',
   'blogdown.subdir', 'post', 'a subdirectory under /content/',
   'blogdown.yaml.empty', TRUE, 'preserve empty fields in YAML?',
-  'blogdown.method', 'html', 'the building method for R Markdown'
+  'blogdown.method', 'html', 'the building method for R Markdown',
+  'blogdown.widgetsID', TRUE, "incremental ID's for HTML widgets?",
+  NULL
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
 ```
 
@@ -130,6 +132,8 @@ options(servr.daemon = TRUE, blogdown.author = 'John Doe')
 A nice consequence of setting these options is that when you use the RStudio addin "New Post", the fields "Author", "Subdirectory", and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
 
 The option `blogdown.method` is explained in Section \@ref(methods).
+
+The option `blogdown.widgetsID` is only relevant if your website source is under version control and you have HTML widgets on the website. If this option is `TRUE` (default), the random ID's of HTML widgets will be changed to incremental ID's in the HTML output, so that these ID's are unlikely to change every time you recompile your website, otherwise every time you will get different random ID's.
 
 ## R Markdown vs Markdown {#output-format}
 
