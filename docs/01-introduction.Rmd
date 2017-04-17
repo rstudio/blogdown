@@ -23,6 +23,8 @@ By default, it installs the latest version of Hugo, but you can choose a specifi
 
 For macOS users, `install_hugo()` uses the package manager Homebrew (https://brew.sh), which is the recommended way to install Hugo, but if you do not prefer installing or using Homebrew, you can call `blogdown::install_hugo(use_brew = FALSE)`.^[If you are not a software developer, the benefits of Homebrew may not be so obvious.] If you have never installed Homebrew before, the installation may take one or two minutes. If the installation fails for any reason,^[One possible reason for the failure might be that you do not have Xcode Command Line Tools, and you can try the command `xcode-select --install` in the Terminal.] `install_hugo()` will automatically retry with `use_brew = FALSE`.
 
+If you cannot use `install_hugo()` for any reason, you may download a copy of the Hugo executable, put it anywhere in your system, and set the global option `blogdown.hugo` to be the path to the executable, e.g., `options(blogdown.hugo = '~/Downloads/hugo_0.20.1/hugo')`. This may be useful for you to use a specific version of Hugo for a specific website,^[You can set this option per project. See Section \@ref(global-options) for details.] or store a copy of Hugo on a USB Flash drive along with your website.
+
 ## A quick example
 
 From our experience, Hugo's documentation may be a little daunting to read and digest for beginners.^[One day Yihui was almost ready to kill himself when he was trying to figure out how `_index.md` works by reading the documentation over and over again, and desperately searching in the Hugo forum.] For example, its "Quickstart" guide has 12 steps, and you can easily get lost if you have not used a static website generator before. For **blogdown**, we hope users of all levels can at least get started as quickly as possible. There are many things you may want to tweak for the website later, but the first step is actually fairly simple: create a new project under a new directory in the RStudio IDE (`File -> New Project`), and call the function:
@@ -111,6 +113,7 @@ knitr::kable(matrix(c(
   'blogdown.subdir', 'post', 'a subdirectory under /content/',
   'blogdown.yaml.empty', TRUE, 'preserve empty fields in YAML?',
   'blogdown.method', 'html', 'the building method for R Markdown',
+  'blogdown.hugo', '', 'the path to the Hugo executable',
   'blogdown.widgetsID', TRUE, "incremental ID's for HTML widgets?",
   NULL
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
