@@ -264,7 +264,7 @@ After you have found a satisfactory theme, you need to figure out its Github use
 
 - Sophisticated themes: [hugo-academic](https://github.com/gcushen/hugo-academic) (strongly recommended for users in academia), [hugo-future-imperfect](https://github.com/jpescador/hugo-future-imperfect), and [hugo-tranquilpeak-theme](https://github.com/kakawait/hugo-tranquilpeak-theme).
 
-- Multimedia content themes: If you are interested in adding multimedia content to your site (such as audio files of a podcast), the [castanet](https://github.com/mattstratton/castanet) theme provides an excellent framework tailored for this application.  An example of a site using `blogdown` with the castanet theme is the R-Podcast at [www.r-podcast.org](https://www.r-podcast.org).
+- Multimedia content themes: If you are interested in adding multimedia content to your site (such as audio files of a podcast), the [castanet](https://github.com/mattstratton/castanet) theme provides an excellent framework tailored for this application.  An example of a site using **blogdown** with the castanet theme is the [R-Podcast](https://www.r-podcast.org).
 
     ```{r eval=FALSE}
     # for example, create a new site with the academic theme
