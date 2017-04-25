@@ -70,6 +70,7 @@ sessionInfo = function() {
   res$loadedOnly = loaded[intersect(names(loaded), c(
     'blogdown', 'bookdown', 'knitr', 'rmarkdown', 'htmltools'
   ))]
+  res$BLAS = res$LAPACK = NULL
   res
 }
 ```
