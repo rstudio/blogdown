@@ -72,6 +72,8 @@ download2 = function(url, ...) {
       download.file(url, ...)  # try default method if wininet fails
     }))
 
+  R340 = getRversion() >= '3.4.0'
+  if (R340 && download.file(url, ...) == 0) return(invisible(0L))
   # if non-Windows, check for libcurl/curl/wget/lynx, call download.file with
   # appropriate method
   if (Sys.which('curl') != '') {
