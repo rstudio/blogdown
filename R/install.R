@@ -38,6 +38,7 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
     version = gsub(r, '\\1', grep(r, json, value = TRUE)[1])
   }
   version = gsub('^[vV]', '', version)  # pure version number
+  version2 = as.numeric_version(version)
   bit = if (grepl('64', Sys.info()[['machine']])) '64bit' else '32bit'
   base = sprintf('https://github.com/spf13/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
@@ -47,11 +48,15 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
   download_zip = function(OS, type = 'zip') {
     zipfile = sprintf('hugo_%s_%s-%s.%s', version, OS, bit, type)
     download2(paste0(base, zipfile), zipfile, mode = 'wb')
-    zipfile
+    switch(type, zip = utils::unzip(zipfile), tar.gz = {
+      files = utils::untar(zipfile, list = TRUE)
+      utils::untar(zipfile)
+      files
+    })
   }
 
-  if (is_windows()) {
-    files = utils::unzip(download_zip('Windows'))
+  files = if (is_windows()) {
+    download_zip('Windows')
   } else if (is_osx()) {
     if (use_brew) {
       if (brew_hugo() == 0) return()
@@ -60,12 +65,12 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
         'I will try to download the Hugo binary directly and install it.'
       )
     }
-    files = utils::unzip(download_zip('MacOS'))
+    download_zip(
+      if (version2 >= '0.18') 'macOS' else 'MacOS',
+      if (version2 >= '0.20.3') 'tar.gz' else 'zip'
+    )
   } else {
-    # might be Linux; good luck
-    zipfile = download_zip('Linux', 'tar.gz')
-    files = utils::untar(zipfile, list = TRUE)
-    utils::untar(zipfile)
+    download_zip('Linux', 'tar.gz')  # _might_ be Linux; good luck
   }
   exec = files[grep(sprintf('^hugo_%s.+', version), basename(files))][1]
   if (is_windows()) {
