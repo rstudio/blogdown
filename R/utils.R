@@ -67,29 +67,30 @@ is_linux = function() Sys.info()[['sysname']] == 'Linux'
 # download.file() cannot download Github release assets:
 # https://stat.ethz.ch/pipermail/r-devel/2016-June/072852.html
 download2 = function(url, ...) {
+  download = function() download.file(url, ...)
   if (is_windows())
-    return(tryCatch(download.file(url, method = 'wininet', ...), error = function(e) {
-      download.file(url, ...)  # try default method if wininet fails
+    return(tryCatch(download(method = 'wininet'), error = function(e) {
+      download()  # try default method if wininet fails
     }))
 
   R340 = getRversion() >= '3.4.0'
-  if (R340 && download.file(url, ...) == 0) return(invisible(0L))
+  if (R340 && download() == 0) return(0L)
   # if non-Windows, check for libcurl/curl/wget/lynx, call download.file with
   # appropriate method
+  res = NA
   if (Sys.which('curl') != '') {
-    method = 'curl'
     # curl needs to add a -L option to follow redirects
-    opts = options(download.file.extra = paste('-L', getOption('download.file.extra')))
-    on.exit(options(opts), add = TRUE)
-  } else if (Sys.which('wget') != '') {
-    method = 'wget'
-  } else if (Sys.which('lynx') != '') {
-    method = 'lynx'
-  } else {
-    stop('no download method found (wget/curl/lynx)')
+    if ((res <- download(method = 'curl', extra = '-L')) == 0) return(res)
   }
+  if (Sys.which('wget') != '') {
+    if ((res <- download.file(method = 'wget')) == 0) return(res)
+  }
+  if (Sys.which('lynx') != '') {
+    if ((res <- download.file(method = 'lynx')) == 0) return(res)
+  }
+  if (is.na(res)) stop('no download method found (wget/curl/lynx)')
 
-  download.file(url, method = method, ...)
+  res
 }
 
 opts = knitr:::new_defaults()
