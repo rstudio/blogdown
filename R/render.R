@@ -225,14 +225,8 @@ process_page = function(f, env, local = FALSE, root) {
     x = decode_paths_xml(x, root)
     return(writeUTF8(x, f))
   }
-  i1 = grep('<!-- BLOGDOWN-BODY-BEFORE -->', x)
-  if (length(i1) == 0) return()
-  i2 = grep('<!-- /BLOGDOWN-BODY-BEFORE -->', x)
-  i3 = grep('<!-- BLOGDOWN-HEAD -->', x)
-  i4 = grep('<!-- /BLOGDOWN-HEAD -->', x)
-  i5 = (i3 + 1):(i4 - 1)
-  h = paste(x[i5], collapse = '\n')
-  x = x[-c(i1, i2, i3, i4, i5)]
+  res = split_html_tokens(x)
+  x = res$body; h = res$head
   # if you have provided a token in your Hugo template, I'll use it, otherwise I
   # will insert the head code introduced by HTML dependencies before </head>
   i6 = grep('<!-- RMARKDOWN-HEADER -->', x)
@@ -242,4 +236,19 @@ process_page = function(f, env, local = FALSE, root) {
   }
   x = decode_paths(x, dirname(f), env, root)
   writeUTF8(x, f)
+}
+
+split_html_tokens = function(x, extract_head = TRUE) {
+  i1 = grep('<!-- BLOGDOWN-BODY-BEFORE -->', x)
+  if (length(i1) == 0) return(list(body = x))
+  i2 = grep('<!-- /BLOGDOWN-BODY-BEFORE -->', x)
+  i3 = grep('<!-- BLOGDOWN-HEAD -->', x)
+  i4 = grep('<!-- /BLOGDOWN-HEAD -->', x)
+  if (extract_head) {
+    i5 = (i3 + 1):(i4 - 1)
+    h = paste(x[i5], collapse = '\n')
+  } else {
+    i5 = h = NULL
+  }
+  list(body = x[-c(i1, i2, i3, i4, i5)], head = h)
 }
