@@ -99,6 +99,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
     x = readUTF8(html)
     x = encode_paths(x, by_products(f, '_files'), d, raw, root)
     if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
+    if (raw) x = split_html_tokens(x)$body
     writeUTF8(c(fetch_yaml2(f), '', x), html)
   })
 
