@@ -240,16 +240,14 @@ process_page = function(f, env, local = FALSE, root) {
 }
 
 split_html_tokens = function(x, extract_head = TRUE) {
-  i1 = grep('<!-- BLOGDOWN-BODY-BEFORE -->', x)
-  if (length(i1) == 0) return(list(body = x))
-  i2 = grep('<!-- /BLOGDOWN-BODY-BEFORE -->', x)
-  i3 = grep('<!-- BLOGDOWN-HEAD -->', x)
-  i4 = grep('<!-- /BLOGDOWN-HEAD -->', x)
+  i1 = grep('<!-- BLOGDOWN-HEAD -->', x)
+  i2 = grep('<!-- /BLOGDOWN-HEAD -->', x)
+  if (length(i1) * length(i2) != 1) return(list(body = x))
   if (extract_head) {
-    i5 = (i3 + 1):(i4 - 1)
-    h = paste(x[i5], collapse = '\n')
+    i3 = (i1 + 1):(i2 - 1)
+    h = paste(x[i3], collapse = '\n')
   } else {
-    i5 = h = NULL
+    i3 = h = NULL
   }
-  list(body = x[-c(i1, i2, i3, i4, i5)], head = h)
+  list(body = x[-c(i1, i2, i3)], head = h)
 }
