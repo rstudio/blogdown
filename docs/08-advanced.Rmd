@@ -97,7 +97,7 @@ author: "Yihui Xie"
 I found a package named <strong>blogdown</strong>.
 ```
 
-This is the file to be picked up by Hugo and eventually converted to an HTML page of a website. Since the Markdown body has been processed to HTML by Pandoc, Hugo will basically use the HTML. That is how we bypasses Hugo's Markdown engine BlackFriday.
+This is the file to be picked up by Hugo and eventually converted to an HTML page of a website. Since the Markdown body has been processed to HTML by Pandoc, Hugo will basically use the HTML. That is how we bypass Hugo's Markdown engine BlackFriday.
 
 Besides `$body$`, you may have noticed other Pandoc template variables like `$header-includes$`, `$css$`, `$include-before$`, `$toc$`, and `$include-after$`. These variables make it possible to customize the `html_page` format. For example, if you want to generate a table of contents, and apply an additional CSS stylesheet to a certain page, you may set `toc` to `true` and pass the stylesheet path to the `css` argument of `html_page()`, e.g.,
 
