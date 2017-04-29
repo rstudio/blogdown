@@ -178,8 +178,8 @@ open_file = function(x) {
   tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
 }
 
-dash_filename = function(string) {
-  tolower(gsub('^-+|-+$', '', gsub('[^[:alnum:]]+', '-', string)))
+dash_filename = function(string, pattern = '[^[:alnum:]]+') {
+  tolower(gsub('^-+|-+$', '', gsub(pattern, '-', string)))
 }
 
 post_filename = function(title, subdir, rmd, date) {
