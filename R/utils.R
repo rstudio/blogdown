@@ -188,8 +188,10 @@ post_filename = function(title, subdir, rmd, date) {
   if (is.null(subdir) || subdir == '') subdir = '.'
   d = if (d == '.') subdir else file.path(subdir, d)
   d = gsub('/+$', '', d)
+  if (length(date) == 0 || is.na(date)) date = ''
+  date = format(date)
   # FIXME: this \\d{4} will be problematic in about 8000 years
-  if (!grepl('^\\d{4}-\\d{2}-\\d{2}-', f)) f = paste(format(date), f, sep = '-')
+  if (date != '' && !grepl('^\\d{4}-\\d{2}-\\d{2}-', f)) f = paste(date, f, sep = '-')
   gsub('^([.]/)+', '', file.path(d, f))
 }
 
