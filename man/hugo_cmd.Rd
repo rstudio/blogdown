@@ -53,7 +53,9 @@ YAML instead of TOML.}
 default, but this function adds sample content by default).}
 
 \item{theme}{A Hugo theme on Github (a chararacter string of the form
-\code{user/repo}).}
+\code{user/repo}, and you can optionally sepecify a GIT branch or tag name
+after \code{@}, i.e. \code{theme} can be of the form
+\code{user/repo@branch}).}
 
 \item{theme_example}{Whether to copy the example in the \file{exampleSite}
 directory if it exists in the theme. Not all themes provide example sites.}
