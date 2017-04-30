@@ -122,6 +122,8 @@ new_site = function(
     if (interactive() && getOption('blogdown.open_sample', TRUE))
       open_file('content/post/2015-07-23-r-rmarkdown.Rmd')
   }
+  if (!file.exists('index.Rmd'))
+    writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
   if (serve) serve_site()
 }
 
