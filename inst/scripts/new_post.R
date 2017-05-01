@@ -58,7 +58,7 @@ local({
         blogdown::new_post(
           input$title, author = input$author, rmd = input$format == 'R Markdown',
           categories = input$cat, tags = input$tag,
-          file = blogdown:::dash_filename(input$file, '[-[:space:]]+'),
+          file = gsub('[-[:space:]]+', '-', input$file),
           slug = input$slug, subdir = input$subdir, date = input$date
         )
         shiny::stopApp()

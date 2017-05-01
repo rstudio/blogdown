@@ -176,7 +176,6 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 #'   (e.g. a post or a page).
 new_content = function(path, kind = 'default', open = interactive()) {
   hugo_cmd(c('new', shQuote(path), '-f yaml', c('-k', kind)))
-  file.rename(path, path)  # because Hugo forces lower-case file extensions, e.g. Rmd -> rmd
   if (open) open_file(content_file(path))
 }
 
