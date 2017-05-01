@@ -12,7 +12,7 @@ serve_site = function(...) {
     # exclude changes in the publish dir
     files = files[substr(files, 1, n) != pdir]
     # re-generate only if Rmd/md or config files or layouts were updated
-    if (length(grep('^(themes|layouts|static)/|[.](R?md|toml|yaml)$', files)))
+    if (length(grep('^(themes|layouts|static)/|[.]([Rr]?md|toml|yaml)$', files)))
       build_site(TRUE)
   }, ...)
 }
