@@ -67,7 +67,9 @@ is_linux = function() Sys.info()[['sysname']] == 'Linux'
 # download.file() cannot download Github release assets:
 # https://stat.ethz.ch/pipermail/r-devel/2016-June/072852.html
 download2 = function(url, ...) {
-  download = function() download.file(url, ...)
+  download = function(method = 'auto', extra = getOption('download.file.extra')) {
+    download.file(url, ..., method = method, extra = extra)
+  }
   if (is_windows())
     return(tryCatch(download(method = 'wininet'), error = function(e) {
       download()  # try default method if wininet fails
