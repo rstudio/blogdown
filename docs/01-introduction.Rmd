@@ -71,7 +71,7 @@ You have to know three most basic concepts for a Hugo-based website:
 
 1. The publishing directory (by default, `public/`). Your website will be generated to this directory. Typically it contains a lot of `*.html` files and dependencies like `*.css`, `*.js`, and images. You can upload everything under `public/` to any web server that can serve static websites, and your website will be up and running. There are many options for publishing static websites, and we will talk more about them in Chapter \@ref(deployment) if you are not familiar with deploying websites.
 
-If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! We will show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technilogies like the Hugo templating language, HTML, CSS, and JavaScript.
+If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! We will show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technologies like the Hugo templating language, HTML, CSS, and JavaScript.
 
 ## RStudio IDE
 
