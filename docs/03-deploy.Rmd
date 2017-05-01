@@ -10,11 +10,17 @@ If you do not mind using command-line tools or are familiar with GIT/GitHub, you
 
 ## Netlify
 
+As we just mentioned, Netlify allows you to quickly publish a website by uploading the `public/` folder through its web interface, and you will be assigned a random subdomain `*.netlify.com`. This approach is good for those websites that are not updated frequently (or at all), but it is unlikely that you do not need to update your website, so we introduce a better approach in this section,^[Please bear in mind that this section is to outline the basic steps of publishing a website with Netlify, and the technical details may change from time to time, so the official Netlify documentation should be the most reliable source if you have any questions or anything we introduced here does not work.] which will take you a few more minutes to complete the configurations, but once it is properly configured, all you need to do in the future is to update the source repository, and Netlify will call Hugo to render your website automatically.
 
+Basically you have to host all source files of your website in a GIT repository. You do not need to put the `public/` directory under version control^[You can add `public` to `.gitignore` to ignore it in GIT.] because it is to be automatically generated. Currently Netlify supports GIT repositories hosted on GitHub, GitLab, and BitBucket. With any of these accounts, you can log in Netlify from the its homepage and follow the guide to create a new site from your GIT repository.
 
-Precompile Rmd files, push to Github, and let Netlify build the site using Hugo and deploy.
+Netlify supports several static website generators, including Jekyll and Hugo. For a new site, you have to specify a command to build your website, as well as the path of the publish directory. Netlify also supports multiple versions of Hugo, so the build command can be the default `hugo` (see the Netlify documentation to know what the default version is), or a specific version of Hugo, e.g., `hugo_0.19`. The publish directory should be `public` unless you have changed it in your `config.toml`.
 
-rbind
+It may take a minute or two to deploy your website on Netlify for the first time, but it can be much faster later (a few seconds) when you update your website source, because Netlify deploys incremental changes in the `public/` directory, i.e., only the newer files compared  to the last time are deployed.
+
+After your GIT repository is connected with Netlify, the last issue you may want to solve is the domain name, unless you are satisfied with the free Netlify subdomain. If you want to use a different domain, you need configure some DNS records of the domain to point it to the Netlify server. See \@ref(domain-name) for some background knowledge on domain names.
+
+If you are not familiar with domain names or do not want to learn more about them, an option for your consideration is a free subdomain `*.rbind.io` offered by RStudio, Inc. Please visit the Rbind support website <https://support.rbind.io> to know how to apply for a subdomain. In fact, the Rbind organization also offers free help on how to set up a website based on **blogdown**, thanks to a lot of volunteers from the R and statistics community.
 
 ## Updog
 
