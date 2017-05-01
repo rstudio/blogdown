@@ -6,7 +6,7 @@ In this chapter, we show how to create a simple website from scratch. The websit
 
 ## Installation
 
-We assume you have already installed R (https://www.r-project.org) and the RStudio IDE (https://www.rstudio.com). Next we need to install the **blogdown** package in R. Currently it is only available on Github (still a beta version), and you can install it using the **devtools** package:
+We assume you have already installed R (https://www.r-project.org) and the RStudio IDE (https://www.rstudio.com). Next we need to install the **blogdown** package in R. Currently it is only available on GitHub (still a beta version), and you can install it using the **devtools** package:
 
 ```{r eval=FALSE}
 if (!requireNamespace("devtools")) install.packages('devtools')
@@ -37,7 +37,7 @@ Then wait for this function to create a new site, download the default theme, ad
 
 Now you should see a bunch of directories and files under the RStudio project or your current working directory. Before we explain these new directories and files, let's introduce an important and helpful technology first: _LiveReload._ This means your website will be automatically rebuilt and reloaded in your web browser^[You can also think the RStudio Viewer as a web browser.] whenever you modify any source file of your website and save it. Basically once you launch the website in a web browser, you will not need to build it explicitly. All you need to do is to edit the source files, such as R Markdown documents, and there is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()` based on the R package **servr**.^[Hugo has its own LiveReload implementation, but we did not take advantage of it in **blogdown** because Hugo does not know how to compile R Markdown documents.]
 
-The `new_site()` function has several arguments, and you may check out its R help page (`?blogdown::new_site`) for details. A minimal default theme named "hugo-lithium-theme" is provided as the default theme of the new site,^[You can find its source on Github: https://github.com/yihui/hugo-lithium-theme. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.] and you can see what it looks like in Figure \@ref(fig:lithium).
+The `new_site()` function has several arguments, and you may check out its R help page (`?blogdown::new_site`) for details. A minimal default theme named "hugo-lithium-theme" is provided as the default theme of the new site,^[You can find its source on GitHub: https://github.com/yihui/hugo-lithium-theme. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.] and you can see what it looks like in Figure \@ref(fig:lithium).
 
 ```{r lithium, fig.cap='The homepage of the default new site.', echo=FALSE, fig.align='center', out.width='90%'}
 knitr::include_graphics('images/lithium-theme.png')
@@ -65,7 +65,7 @@ You have to know three most basic concepts for a Hugo-based website:
         url = "https://twitter.com/rstudio"
     ```
 
-    You can change the website title, e.g., `title = "My own cool website"`, and update the Github and Twitter URLs.
+    You can change the website title, e.g., `title = "My own cool website"`, and update the GitHub and Twitter URLs.
 
 1. The content directory (by default, `content/`). This is where you write the R Markdown or Markdown source files for your posts and pages. Under `content/` of the default site, you can see `about.md` and a `post/` directory containing a few posts. The organization of the content directory is up to you. You can have arbitrary files and directories there, depending on the website structure you want.
 
@@ -223,7 +223,7 @@ If your code chunk has graphics output, we recommend that you avoid special char
 
 In the beginning, you will probably spend much time on looking for a Hugo theme that you like from the collection listed at http://themes.gohugo.io, if you care a lot about the appearance of your website. Please note that not all themes have been tested against **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason.
 
-After you have found a satisfactory theme, you need to figure out its Github user name and repository name, then either install the theme via `blogdown::install_theme()`, or just create a new site under another new directory and pass the Github repository name to the `theme` argument of `new_site()`. We recommend that you use the second approach, because Hugo themes could be very complicated and the usage of each theme can be very different and highly dependent on `config.toml`. If you use `new_site()` instead of `install_theme()`, the default sample `config.toml` of the theme will be copied to the root directory of your website, so you can edit it immediately, otherwise you will have to read the documentation of the theme carefully to know how to properly write a `config.toml` by yourself. To save you some time, we list a few themes below that match our taste:
+After you have found a satisfactory theme, you need to figure out its GitHub user name and repository name, then either install the theme via `blogdown::install_theme()`, or just create a new site under another new directory and pass the GitHub repository name to the `theme` argument of `new_site()`. We recommend that you use the second approach, because Hugo themes could be very complicated and the usage of each theme can be very different and highly dependent on `config.toml`. If you use `new_site()` instead of `install_theme()`, the default sample `config.toml` of the theme will be copied to the root directory of your website, so you can edit it immediately, otherwise you will have to read the documentation of the theme carefully to know how to properly write a `config.toml` by yourself. To save you some time, we list a few themes below that match our taste:
 
 - Simple/minimal themes: [simple-a](https://github.com/AlexFinn/simple-a), and [ghostwriter](https://github.com/jbub/ghostwriter).
 
