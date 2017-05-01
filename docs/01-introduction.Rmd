@@ -73,7 +73,7 @@ You have to know three most basic concepts for a Hugo-based website:
 
 If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! We will show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technilogies like the Hugo templating language, HTML, CSS, and JavaScript.
 
-## RStudio addins
+## RStudio IDE
 
 There are a few essential RStudio addins to make it easy to edit and preview your website, and you can find them from the menu "Addins" on the RStudio toolbar:
 
@@ -100,6 +100,26 @@ knitr::include_graphics('images/update-meta.png')
 ```
 
 With these addins, you should rarely need to run any R commands manually after you have set up your website, since all your posts will be automatically compiled whenever you create a new post or modify an existing post due to the LiveReload feature.
+
+If your RStudio version is higher than v1.1.28,^[Currently it is only available in RStudio daily builds: <https://dailies.rstudio.com>. Please note that daily builds are for testing purposes only.] you can actually create a website project directly from the menu `File -> New Project -> New Directory` (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
+
+```{r new-project, echo=FALSE, fig.cap='Create a new website project in RStudio.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/new-project.png')
+```
+
+```{r blogdown-project, echo=FALSE, fig.cap='Create a website project based on blogdown.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/blogdown-project.png')
+```
+
+If your website was created using the function `blogdown::new_site()` instead of the RStudio menu for the first time, you can quit RStudio and open the project again. If you go to the menu `Tools -> Project Options`, your project type should be "Website" like what you can see in Figure \@ref(fig:project-options).
+
+Then you will see a pane in RStudio named "Build", and there is a button "Build Website". When you click this button, RStudio will call `blogdown::build_site()` to build the website. If you want to build the website and publish the output files under the `public/` manually, you are recommended to restart your R session and click this "Build Website" button every time before you publish the website, instead of publishing the `public/` folder generated continuously and automatically by `blogdown::serve_site()`, because the latter calls `blogdown::build_site(local = TRUE)`, which has some subtle differences with `blogdown::build_site(local = FALSE)` (see Section \@ref(local-preview) for details).
+
+We strongly recommend you to uncheck the option "Preview site after building" in your RStudio project options (Figure \@ref(fig:project-options)).^[In case you wonder why: unless you have set the option `relativeurls` to `true` in `config.toml`, it requires a web server to preview the website locally, otherwise even if you can see the homepage of your website in the RStudio Viewer, most links like those links to CSS and JavaScript files are unlikely to work. When the RStudio Viewer shows you the preview, it does not actually launch a web server.]
+
+```{r project-options, echo=FALSE, fig.cap='RStudio project options.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/project-options.png')
+```
 
 ## Global options
 
