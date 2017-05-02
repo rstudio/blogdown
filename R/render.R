@@ -139,9 +139,6 @@ encode_paths = function(x, deps, parent, raw = TRUE, root) {
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
   if (!raw) return(gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x))
 
-  # remove special tokens
-  i = grep('<!-- /?BLOGDOWN-(HEAD|BODY-BEFORE) -->', x)
-  if (length(i)) x = x[-i]
   # move figures to /static/path/to/post/foo_files/figure-html
   r1 = paste0(r, '(figure-html/)')
   x = gsub(r1, paste0('\\1\\2', gsub('^content', '', parent), '/\\3\\4'), x)
