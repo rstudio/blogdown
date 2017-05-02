@@ -90,6 +90,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
   } else dir_copy(lib2[i], lib1[i])
 
   root = getwd()
+  base = site_base_dir()
   for (f in files) in_dir(d <- dirname(f), {
     f = basename(f)
     html = with_ext(f, 'html')
@@ -97,7 +98,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
     if (local && !require_rebuild(html, f)) next
     render_page(f)
     x = readUTF8(html)
-    x = encode_paths(x, by_products(f, '_files'), d, raw, root)
+    x = encode_paths(x, by_products(f, '_files'), d, raw, root, base)
     if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
     if (raw) x = split_html_tokens(x, FALSE)$body
     writeUTF8(c(fetch_yaml2(f), '', x), html)
@@ -133,7 +134,7 @@ render_page = function(input) {
 
 # example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
 # parent = 'content/post'; root = ~/Websites/Frida/
-encode_paths = function(x, deps, parent, raw = TRUE, root) {
+encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
   if (!dir_exists(deps)) return(x)
   # find the dependencies referenced in HTML, add a marker ##### to their paths
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
@@ -141,7 +142,7 @@ encode_paths = function(x, deps, parent, raw = TRUE, root) {
 
   # move figures to /static/path/to/post/foo_files/figure-html
   r1 = paste0(r, '(figure-html/)')
-  x = gsub(r1, paste0('\\1\\2', gsub('^content', '', parent), '/\\3\\4'), x)
+  x = gsub(r1, paste0('\\1\\2', gsub('^content/', base, parent), '/\\3\\4'), x)
   # move other HTML dependencies to /static/rmarkdown-libs/
   r2 = paste0(r, '([^/]+)/')
   x2 = grep(r2, x, value = TRUE)

@@ -33,8 +33,8 @@ hugo_build = function(local = FALSE, config = load_config()) {
     on.exit(writeUTF8(oconf$text, oconf$file), add = TRUE)
   }
   hugo_cmd(c(
-    if (local) c('-b', '/', '-D', '-F'), '-d', shQuote(publish_dir(config)),
-    theme_flag(config)
+    if (local) c('-b', site_base_dir(), '-D', '-F'),
+    '-d', shQuote(publish_dir(config)), theme_flag(config)
   ))
 }
 

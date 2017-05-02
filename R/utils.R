@@ -7,7 +7,7 @@
 serve_site = function(...) {
   build_site(TRUE)
   pdir = publish_dir(); n = nchar(pdir)
-  servr::httw(site.dir = pdir, handler = function(...) {
+  servr::httw(site.dir = pdir, baseurl = site_base_dir(), handler = function(...) {
     files = c(...)
     # exclude changes in the publish dir
     files = files[substr(files, 1, n) != pdir]
@@ -15,6 +15,20 @@ serve_site = function(...) {
     if (length(grep('^(themes|layouts|static)/|[.]([Rr]?md|toml|yaml)$', files)))
       build_site(TRUE)
   }, ...)
+}
+
+# figure out the base dir of the website, e.g. http://example.com/project/ ->
+# project/, so that serve_site() works as a local server when the website is to
+# be generated to a subdirectory of a domain (see the baseurl argument of
+# servr::httw())
+site_base_dir = function() {
+  config = load_config()
+  # baseurl is not meaningful when using relative URLs
+  if (get_config('relativeurls', FALSE, config)) return('/')
+  x = get_config('baseurl', '/', config)
+  x = gsub('^(https?://[^/]+)?/', '', x)
+  if (!grepl('^/', x)) x = paste0('/', x)
+  x
 }
 
 pkg_file = function(..., mustWork = TRUE) {

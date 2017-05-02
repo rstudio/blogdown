@@ -26,9 +26,7 @@ We must have successfully confused you now, but do not worry. You do not have to
     - Your `/content/` directory may not be completely clean, since it also contains `*.html` files.
     
     - If you use HTML widgets in Rmd, the HTML pages may not conform to W3C standards,^[W3C stands for World Wide Web Consortium: https://www.w3.org. In case you are really curious: the problem with `method = 'html'` for HTML widgets is that CSS styles may be declared in the `<body>` tag.] but the widgets will be most likely to work well anyway.
-    
-    - If your website is supposed to be placed in a subdirectory under a domain name (e.g., `http://example.com/my-project/`) when it is published, you must use `relativeurls = true` in `config.toml`.
-    
+
     - Besides these relatively minor disadvantages, the major advantage of `method = 'html'` is that your website is ready to be compiled by Hugo _alone_ after you have compiled it through **blogdown** once, because there is no need to use R or **blogdown** to post-process the website like `method = 'html_encoded'`. This advantage gives you the freedom to use deploying services like Netlify (Chapter \@ref(deployment)), where neither R nor **blogdown** is not available, but Hugo is. It is also much faster than `'html_encoded'.`
 
 - For `method = 'html_encoded'`:
@@ -37,11 +35,7 @@ We must have successfully confused you now, but do not worry. You do not have to
     
     - The HTML files under `/public/` should conform to standards.
     
-    - There is no need to adjust the `relativeurls` option.
-    
     - The disadvantages are: rendering the website is dependent on **blogdown** all the time, and it is relatively slow.^[It should not be too bad. Typically a website can be rendered in a few seconds.]
-
-There is a caching mechanism in `build_site()` to speed up building your website: an Rmd file will not be recompiled when its `*.html` output file is newer (this test is done through comparing file modification times). If you want to force `build_site()` to recompile the Rmd file even if it is older than the HTML output, you need to delete the HTML output, or edit the Rmd file.
 
 No matter which method you choose to use, `build_site()` will always look for an R script `/R/build.R` and execute it if it exists. This gives you the complete freedom to do anything you want for the website. For example, you can call `knitr::knit()` to compile Rmd to Markdown (`*.md`) in this R script instead of using `rmarkdown::render()`. This feature is designed for advanced users who are really familiar with the **knitr** package^[Honestly, it was originally designed for Yihui himself to build his own website, but he realized this feature could actually free users from Hugo. For example, it is possible to use Jekyll (another popular static site generator) with **blogdown**, too.] and Hugo or other static website generators (see Chapter \@ref(other-generators)).
 
@@ -61,9 +55,11 @@ The function `blogdown::serve_site()` calls `blogdown::build_site(local = TRUE)`
 
 The function `blogdown::build_site()` has an argument `local` that defaults to `FALSE`, which means building the website for publishing instead of local previewing. The mode `local = TRUE` is primarily for `blogdown::serve_site()` to serve the website locally. There are two major differences between `local = FALSE` and `TRUE`. When `local = TRUE`:
 
-- The `baseurl` option in `config.toml` is temporarily overridden by `"/"` even if you have set it to something like `"http://www.example.com/"`. This is because when a website is to be previewed locally, links should refer to local files. For example, `/about/index.html` should be used instead of the full link `http://www.example.com/about/index.html`; `serve_site()` knows that `/about/index.html` means the file under the `public/` directory, and can fetch it and display the conten to you, otherwise your browser will take you to the website `http://www.example.com` instead of displaying a local file.
+- The `baseurl` option in `config.toml` is temporarily overridden by `"/"` even if you have set it to a full URL like `"http://www.example.com/"`.^[If your `baseurl` contains a subdirectory, it will be overridden by the subdirectory name. For example, for `baseurl = "http://www.example.com/project/"`, `build_site(local = TRUE)` will temporarily remove the domain name and only use the value `/project/`.] This is because when a website is to be previewed locally, links should refer to local files. For example, `/about/index.html` should be used instead of the full link `http://www.example.com/about/index.html`; `serve_site()` knows that `/about/index.html` means the file under the `public/` directory, and can fetch it and display the conten to you, otherwise your browser will take you to the website `http://www.example.com` instead of displaying a local file.
 
 - Draft and future posts are always rendered when `local = TRUE`, but not when `local = FALSE`. This is for you to preview draft and future posts locally. If you know the [Hugo command line](https://gohugo.io/commands/hugo/), it means the `hugo` command is called with the flags `-D -F`, or equivalently, `--buildDrafts --buildFuture`.
+
+- There is a caching mechanism to speed up building your website: an Rmd file will not be recompiled when its `*.html` output file is newer (in terms of file modification times). If you want to force `build_site(local = TRUE)` to recompile the Rmd file even if it is older than the HTML output, you need to delete the HTML output, or edit the Rmd file so that its modification time will be newer.
 
 If your website does not work without the full `baseurl`, or you do not want the draft or future posts to be published, you should not publish the `public/` directory generated by `serve_site()`. Always run `blogdown::build_site()` before you upload this directory to a web server. You do not need to worry about these details if your website is automatically generated from source via a service like Netlify, which will make use of `baseurl` and not use `-D -F` by default.
 
