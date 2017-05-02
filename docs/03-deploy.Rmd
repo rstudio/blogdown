@@ -4,7 +4,7 @@ Since the website is basically a folder containing static files, it is much easi
 
 Considering the cost and friendliness to beginners, we currently recommend [Netlify](https://www.netlify.com). It provides a free plan that actually has quite a lot of useful features. If you have no experience in publishing websites before, just log in using your GitHub account or other accounts, drag the `public/` folder built by **blogdown** for your website to the Netlify page, and your website will be online in a few seconds with a random subdomain name of the form `xxxx.netlify.com` provided by Netlify (you can customize it). You can easily automate this process, and see Section \@ref(netlify) for more details.
 
-The second easiest solution may be [Updog](https://updog.co). It features the Dropbox integration. Publishing a website can be as easy as copying the files under the `public/` folder of your **blogdown** website to a Dropbox folder. The free plan of Updog only provides limited features, but its Pro plan only requires a one-time payment, and you will have access to much richer features.
+The second easiest solution may be [Updog](https://updog.co). It features the Dropbox integration. Publishing a website can be as easy as copying the files under the `public/` folder of your **blogdown** website to a Dropbox folder. The free plan of Updog only provides limited features, and its paid plan will give you access to much richer features.
 
 If you do not mind using command-line tools or are familiar with GIT/GitHub, you can certainly consider services like GitHub pages, Travis CI, or Amazon S3 to build or host your websites. No matter which service you use, please keep in mind that none of them can really lock you and you are always free to change the service. As we have mentioned before, one great advantage of **blogdown** is that your website will be a folder of static files that you can move to any web server.
 
@@ -18,17 +18,78 @@ Netlify supports several static website generators, including Jekyll and Hugo. F
 
 It may take a minute or two to deploy your website on Netlify for the first time, but it can be much faster later (a few seconds) when you update your website source, because Netlify deploys incremental changes in the `public/` directory, i.e., only the newer files compared  to the last time are deployed.
 
-After your GIT repository is connected with Netlify, the last issue you may want to solve is the domain name, unless you are satisfied with the free Netlify subdomain. If you want to use a different domain, you need configure some DNS records of the domain to point it to the Netlify server. See \@ref(domain-name) for some background knowledge on domain names.
+After your GIT repository is connected with Netlify, the last issue you may want to solve is the domain name, unless you are satisfied with the free Netlify subdomain. If you want to use a different domain, you need configure some DNS records of the domain to point it to the Netlify server. See Appendix \@ref(domain-name) for some background knowledge on domain names.
 
 If you are not familiar with domain names or do not want to learn more about them, an option for your consideration is a free subdomain `*.rbind.io` offered by RStudio, Inc. Please visit the Rbind support website <https://support.rbind.io> to know how to apply for a subdomain. In fact, the Rbind organization also offers free help on how to set up a website based on **blogdown**, thanks to a lot of volunteers from the R and statistics community.
 
+Netlify is the only solution in this chapter that does not require you to prebuild your website. You only need to update the source files, push them to GitHub, and Netlify will build the website for you. All the rest of solutions in this chapter will require you to build your website locally and upload the `public/` folder explicitly or implicitly.
+
 ## Updog
 
-The simplest solution: store the website in Dropbox, and point Updog to the folder. Done.
+[Updog](https://updog.co) provides a simple service: it turns a specified Dropbox (or Google Drive) folder into a website. The idea is that you grant Updog the permission to read the folder, and it will act as a middleman to serve your files under this folder to your visitors. This folder has to be accessed via a domain name, and Updog offers a free subdomain `*.updog.co`. For example, if you have assigned the domain `example.updog.co` to your Dropbox folder, and a visitor wants to see the page `https://example.updog.co/foo/index.html`, Updog will read the file `foo/index.html` in your Dropbox folder and display it to the visitor.
+
+At the moment, the free plan of Updog only allows one website per account, and will insert a footer "Hosted on UpDog" on your web pages. You may not like these limitations. The major benefit of using Updog is that publishing a website becomes implicit since Dropbox will continuously sync files. All you need to do is to make sure your website is generated to the correct Dropbox folder. This can be easily achieved by setting the option `publishDir` in `config.toml`. For example, suppose the folder that you assign to Updog is `~/Dropbox/Apps/updog/my-website/`, and your source folder is at `~/Dropbox/Apps/updog/my-source/`, then you can set `publishDir: "../my-website"` in `~/Dropbox/Apps/updog/my-source/config.toml`.
+
+You can also use your custom domain name if you do not want the default Updog subdomain, and you only need to point the CNAME record of your domain name to the Updog subdomain.
 
 ## GitHub pages
 
-Prebuild the website to HTML, and publish the `public` folder to the `user.github.io` repo, `gh-pages` or the `docs` folder.
+Although GitHub does not officially support Hugo (only Jekyll is supported), you can actually publish any static HTML files on [GitHub pages](https://pages.github.com/), even if they are not built with Jekyll. The first requirement of using GitHub pages is that you have to create a GitHub repository named `username.github.io` under your account (replace `username` with your actual GitHub username), and the rest of work is to push your website files to this repository. The comprehensive documentation of GitHub pages is at https://pages.github.com, and please ignore anything related to Jekyll there unless you actually use Jekyll instead of Hugo. To make sure GitHub does not rebuild your website using Jekyll and just publish whatever files you push to the repository, you need to create a (hidden) file named `.nojekyll` in the repository.^[You may use the R function `file.create('.nojekyll')` to create this file if you do not know how.] GitHub offers a free subdomain `username.github.io`, and you can use your own domain name by configuring its A or CNAME records to point it to GitHub pages (consult the GitHub pages documentation for how).
+
+Your `public/` directory should be the GIT repository. You have two possible choices of setting up this repository locally. The first choice is to follow the default structure of a Hugo website like the diagram below, and initialize the GIT repository under the `public/` directory:
+
+```
+source/
+|
+|-- config.toml
+|-- content/
+|-- themes/
+|-- ...
+|-- public/
+    |
+    |-- .git/
+    |-- .nojekyll
+    |-- index.html
+    |-- about/
+    |-- ...
+```
+
+If you know how to use command line, basically you change the working directory to `public/`, and initialize the GIT repository there:
+
+```bash
+cd public
+git init
+git remote add origin https://github.com/username/username.github.io
+```
+
+The other choice is to clone the GitHub repository you created to the same directory as your website source:
+
+```bash
+git clone https://github.com/username/username.github.io
+```
+
+And the structure looks like this:
+
+```
+source/
+|
+|-- config.toml
+|-- content/
+|-- themes/
+|-- ...
+
+username.github.io/
+|
+|-- .git/
+|-- .nojekyll
+|-- index.html
+|-- about/
+|-- ...
+```
+
+The source directory and the `username.github.io` directory are under the same parent directory. In this case, you need to set the option `publishDir: "../username.github.io"` in `source/config.toml`.
+
+
 
 ## Travis + GitHub
 
