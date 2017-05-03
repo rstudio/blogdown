@@ -1,10 +1,26 @@
 # Domain Name
 
-registration
+While you can use the free subdomain names like those provided by GitHub or Netlify, it may be a better idea to own a domain name by yourself. The cost of an apex domain is minimal (typically the yearly cost is about 10 US dollars), but you will enter a much richer world after you own a domain name. For example, you are free to point your domain to any web servers, you can create as many subdomain names as you want, and you can even set up your own email accounts using the domain or subdomains. In this chapter, we will explain some basic concepts of domain names, and mention a few (free) services to help you configure your domain name.
 
-name servers
+Before we dive in the details, we want to outline the big picture of how a URL works in your web browser. Suppose you typed or clicked a link `http://www.example.com/foo/index.html` in your web browser. What happens behind the scenes before you see the actual web page?
 
-DNS records
+First, the domain name has to be resolved through the nameservers associated with it. A nameserver knows the DNS (Domain Name System) records of a domain. Typically it will look up the "A records" to point the domain to the IP address of a web server. There are several other types of DNS records, and we will explain them later. Once the web server is reached, the server will look for the file `foo/index.html` under a directory associated with the domain name, and return its content in the response. That is basically how you can see a web page.
+
+## Registration
+
+You can purchase a domain name from many domain name registrars. To stay neutral, we are not going to make recommendations here, and you can use your search engine to find a registrar by yourself, or ask your friends for recommendations. However, we would like to remind you of a few things that you should pay attention to when looking for a domain name registrar:
+
+- You should have the freedom to transfer your domain from the current registrar to other registrars, i.e., they should not lock you in their system. To transfer a domain name, you should be given a code known as the "Transfer Auth Code" or "Auth Code" or "Transfer Key" or something like that.
+
+- You should be able to customize the nameservers (see Section \@ref(nameservers)) of your domain. By default, each registrar will assign their own nameservers to you, and these nameservers typically work very well, but there are some special nameservers that provide services more than just DNS records, and you may be interested in using them.
+
+- Other people can freely look up your personal information such as your email or physical address after you register a domain and submit these information to the registrar. This is called the "WHOIS Lookup". You may want to protect your privacy, but your registrar may require an extra payment.
+
+## Nameservers
+
+The main reason why we need nameservers is that we want to use domains instead of IP addresses, although a domain is not strictly necessary for you to be able to access a website. You could use the IP address if you have your own server with a public IP, but there are many problems with it, such as IP addresses are limited (in particular, IPv4), not easy to memorize, and you can only host one website per IP address (without using other ports).
+
+## DNS records
 
 subdomain
 
