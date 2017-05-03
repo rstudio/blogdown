@@ -357,3 +357,6 @@ clean_widget_html = function(x) {
   }
   x
 }
+
+decode_uri = function(...) httpuv::decodeURIComponent(...)
+encode_uri = function(...) httpuv::encodeURIComponent(...)

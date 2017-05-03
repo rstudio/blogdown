@@ -160,7 +160,7 @@ decode_paths = function(x, dcur, env, root) {
   m = gregexpr(r, x)
   regmatches(x, m) = lapply(regmatches(x, m), function(p) {
     if (length(p) == 0) return(p)
-    path = gsub(r, '\\2', p)
+    path = decode_uri(gsub(r, '\\2', p))
     path = file.path(root, path)
     d0 = gsub('^(.+_files)/.+', '\\1', path)
 
@@ -184,7 +184,7 @@ decode_paths = function(x, dcur, env, root) {
 
     env$dirs = c(env$dirs, unique(d0))
 
-    paste0(gsub(r, '\\1="', p), path, '"')
+    paste0(gsub(r, '\\1="', p), encode_uri(path), '"')
   })
   x
 }
