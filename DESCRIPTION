@@ -13,6 +13,7 @@ Imports:
     bookdown (>= 0.2),
     knitr,
     yaml (>= 2.1.14),
+    httpuv,
     servr (>= 0.4.1)
 Suggests:
   testit,
