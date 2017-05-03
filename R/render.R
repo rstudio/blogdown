@@ -148,7 +148,7 @@ encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
   x2 = grep(r2, x, value = TRUE)
   if (length(x2) == 0) return(x)
   libs = unique(gsub(r2, '\\3\\4', unlist(regmatches(x2, gregexpr(r2, x2)))))
-  x = gsub(r2, '\\1\\2/rmarkdown-libs/\\4/', x)
+  x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
   to = file.path(root, 'static', 'rmarkdown-libs', basename(libs))
   dirs_copy(libs, to)
   unlink(libs, recursive = TRUE)
