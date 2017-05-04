@@ -31,6 +31,25 @@ site_base_dir = function() {
   x
 }
 
+#' A helper function to return a dependency path name
+#'
+#' In most cases, \pkg{blogdown} can process images and HTML widgets
+#' automatically generated from code chunks (they will be moved to the
+#' \code{static/} folder by default), but it may fail to recognize dependency
+#' files generated to other paths. This function returns a path that you can use
+#' for your output files, so that \pkg{blogdown} knows that they should be be
+#' processed, too. It is designed to be used in a \pkg{knitr} code chunk.
+#' @param default Return this default value when this function is called outside
+#'   of a \pkg{knitr} code chunk.
+#' @return A character string of the \code{default} value (outside \pkg{knitr}),
+#'   or a path consisting of the \pkg{knitr} figure path appended by the current
+#'   chunk label.
+#' @export
+dep_path = function(default = knitr::opts_chunk$get('fig.path')) {
+  opts = knitr::opts_current$get()
+  if (length(opts) == 0) default else knitr::fig_path('', opts, NULL)
+}
+
 pkg_file = function(..., mustWork = TRUE) {
   system.file(..., package = 'blogdown', mustWork = mustWork)
 }

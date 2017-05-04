@@ -141,8 +141,16 @@ encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
   if (!raw) return(gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x))
 
   # move figures to /static/path/to/post/foo_files/figure-html
-  r1 = paste0(r, '(figure-html/)')
-  x = gsub(r1, paste0('\\1\\2', gsub('^content/', base, parent), '/\\3\\4'), x)
+  if (FALSE) {
+    # this is a little more rigorous: the approach below ("\'?)(%s/figure-html/)
+    # means process any paths that "seems to have been generated from Rmd"; the
+    # optional single quote after double quote is only for the sake of
+    # trelliscopejs, where the string may be "'*_files/figure-html'"
+    r1 = paste0(r, '(figure-html/)')
+    x = gsub(r1, paste0('\\1\\2', gsub('^content/', base, parent), '/\\3\\4'), x)
+  }
+  r1 = sprintf('("\'?)(%s/figure-html/)', deps)
+  x = gsub(r1, paste0('\\1', gsub('^content/', base, parent), '/\\2'), x, perl = TRUE)
   # move other HTML dependencies to /static/rmarkdown-libs/
   r2 = paste0(r, '([^/]+)/')
   x2 = grep(r2, x, value = TRUE)
