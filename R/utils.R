@@ -189,6 +189,7 @@ site_root = function() {
 
 # not TOML parser in R yet, so a simple version that only reads top-level options
 parse_toml = function(f, x = readUTF8(f)) {
+  if (requireNamespace('RcppTOML', quietly = TRUE)) return(RcppTOML::parseTOML(f))
   z = list()
   # strings
   r = '^([[:alnum:]]+?)\\s*=\\s*"([^"]*?)"\\s*$'

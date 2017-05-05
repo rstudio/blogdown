@@ -19,6 +19,7 @@ Suggests:
   testit,
   shiny,
   miniUI,
+  RcppTOML,
   rprojroot,
   rstudioapi
 LazyData: true
