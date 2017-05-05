@@ -4,7 +4,7 @@
 \alias{serve_site}
 \title{Live preview a site}
 \usage{
-serve_site(dir = ".", ...)
+serve_site(...)
 }
 \arguments{
 \item{...}{Arguments passed to \code{servr::httw()} (arguments \code{dir},
