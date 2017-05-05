@@ -188,8 +188,13 @@ site_root = function() {
 }
 
 # a simple parser that only reads top-level options unless RcppTOML is available
-parse_toml = function(f, x = readUTF8(f)) {
-  if (requireNamespace('RcppTOML', quietly = TRUE)) return(RcppTOML::parseTOML(f))
+parse_toml = function(
+  f, x = readUTF8(f), strict = requireNamespace('RcppTOML', quietly = TRUE)
+) {
+  if (strict) {
+    if (no_file <- missing(f)) f = paste(x, collapse = '\n')
+    return(RcppTOML::parseTOML(f, fromFile = !no_file))
+  }
   z = list()
   # strings
   r = '^([[:alnum:]]+?)\\s*=\\s*"([^"]*?)"\\s*$'
