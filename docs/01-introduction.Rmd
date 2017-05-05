@@ -23,7 +23,7 @@ By default, it installs the latest version of Hugo, but you can choose a specifi
 
 For macOS users, `install_hugo()` uses the package manager Homebrew (https://brew.sh), which is the recommended way to install Hugo, but if you do not prefer installing or using Homebrew, you can call `blogdown::install_hugo(use_brew = FALSE)`.^[If you are not a software developer, the benefits of Homebrew may not be so obvious.] If you have never installed Homebrew before, the installation may take one or two minutes. If the installation fails for any reason,^[One possible reason for the failure might be that you do not have Xcode Command Line Tools, and you can try the command `xcode-select --install` in the Terminal.] `install_hugo()` will automatically retry with `use_brew = FALSE`.
 
-To upgrade or reinstall Hugo, pass the argument `force = TRUE` to `install_hugo()`.
+To upgrade or reinstall Hugo, pass the argument `force = TRUE` to `install_hugo()`. You can check the Hugo version via `blogdown::hugo_version()`.
 
 ## A quick example
 
@@ -35,7 +35,7 @@ blogdown::new_site()
 
 Then wait for this function to create a new site, download the default theme, add some sample posts, open them, build the site, and launch it in the RStudio Viewer, so you can immediately preview it. If you do not use the RStudio IDE, you need to make sure you are currently under an empty directory,^[Check the output of `list.files('.')` in R, and make sure it does not include files other than `LICENSE`, the RStudio project file (`*.Rproj`), `README` or `README.md`.] and `new_site()` will do the same thing but the website will be launched in your web browser instead of the RStudio Viewer.
 
-Now you should see a bunch of directories and files under the RStudio project or your current working directory. Before we explain these new directories and files, let's introduce an important and helpful technology first: _LiveReload._ This means your website will be automatically rebuilt and reloaded in your web browser^[You can also think the RStudio Viewer as a web browser.] whenever you modify any source file of your website and save it. Basically once you launch the website in a web browser, you will not need to build it explicitly. All you need to do is to edit the source files, such as R Markdown documents, and there is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()` based on the R package **servr**.^[Hugo has its own LiveReload implementation, but we did not take advantage of it in **blogdown** because Hugo does not know how to compile R Markdown documents.]
+Now you should see a bunch of directories and files under the RStudio project or your current working directory. Before we explain these new directories and files, let's introduce an important and helpful technology first: _LiveReload._ This means your website will be automatically rebuilt and reloaded in your web browser^[You can also think the RStudio Viewer as a web browser.] when you modify any source file of your website and save it. Basically once you launch the website in a web browser, you do not need to rebuild it explicitly any more. All you need to do is to edit the source files, such as R Markdown documents, and there is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()` based on the R package **servr**.^[Hugo has its own LiveReload implementation, but we did not take advantage of it in **blogdown** because Hugo does not know how to compile R Markdown documents.]
 
 The `new_site()` function has several arguments, and you may check out its R help page (`?blogdown::new_site`) for details. A minimal default theme named "hugo-lithium-theme" is provided as the default theme of the new site,^[You can find its source on GitHub: https://github.com/yihui/hugo-lithium-theme. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.] and you can see what it looks like in Figure \@ref(fig:lithium).
 
@@ -115,7 +115,7 @@ If your website was created using the function `blogdown::new_site()` instead of
 
 Then you will see a pane in RStudio named "Build", and there is a button "Build Website". When you click this button, RStudio will call `blogdown::build_site()` to build the website. If you want to build the website and publish the output files under the `public/` manually, you are recommended to restart your R session and click this "Build Website" button every time before you publish the website, instead of publishing the `public/` folder generated continuously and automatically by `blogdown::serve_site()`, because the latter calls `blogdown::build_site(local = TRUE)`, which has some subtle differences with `blogdown::build_site(local = FALSE)` (see Section \@ref(local-preview) for details).
 
-We strongly recommend you to uncheck the option "Preview site after building" in your RStudio project options (Figure \@ref(fig:project-options)).^[In case you wonder why: unless you have set the option `relativeurls` to `true` in `config.toml`, it requires a web server to preview the website locally, otherwise even if you can see the homepage of your website in the RStudio Viewer, most links like those links to CSS and JavaScript files are unlikely to work. When the RStudio Viewer shows you the preview, it does not actually launch a web server.]
+We strongly recommend you to uncheck the option "Preview site after building" in your RStudio project options (Figure \@ref(fig:project-options)).^[In case you wonder why: unless you have set the option `relativeurls` to `true` in `config.toml`, it requires a web server to preview the website locally, otherwise even if you can see the homepage of your website in the RStudio Viewer, most links like those links to CSS and JavaScript files are unlikely to work. When the RStudio Viewer shows you the preview, it does not actually launch a web server.] You can also uncheck the option "Re-knit current preview when supporting files change", since this option is not really useful after you call `serve_site()`.
 
 ```{r project-options, echo=FALSE, fig.cap='RStudio project options.', out.width='80%', fig.align='center'}
 knitr::include_graphics('images/project-options.png')
@@ -211,6 +211,8 @@ output:
 At the moment, not all features of `rmarkdown::html_document` are supported in **blogdown**, such as `df_print`, `code_folding`, `code_download`, `theme`, `highlight`,^[Syntax highlighting can be added through the JavaScript highlight.js. See \@ref(how-to) for details.] and so on.
 
 If your code chunk has graphics output, we recommend that you avoid special characters like spaces in the chunk label. Ideally, you should only use alphanumeric characters and dashes, e.g., ```` ```{r, my-label}```` instead of ```` ```{r, my label}````.
+
+It is not recommended to change the **knitr** chunk options `fig.path` or `cache.path` in R Markdown. The default values of these options work best with **blogdown**. Please read Section \@ref(figure-paths) to know the technical reasons if you prefer.
 
 ## Other themes
 
