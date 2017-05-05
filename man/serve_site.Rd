@@ -4,12 +4,14 @@
 \alias{serve_site}
 \title{Live preview a site}
 \usage{
-serve_site(...)
+serve_site(dir = ".", ...)
 }
 \arguments{
-\item{...}{Arguments passed to \code{servr::httw()}.}
+\item{...}{Arguments passed to \code{servr::httw()} (arguments \code{dir},
+\code{site.dir}, \code{baseurl}, and \code{handler} have been provided,
+hence you cannot customize these arguments).}
 }
 \description{
 Calls \code{servr::\link{httw}()} to watch for changes in the site, rebuild
-the site if necessary, and refresh the page automatically.
+the site if necessary, and refresh the web page automatically.
 }

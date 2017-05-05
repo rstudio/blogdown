@@ -1,7 +1,7 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.0.34
+Version: 0.0.35
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name")
     )
@@ -19,6 +19,7 @@ Suggests:
   testit,
   shiny,
   miniUI,
+  rprojroot,
   rstudioapi
 LazyData: true
 URL: https://github.com/rstudio/blogdown
