@@ -1,4 +1,5 @@
 language: r
+dist: trusty
 sudo: false
 cache:
   packages: yes
