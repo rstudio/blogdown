@@ -23,7 +23,7 @@ By default, it installs the latest version of Hugo, but you can choose a specifi
 
 For macOS users, `install_hugo()` uses the package manager Homebrew (https://brew.sh), which is the recommended way to install Hugo, but if you do not prefer installing or using Homebrew, you can call `blogdown::install_hugo(use_brew = FALSE)`.^[If you are not a software developer, the benefits of Homebrew may not be so obvious.] If you have never installed Homebrew before, the installation may take one or two minutes. If the installation fails for any reason,^[One possible reason for the failure might be that you do not have Xcode Command Line Tools, and you can try the command `xcode-select --install` in the Terminal.] `install_hugo()` will automatically retry with `use_brew = FALSE`.
 
-If you want to install Hugo to a custom path, you can set the global option `blogdown.hugo.dir` to a directory to store the Hugo executable before you call `install_hugo()`, e.g., `options(blogdown.hugo.dir = '~/Downloads/hugo_0.20.1/')`. This may be useful for you to use a specific version of Hugo for a specific website,^[You can set this option per project. See Section \@ref(global-options) for details.] or store a copy of Hugo on a USB Flash drive along with your website.
+To upgrade or reinstall Hugo, pass the argument `force = TRUE` to `install_hugo()`.
 
 ## A quick example
 
@@ -132,9 +132,6 @@ knitr::kable(matrix(c(
   'blogdown.rmd', 'FALSE', 'default new post format to Rmd?',
   'blogdown.subdir', 'post', 'a subdirectory under /content/',
   'blogdown.yaml.empty', TRUE, 'preserve empty fields in YAML?',
-  'blogdown.method', 'html', 'the building method for R Markdown',
-  'blogdown.hugo.dir', '', 'the directory of the Hugo executable',
-  'blogdown.widgetsID', TRUE, "incremental ID's for HTML widgets?",
   NULL
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
 ```
@@ -153,10 +150,6 @@ options(servr.daemon = TRUE, blogdown.author = 'John Doe')
 ```
 
 A nice consequence of setting these options is that when you use the RStudio addin "New Post", the fields "Author", "Subdirectory", and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
-
-The option `blogdown.method` is explained in Section \@ref(methods).
-
-The option `blogdown.widgetsID` is only relevant if your website source is under version control and you have HTML widgets on the website. If this option is `TRUE` (default), the random ID's of HTML widgets will be changed to incremental ID's in the HTML output, so that these ID's are unlikely to change every time you recompile your website, otherwise every time you will get different random ID's.
 
 ## R Markdown vs Markdown {#output-format}
 

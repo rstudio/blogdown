@@ -2,6 +2,28 @@
 
 In this chapter, we talk about a few advanced topics that may be of interest to developers and advanced users.
 
+## More global options
+
+There are a few more advanced global options in addition to those introduced in Section \@ref(global-options), and they are listed in Table \@ref(tab:global-options2).
+
+```{r global-options2, echo=FALSE}
+knitr::kable(matrix(c(
+  'blogdown.hugo.dir', '', 'the directory of the Hugo executable',
+  'blogdown.method', 'html', 'the building method for R Markdown',
+  'blogdown.publishDir', '', 'the publish dir for local preview',
+  'blogdown.widgetsID', TRUE, "incremental ID's for HTML widgets?",
+  NULL
+), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'A few more advanced global options.')
+```
+
+If you want to install Hugo to a custom path, you can set the global option `blogdown.hugo.dir` to a directory to store the Hugo executable before you call `install_hugo()`, e.g., `options(blogdown.hugo.dir = '~/Downloads/hugo_0.20.1/')`. This may be useful for you to use a specific version of Hugo for a specific website,^[You can set this option per project. See Section \@ref(global-options) for details.] or store a copy of Hugo on a USB Flash drive along with your website.
+
+The option `blogdown.method` is explained in Section \@ref(methods).
+
+When your website project is under version control in the RStudio IDE, it may be slow to preview the site continuously if it contains hundreds of files or more, because the default publish directory is `public/` under the project root directory, and whenever you make a change in the source that triggers a rebuild, RStudio will be busy with tracking file changes in the `public/` directory. The delay before you see the website in the RStudio Viewer can be more than 10 seconds or even longer. That is why we provide the option `blogdown.publishDir`. You may set a temporary publish directory to generate the website, and this directory should not be under the same RStudio project, e.g., `options(blogdown.publishDir = '../public_site')`, which means the website will be generated to the directory `public_site/` under the parent directory of the current project.
+
+The option `blogdown.widgetsID` is only relevant if your website source is under version control and you have HTML widgets on the website. If this option is `TRUE` (default), the random ID's of HTML widgets will be changed to incremental ID's in the HTML output, so that these ID's are unlikely to change every time you recompile your website, otherwise every time you will get different random ID's.
+
 ## Different building methods {#methods}
 
 If your website does not contain any Rmd files, it is very straightforward to render it --- just a system call to the `hugo` command. When your website contains Rmd files, **blogdown** has provided three different rendering methods to compile these Rmd files. A website can be built using the function `blogdown::build_site()`:
