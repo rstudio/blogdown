@@ -1,10 +1,21 @@
 #' Live preview a site
 #'
 #' Calls \code{servr::\link{httw}()} to watch for changes in the site, rebuild
-#' the site if necessary, and refresh the page automatically.
-#' @param ... Arguments passed to \code{servr::httw()}.
+#' the site if necessary, and refresh the web page automatically.
+#' @param ... Arguments passed to \code{servr::httw()} (arguments \code{dir},
+#'   \code{site.dir}, \code{baseurl}, and \code{handler} have been provided,
+#'   hence you cannot customize these arguments).
 #' @export
-serve_site = function(...) {
+serve_site = function(dir = '.', ...) {
+  if (!has_config(dir)) {
+    warning('There is no config.toml or config.yaml under ', normalizePath(dir))
+    dir2 = tryCatch(rprojroot::find_rstudio_root_file(), error = function(e) dir)
+    if (dir2 != dir && has_config(dir2)) {
+      message('Using the directory ', dir2, ' as the root directory of the website')
+      dir = dir2
+    }
+  }
+  owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
   build_site(TRUE)
   pdir = publish_dir(); n = nchar(pdir)
   servr::httw(site.dir = pdir, baseurl = site_base_dir(), handler = function(...) {
@@ -14,7 +25,7 @@ serve_site = function(...) {
     # re-generate only if Rmd/md or config files or layouts were updated
     if (length(grep('^(themes|layouts|static)/|[.]([Rr]?md|toml|yaml)$', files)))
       build_site(TRUE)
-  }, ...)
+  }, dir = '.', ...)
 }
 
 # figure out the base dir of the website, e.g. http://example.com/project/ ->
@@ -29,6 +40,10 @@ site_base_dir = function() {
   x = gsub('^(https?://[^/]+)?/', '', x)
   if (!grepl('^/', x)) x = paste0('/', x)
   x
+}
+
+has_config = function(dir) {
+  length(grep('^config[.](toml|yaml)$', list.files(dir))) > 0
 }
 
 #' A helper function to return a dependency path name
