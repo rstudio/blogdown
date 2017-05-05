@@ -187,7 +187,7 @@ site_root = function() {
   getwd()
 }
 
-# not TOML parser in R yet, so a simple version that only reads top-level options
+# a simple parser that only reads top-level options unless RcppTOML is available
 parse_toml = function(f, x = readUTF8(f)) {
   if (requireNamespace('RcppTOML', quietly = TRUE)) return(RcppTOML::parseTOML(f))
   z = list()
