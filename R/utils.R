@@ -207,7 +207,10 @@ parse_toml = function(
   # numbers
   r = '^([[:alnum:]]+?)\\s*=\\s*([0-9.]+)\\s*$'
   y = grep(r, x, value = TRUE)
-  z[gsub(r, '\\1', y)] = as.list(as.numeric(gsub(r, '\\2', y)))
+  z[gsub(r, '\\1', y)] = lapply(as.list(as.numeric(gsub(r, '\\2', y))), function(v) {
+    v2 = as.integer(v)
+    if (isTRUE(v2 == v)) v2 else v
+  })
   z
 }
 
