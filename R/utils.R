@@ -6,7 +6,7 @@
 #'   \code{site.dir}, \code{baseurl}, and \code{handler} have been provided,
 #'   hence you cannot customize these arguments).
 #' @export
-serve_site = function(dir = '.', ...) {
+serve_site = function(...) {
   if (!has_config(dir)) {
     warning('There is no config.toml or config.yaml under ', normalizePath(dir))
     dir2 = tryCatch(rprojroot::find_rstudio_root_file(), error = function(e) dir)
