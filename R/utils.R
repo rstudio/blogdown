@@ -7,6 +7,7 @@
 #'   hence you cannot customize these arguments).
 #' @export
 serve_site = function(...) {
+  dir = '.'
   if (!has_config(dir)) {
     warning('There is no config.toml or config.yaml under ', normalizePath(dir))
     dir2 = tryCatch(rprojroot::find_rstudio_root_file(), error = function(e) dir)
