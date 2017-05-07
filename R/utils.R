@@ -161,17 +161,17 @@ load_config = function() {
 
   find_config()
 
-  if (file_exists('config.yaml'))
-    return(read_config('config.yaml', yaml::yaml.load_file))
-
   if (file_exists('config.toml'))
     return(read_config('config.toml', parse_toml))
+
+  if (file_exists('config.yaml'))
+    return(read_config('config.yaml', yaml::yaml.load_file))
 }
 
 find_config = function(error = TRUE) {
   f = existing_files(c('config.toml', 'config.yaml'), first = TRUE)
   if (length(f) == 0 && error) stop(
-    'Cannot find the configuration file config.yaml or config.toml of the website'
+    'Cannot find the configuration file config.toml or config.yaml of the website'
   )
   f
 }
