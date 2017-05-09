@@ -151,6 +151,14 @@ options(servr.daemon = TRUE, blogdown.author = 'John Doe')
 
 A nice consequence of setting these options is that when you use the RStudio addin "New Post", the fields "Author", "Subdirectory", and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
 
+R only reads one startup profile file. For example, if you have a `.Rprofile` under the current directory and a global `~/.Rprofile`, only the former one will be executed when R starts up from the current directory. This may make it inconvenient for multiple authors collaborating on the same website project, since you cannot set author-specific options. In particular, it is not posssible to set the `blogdown.author` option in a single `.Rprofile`, because this option should be different for different authors. One workaround is to set common options in `.Rprofile` under the root directory of the website project, and also execute the global `~/.Rprofile` if it exists. Author-specific options can be set in the global `~/.Rprofile` on each author's computer.
+
+```{r eval=FALSE}
+# in .Rprofile of the website project
+if (file.exists('~/.Rprofile')) base::sys.source('~/.Rprofile')
+# then set options(blogdown.author = 'Your Name') in ~/.Rprofile
+```
+
 ## R Markdown vs Markdown {#output-format}
 
 When you create a new post, you have to decide whether you want to use R Markdown or plain Markdown, as you can see from Figure \@ref(fig:new-post). The main differences are:
