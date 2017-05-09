@@ -192,7 +192,10 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   \file{content/post/2016-12-28-hello-world.md}. The date of the form
 #'   \code{YYYY-mm-dd} will be prepended if the filename does not start with a
 #'   date.
-#' @param slug The slug of the post.
+#' @param slug The slug of the post. By default (\code{NULL}), the slug is
+#'   generated from the filename by removing the date and filename extension,
+#'   e.g., if \code{file = 'post/2015-07-23-hi-there.md'}, \code{slug} will be
+#'   \code{hi-there}. Set \code{slug = ''} if you do not want it.
 #' @param subdir If specified (not \code{NULL}), the post will be generated
 #'   under a subdirectory under \file{content/}. It can be a nested subdirectory
 #'   like \file{post/joe/}.
@@ -207,11 +210,12 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
-  categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = '',
+  categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = NULL,
   subdir = getOption('blogdown.subdir', 'post'), rmd = getOption('blogdown.rmd', FALSE)
 ) {
   if (is.null(file)) file = post_filename(title, subdir, rmd, date)
   file = trim_ws(file)  # trim (accidental) white spaces
+  if (is.null(slug)) slug = post_slug(file)
   slug = trim_ws(slug)
   new_content(file, kind, FALSE)
 
