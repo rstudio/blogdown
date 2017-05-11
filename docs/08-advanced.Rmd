@@ -105,6 +105,39 @@ In the rare cases when **blogdown** fails to detect and copy some of your depend
 
 If you do not understand all these technical details, we recommend you to use the first choice, and you will have to sacrifice custom permanent links and clean URLs (e.g., `/about.html` instead of `/about/`). With this choice, you can also customize the `fig.path` option for code chunks if you want.
 
+## Version control
+
+If your website source files are under version control, we recommend you to add at least these two folder names to your `.gitignore` file:
+
+```
+blogdown
+public
+```
+
+The `blogdown/` directory is used to store cache files, and they are most likely to be useless to the published website. Only **knitr** may use them, and the published website will not depend on these files.
+
+The `public/` directory should be ignored if your website is to going to be automatically (re)built on a remote server such as Netlify.
+
+As we mentioned in Section \@ref(dep-path), R plots will be copied to `static/`, so you may see new files in GIT after you render an Rmd file that has graphics output. You need to add and commit these new files in GIT, because the website will use them.
+
+Although it is not relevant to **blogdown**, but macOS users should remember to ignore `.DS_Store` and Windows users should ignore `Thumbs.db`.
+
+If you are relatively familiar with GIT, there is a special technique that may be useful for you to manage Hugo themes, which is called "GIT submodules". A submodule in GIT allows you to manage a particular folder of the main repository using a different remote repository. For example, if you used the default `hugo-lithium-theme` from my GitHub repository, and want to sync it with my repository occasionally, because I may update it from time to time. You can add the GIT submodule via command line: 
+
+```bash
+git submodule add \
+  https://github.com/yihui/hugo-lithium-theme.git \
+  themes/hugo-lithium-theme
+```
+
+If the folder `themes/hugo-lithium-theme` exists, you need to delete it before adding the submodule. Then you can see a SHA string associated with the "folder" `themes/hugo-lithium-theme` in the GIT status of your main repository indicating the version of the submodule. Note you will only see the SHA string instead of the full content of the folder. Next time when you want to sync with my repository, you may run the command:
+
+```bash
+git submodule update --recursive --remote
+```
+
+In general, if you are happy with how your website looks, you do not need to manage the theme using GIT submodules. Future updates in the upstream repository may not really be what you want. In that case, a physical and fixed copy of the theme is more appropriate for you.
+
 ## The default HTML template {#default-template}
 
 As we mentioned in Section \@ref(output-format), the default output format for an Rmd document in **blogdown** is `blogdown::html_page`. This format passes a minimal HTML template to Pandoc by default:
