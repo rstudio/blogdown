@@ -236,3 +236,59 @@ new_post = function(
 
   if (open) open_file(file)
 }
+
+#' Helper functions to write Hugo shortcodes using the R syntax
+#'
+#' These functions return Hugo shortcodes with the shortcode name and arguments
+#' you specify. The closing shortcode will be added only if the inner content is
+#' not empty. The function \code{shortcode_html()} is essentially
+#' \code{shortcode(.type = 'html')}.
+#'
+#' These functions can be used in either \pkg{knitr} inline R expressions or
+#' code chunks. The returned character string is wrapped in
+#' \code{htmltools::\link[htmltools]{HTML}()}, so  \pkg{rmarkdown} will protect
+#' it from the Pandoc conversion. You cannot simply write \code{{{< shortcode
+#' >}}} in R Markdown, because Pandoc is not aware of Hugo shortcodes, and may
+#' convert special characters so that Hugo can no longer recognize the
+#' shortcodes (e.g. \code{<} will be converted to \code{&lt;}).
+#'
+#' If your document is pure Markdown, you can use the Hugo syntax to write
+#' shortcodes, and there is no need to call these R functions.
+#' @param .name The name of the shortcode.
+#' @param ... All arguments of the shortcode (either all named, or all unnamed).
+#'   The \code{...} argument of \code{shortcode_html()} is passed to
+#'   \code{shortcode()}.
+#' @param .content The inner content for the shortcode.
+#' @param .type The type of the shortcode: \code{markdown} or \code{html}.
+#' @return A character string wrapped in \code{htmltools::HTML()};
+#'   \code{shortcode()} returns a string of the form \code{{{\% name args \%}}},
+#'   and \code{shortcode_html()} returns \code{{{< name args >}}}.
+#' @references \url{https://gohugo.io/extras/shortcodes/}
+#' @export
+#' @examples library(blogdown)
+#'
+#' shortcode('twitter', 1234567)
+#' shortcode('figure', src='/images/foo.png', alt='A nice figure')
+#' shortcode('highlight', 'bash', .content = 'echo hello world;')
+#'
+#' shortcode_html('myshortcode', .content='My <strong>shortcode</strong>.')
+shortcode = function(.name, ..., .content = NULL, .type = 'markdown') {
+  is_html = match.arg(.type, c('markdown', 'html')) == 'html'
+  m = .name; x = paste(.content, collapse = '\n'); a = args_string(...)
+  if (a != '') a = paste('', a)
+  if (is_html) {
+    s1 = sprintf('{{< %s%s >}}', m, a)
+    s2 = sprintf('{{< /%s >}}', m)
+  } else {
+    s1 = sprintf('{{%% %s%s %%}}', m, a)
+    s2 = sprintf('{{%% /%s %%}}', m)
+  }
+  res = if (x == '') s1 else paste(s1, x, s2, sep = '\n')
+  htmltools::HTML(res)
+}
+
+#' @export
+#' @rdname shortcode
+shortcode_html = function(...) {
+  shortcode(..., .type = 'html')
+}

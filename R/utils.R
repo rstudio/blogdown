@@ -404,3 +404,20 @@ clean_widget_html = function(x) {
 
 decode_uri = function(...) httpuv::decodeURIComponent(...)
 encode_uri = function(...) httpuv::encodeURIComponent(...)
+
+# convert arguments to a single string of the form "arg1=value1 arg2=value2 ..."
+args_string = function(...) {
+  v = list(...)
+  if (length(v) == 0) return('')
+  if (any(unlist(lapply(v, length)) != 1)) stop('All argument values must be of length 1')
+  m = names(v)
+  v = as.character(v)
+  i = grep('\\s', v)  # quote values that contain spaces
+  v[i] = sprintf('"%s"', v[i])
+  if (is.null(m)) {
+    paste(v, collapse = ' ')
+  } else {
+    if (any(m == '')) stop('All arguments must be either named or unnamed')
+    paste(m, '=', v, sep = '', collapse = ' ')
+  }
+}
