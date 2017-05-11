@@ -23,7 +23,7 @@ new_content(path, kind = "default", open = interactive())
 
 new_post(title, kind = "default", open = interactive(), 
     author = getOption("blogdown.author"), categories = NULL, 
-    tags = NULL, date = Sys.Date(), file = NULL, slug = "", 
+    tags = NULL, date = Sys.Date(), file = NULL, slug = NULL, 
     subdir = getOption("blogdown.subdir", "post"), rmd = getOption("blogdown.rmd", 
         FALSE))
 }
@@ -86,7 +86,10 @@ characters with dashes, e.g. \code{title = 'Hello World'} may create a file
 \code{YYYY-mm-dd} will be prepended if the filename does not start with a
 date.}
 
-\item{slug}{The slug of the post.}
+\item{slug}{The slug of the post. By default (\code{NULL}), the slug is
+generated from the filename by removing the date and filename extension,
+e.g., if \code{file = 'post/2015-07-23-hi-there.md'}, \code{slug} will be
+\code{hi-there}. Set \code{slug = ''} if you do not want it.}
 
 \item{subdir}{If specified (not \code{NULL}), the post will be generated
 under a subdirectory under \file{content/}. It can be a nested subdirectory
