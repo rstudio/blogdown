@@ -237,6 +237,18 @@ new_post = function(
   if (open) open_file(file)
 }
 
+#' @param to A format to convert to.
+#' @param unsafe Whether to enable unsafe operations, such as overwriting
+#'   Markdown source documents. If you have backed up the website, or the
+#'   website is under version control, you may try \code{unsafe = TRUE}.
+#' @export
+#' @describeIn hugo_cmd A wrapper function to convert source content to
+#'   different formats via \command{hugo convert}.
+hugo_convert = function(to = c('YAML', 'TOML', 'JSON'), unsafe = FALSE, ...) {
+  to = match.arg(to)
+  hugo_cmd(c('convert', paste0('to', to), if (unsafe) '--unsafe', ...))
+}
+
 #' Helper functions to write Hugo shortcodes using the R syntax
 #'
 #' These functions return Hugo shortcodes with the shortcode name and arguments
