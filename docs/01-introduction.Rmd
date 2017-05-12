@@ -23,11 +23,11 @@ By default, it installs the latest version of Hugo, but you can choose a specifi
 
 For macOS users, `install_hugo()` uses the package manager Homebrew (https://brew.sh), which is the recommended way to install Hugo, but if you do not prefer installing or using Homebrew, you can call `blogdown::install_hugo(use_brew = FALSE)`.^[If you are not a software developer, the benefits of Homebrew may not be so obvious.] If you have never installed Homebrew before, the installation may take one or two minutes. If the installation fails for any reason,^[One possible reason for the failure might be that you do not have Xcode Command Line Tools, and you can try the command `xcode-select --install` in the Terminal.] `install_hugo()` will automatically retry with `use_brew = FALSE`.
 
-To upgrade or reinstall Hugo, pass the argument `force = TRUE` to `install_hugo()`. You can check the Hugo version via `blogdown::hugo_version()`.
+To upgrade or reinstall Hugo, you may pass `force = TRUE` to `install_hugo()`. You can check the installed Hugo version via `blogdown::hugo_version()`, and find the latest version of Hugo at <https://github.com/spf13/hugo/releases>.
 
 ## A quick example
 
-From our experience, Hugo's documentation may be a little daunting to read and digest for beginners.^[One day I was almost ready to kill myself when I was trying to figure out how `_index.md` works by reading the documentation over and over again, and desperately searching in the Hugo forum.] For example, its "Quickstart" guide has 12 steps, and you can easily get lost if you have not used a static website generator before. For **blogdown**, we hope users of all levels can at least get started as quickly as possible. There are many things you may want to tweak for the website later, but the first step is actually fairly simple: create a new project under a new directory in the RStudio IDE (`File -> New Project`), and call the function:
+From our experience, Hugo's documentation may be a little daunting to read and digest for beginners.^[One day I was almost ready to kill myself when I was trying to figure out how `_index.md` works by reading the documentation over and over again, and desperately searching on the Hugo forum.] For example, its "Quickstart" guide has 12 steps, and you can easily get lost if you have not used a static website generator before. For **blogdown**, we hope users of all levels can at least get started as quickly as possible. There are many things you may want to tweak for the website later, but the first step is actually fairly simple: create a new project under a new directory in the RStudio IDE (`File -> New Project`), and call the function:
 
 ```{r eval=FALSE}
 blogdown::new_site()
@@ -224,7 +224,7 @@ It is not recommended to change the **knitr** chunk options `fig.path` or `cache
 
 ## Other themes
 
-In the beginning, you will probably spend much time on looking for a Hugo theme that you like from the collection listed at http://themes.gohugo.io, if you care a lot about the appearance of your website. Please note that not all themes have been tested against **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason.
+In the beginning, you will probably spend much time on looking for a Hugo theme that you like from the collection listed at http://themes.gohugo.io, if you care a lot about the appearance of your website. Please note that not all themes have been tested against **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason, but it can be time-consuming to learn and understand how a new theme works, so we recommend you to learn more about Hugo by yourself before asking, and we also encourage users to help each other there.
 
 After you have found a satisfactory theme, you need to figure out its GitHub user name and repository name, then either install the theme via `blogdown::install_theme()`, or just create a new site under another new directory and pass the GitHub repository name to the `theme` argument of `new_site()`. We recommend that you use the second approach, because Hugo themes could be very complicated and the usage of each theme can be very different and highly dependent on `config.toml`. If you use `new_site()` instead of `install_theme()`, the default sample `config.toml` of the theme will be copied to the root directory of your website, so you can edit it immediately, otherwise you will have to read the documentation of the theme carefully to know how to properly write a `config.toml` by yourself. To save you some time, we list a few themes below that match our taste:
 
@@ -239,4 +239,10 @@ After you have found a satisfactory theme, you need to figure out its GitHub use
     blogdown::new_site(theme = 'gcushen/hugo-academic')
     ```
 
-If you do not understand HTML, CSS, or JavaScript, and have no experience with Hugo themes or templates, it may take you about 10 minutes to get started with your new website, since you can basically accept everything you are given (such as the default theme). If you do have the knowledge and experience, it may take you several days to get started. Hugo is really powerful. Be cautious with power.
+If you do not understand HTML, CSS, or JavaScript, and have no experience with Hugo themes or templates, it may take you about 10 minutes to get started with your new website, since you have to accept everything you are given (such as the default theme). If you do have the knowledge and experience, it may take you several days to get started. Hugo is really powerful. Be cautious with power.
+
+Another thing to keep in mind is that the more effort you make in a complicated theme, the more difficult it is to change the theme in the future, because you may have customized a lot of things that are not straightforward to port to another theme. So please ask yourself seriously, "do I like this fancy theme so much that I will definitely not change it in the next couple of years?"
+
+> If you choose to dig a rather deep hole, someday you will have no choice but keep on digging, even with tears.
+>
+> --- Liyun Chen^[Translated from her Chinese Weibo: http://weibo.com/1406511850/Dhrb4toHc (you cannot view this page unless you have logged in).]
