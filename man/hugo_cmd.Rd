@@ -7,6 +7,7 @@
 \alias{new_site}
 \alias{new_content}
 \alias{new_post}
+\alias{hugo_convert}
 \title{Run Hugo commands}
 \usage{
 hugo_cmd(...)
@@ -26,6 +27,9 @@ new_post(title, kind = "default", open = interactive(),
     tags = NULL, date = Sys.Date(), file = NULL, slug = NULL, 
     subdir = getOption("blogdown.subdir", "post"), rmd = getOption("blogdown.rmd", 
         FALSE))
+
+hugo_convert(to = c("YAML", "TOML", "JSON"), unsafe = FALSE, 
+    ...)
 }
 \arguments{
 \item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
@@ -97,6 +101,12 @@ like \file{post/joe/}.}
 
 \item{rmd}{Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
 file. Ignored if \code{file} has been specified.}
+
+\item{to}{A format to convert to.}
+
+\item{unsafe}{Whether to enable unsafe operations, such as overwriting
+Markdown source documents. If you have backed up the website, or the
+website is under version control, you may try \code{unsafe = TRUE}.}
 }
 \description{
 Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
@@ -125,6 +135,9 @@ post will use R code chunks, you can set \code{rmd = TRUE} or the global
 option \code{options(blogdown.rmd = TRUE)} in your \file{~/.Rprofile}.
 Similarly, you can set \code{options(blogdown.author = 'Your Name')} so
 that the author field is automatically filled out when creating a new post.
+
+\item \code{hugo_convert}: A wrapper function to convert source content to
+different formats via \command{hugo convert}.
 }}
 
 \references{
