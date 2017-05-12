@@ -6,6 +6,8 @@
 
 ## HTML
 
+relative paths and absolute paths
+
 ## CSS
 
 ## JavaScript

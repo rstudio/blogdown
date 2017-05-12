@@ -2,14 +2,19 @@
 
 In this chapter, we will introduce [Hugo](https://gohugo.io), the static site generator on which **blogdown** is based. 
 
-"Static site generator" refers to the way that a website's content is generated. On dynamically generated sites, the content updates and is rendered every time a user visits the site. Alternatively, on statically generated sites the content is pre-rendered and the content only updates when the creator explicitly changes it^[More information here: https://gohugo.io/overview/introduction/]. 
+## Static sites and Hugo {#static-sites}
 
-Hugo is one example of a static site generator. It provides the framework for a variety of website types including, but certainly not limited to, blogs. We are fans of Hugo for many reasons but there are a few that stand out. Unlike other static site generators, Hugo doesn't require any dependencies, making it very quick and easy to install on most operating systems. It was also designed to render hundreds of pages of content faster than comparable static site generators and can reportedly render a single page in approximately 1 millisecond. Lastly, the community of Hugo users is very active both on the Hugo discussion boards^[https://discuss.gohugo.io/] and on GitHub^[https://github.com/spf13/hugo/issues].
+A static site often consists of HTML files (with optional external dependencies like images and JavaScript libraries), and the web server sends exactly the same content to the web browser no matter who visits the web pages. There is no dynamic computing on the server when a page is requested. By comparison, a dynamic site relies on a server-side language to do certain computing and sends potentially different content depending on different conditions. A common language is PHP, and a typical example of a dynamic site is a web forum. For example, each user has a profile page, but typically this does not mean the server has stored many HTML profile pages for all users. Instead, the server will fetch the user data from a database, and render the profile page dynamically.
 
-Although we think Hugo is a fantastic static site generator, there is really one and only one important but missing feature: the support for R Markdown. That is basically the whole point of the **blogdown** package. This missing feature means that you cannot easily generate results using R code on your web pages, since you can only use static Markdown documents. Besides, you have to use Hugo's choice of the Markdown engine named "Blackfriday" instead of the more powerful Pandoc.^[There is a feature request in Hugo's repository that has been three years old: https://github.com/spf13/hugo/issues/234, and it seems that it will not be implemented in the near future.]
+For a static site, each URL you visit often has a corresponding HTML file stored on the server, so there is no need to compute anything before serving the file to visitors. This means static sites tend to be faster in response time than dynamic sites, and it is also much easier to deploy, since the deployment simply means to copy static files to a server. A dynamic site often relies on databases, and you will have to install more software packages to server a dynamic site. For more advantages of static sites, please read the [introduction](https://gohugo.io/overview/introduction/) on Hugo's website.
 
+There are many existing static site generators, including Hugo, [Jekyll](http://jekyllrb.com), and [Hexo](https://hexo.io), etc. Most of them can build general-purpose websites but are often used to build blogs.
 
-Hugo uses a consistent file and folder structure to create your website.  The rest of this chapter will give more detail on the following files and folders:
+We love Hugo for many reasons but there are a few that stand out. Unlike other static site generators, the installation of Hugo is very simple because it provides a single executable without dependencies for most operating systems (see Section \@ref(installation)). It was also designed to render hundreds of pages of content faster than comparable static site generators and can reportedly render a single page in approximately 1 millisecond. Lastly, the community of Hugo users is very active both on the [Hugo discussion forum](https://discuss.gohugo.io) and on [GitHub issues](https://github.com/spf13/hugo/issues).
+
+Although we think Hugo is a fantastic static site generator, there is really one and only one major missing feature: the support for R Markdown. That is basically the whole point of the **blogdown** package.^[Another motivation was an easier way to create new pages or posts. Static site generators often provide commands to create new posts, but you often have to open and modify the new file created by hand after using these commands. I was very frustrated by this, because I was looking for a graphical user interface where I can just fill out the title, author, date, and other information about a page, then I can start writing the content right away. That is why I provided the RStudio addin "New Post" and the function `blogdown::new_post()`. In the past few years, I hated it every time I was about to create a new post either by hand or via the Jekyll command line. Finally I felt addicted to blogging again.] This missing feature means that you cannot easily generate results using R code on your web pages, since you can only use static Markdown documents. Besides, you have to use Hugo's choice of the Markdown engine named "Blackfriday" instead of the more powerful Pandoc.^[There is a feature request in Hugo's repository that has been more than three years old: https://github.com/spf13/hugo/issues/234, and it seems that it will not be implemented in the near future.]
+
+Hugo uses a special file and folder structure to create your website. The rest of this chapter will give more details on the following files and folders:
 
 - `config.toml`
 - `content/`
@@ -17,21 +22,25 @@ Hugo uses a consistent file and folder structure to create your website.  The re
 - `themes/`
 - `layouts/`
 
-```{r folders, fig.cap='Files and Folders created when you create a new site using **blogdown**', echo=FALSE, fig.align='center', out.width='90%'}
+(ref:folders) Possible files and folders created when you create a new site using **blogdown**.
+
+```{r folders, fig.cap='(ref:folders)', echo=FALSE, fig.align='center', out.width='90%'}
 knitr::include_graphics('images/folder-structure.png')
 ```
 
 ## Configuration
 
-The first file that Hugo uses to generate a website is the configuration or `config` file. It is worth mentioning here that technically speaking, Hugo could generate your website without a `config` file if your files and folders are in the correct locations. Regardless, Hugo will look for a `config` file in the root directory of your website, so it is best to make sure that you have one. Generally speaking, this is the only file that Hugo expects to be in the root directory. 
+The first file that you may want to look at is the configuration or `config` file, in which you can set global configurations of your site. It may contain options like the title and description of your site, as well as other global options like links to your social networks, the navigation menu, and the base URL for your website.
 
-As its name suggests, the `config` file is where you tell Hugo exactly how to render your webpage and display your menus. It is also the location of other global parameters like links to your social networks, your site's name, and the base URL for your website. 
+When generating your site, Hugo will search for a file called `config.toml` first. If it cannot find one, it will continue to search for `config.yaml`.^[Hugo also supports `config.json`, but **blogdown** does not support it, so we do not recommend you to use it.] Since most Hugo themes contain example sites that ship `config.toml` files, and the TOML (Tom's Obvious, Minimal Language) format appears to be more popular in the Hugo community, we will mainly discuss `config.toml` here.
 
-When generating your site, Hugo will search for a file called `config.toml` first. If it doesn't find one, it will continue to search for either `config.yaml` or `config.json`. Since most themes automatically generate a `config.toml` file, we will discuss that here. 
+We recommend you to use the TOML syntax only for the config file (you can also use YAML if you prefer), and use YAML as the data format for the metadata of (R) Markdown pages and posts, because R Markdown and **blogdown** only fully support YAML.^[TOML has its advantages but I feel they are not very useful in the context of Hugo websites. It is a pain to have to know yet another language TOML, when YAML stands for "Yet Another Markup Language". I'm not sure if the XKCD comic applies in this case: https://xkcd.com/927/.] If you have a website that has already used TOML, you may use `blogdown::hugo_convert(unsafe = TRUE)` to convert TOML data to YAML, but please first make sure you have backed up the website because it will overwrite your Markdown files.
 
 ### TOML Syntax
 
-If you're not familiar with TOML Syntax, don't worry, we'll give a brief overview here (and you can find more information in the [documentation](https://github.com/toml-lang/toml)). TOML is made up of key and value pairs separated by an equals sign. 
+If you are not familiar with the TOML Syntax, we will give a brief overview and you may read the [full documentation](https://github.com/toml-lang/toml)) to know the details.
+
+TOML is made up of key and value pairs separated by an equal sign. 
 
 ```{r eval=FALSE}
 key = value
@@ -46,6 +55,7 @@ title = "My Awesome Site"
 
 pluralizeListTitles = false
 ```
+
 Most of your website's global variables are entered in the `config.toml` file in exactly this manner. 
 
 Further into your `config` file you may notice some values in brackets like this:
@@ -56,22 +66,22 @@ Further into your `config` file you may notice some values in brackets like this
     twitter = "https://twitter.com/rstudio"
 ```
 
-This is a table in the TOML language and Hugo uses them to fill in information on other pages within your site. For instance, the above table will populate the Site.Social variable in your site's templates (more information on this in Section \@ref(templates)).
+This is a table in the TOML language and Hugo uses them to fill in information on other pages within your site. For instance, the above table will populate the `.Site.Social` variable in your site's templates (more information on this in Section \@ref(templates)).
 
 Lastly, you may find some values in double brackets like this:
 
 ```js
 [[menu.main]]
     name = "Blog"
-    url = "/blog"
+    url = "/blog/"
 
 [[menu.main]]
     name = "Categories"
-    url = "/categories"
+    url = "/categories/"
 
 [[menu.main]]
     name = "About"
-    url = "/about"
+    url = "/about/"
 ```
 
 In TOML, double brackets are used to indicate an array of tables. Hugo interprets this information as a menu. If the code above was found in a `config.toml` file, the resulting website would have links to Blog, Categories, and About pages in the site's main menu. The location and styling of that menu is specified elsewhere, but the names of each menu's choices and the links to each section are defined here. 
@@ -83,6 +93,7 @@ The `config.toml` file varies between each theme. Make sure that when you choose
 
 ### YAML metadata
 
+draft: yes
 
 ### Body
 
@@ -98,12 +109,6 @@ shortcode
 
 ### Managing themes
 
-```bash
-git submodule add \
-  https://github.com/yihui/hugo-lithium-theme.git \
-  themes/hugo-lithium-theme
-git submodule foreach git pull origin master
-```
 
 ## Templates
 
