@@ -12,6 +12,7 @@ Imports:
     rmarkdown,
     bookdown (>= 0.2),
     knitr,
+    htmltools,
     yaml (>= 2.1.14),
     httpuv,
     servr (>= 0.4.1)
