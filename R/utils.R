@@ -316,7 +316,9 @@ split_yaml_body = function(x) {
     yaml = x[i[1]:i[2]], yaml_range = i[1:2],
     body = if (i[2] == n) character() else x[(i[2] + 1):n]
   )
-  res$yaml_list = if (length(res$yaml)) yaml::yaml.load(paste(res$yaml, collapse = '\n'))
+  res$yaml_list = if ((n <- length(res$yaml)) >= 3) {
+    yaml::yaml.load(paste(res$yaml[-c(1, n)], collapse = '\n'))
+  }
   res
 }
 
