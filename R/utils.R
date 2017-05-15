@@ -345,6 +345,19 @@ append_yaml = function(x, value = list()) {
   append(x, value, res$yaml_range[2] - 1)
 }
 
+modify_yaml = function(file, ...) {
+  x = readUTF8(file)
+  res = split_yaml_body(x)
+  if (length(yml <- res$yaml) > 2) {
+    meta1 = res$yaml_list
+    meta2 = list(...)
+    meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
+    if (!getOption('blogdown.yaml.empty', TRUE)) meta1 = filter_list(meta1)
+    yml = as.yaml(meta1)
+    writeUTF8(c('---', yml, '---', res$body), file)
+  } else warning("Could not detect YAML metadata in the post '", file, "'")
+}
+
 # filter out empty elements in a list
 filter_list = function(x) {
   for (i in names(x)) {

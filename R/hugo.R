@@ -220,20 +220,10 @@ new_post = function(
   new_content(file, kind, FALSE)
 
   file = content_file(file)
-  x = readUTF8(file)
-  res = split_yaml_body(x)
-  if ((n <- length(yml <- res$yaml)) > 2) {
-    meta1 = yaml::yaml.load(paste(yml[-c(1, n)], collapse = '\n'))
-    meta2 = list(
-      title = title, author = author, date = format(date), slug = slug,
-      categories = as.list(categories), tags = as.list(tags)
-    )
-    meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
-    if (!getOption('blogdown.yaml.empty', TRUE)) meta1 = filter_list(meta1)
-    yml = as.yaml(meta1)
-    writeUTF8(c('---', yml, '---', res$body), file)
-  } else warning("Could not detect YAML metadata in the post '", file, "'")
-
+  modify_yaml(
+    file, title = title, author = author, date = format(date), slug = slug,
+    categories = as.list(categories), tags = as.list(tags)
+  )
   if (open) open_file(file)
 }
 
