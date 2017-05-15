@@ -7,14 +7,13 @@ local({
   meta = blogdown:::scan_meta()
 
   ctxt = rstudioapi::getSourceEditorContext(); txt = ctxt$contents
-  res = blogdown:::split_yaml_body(txt); yml = res$yaml; rng = res$yaml_range
-  if ((n <- length(yml)) < 2) return(
+  res = blogdown:::split_yaml_body(txt); yml = res$yaml_list; rng = res$yaml_range
+  if (length(yml) == 0) return(
     warning("The current document does not seem to contain YAML metadata", call. = FALSE)
   )
   rstudioapi::setSelectionRanges(list(c(rng[1] + 1, 1, rng[2], 1)))
   slct = rstudioapi::getSourceEditorContext()$selection[[1]]
 
-  yml = if (n > 2) yaml::yaml.load(paste(yml[-c(1, n)], collapse = '\n'))
   if (length(yml) == 0) yml = list()
   yml = blogdown:::filter_list(yml)
   if (is.null(yml[['title']])) yml$title = ''
