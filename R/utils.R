@@ -335,6 +335,7 @@ collect_yaml = function(fields = c('categories', 'tags'), dir = 'content', uniq 
 find_yaml = function(field = character(), value = character(), open = FALSE) {
   if (length(field) == 0) return()
   meta = scan_yaml()
+  if (length(meta) == 0) return()
   files = names(which(unlist(lapply(meta, function(m) {
     any(value %in% m[[field]])
   }))))
