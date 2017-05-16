@@ -4,7 +4,7 @@ local({
   sel_input = function(...) shiny::selectizeInput(
     ..., width = '100%', multiple = TRUE, options = list(create = TRUE)
   )
-  meta = blogdown:::scan_meta()
+  meta = blogdown:::collect_meta()
 
   ctxt = rstudioapi::getSourceEditorContext(); txt = ctxt$contents
   res = blogdown:::split_yaml_body(txt); yml = res$yaml_list; rng = res$yaml_range

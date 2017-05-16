@@ -286,11 +286,10 @@ update_meta_addin = function() {
   sys.source(pkg_file('scripts', 'update_meta.R'))
 }
 
-scan_meta = function(fields = c('categories', 'tags'), dir = 'content') {
-  res = list()
+scan_meta = function(dir = 'content') {
   files = list.files(dir, '[.][Rr]?md$', recursive = TRUE, full.names = TRUE)
-  if (length(files) == 0) return(res)
-  meta = lapply(files, function(f) {
+  if (length(files) == 0) return(list())
+  res = lapply(files, function(f) {
     yaml = fetch_yaml(f)
     if (length(yaml) == 0) return()
     yaml = yaml[-c(1, length(yaml))]
@@ -300,8 +299,15 @@ scan_meta = function(fields = c('categories', 'tags'), dir = 'content') {
       NULL
     })
   })
+  setNames(res, files)
+}
+
+collect_meta = function(fields = c('categories', 'tags'), dir = 'content', uniq = TRUE) {
+  res = list()
+  meta = scan_meta(dir)
   for (i in fields) {
-    res[[i]] = sort2(unique(unlist(lapply(meta, `[[`, i))))
+    res[[i]] = sort2(unlist(lapply(meta, `[[`, i)))
+    if (uniq) res[[i]] = unique(res[[i]])
   }
   res
 }
