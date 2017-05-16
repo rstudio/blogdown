@@ -379,6 +379,22 @@ filter_list = function(x) {
   x
 }
 
+process_file = function(f, FUN) {
+  x = readUTF8(f)
+  x = FUN(x)
+  writeUTF8(x, f)
+}
+
+# replace three or more \n with two
+remove_extra_empty_lines = function(f) process_file(f, function(x) {
+  x = paste(x, collapse = '\n')
+  trim_ws(gsub('\n{3,}', '\n\n', x))
+})
+
+process_bare_urls = function(f) process_file(f, function(x) {
+  gsub('\\[([^]]+)]\\(\\1/?\\)', '<\\1>', x)
+})
+
 # prevent sort(NULL), which will trigger a warning "is.na() applied to non-(list
 # or vector) of type 'NULL'"
 sort2 = function(x, ...) {
