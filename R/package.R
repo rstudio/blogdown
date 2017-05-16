@@ -1,4 +1,5 @@
 #' @import utils
+#' @import stats
 
 with_ext = bookdown:::with_ext
 readUTF8 = function(f) {
