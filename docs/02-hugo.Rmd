@@ -128,8 +128,8 @@ Besides the built-in Hugo options, you can set other arbitrary options in `confi
 
 ```js
 [params]
-    author: "Frida Gomam"
-    dateFormat: "2006/01/02"
+    author = "Frida Gomam"
+    dateFormat = "2006/01/02"
 ```
 
 The goal of all these options is to avoid hardcoding anything in Hugo themes, so that users can easily edit a single config file to apply the theme to their websites, instead of going through many HTML files and make changes one by one.
