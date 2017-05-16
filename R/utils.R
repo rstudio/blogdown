@@ -286,7 +286,7 @@ update_meta_addin = function() {
   sys.source(pkg_file('scripts', 'update_meta.R'))
 }
 
-scan_meta = function(dir = 'content') {
+scan_yaml = function(dir = 'content') {
   files = list.files(dir, '[.][Rr]?md$', recursive = TRUE, full.names = TRUE)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
@@ -302,13 +302,69 @@ scan_meta = function(dir = 'content') {
   setNames(res, files)
 }
 
-collect_meta = function(fields = c('categories', 'tags'), dir = 'content', uniq = TRUE) {
+collect_yaml = function(fields = c('categories', 'tags'), dir = 'content', uniq = TRUE) {
   res = list()
-  meta = scan_meta(dir)
+  meta = scan_yaml(dir)
   for (i in fields) {
     res[[i]] = sort2(unlist(lapply(meta, `[[`, i)))
     if (uniq) res[[i]] = unique(res[[i]])
   }
+  res
+}
+
+#' Find posts containing the specified metadata
+#'
+#' Given a YAML field name, find the (R) Markdown files that contain this field
+#' and its value contains any of the specified values. Functions
+#' \code{find_tags()} and \code{find_categories()} are wrappers of
+#' \code{find_yaml()} with \code{field = 'tags'} and \code{field =
+#' 'categories'}, respectively; \code{count_fields()} returns the frequency
+#' tables of the specified YAML fields, such as the counts of tags and
+#' categories.
+#' @param field,fields A character vector of YAML field names.
+#' @param value A vector of the field values to be matched.
+#' @param open Whether to open the matched files automatically.
+#' @return \code{find_yaml()} returns a character vector of filenames;
+#'   \code{count_yaml()} returns a list of frequency tables.
+#' @export
+#' @examples library(blogdown)
+#' find_tags(c('time-series', 'support vector machine'))
+#' find_categories('Statistics')
+#'
+#' count_yaml(sort_by_count = FALSE)
+find_yaml = function(field = character(), value = character(), open = FALSE) {
+  if (length(field) == 0) return()
+  meta = scan_yaml()
+  files = names(which(unlist(lapply(meta, function(m) {
+    any(value %in% m[[field]])
+  }))))
+  n = length(files)
+  if (n == 0) return(invisible(files))
+  if (open) for (f in files) open_file(f)
+  files
+}
+
+#' @export
+#' @rdname find_yaml
+find_tags = function(value = character(), open = FALSE) {
+  find_yaml('tags', value, open)
+}
+
+#' @export
+#' @rdname find_yaml
+find_categories = function(value = character(), open = FALSE) {
+  find_yaml('categories', value, open)
+}
+
+#' @param sort_by_count Whether to sort the frequency tables by counts.
+#' @export
+#' @rdname find_yaml
+count_yaml = function(fields = c('categories', 'tags'), sort_by_count = TRUE) {
+  res = collect_yaml(fields, uniq = FALSE)
+  res = lapply(res, function(x) {
+    z = table(x)
+    if (sort_by_count) sort(z) else z
+  })
   res
 }
 

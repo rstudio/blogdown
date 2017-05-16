@@ -4,7 +4,7 @@ local({
   sel_input = function(...) shiny::selectizeInput(
     ..., width = '98%', multiple = TRUE, options = list(create = TRUE)
   )
-  meta = blogdown:::collect_meta()
+  meta = blogdown:::collect_yaml()
   shiny::runGadget(
     miniUI::miniPage(miniUI::miniContentPanel(
       txt_input('title', 'Title', placeholder = 'Post Title'),
