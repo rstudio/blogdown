@@ -101,7 +101,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
     x = encode_paths(x, by_products(f, '_files'), d, raw, root, base)
     if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
     if (raw) x = split_html_tokens(x, FALSE)$body
-    writeUTF8(c(fetch_yaml2(f), '', x), html)
+    prepend_yaml(f, html, x)
   })
 
   # copy (new) by-products from /content/ to /blogdown/ or /static to make the

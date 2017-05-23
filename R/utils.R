@@ -435,6 +435,11 @@ modify_yaml = function(
   } else warning("Could not detect YAML metadata in the post '", file, "'")
 }
 
+prepend_yaml = function(from, to, body = readUTF8(to)) {
+  x = c(fetch_yaml2(from), '', body)
+  writeUTF8(x, to)
+}
+
 # filter out empty elements in a list
 filter_list = function(x) {
   for (i in names(x)) {
