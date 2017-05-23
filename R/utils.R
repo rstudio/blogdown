@@ -147,6 +147,7 @@ download2 = function(url, ...) {
 
 opts = knitr:::new_defaults()
 
+# read config file and cache the options (i.e. do not read again unless the config is newer)
 load_config = function() {
   config = opts$get('config')
 
@@ -169,6 +170,7 @@ load_config = function() {
     return(read_config('config.yaml', yaml::yaml.load_file))
 }
 
+# only support TOML and YAML (no JSON)
 find_config = function(error = TRUE) {
   f = existing_files(c('config.toml', 'config.yaml'), first = TRUE)
   if (length(f) == 0 && error) stop(
@@ -221,6 +223,7 @@ get_config = function(field, default, config = load_config()) {
   config[[field]] %n% config[[match(tolower(field), tolower(names(config)))]] %n% default
 }
 
+# read the publishDir option in config if the temporary publish dir is not set
 publish_dir = function(config = load_config()) {
   publish_dir_tmp() %n% get_config('publishDir', 'public', config)
 }
@@ -239,10 +242,12 @@ open_file = function(x) {
   tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
 }
 
+# produce a dash-separated filename by replacing non-alnum chars with -
 dash_filename = function(string, pattern = '[^[:alnum:]]+') {
   tolower(gsub('^-+|-+$', '', gsub(pattern, '-', string)))
 }
 
+# return a filename for a post based on title, date, etc
 post_filename = function(title, subdir, rmd, date) {
   file = paste0(dash_filename(title), ifelse(rmd, '.Rmd', '.md'))
   d = dirname(file); f = basename(file)
@@ -287,6 +292,7 @@ update_meta_addin = function() {
   sys.source(pkg_file('scripts', 'update_meta.R'))
 }
 
+# scan YAML metadata of all Rmd/md files
 scan_yaml = function(dir = 'content') {
   files = list.files(dir, '[.][Rr]?md$', recursive = TRUE, full.names = TRUE)
   if (length(files) == 0) return(list())
@@ -303,6 +309,7 @@ scan_yaml = function(dir = 'content') {
   setNames(res, files)
 }
 
+# collect specific fields of all YAML metadata
 collect_yaml = function(fields = c('categories', 'tags'), dir = 'content', uniq = TRUE) {
   res = list()
   meta = scan_yaml(dir)
@@ -386,6 +393,7 @@ split_yaml_body = function(x) {
   res
 }
 
+# if YAML contains inline code, evaluate it and return the YAML
 fetch_yaml2 = function(f) {
   yaml = fetch_yaml(f)
   n = length(yaml)
@@ -398,11 +406,13 @@ fetch_yaml2 = function(f) {
   c('---', res, '---')
 }
 
+# a wrapper of yaml::as.yaml() to indent sublists by default and trim white spaces
 as.yaml = function(..., .trim_ws = TRUE) {
   res = yaml::as.yaml(..., indent.mapping.sequence = TRUE)
   if (.trim_ws) sub('\\s+$', '', res) else res
 }
 
+# append YAML to Markdown text
 append_yaml = function(x, value = list()) {
   if (length(value) == 0) return(x)
   value = as.yaml(value)
@@ -411,6 +421,8 @@ append_yaml = function(x, value = list()) {
   append(x, value, res$yaml_range[2] - 1)
 }
 
+# modify the YAML of a file using specified new YAML options, preserve a
+# particular order, and optionally remove empty fields
 modify_yaml = function(
   file, ..., .order = character(),
   .keep_empty = getOption('blogdown.yaml.empty', TRUE)
@@ -435,6 +447,7 @@ modify_yaml = function(
   } else warning("Could not detect YAML metadata in the post '", file, "'")
 }
 
+# prepend YAML of one file to another file
 prepend_yaml = function(from, to, body = readUTF8(to)) {
   x = c(fetch_yaml2(from), '', body)
   writeUTF8(x, to)
@@ -448,6 +461,7 @@ filter_list = function(x) {
   x
 }
 
+# a wrapper function to read a file as UTF-8, process the text, and write back
 process_file = function(f, FUN) {
   x = readUTF8(f)
   x = FUN(x)
@@ -460,6 +474,7 @@ remove_extra_empty_lines = function(f) process_file(f, function(x) {
   trim_ws(gsub('\n{3,}', '\n\n', x))
 })
 
+# replace [url](url) with <url>
 process_bare_urls = function(f) process_file(f, function(x) {
   gsub('\\[([^]]+)]\\(\\1/?\\)', '<\\1>', x)
 })
