@@ -159,8 +159,9 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
     file.rename(zipdir, gsub(sprintf('-%s$', branch), '', zipdir))
     unlink(zipfile)
   })
-  if (update_config) return(change_config('theme', sprintf('"%s"', basename(theme))))
-  message(
+  if (update_config) {
+    change_config('theme', sprintf('"%s"', basename(theme)))
+  } else message(
     "Do not forget to change the 'theme' option in '",
     find_config(), "' to \"", basename(theme), '"'
   )
