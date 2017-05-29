@@ -442,6 +442,7 @@ modify_yaml = function(
       meta1 = meta1[c(i1, i2)]
     }
     if (!.keep_empty) meta1 = filter_list(meta1)
+    if (is.null(meta1[['draft']])) meta1$draft = NULL
     yml = as.yaml(meta1)
     writeUTF8(c('---', yml, '---', res$body), file)
   } else warning("Could not detect YAML metadata in the post '", file, "'")
