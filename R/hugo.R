@@ -269,7 +269,7 @@ hugo_convert = function(to = c('YAML', 'TOML', 'JSON'), unsafe = FALSE, ...) {
 #' @export
 #' @examples library(blogdown)
 #'
-#' shortcode('twitter', 1234567)
+#' shortcode('tweet', 1234567)
 #' shortcode('figure', src='/images/foo.png', alt='A nice figure')
 #' shortcode('highlight', 'bash', .content = 'echo hello world;')
 #'
