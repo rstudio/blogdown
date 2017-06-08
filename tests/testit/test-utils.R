@@ -26,3 +26,27 @@ assert(
   dash_filename(c('foo Bar', 'foo/bar  !@ hi', '() foo/hello WORLD')) %==%
     c('foo-bar', 'foo-bar-hi', 'foo-hello-world')
 )
+
+test_rmd_file = tempfile()
+test_rmd = '---
+date: \'2017-05-01\'
+string: text
+empty_list: []
+unit_list:
+  - 1
+multi_list:
+  - 1
+  - 2
+---
+'
+
+assert(
+  'modify_yaml perserves original values properly',
+  {
+    write(test_rmd, test_rmd_file)
+    old_content = readUTF8(test_rmd_file)
+
+    modify_yaml(test_rmd_file)
+    readUTF8(test_rmd_file) %==% old_content
+  }
+)

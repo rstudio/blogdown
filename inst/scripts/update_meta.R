@@ -41,12 +41,16 @@ local({
     )),
     server = function(input, output) {
       shiny::observeEvent(input$done, {
+        seq_keys = Filter(function(key) {
+          isTRUE(attr(yml[[key]], 'yml_type') == 'seq')
+        }, names(yml))
+
         res = list(
           title = input$title, author = input$author, date = format(input$date),
           categories = input$cat, tags = input$tag
         )
         yml = c(res, yml[setdiff(names(yml), names(res))])
-        for (i in c('categories', 'tags')) yml[[i]] = if (length(yml[[i]]) > 0) as.list(yml[[i]])
+        for (i in seq_keys) yml[[i]] = if (length(yml[[i]]) > 0) as.list(yml[[i]])
         rstudioapi::modifyRange(
           slct$range, blogdown:::as.yaml(yml, .trim_ws = FALSE)
         )
