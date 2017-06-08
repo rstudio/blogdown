@@ -1,9 +1,11 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.0.41
+Version: 0.0.42
 Authors@R: c(
-    person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name")
+    person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name"),
+    person("Forest", "Fang", role = "ctb"),
+    person()
     )
 Description: Write blog posts and web pages in R Markdown. This package uses the
     static site generator Hugo (<https://gohugo.io>).
