@@ -42,7 +42,7 @@ local({
     server = function(input, output) {
       shiny::observeEvent(input$done, {
         seq_keys = Filter(function(key) {
-          isTRUE(attr(yml[[key]], 'yml_type') == 'seq')
+          identical(attr(yml[[key]], 'yml_type'), 'seq')
         }, names(yml))
 
         res = list(

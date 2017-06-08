@@ -388,23 +388,27 @@ split_yaml_body = function(x) {
     body = if (i[2] == n) character() else x[(i[2] + 1):n]
   )
   res$yaml_list = if ((n <- length(res$yaml)) >= 3) {
-    yaml::yaml.load(
-      paste(res$yaml[-c(1, n)], collapse = '\n'),
-      handlers = list(
-        # anotate seq type values because both single value and list values are converted to vector
-        seq = function(x) {
-          # continue coerce into vector because many places of code already assume this
-          if (length(x) > 0) {
-            x = unlist(x, recursive = FALSE)
-            attr(x, 'yml_type') <- 'seq'
-          }
-          x
-        }
-      )
-    )
+    yaml_load(res$yaml[-c(1, n)])
   }
   res
 }
+
+# anotate seq type values because both single value and list values are
+# converted to vector by default
+yaml_load = function(x) yaml::yaml.load(
+  paste(x, collapse = '\n'),
+  handlers = list(
+    seq = function(x) {
+      # continue coerce into vector because many places of code already assume this
+      if (length(x) > 0) {
+        x = unlist(x, recursive = FALSE)
+        attr(x, 'yml_type') = 'seq'
+      }
+      x
+    }
+  )
+)
+
 
 # if YAML contains inline code, evaluate it and return the YAML
 fetch_yaml2 = function(f) {
@@ -457,7 +461,7 @@ modify_yaml = function(
     if (!.keep_empty) meta1 = filter_list(meta1)
     if (is.null(meta1[['draft']])) meta1$draft = NULL
     for (i in names(meta1)) {
-      if (isTRUE(attr(meta1[[i]], 'yml_type') == 'seq')) {
+      if (identical(attr(meta1[[i]], 'yml_type'), 'seq')) {
         meta1[[i]] = as.list(meta1[[i]])
       }
     }
