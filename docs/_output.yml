@@ -10,6 +10,9 @@ bookdown::gitbook:
         <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
     download: [pdf, epub]
     edit: https://github.com/rstudio/blogdown/edit/master/docs/%s
+    sharing:
+      github: yes
+      facebook: no
 bookdown::pdf_book:
   includes:
     in_header: latex/preamble.tex
