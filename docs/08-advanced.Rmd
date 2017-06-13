@@ -64,6 +64,12 @@ In the rare cases when **blogdown** fails to detect and copy some of your depend
 
 If you do not understand all these technical details, we recommend you to use the first choice, and you will have to sacrifice custom permanent links and clean URLs (e.g., `/about.html` instead of `/about/`). With this choice, you can also customize the `fig.path` option for code chunks if you want.
 
+## HTML widgets
+
+We do not recommend you to use different HTML widgets from many R packages on the same page, because it is likely to cause conflicts in JavaScript.
+
+If you theme uses the jQuery library, it is also likely that the theme's jQuery library will conflict with the jQuery library used by a certain HTML widget.
+
 ## Version control
 
 If your website source files are under version control, we recommend you to add at least these two folder names to your `.gitignore` file:
