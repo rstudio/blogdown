@@ -1,10 +1,10 @@
 # Hugo
 
-In this chapter, we will introduce [Hugo](https://gohugo.io), the static site generator on which **blogdown** is based. 
+In this chapter, we will briefly introduce [Hugo](https://gohugo.io), the static site generator on which **blogdown** is based. This chapter is not meant to replace the official Hugo documentation, but provide a guide to those who are just getting started with Hugo. When in doubt, please consult the official Hugo documentation.
 
 ## Static sites and Hugo {#static-sites}
 
-A static site often consists of HTML files (with optional external dependencies like images and JavaScript libraries), and the web server sends exactly the same content to the web browser no matter who visits the web pages. There is no dynamic computing on the server when a page is requested. By comparison, a dynamic site relies on a server-side language to do certain computing and sends potentially different content depending on different conditions. A common language is PHP, and a typical example of a dynamic site is a web forum. For example, each user has a profile page, but typically this does not mean the server has stored many HTML profile pages for all users. Instead, the server will fetch the user data from a database, and render the profile page dynamically.
+A static site often consists of HTML files (with optional external dependencies like images and JavaScript libraries), and the web server sends exactly the same content to the web browser no matter who visits the web pages. There is no dynamic computing on the server when a page is requested. By comparison, a dynamic site relies on a server-side language to do certain computing and sends potentially different content depending on different conditions. A common language is PHP, and a typical example of a dynamic site is a web forum. For example, each user has a profile page, but typically this does not mean the server has stored a different HTML profile page for every single user. Instead, the server will fetch the user data from a database, and render the profile page dynamically.
 
 For a static site, each URL you visit often has a corresponding HTML file stored on the server, so there is no need to compute anything before serving the file to visitors. This means static sites tend to be faster in response time than dynamic sites, and it is also much easier to deploy, since the deployment simply means to copy static files to a server. A dynamic site often relies on databases, and you will have to install more software packages to server a dynamic site. For more advantages of static sites, please read the [introduction](https://gohugo.io/overview/introduction/) on Hugo's website.
 
@@ -12,7 +12,7 @@ There are many existing static site generators, including Hugo, [Jekyll](http://
 
 We love Hugo for many reasons but there are a few that stand out. Unlike other static site generators, the installation of Hugo is very simple because it provides a single executable without dependencies for most operating systems (see Section \@ref(installation)). It was also designed to render hundreds of pages of content faster than comparable static site generators and can reportedly render a single page in approximately 1 millisecond. Lastly, the community of Hugo users is very active both on the [Hugo discussion forum](https://discuss.gohugo.io) and on [GitHub issues](https://github.com/spf13/hugo/issues).
 
-Although we think Hugo is a fantastic static site generator, there is really one and only one major missing feature: the support for R Markdown. That is basically the whole point of the **blogdown** package.^[Another motivation was an easier way to create new pages or posts. Static site generators often provide commands to create new posts, but you often have to open and modify the new file created by hand after using these commands. I was very frustrated by this, because I was looking for a graphical user interface where I can just fill out the title, author, date, and other information about a page, then I can start writing the content right away. That is why I provided the RStudio addin "New Post" and the function `blogdown::new_post()`. In the past few years, I hated it every time I was about to create a new post either by hand or via the Jekyll command line. Finally I felt addicted to blogging again.] This missing feature means that you cannot easily generate results using R code on your web pages, since you can only use static Markdown documents. Besides, you have to use Hugo's choice of the Markdown engine named "Blackfriday" instead of the more powerful Pandoc.^[There is a feature request in Hugo's repository that has been more than three years old: https://github.com/spf13/hugo/issues/234, and it seems that it will not be implemented in the near future.]
+Although we think Hugo is a fantastic static site generator, there is really one and only one major missing feature: the support for R Markdown. That is basically the whole point of the **blogdown** package.^[Another motivation was an easier way to create new pages or posts. Static site generators often provide commands to create new posts, but you often have to open and modify the new file created by hand after using these commands. I was very frustrated by this, because I was looking for a graphical user interface where I can just fill out the title, author, date, and other information about a page, then I can start writing the content right away. That is why I provided the RStudio addin "New Post" and the function `blogdown::new_post()`. In the past few years, I hated it every time I was about to create a new post either by hand or via the Jekyll command line. Finally I felt addicted to blogging again after I finished the RStudio addin.] This missing feature means that you cannot easily generate results using R code on your web pages, since you can only use static Markdown documents. Besides, you have to use Hugo's choice of the Markdown engine named "Blackfriday" instead of the more powerful Pandoc.^[There is a feature request in Hugo's repository that has been more than three years old: https://github.com/spf13/hugo/issues/234, and it seems that it will not be implemented in the near future.]
 
 Hugo uses a special file and folder structure to create your website (Figure \@ref(fig:folders)). The rest of this chapter will give more details on the following files and folders:
 
@@ -94,7 +94,7 @@ The `config.toml` file varies between each theme. Make sure that when you choose
 
 All built-in options that you may set for Hugo are listed on [this page](https://gohugo.io/overview/configuration/). You can change any of these options except `contentDir`, which is hardcoded to `content` in **blogdown**. Our general recommendation is that you'd better not modify the defaults unless you understand the consequences. We list a few options that may be of interest to you:
 
-- `baseURL`: Normally you have to change the value of this option to the base URL of your website. Some Hugo themes may have set it to `http://www.example.com/` or `http://replace-this-with-your-hugo-site.com/` in their example sites, but please make sure to replace them with your own URL (see Chapter \@ref(deployment) and Appendix \@ref(domain-name) for more information on publishing websites and obtaining domain names). Note this option can be a URL with a subpath, if your website is to be published under a subpath of a domain name, e.g., `http://www.example.com/docs/`.
+- `baseURL`: Normally you have to change the value of this option to the base URL of your website. Some Hugo themes may have set it to `http://replace-this-with-your-hugo-site.com/` or `http://www.example.com/` in their example sites, but please make sure to replace them with your own URL (see Chapter \@ref(deployment) and Appendix \@ref(domain-name) for more information on publishing websites and obtaining domain names). Note this option can be a URL with a subpath, if your website is to be published under a subpath of a domain name, e.g., `http://www.example.com/docs/`.
 
 - `enableEmoji`: You may set it to `true` so that you can use [Emoji emoticons](http://www.emoji-cheat-sheet.com) like `:smile:` in Markdown.
 
@@ -112,7 +112,7 @@ All built-in options that you may set for Hugo are listed on [this page](https:/
         post = "/:year/:month/:day/:slug/"
     ```
     
-    This is because your post title may change, and you probably do not want the link of the post to change, otherwise you have to redirect the old link to the new link, and there will other trouble like Disqus comments. The `:slug` variable falls back to `:title` if a field named `slug` is not set in the YAML metadata of the post. You can set a fixed slug so that the link to the post is always fixed and you will have the freedom to update the title of your post.
+    This is because your post title may change, and you probably do not want the link of the post to change, otherwise you have to redirect the old link to the new link, and there will other types of trouble like Disqus comments. The `:slug` variable falls back to `:title` if a field named `slug` is not set in the YAML metadata of the post. You can set a fixed slug so that the link to the post is always fixed and you will have the freedom to update the title of your post.
     
     You may find a list of all possible variables that you can use in the `permalinks` option on [this page](https://gohugo.io/extras/permalinks/). 
 
@@ -138,15 +138,70 @@ Option names are case-insensitive, so `.Site.Params.AUTHOR` is the same as `.Sit
 
 ## Content
 
+The structure of the `content/` directory can be arbitrary. A common structure is that there are a few static pages under the root of `content/`, and a subdirectory `post/` containing blog posts:
+
+```bash
+_index.md
+about.md
+vitae.md
+post/
+  |
+  |- 2017-01-01-foo.md
+  |- 2017-01-02-bar.md
+  |- ...
+...
+```
+
 ### YAML metadata
 
-draft: yes
+Each page should start with YAML metadata specifying information like the title, date, author, categories, tags, and so on. Depending on the specific Hugo theme and templates you use, some of these fields may be optional.
+
+Among all YAML fields, we want bring tese to your attention:
+
+- `draft`: You can mark a document as a draft by setting `draft: true` in its YAML metadata. Draft posts will not be rendered if the site is built via `blogdown::build_site()` or `blogdown::hugo_build()`, but will be rendered in the local preview mode (see Section \@ref(local-preview)).
+
+- `publishdate`: You may specify a future date to publish a post. Similar to draft posts, future posts are only rendered in the local preview mode.
+
+- `weight`: This field can take a numeric value to tell Hugo the order of pages when sorting them, e.g., when you generate a list of all pages under a directory, and if two posts have the same date, you may assign different weights to them to get your desired order in the list.
+
+- `slug`: A character string as the tail of the URL. It is particularly useful when you define custom rules for permanent URLs (see Section \@ref(options)).
 
 ### Body
 
-See Section \@ref(output-format) for differences between R Markdown and plain Markdown.
+As we mentioned in Section \@ref(output-format), your post can be written in either R Markdown or plain Markdown. Please be cautious about the syntax differences between the two formats when you write the body of a post.
 
-shortcode
+Besides all Markdown features, Hugo provided a useful feature named "shortcodes". You can use a shortcode in the body of your post. When Hugo renders the post, it can automatically generate an HTML snippet based on the parameters you pass to the shortcode. This is convenient because you do not have to type or embed a large amount of HTML code in your post. For example, Hugo has a built-in shortcode for embedding Twitter cards. Normally this is how you embed a Twitter card (Figure \@ref(fig:jtleek-tweet)) on a page:
+
+```html
+<blockquote class="twitter-tweet">
+  <p lang="en" dir="ltr">Anyone know of an R package for
+    interfacing with Alexa Skills?
+    <a href="https://twitter.com/thosjleeper">@thosjleeper</a>
+    <a href="https://twitter.com/xieyihui">@xieyihui</a>
+    <a href="https://twitter.com/drob">@drob</a>
+    <a href="https://twitter.com/JennyBryan">@JennyBryan</a>
+    <a href="https://twitter.com/HoloMarkeD">@HoloMarkeD</a> ?
+  </p>
+  &mdash; Jeff Leek (@jtleek)
+  <a href="https://twitter.com/jtleek/status/852205086956818432">
+    April 12, 2017
+  </a>
+</blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8">
+</script>
+```
+
+```{r jtleek-tweet, fig.cap='A tweet by Jeff Leek.', fig.align='center', out.width='80%', echo=FALSE}
+knitr::include_graphics('images/jtleek-tweet.png')
+```
+
+If you use the shortcode, all you need in the Markdown source document is:
+
+```go
+{{< tweet 852205086956818432 >}}
+```
+
+Basically you only need to pass the ID of the tweet to a shortcode named `tweet`. Hugo will fetch the tweet automatically and render the HTML snippet for you. For more about shortcodes, see https://gohugo.io/extras/shortcodes/.
 
 ## Themes
 
