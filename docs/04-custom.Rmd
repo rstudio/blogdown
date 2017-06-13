@@ -4,6 +4,8 @@ We mentioned the possibility to bypass Hugo and use your own building method in 
 
 ## Jekyll
 
+https://github.com/yihui/knitr-jekyll
+
 ## Hexo
 
 ## Default site generator in rmarkdown {#rmd-website}
