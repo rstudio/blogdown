@@ -44,6 +44,7 @@ local({
         seq_keys = Filter(function(key) {
           identical(attr(yml[[key]], 'yml_type'), 'seq')
         }, names(yml))
+        seq_keys = unique(c(seq_keys, 'categories', 'tags'))
 
         res = list(
           title = input$title, author = input$author, date = format(input$date),
@@ -51,6 +52,7 @@ local({
         )
         yml = c(res, yml[setdiff(names(yml), names(res))])
         for (i in seq_keys) yml[[i]] = if (length(yml[[i]]) > 0) as.list(yml[[i]])
+        if (!getOption('blogdown.yaml.empty', TRUE)) yml = blogdown:::filter_list(yml)
         rstudioapi::modifyRange(
           slct$range, blogdown:::as.yaml(yml, .trim_ws = FALSE)
         )
