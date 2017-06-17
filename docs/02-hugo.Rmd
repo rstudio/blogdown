@@ -48,7 +48,7 @@ TOML is made up of key-value pairs separated by equal signs:
 key = value
 ```
 
-When you want to edit a configuration in the TOML file, simply change the value. Values that are character strings should be in quotes, whereas boolean values should be lowercase and bare. 
+When you want to edit a configuration in the TOML file, simply change the value. Values that are character strings should be in quotes, whereas Boolean values should be lowercase and bare. 
 
 For example, if you want to give your website the title "My Awesome Site", and use relative URLs instead of the default absolute URLs, you may have the following entries in your `config.toml` file.
 
@@ -92,7 +92,7 @@ The `config.toml` file varies between each theme. Make sure that when you choose
 
 ### Options
 
-All built-in options that you may set for Hugo are listed on [this page](https://gohugo.io/overview/configuration/). You can change any of these options except `contentDir`, which is hardcoded to `content` in **blogdown**. Our general recommendation is that you'd better not modify the defaults unless you understand the consequences. We list a few options that may be of interest to you:
+All built-in options that you may set for Hugo are listed on [this page](https://gohugo.io/overview/configuration/). You can change any of these options except `contentDir`, which is hard-coded to `content` in **blogdown**. Our general recommendation is that you'd better not modify the defaults unless you understand the consequences. We list a few options that may be of interest to you:
 
 - `baseURL`: Normally you have to change the value of this option to the base URL of your website. Some Hugo themes may have set it to `http://replace-this-with-your-hugo-site.com/` or `http://www.example.com/` in their example sites, but please make sure to replace them with your own URL (see Chapter \@ref(deployment) and Appendix \@ref(domain-name) for more information on publishing websites and obtaining domain names). Note this option can be a URL with a subpath, if your website is to be published under a subpath of a domain name, e.g., `http://www.example.com/docs/`.
 
@@ -120,6 +120,8 @@ All built-in options that you may set for Hugo are listed on [this page](https:/
 
 - `theme`: The directory name of the Hugo theme under `themes/`.
 
+- `ignoreFiles`: A list of filename patterns (regular expressions) for Hugo to ignore certain files when building the site. You are recommended to specify at least these patterns `["\\.Rmd$", "_files$", "_cache$"]`. You should ignore `.Rmd` files because **blogdown** will compile them to `.html`, and it suffices for Hugo to use the `.html` files. There is no need for Hugo to build `.Rmd` files, and actually Hugo does not know how. Directories with suffixes `_files` and `_cache` should be ignored because they contain auxiliary files after an Rmd file is compiled, and **blogdown** will store them. Hugo should not copy them again to the `public/` directory.
+
 - `uglyURLs`: By default, Hugo generate "clean" URLs. This may be a little surprising and requires you to understand how URLs work when your browser fetches a page from a server. Basically Hugo generates `foo/index.html` for `foo.md` by default instead of `foo.html`, because the former allows you to visit the page via the clean URL `foo/` without `index.html`. Most web servers understand requests like `http://www.example.com/foo/` and will present `index.html` under `foo/` to you. If you prefer the strict mapping from `*.md` to `*.html`, you may enable "ugly" URLs by setting `uglyURLs` to `true`.
 
 - `hasCJKLanguage`: If your website is primarily in CJK (Chinese, Korean, and Japanese), you are recommended to set this option to `true`, so that Hugo's automatic summary and word count work better.
@@ -132,7 +134,7 @@ Besides the built-in Hugo options, you can set other arbitrary options in `confi
     dateFormat = "2006/01/02"
 ```
 
-The goal of all these options is to avoid hardcoding anything in Hugo themes, so that users can easily edit a single config file to apply the theme to their websites, instead of going through many HTML files and make changes one by one.
+The goal of all these options is to avoid hard-coding anything in Hugo themes, so that users can easily edit a single config file to apply the theme to their websites, instead of going through many HTML files and make changes one by one.
 
 Option names are case-insensitive, so `.Site.Params.AUTHOR` is the same as `.Site.Params.author`.
 
@@ -156,7 +158,7 @@ post/
 
 Each page should start with YAML metadata specifying information like the title, date, author, categories, tags, and so on. Depending on the specific Hugo theme and templates you use, some of these fields may be optional.
 
-Among all YAML fields, we want bring tese to your attention:
+Among all YAML fields, we want bring these to your attention:
 
 - `draft`: You can mark a document as a draft by setting `draft: true` in its YAML metadata. Draft posts will not be rendered if the site is built via `blogdown::build_site()` or `blogdown::hugo_build()`, but will be rendered in the local preview mode (see Section \@ref(local-preview)).
 
@@ -205,16 +207,185 @@ Basically you only need to pass the ID of the tweet to a shortcode named `tweet`
 
 ## Themes
 
+A Hugo theme is a collection of template files and optional website assets such as CSS and JavaScript files. In a nutshell, a theme defines what your website looks like after your source content is rendered through the templates.
+
+Hugo has provided a large number of user-contributed themes at https://themes.gohugo.io. Unless you are an experienced web designer, you'd better start from an existing theme here. The quality and complexity of these themes vary a lot, and you should choose one with caution. For example, you may take a look at the number of stars of a theme repository on GitHub, as well as whether the repository is still relatively active. We do not recommend you to use a theme that has not been updated for over a year.
+
+In this section, we will explain how the default theme in **blogdown** works, which may also give you some ideas about how to get started with other themes.
+
 ### The default theme
 
-### A few examples
+The default theme in **blogdown**, hugo-lithium-theme, is hosted on GitHub at https://github.com/yihui/hugo-lithium-theme. It was originally written by Jonathan Rutheiser, and I have made several changes to it. This theme is suitable for those who prefer minimal styles, and want to build a website with a few pages and some blog posts.
 
-### Managing themes
+Typically a theme repository on GitHub has a `README` file, which also serves as the documentation of the theme. After you read it, the next file to look for is `config.toml` under the `exampleSite` directory, which contains sample configurations for a website based on this theme. If a theme does not have a `README` file or `exampleSite` directory, you probably should not use it.
 
+The `config.toml` of the theme hugo-lithium-theme contains the following options:
+
+```js
+baseurl = "/"
+relativeurls = true
+languageCode = "en-us"
+title = "A Hugo website"
+theme = "hugo-lithium-theme"
+googleAnalytics = ""
+disqusShortname = ""
+ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
+
+[permalinks]
+    post = "/:year/:month/:day/:slug/"
+
+[[menu.main]]
+    name = "About"
+    url = "/about/"
+[[menu.main]]
+    name = "GitHub"
+    url = "https://github.com/rstudio/blogdown"
+[[menu.main]]
+    name = "Twitter"
+    url = "https://twitter.com/rstudio"
+
+[params]
+    description = "A website built through Hugo and blogdown."
+
+    highlightjsVersion = "9.11.0"
+    highlightjsCDN = "//cdn.bootcss.com"
+    highlightjsLang = ["r", "yaml"]
+    highlightjsTheme = "github"
+
+    MathJaxCDN = "//cdn.bootcss.com"
+    MathJaxVersion = "2.7.1"
+
+[params.logo]
+    url = "logo.png"
+    width = 50
+    height = 50
+    alt = "Logo"
+```
+
+Some of these options may be obvious to understand, and some may need explanations:
+
+- `baseurl`: You can configure this option later, after you have got a domain name for your website. Do not forget the trailing slash.
+
+- `relativeurls`: It is optional. You may want to set it to `true` only if you intend to view your website locally through your file viewer, e.g., double click on an HTML file and view it in your browser. This option defaults to `false` in Hugo, and it means your website must be viewed through a web server, e.g., `blogdown::serve_site()` has provided a local web server, so you can preview your website locally when `relativeurls = false`.
+
+- `title`: The title of your website. Typically this is displayed in a web browser's title bar or on a page tab.
+
+- `theme`: The directory name of the theme. You need to be very careful when changing themes, because one theme can be drastically different with another theme in terms of the configurations. It is quite possible that a different theme will not work with your current `config.toml`. Again, you have to read the documentation of a theme to know what options are supported or required.
+
+- `googleAnalytics`: The Google Analytics tracking ID (like `UA-000000-2`). You can sign up at https://analytics.google.com to obtain a tracking ID.
+
+- `disqusShortname`: The Disqus ID. You may register an account at https://disqus.com. Please note that you have to set up a functional `baseurl` and publish your website before Disqus comments can work.
+
+- `ignoreFiles` and `permalinks`: These options have been explained in Section \@ref(options).
+
+- `menu`: This list of options specifies the text and URL of menu items at the top. See Figure \@ref(fig:lithium) for a sample page. You can change or add more menu items. If you want to order the items, you may assign a `weight` to each item, e.g.,
+
+    ```js
+    [[menu.main]]
+        name = "Home"
+        url = "/"
+        weight = 1
+    [[menu.main]]
+        name = "About"
+        url = "/about/"
+        weight = 2
+    [[menu.main]]
+        name = "GitHub"
+        url = "https://github.com/rstudio/blogdown"
+        weight = 3
+    [[menu.main]]
+        name = "CV"
+        url = "/vitae/"
+        weight = 4
+    [[menu.main]]
+        name = "Twitter"
+        url = "https://twitter.com/rstudio"
+        weight = 5
+    ```
+    
+    In the above example, I added a menu item `CV` with the URL `/vitae/`, and there is supposed to be a corresponding source file `vitae.md` under the `content/` directory to generate the page `/vitae/index.html`, so the link will actually function.
+
+- `params`: Miscellaneous parameters for the theme.
+
+    - `description`: A brief description of your website. It is not visible on web pages (you can only see it from the HTML source), but should give search engines a hint about your website.
+    
+    - `highlightjs*`: These options are used to configure the JavaScript library [highlight.js](https://highlightjs.org) for syntax highlighting of code blocks on the web pages. You can change the version (e.g., `9.12.0`), the CND host (e.g., using [cdnjs](https://cdnjs.com): `//cdnjs.cloudflare.com/ajax/libs`), add more languages (e.g., `["r", "yaml", "tex"]`), and change the theme (e.g., `atom-one-light`). See https://highlightjs.org/static/demo/ for all languages and themes that highlight.js supports.
+    
+    - `MathJax*`: The JavaScript library MathJax can render LaTeX math expressions on web pages. Similar to `highlightjsCDN`, you can specify the CDN host of MathJax, e.g., `//cdnjs.cloudflare.com/ajax/libs`, and you can also specify the version of MathJax.
+    
+    - `logo`: A list of options to define the logo of the website. By default, the image `logo.png` under the `static/` directory is used.
+
+If you want to be a theme developer and fully understand all the technical details about these options, you have to understand Hugo templates, which we will introduce in Section \@ref(templates).
 
 ## Templates
 
+A Hugo theme consists of two major components: templates, and web assets. The former is essential, and it tells Hugo how to render a page.^[The most common functionality of templates is to render HTML pages, but there can also be special templates, for example, for RSS feeds and sitemaps, which are XML files.] The latter is optional but also important. It typically consists of CSS and JavaScript files, as well as other assets like images and videos. These assets determine the appearance and functionality of your website, and some may be embedded in the content of your web pages.
+
+You can learn more about Hugo templates from the official documentation (https://gohugo.io/templates/overview/). There are a great many different types of templates. To make it easier for you to master the key ideas, I created a very minimal Hugo theme, which covers most functionalities that an average user may need, but the total number of lines is only about 150, so we can talk about all the source code of this theme in the following subsection.
+
 ### A minimal example
+
+[XMin](https://github.com/yihui/hugo-xmin) is a Hugo theme I wrote from scratch in about 12 hours. Roughly half an hour was spent on templates, 3.5 hours were spent on tweaking the CSS styles, and 8 hours were spent on the documentation (https://xmin.yihui.name). I think this may be a representative case of how much time you would spend on each part when designing a theme. It is perhaps our nature to spend much more time on cosmetic stuff like CSS than essential stuff like templates. Meanwhile, coding is often easier than documentation.
+
+Below is a tree view of all files and directories in the theme:
+
+```text
+hugo-xmin/
+├── LICENSE.md
+├── README.md
+├── archetypes
+│   └── default.md
+├── layouts
+│   ├── 404.html
+│   ├── _default
+│   │   ├── list.html
+│   │   ├── single.html
+│   │   └── terms.html
+│   └── partials
+│       ├── foot_custom.html
+│       ├── footer.html
+│       ├── head_custom.html
+│       └── header.html
+├── static
+│   └── css
+│       ├── fonts.css
+│       └── style.css
+└── exampleSite
+    ├── config.toml
+    ├── content
+    │   ├── _index.md
+    │   ├── about.md
+    │   ├── note
+    │   │   ├── 2017-06-13-a-quick-note.md
+    │   │   └── 2017-06-14-another-note.md
+    │   └── post
+    │       ├── 2015-07-23-lorem-ipsum.md
+    │       └── 2016-02-14-hello-markdown.md
+    ├── layouts
+    │   └── partials
+    │       └── foot_custom.html
+    └── public
+        └── ...
+```
+
+`LICENSE.md` and `README.md` are not a required component of a theme, but you definitely should choose a license for your source code so that other people can properly use your code, and a `README` can be the brief documentation of your software.
+
+The file `archetypes/default.md` defines the default template based on which users can create new posts. In this theme, `default.md` only provided empty YAML metadata:
+
+```yaml
+---
+---
+```
+
+The most important directories of a theme are `layouts/` and `static/`. HTML templates are stored under `layouts/`, and assets are stored under `static/`.
+
+To understand `layouts/`, you must know some basics about HTML (see Section \@ref(html)) because the templates under this directory are mostly HTML documents or fragments.
+
+single.html
+
+list.html
+
+https://github.com/twbs/bootstrap bootstrap.css has nearly 10,000 lines of code.
 
 ### How-to
 
@@ -231,6 +402,3 @@ override a subset of files in the theme
 ## Static files
 
 copied to `public/`
-
-## Other directories
-
