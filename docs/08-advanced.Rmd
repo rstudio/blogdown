@@ -74,7 +74,7 @@ If you theme uses the jQuery library, it is also likely that the theme's jQuery 
 
 If your website source files are under version control, we recommend you to add at least these two folder names to your `.gitignore` file:
 
-```
+```bash
 blogdown
 public
 ```
