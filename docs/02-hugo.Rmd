@@ -205,6 +205,14 @@ If you use the shortcode, all you need in the Markdown source document is:
 
 Basically you only need to pass the ID of the tweet to a shortcode named `tweet`. Hugo will fetch the tweet automatically and render the HTML snippet for you. For more about shortcodes, see https://gohugo.io/extras/shortcodes/.
 
+Shortcodes are supposed to work in plain Markdown documents only. To use shortcodes in R Markdown instead of plain Markdown, you have to call the function `blogdown::shortcode()`, e.g.,
+
+````markdown
+`r ''````{r echo=FALSE}
+blogdown::shortcode('tweet', '852205086956818432')
+```
+````
+
 ## Themes
 
 A Hugo theme is a collection of template files and optional website assets such as CSS and JavaScript files. In a nutshell, a theme defines what your website looks like after your source content is rendered through the templates.
