@@ -32,7 +32,7 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
   # poor-man's version may work as well
   if (version == 'latest') {
     json = readLines(
-      'https://api.github.com/repos/spf13/hugo/releases/latest', warn = FALSE
+      'https://api.github.com/repos/gohugoio/hugo/releases/latest', warn = FALSE
     )
     r = '^.*?"tag_name":\\s*"([^"]+)",.*'
     version = gsub(r, '\\1', grep(r, json, value = TRUE)[1])
@@ -40,7 +40,7 @@ install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
   version = gsub('^[vV]', '', version)  # pure version number
   version2 = as.numeric_version(version)
   bit = if (grepl('64', Sys.info()[['machine']])) '64bit' else '32bit'
-  base = sprintf('https://github.com/spf13/hugo/releases/download/v%s/', version)
+  base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
   unlink(sprintf('hugo_%s*', version), recursive = TRUE)
