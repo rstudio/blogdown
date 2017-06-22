@@ -21,7 +21,7 @@ blogdown::install_hugo()
 
 By default, it installs the latest version of Hugo, but you can choose a specific version through the `version` argument if you prefer.
 
-For macOS users, `install_hugo()` uses the package manager Homebrew (https://brew.sh), which is the recommended way to install Hugo, but if you do not prefer installing or using Homebrew, you can call `blogdown::install_hugo(use_brew = FALSE)`.^[If you are not a software developer, the benefits of Homebrew may not be so obvious.] If you have never installed Homebrew before, the installation may take one or two minutes. If the installation fails for any reason,^[One possible reason for the failure might be that you do not have Xcode Command Line Tools, and you can try the command `xcode-select --install` in the Terminal.] `install_hugo()` will automatically retry with `use_brew = FALSE`.
+For macOS users, `install_hugo()` uses the package manager Homebrew (https://brew.sh) if it has already been installed, otherwise it just downloads the Hugo binary directly.
 
 To upgrade or reinstall Hugo, you may pass `force = TRUE` to `install_hugo()`. You can check the installed Hugo version via `blogdown::hugo_version()`, and find the latest version of Hugo at <https://github.com/gohugoio/hugo/releases>.
 

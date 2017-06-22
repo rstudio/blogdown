@@ -15,16 +15,19 @@
 #' executable for your operating system, especially if you are not on Windows or
 #' Mac or a major Linux distribution. When in doubt, read the Hugo documentation
 #' and install it by yourself: \url{https://gohugo.io}.
-#' @param version The Hugo version number, e.g., \code{0.17}; the special value
+#' @param version The Hugo version number, e.g., \code{0.19}; the special value
 #'   \code{latest} means the latest version (fetched from Github releases).
 #' @param use_brew Whether to use Homebrew (\url{https://brew.sh}) on macOS to
-#'   install Hugo (recommended because it is much easier to manage packages).
-#'   Note Homebrew will be automatically installed if it has not been installed.
+#'   install Hugo (recommended if you have already installed Homebrew). Note
+#'   Homebrew will be automatically installed if it has not been installed when
+#'   \code{use_brew = TRUE}.
 #' @param force Whether to install Hugo even if it has already been installed.
 #'   This may be useful when upgrading Hugo (if you use Homebrew, run the
 #'   command \command{brew update && brew upgrade} instead).
 #' @export
-install_hugo = function(version = 'latest', use_brew = TRUE, force = FALSE) {
+install_hugo = function(
+  version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE
+) {
 
   if (Sys.which('hugo') != '' && !force) return(invisible())
 
