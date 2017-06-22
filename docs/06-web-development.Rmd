@@ -100,3 +100,53 @@ There are much better tutorials on HTML than this section, such as those offered
 ## CSS
 
 ## JavaScript
+
+Brief introduction here...
+
+Next we show a slightly advanced application. In Section \@ref(how-to), we mentioned how to enable MathJax on a Hugo website. The easy part is to include the script `MathJax.js` via a `<script>` tag, and there are two hard parts:
+
+1. How to protect the math content from the Markdown engine (Blackfriday), e.g., we need to make sure underscores in math expressions are not interpreted as `<em></em>`. This problem only exists in plain Markdown posts, and has been mentioned in Section \@ref(output-format) without explaining the solution.
+
+1. By default, MathJax does not recognize a pair of single dollar signs as the syntax for inline math expressions, but most users are perhaps more comfortable with the syntax `$x$` than `\(x\)`.
+
+The easiest solution to the first problem may be adding backticks around math expressions, e.g., `` `$x_i$` ``, but the consequence is that the math expression will be rendered to in `<code></code>`, and MathJax ignores `<code>` tags when looking for math expressions on the page. We can force MathJax to search for math expressions in `<code>`, but this will still be problematic. For example, someone may want to display inline R code `` `list$x$y` ``, and `$x$` may be recognized as a math expression. MathJax ignores `<code>` for good reasons. Even if you do not have such expressions in `<code>`, you may have some special CSS styles attached to `<code>`, and these styles will be applied to your math expressions, which can be undesired (e.g., a lightgray background).
+
+To solve these problems, I have provided a solution in the JavaScript code at https://yihui.name/js/math-code.js:
+
+```js
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' &&
+        code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) ||
+          /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$(.|\s)+\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+```
+
+It is not a perfect solution, but it should be very rare that you run into problems. What it does is to identify possible math expressions in `<code>`, and strip the `<code>` tag, e.g., replace `<code>$x$</code>` with `$x$`. After this script is executed, we load the MathJax script. This way, we do not need to force MathJax to search for math expressions in `<code>` tags, and your math expressions will not inherit any styles from `<code>`. The JavaScript code above is not too long, and should be self-explanatory. The trickiest part is `i++`. I will leave it readers to figure out why the `for` loop is not the usual form `for (i = 0; i < codes.length; i++)`. It took me quite a few minutes to realize my mistake when I wrote the loop with the usual form.
+
+Before MathJax.js is loaded, we have to pre-configure MathJax so that it recognizes single dollar signs for inline math expressions:
+
+```html
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+</script>
+```
+
+The option `processEscapes` means that to avoid a single dollar sign being treated as the marker for a math expression, you can escape it by a leading backslash, e.g., `\$100 and $50`. When MathJax sees the backslash, it will remove it to show the literal dollar sign, so what you will actually see on the page is `$100 and $50`.
