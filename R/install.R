@@ -2,7 +2,8 @@
 #'
 #' Download the appropriate Hugo executable for your platform from Github and
 #' try to copy it to a system directory so \pkg{blogdown} can run the
-#' \command{hugo} command to build a site.
+#' \command{hugo} command to build a site. \code{update_hugo()} is a wrapper of
+#' \code{install_hugo(force = TRUE)}.
 #'
 #' This function tries to install Hugo to \code{Sys.getenv('APPDATA')} on
 #' Windows, \file{~/Library/Application Support} on macOS, and \file{~/bin/} on
@@ -101,6 +102,10 @@ install_hugo = function(
   )
   message('Hugo has been installed to ', normalizePath(destdir))
 }
+
+#' @export
+#' @rdname install_hugo
+update_hugo = function() install_hugo(force = TRUE)
 
 brew_hugo = function() {
   install = function() system('brew update && brew reinstall hugo')
