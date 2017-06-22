@@ -39,7 +39,9 @@ install_hugo = function(
     )
     r = '^.*?"tag_name":\\s*"([^"]+)",.*'
     version = gsub(r, '\\1', grep(r, json, value = TRUE)[1])
-  }
+  } else if (use_brew) warning(
+    "when use_brew = TRUE, only the latest version of Hugo can be installed"
+  )
   version = gsub('^[vV]', '', version)  # pure version number
   version2 = as.numeric_version(version)
   bit = if (grepl('64', Sys.info()[['machine']])) '64bit' else '32bit'
