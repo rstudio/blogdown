@@ -335,9 +335,9 @@ You can learn more about Hugo templates from the official documentation (https:/
 
 [XMin](https://github.com/yihui/hugo-xmin) is a Hugo theme I wrote from scratch in about 12 hours. Roughly half an hour was spent on templates, 3.5 hours were spent on tweaking the CSS styles, and 8 hours were spent on the documentation (https://xmin.yihui.name). I think this may be a representative case of how much time you would spend on each part when designing a theme. It is perhaps our nature to spend much more time on cosmetic stuff like CSS than essential stuff like templates. Meanwhile, coding is often easier than documentation.
 
-Below is a tree view of all files and directories in the theme:
+We will show the source code of the XMin theme. Because the theme may be updated occasionally in the future, you may follow this link to obtain a fixed version that we will talk about in this section: https://github.com/yihui/hugo-xmin/tree/4bb305. Below is a tree view of all files and directories in the theme:
 
-```text
+```bash
 hugo-xmin/
 ├── LICENSE.md
 ├── README.md
@@ -387,26 +387,491 @@ The file `archetypes/default.md` defines the default template based on which use
 
 The most important directories of a theme are `layouts/` and `static/`. HTML templates are stored under `layouts/`, and assets are stored under `static/`.
 
-To understand `layouts/`, you must know some basics about HTML (see Section \@ref(html)) because the templates under this directory are mostly HTML documents or fragments.
+To understand `layouts/`, you must know some basics about HTML (see Section \@ref(html)) because the templates under this directory are mostly HTML documents or fragments. There are many possible types of subdirectories under `layouts/`, but we are only going to introduce two here: `_default/` and `partials/`.
 
-single.html
+- The `_default/` directory is where you put the default templates for your web pages. In the XMin theme, we have three templates: `single.html`, `list.html`, and `terms.html`.
 
-list.html
+    - `single.html` is a template for rendering single pages. A single page basically corresponds to a Markdown document under `content/`, and it contains both the (YAML) metadata and content. Typically we want to render the page title, author, date, and the content. Below is the source code of XMin's `single.html`:
+    
+        ```html
+        {{ partial "header.html" . }}
+        <div class="article-meta">
+        <h1><span class="title">{{ .Title }}</span></h1>
+        {{ with .Params.author }}
+        <h2 class="author">{{ . }}</h2>
+        {{ end }}
+        {{ if .Params.date }}
+        <h2 class="date">{{ .Date.Format "2006/01/02" }}</h2>
+        {{ end }}
+        </div>
+        
+        <main>
+        {{ .Content }}
+        </main>
+        
+        {{ partial "footer.html" . }}
+        ```
+        
+        You see a lot of pairs of double curly braces `{{}}`, and that is how you program the templates using Hugo's variables and functions.
+        
+        The template starts with a partial template `header.html`, of which you will see the source code soon. For now, you can imagine it as all the HTML tags before the body of your page (e.g., `<html><head>`). Partial templates are mainly for reusing HTML code. For example, all HTML pages may share very similar `<head></head>` tags, and you can factor out the common parts into partial templates.
+        
+        The meta data of a page is included in a `<div>` element with the class `article-meta`. We recommend you to assign classes to HTML elements when designing templates, so that it will be easier to apply CSS styles to these elements using class names. In a template, you have access to many variables provided by Hugo, e.g., the `.Title` variable stores the value of the page title, and we write the title in a `<span>` in a first-level header `<h1>`. Similarly, the author and date are written in `<h2>`, but only if they are provided in the YAML metadata. The syntax `{{ with FOO }}{{ . }}{{ end }}` is a shorthand of `{{if FOO }}{{ FOO }}{{ end }}`, i.e., it saves you the effort of typing the expression `FOO` twice by using `{{ . }}`. The method `.Format` can be applied to a date object, and in this theme, we format dates to the form `YYYY/mm/dd` (`2006/01/02` is the way to specify the format in Go).
+        
+        Then we show the content of a page, which is stored in the variable `.Content`. The content is wrapped in a semantic HTML tag `<main>`.
+        
+        The template is finished after we include another partial template `footer.html` (source code to be shown shortly).
+        
+        To make it easier to understand how a template works, we show a minimal example post below:
+        
+        ```markdown
+        ---
+        title: Hello World
+        author: Frida Gomam
+        date: 2017-06-19
+        ---
+        
+        A single paragraph.
+        ```
+        
+        Using the template `single.html`, it will be converted to an HTML page with the source code that looks more or less like this (with the header and footer omitted):
 
-https://github.com/twbs/bootstrap bootstrap.css has nearly 10,000 lines of code.
+        ```html
+        <div class="article-meta">
+          <h1><span class="title">Hello World</span></h1>
+          <h2 class="author">Frida Gomam</h2>
+          <h2 class="date">2017/06/19</h2>
+        </div>
+        
+        <main>
+          <p>A single paragraph.</p>
+        </main>
+        ```
+        
+        For a full example of a single, you may see https://xmin.yihui.name/about/.
+
+    - `list.html` is the template of render lists of pages, such as a list of blog posts, or a list of pages within a category or tag. Here is its source code:
+
+        ```html
+        {{ partial "header.html" . }}
+        
+        {{if not .IsHome }}
+        <h1>{{ .Title }}</h1>
+        {{ end }}
+        
+        {{ .Content }}
+        
+        <ul>
+          {{ range (where .Data.Pages "Section" "!=" "") }}
+          <li>
+            <span class="date">{{ .Date.Format "2006/01/02" }}</span>
+            <a href="{{ .URL }}">{{ .Title }}</a>
+          </li>
+          {{ end }}
+        </ul>
+        
+        {{ partial "footer.html" . }}
+        ```
+        
+        Again, it uses two partial templates `header.html` and `footer.html`. The expression `{{if not .IsHome }}` means if this list is not the home page, show the page title. This is because I do not want to display the title on the home page. It is just my personal preference. You can certainly display the title in `<h1>` on the home page if you want.
+        
+        The `{{ .Content }}` shows the content of the list. Please note that typically `.Content` is empty, which may be surprising. It is because a list page is not generated from a source Markdown file by default. However, there is an exception. When you write a special Markdown file `_index.md` under a directory corresponding to the list name, the `.Content` of the list will be the content of this Markdown file. For example, you can define the content of your homepage in `content/_index.md`, and the content of the post list page under `content/post/_index.md`.
+        
+        Next we generate the list using a loop (`range`) through all pages filtered by the condition that the section of a page should not be empty. "Section" in Hugo means the first-level subdirectory name under `content/`. For example, the section of `content/post/foo.md` is `post`. Therefore the filter means that we will list all pages under subdirectories of `content/`. This will exclude pages under the root `content/` directory, such as `content/about.md`.
+        
+        Please note that the variable `.Data` is dynamic, and its value changes according to the specific list you want to generate. For example, the list page https://xmin.yihui.name/post/ only contains pages under `content/post/`, and https://xmin.yihui.name/note/ only contains pages under `content/note/`. These list pages are automatically generated by Hugo, and you do not need to explicitly loop through the sections `post` and `note`. That is, a single template `list.html` will generate multiple lists of pages according to the sections and taxonomy terms (e.g., categories and tags) you have on your website.
+
+        The list items are represented by the HTML tags `<li>` in `<ul>`. Each item consists of the date, link, and title of a page. You may see https://xmin.yihui.name/post/ for a full example of a list page.
+
+    - `terms.html` is the template for the home page of taxonomy terms. For example, you can use it to generate the full list of categories or tags. The source code is below:
+
+        ```html
+        {{ partial "header.html" . }}
+        
+        <h1>{{ .Title }}</h1>
+        
+        <ul class="terms">
+          {{ range $key, $value := .Data.Terms }}
+          <li>
+            <a href='{{ (print "/" $.Data.Plural "/" $key) | relURL }}'>
+              {{ $key }}
+            </a>
+            ({{ len $value }})
+          </li>
+          {{ end }}
+        </ul>
+        
+        {{ partial "footer.html" . }}
+        ```
+        
+        Similar to `list.html`, it also uses a loop. The variable `.Data.Terms` stores all terms under a taxonomy, e.g., all category names. You can think of it as a named list in R (called a `map` in Go), with the names being the terms and values being lists of pages. The variable `$key` denotes the term and `$value` denotes the list of pages associated with this term. What we render in each `<li>` is a link to the term page as well as the count of posts that used this term (`len` is a Go function that returns the length of an object).
+        
+        Hugo automatically renders all taxonomy pages, and the path names are the plural forms of the taxonomies, e.g., https://xmin.yihui.name/categories/ and https://xmin.yihui.name/tags/. That is the meaning of `.Data.Plural`. The leading `$` is required because we are inside a loop, and need to access variables from the outside scope. The link of the term is passed to the Hugo function `relURL` via a pipe `|` to make it relative, which is good practice because relative links are more portable (independent of the domain name).
+
+- The `partials/` directory is the place to put the HTML fragments to be reused by other templates via the `partial` function. We have four partial templates under this directory:
+
+    - `header.html` main defines the `<head>` tag and the navigation menu in the `<nav>` tag.
+
+        ```html
+        <!DOCTYPE html>
+        <html lang="{{ .Site.LanguageCode }}">
+          <head>
+            <meta charset="utf-8">
+            <title>{{ .Title }} | {{ .Site.Title }}</title>
+            <link href='{{ "/css/style.css" | relURL }}'
+              rel="stylesheet" />
+            <link href='{{ "/css/fonts.css" | relURL }}'
+              rel="stylesheet" />
+            {{ partial "head_custom.html" . }}
+          </head>
+        
+          <body>
+            <nav>
+            <ul class="menu">
+              {{ range .Site.Menus.main }}
+              <li><a href="{{ .URL | relURL }}">{{ .Name }}</a></li>
+              {{ end }}
+            </ul>
+            <hr/>
+            </nav>
+        ```
+        
+        The `<head>` area should be easy to understand if you are familiar with HTML. Note we also included a partial template `head_custom.html`, which is empty in this theme, but it will make it much easier for users to add customized code to `<head>` without rewriting the whole template. See Section \@ref(custom-layouts) for more details.
+        
+        The navigation menu is essentially a list, and each item of the list is read from the variable `.Site.Menus.main`. This means users can define the menu in `config.toml`, e.g., 
+      
+        ```js  
+        [[menu.main]]
+            name = "Home"
+            url = "/"
+        [[menu.main]]
+            name = "About"
+            url = "/about/"
+        ```
+
+        It will generate a menu like this:
+        
+        ```html
+        <ul class="menu">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about/">About</a></li>
+        </ul>
+        ```
+        
+        Hugo has a powerful menu system, and we only used the simplest type of menu in this theme. If you are interested in more features like nested menus, please see the full documentation at http://gohugo.io/extras/menus/.
+
+    - `footer.html` defines the footer area of a page and closes the HTML document:
+
+        ```html
+          <footer>
+          {{ partial "foot_custom.html" . }}
+          {{ with .Site.Params.footer }}
+          <hr/>
+          {{ . | markdownify }}
+          {{ end }}
+          </footer>
+          </body>
+        </html>
+        ```
+        
+        The purpose of the partial template `foot_custom.html` is the same as `head_custom.html`.
+        
+        Lastly, we use the variable `.Site.Params.footer` to generate a page footer. Note we used the `with` function again. The function `markdownify` can convert Markdown to HTML. This means we can define a `footer` option using Markdown under `params` in `config.toml`, e.g.,
+        
+        ```js
+        [params]
+            footer = "&copy; [Yihui Xie](https://yihui.name) 2017"
+        ```
+
+There is a special template `404.html`, which Hugo uses to create the 404 page (when a page is not found, this page is displayed):
+
+```html
+{{ partial "header.html" . }}
+
+404 NOT FOUND
+
+{{ partial "footer.html" . }}
+```
+
+With all templates above, we will be able to generate a website from Markdown source files. You are unlikely to be satisfied with the website, however, because the HTML elements are not styled at all, and the default appearance may not look appealing to most people. You may have noticed that in `header.html`, we have included two CSS files, `/css/style.css` and `/css/fonts.css`.
+
+You can find many existing open-source CSS frameworks online that may be applied to a Hugo theme. For example, the most popular CSS framework may be Bootstrap: http://getbootstrap.com. When I was designing XMin, I wondered how far I could go without using any of these existing frameworks, because they are usually very big. For example, `bootstrap.css` has nearly 10000 lines of code when not minimized. It turned out that I was able to get the satisfactory appearance with about 50 lines of CSS, which I will explain in detail below:
+
+- `style.css` defines all styles except the typefaces:
+
+    ```css
+    body {
+      max-width: 800px;
+      margin: auto;
+      padding: 1em;
+      line-height: 1.5em;
+    }
+    ```
+    
+    The maximum width of the page body is set to 800 pixels because a too wide page is difficult to read (`800` is an arbitrary threshhold I picked). The body is centered using the CSS trick `margin: auto`, which means the top, right, bottom, and left margins are automatic. When a block element's left and right margins are `auto`, it will be centered. 
+    
+    ```css
+    /* header and footer areas */
+    .menu li { display: inline-block; }
+    .article-meta, .menu a {
+      text-decoration: none;
+      background: #eee;
+      padding: 5px;
+      border-radius: 5px;
+    }
+    .menu, .article-meta, footer { text-align: center; }
+    .title { font-size: 1.1em; }
+    footer a { text-decoration: none; }
+    hr {
+      border-style: dashed;
+      color: #ddd;
+    }
+    ```
+    
+    Remember our menu element is a list `<ul class="menu">` defined in `header.html`. I changed the default display style of `<li>` within the menu to `inline-block`, so that they will be laid out from left to right as inline elements, instead of being stacked vertically as a bullet list (the default behavior).
+    
+    For links (`<a>`) in the menu and the meta data area of an article, the default text decoration (underlines) is removed, and a light background color is applied. The border radius is set to 5 pixels so that you can see a subtle round-corner rectangle behind each link.
+    
+    The horizontal rule (`<hr>`) is set to a dashed lightgray line to make it less prominent on a page. These rules are used to separate the article body from the header and footer areas.
+    
+    ```css
+    /* code */
+    pre {
+      border: 1px solid #ddd;
+      box-shadow: 5px 5px 5px #eee;
+      padding: 1em;
+      overflow-x: auto;
+    }
+    code { background: #f9f9f9; }
+    pre code { background: none; }
+    ```
+    
+    For code blocks (`<pre>`), I apply lightgray borders with drop-shadow effects to them. Every inline code element has a very light gray background. These decorations are merely out of a programmer's peculiar interest and emphasis in code.
+    
+    ```css
+    /* misc elements */
+    img, iframe, video { max-width: 100%; }
+    main { hyphens: auto; }
+    blockquote {
+      background: #f9f9f9;
+      border-left: 5px solid #ccc;
+      padding: 3px 1em 3px;
+    }
+    
+    table {
+      margin: auto;
+      border-top: 1px solid #666;
+      border-bottom: 1px solid #666;
+    }
+    table thead th { border-bottom: 1px solid #ddd; }
+    th, td { padding: 5px; }
+    tr:nth-child(even) { background: #eee }
+    ```
+    
+    Embedded elements like images and videos that exceed the page margin are often ugly, so I restrict their maximum width to be 100%. Hyphenation is turned on for words in `<main>`. Blockquotes have a gray left side bar and a lightgray background. Tables are centered by default, with only three horizontal rules: the top and bottom borders of the table, and the bottom border of the table head. Table rows are striped to make it easier to read the table especially when the table is wide.
+
+- `fonts.css` is a separate style sheet because it plays a critical role in the appearance of a website, and it is very likely that you want to customize this file. In most cases, your readers will spend most time on reading the text on your pages, so it is important to make the text comfortable to read. I'm not an expert in web design, and I just picked Palatino for the body and Lucida Console or Monaco (whichever is available in your system) for code. It is common to use Google web fonts nowadays. You may try some web fonts and see if you like any.
+    
+    ```css
+    body {
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    }
+    code {
+      font-family: "Lucida Console", Monaco, monospace;
+      font-size: 85%;
+    }
+    ```
+
+The two CSS files are placed under the `static/css/` directory of the theme. In the HTML template `header.html`, the path `/css/style.css` refers to the file `static/css/style.css`.
+
+Lastly, this theme provided an example site under `exampleSite/`. The directory structure may be a little confusing because this is a theme instead of a website. In practice, everything under `exampleSite/` should be under the root directory of a website, and the top-level `hugo-xmin/` directory should be under the `themes/` directory of this website, i.e.,
+
+```bash
+config.toml
+content/
+...
+themes/
+|
+|- hugo-xmin/
+...
+```
+
+The example site provided a sample `config.toml`, a home page `_index.md`, an about page `about.md`, two posts under `note/` and two under `post/`. It also overrides the `foot_custom.html` in the theme.
 
 ### How-to
 
-syntax highlighting via highlight.js
+The XMin is actually a highly functional theme, but we understand that it may be too minimal to you. There are a few commonly used features (intentionally) missing in this theme, and we will teach you how to add them by yourself if desired. All these features and the source code can be applied to other themes, too.
 
-math support through MathJax
+- **Enable Google Analytics.** Hugo has provided a built-in partial template. For XMin, you can add
 
-the edit button
+    ```html
+    {{ template "_internal/google_analytics.html" . }}
+    ```
+
+    to `layouts/partials/foot_custom.html` under the root directory of your website (instead of `themes/hugo-xmin/`), and configure `googleAnalytics` in the `config.toml`. See https://github.com/yihui/hugo-xmin/pull/3 for details, and the HTML source of this page for the JavaScript rendered from the template: https://deploy-preview-3--hugo-xmin.netlify.com.
+
+- **Enable Disqus comments.** Similar to Google Analytics, you can add the built-in template
+
+    ```html
+    {{ template "_internal/disqus.html" . }}
+    ```
+
+    to `foot_custom.html`, and configure the Disqus shortname in `config.toml`. See https://github.com/yihui/hugo-xmin/pull/4 for details, and a preview at https://deploy-preview-4--hugo-xmin.netlify.com.
+
+- **Enable syntax highlighting via highlight.js.** Add this to `head_custom.html`
+
+    ```html
+    <link href="//YOUR-CDN-LINK/github.min.css" rel="stylesheet">
+    ```
+    
+    and this to `foot_custom.html`:
+    
+    ```html
+    <script src="//YOUR-CDN-LINK/highlight.min.js"></script>
+    <script src="//YOUR-CDN-LINK/languages/r.min.js"></script>
+    
+    <script>
+    hljs.configure({languages: []});
+    hljs.initHighlightingOnLoad();
+    </script>
+    ```
+    
+    Remember to replace `YOUR-CDN-LINK` with the link of your preferred CDN host of highlight.js, e.g., `cdn.bootcss.com/highlight.js/9.12.0`. For more information about highlight.js, please see its homepage: https://highlightjs.org. If you need to use other CDN hosts, cdnjs.com is a good choice: https://cdnjs.com/libraries/highlight.js You can also see which languages and CSS themes are supported there.
+    
+    You may see https://github.com/yihui/hugo-xmin/pull/5 for an actual implmentation, and a sample page with syntax highlighting at https://deploy-preview-5--hugo-xmin.netlify.com/post/2016/02/14/a-plain-markdown-post/.
+
+- **Support math expressions through MathJax.** Add the code below to `foot_custom.html`.
+
+    ```html
+    <script src="//yihui.name/js/math-code.js"></script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+    </script>
+    <script async
+    src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    ```
+    
+    It requires substantial knowledge about JavaScript and familiarity of MathJax to fully understand the code above, and we will leave the explanation of the code to Section \@ref(javascript).
+    
+    Note bootcss.com is only one possible CDN host of MathJax, and you are free to use other hosts.
+
+- **Display categories and tags in a post if provided in its YAML.** Add the code below to where you want to place the categories and tags in `single.html`, e.g., in `<div class="article-meta"></div>`.
+
+    ```html
+    <p class="terms">
+      {{ range $i := (slice "categories" "tags") }}
+      {{ with ($.Param $i) }}
+      {{ $i | title }}:
+      {{ range $k := . }}
+      <a href='{{ relURL (print "/" $i "/" $k | urlize) }}'>{{$k}}</a>
+      {{ end }}
+      {{ end }}
+      {{ end }}
+    </p>
+    ```
+    
+    Basically the code loops through the YAML metadata fields `categories` and `tags`, and for each field, its value is obtained from `.Param`, then we use an inside loop to write out the terms with links of the form `<a href="/tags/foo/">foo</a>`.
+
+    You may see https://github.com/yihui/hugo-xmin/pull/2 for the complete implementation and a preview at https://deploy-preview-2--hugo-xmin.netlify.com/post/2016/02/14/a-plain-markdown-post/.
+
+- **Add a GitHub Edit button or link to a page.** If none of the above features look exciting to you (which will not suprise me), this little feature is really a great example of showing you the power of plain-text files and static websites, when combined with GitHub (or other services that support the online editing of plain-text files). I believe it will be difficult, if not impossible, to implement this feature in dynamic website frameworks like WordPress.
+
+    Basically, when you browse any text files in a repository on GitHub, you can edit them right on the page by hitting the Edit button (see Figure \@ref(fig:github-edit) for an example) if you have a GitHub account. If you have write access to the repository, you can commit the changes directly online, otherwise GitHub will fork the repository for you automatically, so that you can edit the file in your own repository, and GitHub will guide you to create a pull request to the original repository. When the original owner sees the pull request, he/she can see the changes you made and decide whether to accept them or not, or request you to make further changes. Although the terminology "pull request" is highly confusing to beginners,^[In my opinion, it really should be called "merge request" instead.] it is probably the single greatest feature invented by GitHub, because it makes it so much easier for people to make contributions.
+    
+    What is really handy is that all you need is a URL of a fixed form to edit a file on GitHub: `https://github.com/USER/REPO/edit/BRANCH/PATH/TO/FILE`. For example, https://github.com/rbind/yihui/edit/master/content/knitr/faq.md, where `USER` is `rbind`, `REPO` is `yihui`, `BRANCH` is `master`, and the file path is `content/knitr/faq.md`.
+    
+    The key to implement this feature is the variable `.File.Path`, which gives us the source file path of a page under `content/`, e.g., `post/foo.md`. If your website only uses plain Markdown files, the implementation will be very simple. I omitted the full GitHub URL in `...` below, of which an example could be `https://github.com/rbind/yihui/edit/master/content/`.
+    
+    ```html
+    {{ with .File.Path }}
+    <a href="https://github.com/.../{{ . }}">Edit this page</a>
+    {{ end }}
+    ```
+
+    However, the case is a little more complicated to **blogdown** users, when R Markdown posts are involved. You cannot just use `.File.Path` because it actually points to the `.html` output file from an `.Rmd` file, whereas the `.Rmd` file is the actual source file. The Edit button or link should not point to the `.html` file. Below is the complete implementation that you may add to a template file depending on where you want to show the Edit link (e.g., `footer.html`):
+
+    ```html
+    {{ if .File.Path }}
+    
+    {{ $Rmd := (print .File.BaseFileName ".Rmd")) }}
+    
+    {{ if (where (readDir (print "content/" .File.Dir)) "Name" $Rmd) }}
+      {{ $.Scratch.Set "FilePath" (print .File.Dir $Rmd) }}
+    {{ else }}
+      {{ $.Scratch.Set "FilePath" .File.Path }}
+    {{ end }}
+    
+    {{ with .Site.Params.GithubEdit}}
+    <a href='{{ . }}{{ $.Scratch.Get "FilePath" }}'>Edit this page</a>
+    {{ end }}
+    
+    {{ end }}
+    ```
+    
+    The basic logic is that for a file, if the same filename with the extension `.Rmd` exists, we will point the Edit link to the Rmd file. First, we define a variable `$Rmd` to be the filename with the `.Rmd` extension. Then we check if it exists. Unfortunately, there is no function in Hugo like `file.exists()` in R, so we have to use a hack: list all files under the directory and see if the Rmd file is in the list. [`$.Scratch`](http://gohugo.io/extras/scratch/) is the way to dynamically store and obtain variables in Hugo templates. Most variables in Hugo are read-only, and you have to use `$.Scratch` when you want to modify a variable. We set a variable `FilePath` in `$.Scratch`, whose value is the full path to the Rmd file when the Rmd file exists, and the path to the Markdown source file otherwise. Finally we concatenate a custom option `GithubEdit` in `config.toml` with the file path to complete the Edit link `<a>`. Here is an example of the option in `config.toml`:
+    
+    ```js
+    [params]
+      GithubEdit = "https://github.com/rbind/yihui/edit/master/content/"
+    ```
+    
+    You may see https://github.com/yihui/hugo-xmin/pull/6 for an actual implementation with R Markdown examples, and see the footer of this page for the Edit link: https://deploy-preview-6--hugo-xmin.netlify.com. You can actually see a link in the footer of every page, except the lists of pages (because they do not have source files).
+
+```{r github-edit, fig.cap='Edit a text file online on GitHub.', echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics('images/github-edit.png')
+```
+
+After you digest the XMin theme and the implementations of additional features, it should be much easier to understand other people's templates. There are a large number of Hugo themes but the primary differences among them are often in styles. The basic components of templates are often similar.
 
 ## Custom layouts
 
-override a subset of files in the theme
+It is very likely that you want to customize a theme unless it is designed by yourself. The most straightfoward way is to simply make changes directly in the theme, but the problem is that a Hugo theme may be constantly updated by its original author for improvements or bug fixes. Similar to the "you break it, you buy it" policy (the [Pottery Barn rule](https://en.wikipedia.org/wiki/Pottery_Barn_rule)), once you touch other people's source code, you will be responsible for future maintenance by yourself, and the original author should not be responsible for the changes you made on your side. That means it may not be easy to pull future updates of this theme to your website (you have to carefully read the changes and make sure they do not conflict with your changes), but if you are completely satisfied with the current state of the theme, and do not want future updates, it is fine to modify the theme files directly.
+
+For a theme author aware of the fact that users may customize her theme, she will typically provide two ways: one is to provide options in `config.toml`, so that you can change these options without touching the template files; the other is to leave a few lightweight template files under `layouts/` in the theme, so that you can override them without touching the core template files. Take the XMin theme for example:
+
+I have two empty HTML files `head_custom.html` and `foot_custom.html` under `layouts/partials/` in the theme. The former will be added inside `<head></head>` of a page, e.g., you can load JavaScript libraries or include CSS style sheets via `<link>`. The latter will be added before the footer of a page, e.g., you may load additional JavaScript libraries or embed Disqus comments there.
+
+The way that you customize these two files is not to edit them directly in the theme folder, but create a directory `layouts/partials/` under the root directory of your website, e.g., your directory structure may look like this:
+
+```bash
+your-website/
+├── config.toml
+├── ...
+├── themes/
+│   └── hugo-xmin/
+│       ├── ...
+│       └── layouts/
+│           ├── ...
+│           └── partials
+│               ├── foot_custom.html
+│               ├── footer.html
+│               ├── head_custom.html
+│               └── header.html
+└── layouts
+    └── partials
+        ├── foot_custom.html
+        └── head_custom.html
+```
+
+All files under `layouts/` under the root directory will override files with the same relative paths under `themes/hugo-xmin/layouts/`, e.g., the file `layouts/partials/foot_custom.html`, when provided, will override `themes/hugo-xmin/layouts/partials/foot_custom.html`. That means you only need to create and maintain at most two files under `layouts/` instead of maintaining all files under `themes/`. Note this overriding mechanism applies to all files under `layouts/`, and is not limited to the `partials/` directory. It also applies to any Hugo theme that you actually use for your website, and is not limited to `hugo-xmin`.
 
 ## Static files
 
-copied to `public/`
+All files under the `static/` directory copied to `public/` when Hugo renders a website. This directory is often used to store static web assets like images, CSS, and JavaScript files. For example, an image `static/foo/bar.png` can be embedded in your post using the Markdown syntax `![](/foo/bar.png)`.^[The link of the image depends on your `baseurl` setting in `config.toml`. If it does not contain a subpath, `/foo/bar.png` will be the link of the image, otherwise you may have to adjust it, e.g., for `baseurl = "http://example.com/subpath/"`, the link to the image will be `/subpath/foo/bar.png`.]
+
+Usually a theme has a `static/` folder, and you can partially override its files using the same mechanism as overriding `layouts/` files, i.e., `static/file` will override `themes/theme-name/static/file`. In the XMin theme, I have two CSS files `style.css` and `fonts.css`. The former is the main style sheet, and the latter is a quite small file to define typefaces only. You may want to define your own typefaces, and you can only provide a `static/css/fonts.css` to override the one in the theme, e.g.,
+
+```css
+body {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+}
+code {
+  font-family: "Courier New", Courier, monospace;
+}
+```

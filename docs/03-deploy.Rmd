@@ -48,7 +48,7 @@ Although GitHub does not officially support Hugo (only Jekyll is supported), you
 
 Your `public/` directory should be the GIT repository. You have two possible choices of setting up this repository locally. The first choice is to follow the default structure of a Hugo website like the diagram below, and initialize the GIT repository under the `public/` directory:
 
-```
+```bash
 source/
 |
 |-- config.toml
@@ -80,7 +80,7 @@ git clone https://github.com/username/username.github.io
 
 And the structure looks like this:
 
-```
+```bash
 source/
 |
 |-- config.toml
