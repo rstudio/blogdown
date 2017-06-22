@@ -101,6 +101,26 @@ There are much better tutorials on HTML than this section, such as those offered
 
 ## CSS
 
+CSS is a lot of fun to play with, but it can also easily steal your time.
+
+A few one-liner examples.
+
+To make circular or rounded images, you may assign a class `img-circle` to images (e.g., `<img class="img-circle" src="foo.png" />`) and define the CSS:
+
+```css
+.img-circle {
+  border-radius: 50%;
+}
+```
+
+To make striped tables, you can add background colors to odd or even rows of the table, e.g.,
+
+```css
+tr:nth-child(even) {
+  background: #eee
+}
+```
+
 ## JavaScript
 
 Brief introduction here...
