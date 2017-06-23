@@ -176,8 +176,25 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
 new_content = function(path, kind = 'default', open = interactive()) {
-  hugo_cmd(c('new', shQuote(path), '-f yaml', c('-k', kind)))
-  if (open) open_file(content_file(path))
+  hugo_cmd(c('new', shQuote(path), c('-k', kind)))
+  file = content_file(path)
+  hugo_toYAML(file)
+  if (open) open_file(file)
+}
+
+# Hugo cannot convert a single file: https://github.com/gohugoio/hugo/issues/3632
+hugo_toYAML = function(file) {
+  if (identical(trim_ws(readLines(file, 1)), '---')) return()
+  file = normalizePath(file)
+  tmp = tempfile(); on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+  dir.create(tmp)
+  file2 = file.path('content', basename(file))
+  in_dir(tmp, {
+    dir.create('content'); file.copy(file, file2)
+    writeLines('baseurl = "/"', 'config.toml')
+    hugo_convert(unsafe = TRUE)
+    file.copy(file2, file, overwrite = TRUE)
+  })
 }
 
 content_file = function(path) file.path(get_config('contentDir', 'content'), path)

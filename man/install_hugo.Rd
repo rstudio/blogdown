@@ -2,17 +2,21 @@
 % Please edit documentation in R/install.R
 \name{install_hugo}
 \alias{install_hugo}
+\alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(version = "latest", use_brew = TRUE, force = FALSE)
+install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FALSE)
+
+update_hugo()
 }
 \arguments{
-\item{version}{The Hugo version number, e.g., \code{0.17}; the special value
+\item{version}{The Hugo version number, e.g., \code{0.19}; the special value
 \code{latest} means the latest version (fetched from Github releases).}
 
 \item{use_brew}{Whether to use Homebrew (\url{https://brew.sh}) on macOS to
-install Hugo (recommended because it is much easier to manage packages).
-Note Homebrew will be automatically installed if it has not been installed.}
+install Hugo (recommended if you have already installed Homebrew). Note
+Homebrew will be automatically installed if it has not been installed when
+\code{use_brew = TRUE}.}
 
 \item{force}{Whether to install Hugo even if it has already been installed.
 This may be useful when upgrading Hugo (if you use Homebrew, run the
@@ -21,7 +25,8 @@ command \command{brew update && brew upgrade} instead).}
 \description{
 Download the appropriate Hugo executable for your platform from Github and
 try to copy it to a system directory so \pkg{blogdown} can run the
-\command{hugo} command to build a site.
+\command{hugo} command to build a site. \code{update_hugo()} is a wrapper of
+\code{install_hugo(force = TRUE)}.
 }
 \details{
 This function tries to install Hugo to \code{Sys.getenv('APPDATA')} on

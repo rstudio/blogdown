@@ -143,15 +143,14 @@ Option names are case-insensitive, so `.Site.Params.AUTHOR` is the same as `.Sit
 The structure of the `content/` directory can be arbitrary. A common structure is that there are a few static pages under the root of `content/`, and a subdirectory `post/` containing blog posts:
 
 ```bash
-_index.md
-about.md
-vitae.md
-post/
-  |
-  |- 2017-01-01-foo.md
-  |- 2017-01-02-bar.md
-  |- ...
-...
+├── _index.md
+├── about.md
+├── vitae.md
+├── post/
+│   ├── 2017-01-01-foo.md
+│   ├── 2017-01-02-bar.md
+│   └── ...
+└── ...
 ```
 
 ### YAML metadata
@@ -687,13 +686,13 @@ The two CSS files are placed under the `static/css/` directory of the theme. In 
 Lastly, this theme provided an example site under `exampleSite/`. The directory structure may be a little confusing because this is a theme instead of a website. In practice, everything under `exampleSite/` should be under the root directory of a website, and the top-level `hugo-xmin/` directory should be under the `themes/` directory of this website, i.e.,
 
 ```bash
-config.toml
-content/
-...
-themes/
-|
-|- hugo-xmin/
-...
+├── config.toml
+├── content/
+├── ...
+├── themes/
+│   └── hugo-xmin/
+│
+└── ...
 ```
 
 The example site provided a sample `config.toml`, a home page `_index.md`, an about page `about.md`, two posts under `note/` and two under `post/`. It also overrides the `foot_custom.html` in the theme.
@@ -760,6 +759,24 @@ The XMin is actually a highly functional theme, but we understand that it may be
     It requires substantial knowledge about JavaScript and familiarity of MathJax to fully understand the code above, and we will leave the explanation of the code to Section \@ref(javascript).
     
     Note bootcss.com is only one possible CDN host of MathJax, and you are free to use other hosts.
+
+- **Show the table of contents (TOC).** To show a TOC for R Markdown posts, you only need to add the output format `blogdown::html_page` with the option `toc: true` to YAML:
+
+    ```yaml
+    output:
+      blogdown::html_page:
+        toc: true
+    ```
+    
+    For plain Markdown posts, you have to modify the template `single.html`. The TOC of a post is stored in the Hugo template variable `.TableOfContents`. You may want an option to control whether to show the TOC, e.g., you may add an option `toc: true` to the YAML metadata of a Markdown post to show TOC. The code below can be added before the content of a post in `single.html`:
+    
+    ```html
+    {{ if .Params.toc }}
+    {{ .TableOfContents }}
+    {{ end }}
+    ```
+    
+    See https://github.com/yihui/hugo-xmin/pull/7 for an implementation with examples.
 
 - **Display categories and tags in a post if provided in its YAML.** Add the code below to where you want to place the categories and tags in `single.html`, e.g., in `<div class="article-meta"></div>`.
 
