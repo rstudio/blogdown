@@ -25,3 +25,11 @@ When a co-worker introduced her by saying "This is Amber, she does data analysis
 So, she decided to pursue the analytical side of her work and enter the world of data science. She has been taking lots of classes, working on lots of personal projects, joining local Meetups, and looking for work in the field.
 
 She is always looking for new people to chat with and new problems to solve, so feel free to reach out to her!
+
+## Alison Presmanes Hill {-}
+
+Alison (<https://apreshill.rbind.io>) is a professor of pediatrics in Oregon Health and Science University's (OHSU) Center for Spoken Language Understanding in Portland, Oregon. Alison earned her PhD in developmental psychology with a concentration in quantitative methods from Vanderbilt University in 2008. Her current research focuses on developing better outcome measures to evaluate the impact of new treatments for children with autism and other neurodevelopmental disorders, using natural language processing and other computational methods. Alison is the author of numerous journal articles and book chapters, and her work has been funded by the National Institutes of Health, the Oregon Clinical and Translational Research Institute, and Autism Speaks.
+
+In addition to research, Alison teaches graduate-level courses in OHSU's Computer Science program (https://www.ohsu.edu/csee) on statistics, data science, and data visualization using R. She has also developed and led several R workshops and smaller team-based training sessions, and loves to train new "useRs." You can find some of her workshop and teaching materials on GitHub (https://github.com/apreshill) and, of course, on her **blogdown** site.
+
+Being a new mom, Alison's current favorite books are *The Circus Ship* and *Bats at the Ballgame*. She also does rousing renditions of most Emily Arrow songs (for private audiences only). 
