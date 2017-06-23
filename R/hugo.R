@@ -57,16 +57,16 @@ change_config = function(name, value) {
   x = readUTF8(f)
   if (f == 'config.toml') {
     r = sprintf('^%s\\s*=.+', name)
-    v = paste(name, value, sep = ' = ')
+    v = if (!is.na(value)) paste(name, value, sep = ' = ')
   } else if (f == 'config.yaml') {
     r = sprintf('^%s\\s*:.+', name)
-    v = paste(name, value, sep = ': ')
+    v = if (!is.na(value)) paste(name, value, sep = ': ')
   }
   i = grep(r, x)
   if (length(i) > 1) stop("Duplicate configuration for '", name, "' in ", f)
   x0 = x
   if (length(i) == 1) {
-    x[i] = v     # replace old config and write out
+    if (is.null(v)) x = x[-i] else x[i] = v  # replace old config
   } else {
     x = c(v, x)  # append new config and write out
   }
@@ -155,6 +155,8 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
     expdir = file.path(zipdir, 'exampleSite')
     if (theme_example && dir_exists(expdir)) {
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
+      # remove the themesDir setting; it is unlikely that you need it
+      in_dir('..', change_config('themesDir', NA))
     }
     file.rename(zipdir, gsub(sprintf('-%s$', branch), '', zipdir))
     unlink(zipfile)
