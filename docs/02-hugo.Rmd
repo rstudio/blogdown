@@ -761,6 +761,24 @@ The XMin is actually a highly functional theme, but we understand that it may be
     
     Note bootcss.com is only one possible CDN host of MathJax, and you are free to use other hosts.
 
+- **Show the table of contents (TOC).** To show a TOC for R Markdown posts, you only need to add the output format `blogdown::html_page` with the option `toc: true` to YAML:
+
+    ```yaml
+    output:
+      blogdown::html_page:
+        toc: true
+    ```
+    
+    For plain Markdown posts, you have to modify the template `single.html`. The TOC of a post is stored in the Hugo template variable `.TableOfContents`. You may want an option to control whether to show the TOC, e.g., you may add an option `toc: true` to the YAML metadata of a Markdown post to show TOC. The code below can be added before the content of a post in `single.html`:
+    
+    ```html
+    {{ if .Params.toc }}
+    {{ .TableOfContents }}
+    {{ end }}
+    ```
+    
+    See https://github.com/yihui/hugo-xmin/pull/7 for an implementation with examples.
+
 - **Display categories and tags in a post if provided in its YAML.** Add the code below to where you want to place the categories and tags in `single.html`, e.g., in `<div class="article-meta"></div>`.
 
     ```html
