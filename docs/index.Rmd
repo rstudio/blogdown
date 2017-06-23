@@ -1,6 +1,6 @@
 --- 
 title: "blogdown: Creating Websites with R Markdown"
-author: "Yihui Xie & Amber Thomas"
+author: "Yihui Xie, Amber Thomas, & Alison Presmanes Hill"
 date: "`r Sys.Date()`"
 documentclass: krantz
 bibliography: [book.bib, packages.bib]
