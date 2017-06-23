@@ -50,18 +50,18 @@ Your `public/` directory should be the GIT repository. You have two possible cho
 
 ```bash
 source/
-|
-|-- config.toml
-|-- content/
-|-- themes/
-|-- ...
-|-- public/
+│
+├── config.toml
+├── content/
+├── themes/
+├── ...
+└── public/
     |
-    |-- .git/
-    |-- .nojekyll
-    |-- index.html
-    |-- about/
-    |-- ...
+    ├── .git/
+    ├── .nojekyll
+    ├── index.html
+    ├── about/
+    └── ...
 ```
 
 If you know how to use command line, basically you change the working directory to `public/`, and initialize the GIT repository there:
@@ -82,19 +82,19 @@ And the structure looks like this:
 
 ```bash
 source/
-|
-|-- config.toml
-|-- content/
-|-- themes/
-|-- ...
+│
+├── config.toml
+├── content/
+├── themes/
+└── ...
 
 username.github.io/
-|
-|-- .git/
-|-- .nojekyll
-|-- index.html
-|-- about/
-|-- ...
+│
+├── .git/
+├── .nojekyll
+├── index.html
+├── about/
+└── ...
 ```
 
 The source directory and the `username.github.io` directory are under the same parent directory. In this case, you need to set the option `publishDir: "../username.github.io"` in `source/config.toml`.

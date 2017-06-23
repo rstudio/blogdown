@@ -143,15 +143,14 @@ Option names are case-insensitive, so `.Site.Params.AUTHOR` is the same as `.Sit
 The structure of the `content/` directory can be arbitrary. A common structure is that there are a few static pages under the root of `content/`, and a subdirectory `post/` containing blog posts:
 
 ```bash
-_index.md
-about.md
-vitae.md
-post/
-  |
-  |- 2017-01-01-foo.md
-  |- 2017-01-02-bar.md
-  |- ...
-...
+├── _index.md
+├── about.md
+├── vitae.md
+├── post/
+│   ├── 2017-01-01-foo.md
+│   ├── 2017-01-02-bar.md
+│   └── ...
+└── ...
 ```
 
 ### YAML metadata
@@ -687,13 +686,13 @@ The two CSS files are placed under the `static/css/` directory of the theme. In 
 Lastly, this theme provided an example site under `exampleSite/`. The directory structure may be a little confusing because this is a theme instead of a website. In practice, everything under `exampleSite/` should be under the root directory of a website, and the top-level `hugo-xmin/` directory should be under the `themes/` directory of this website, i.e.,
 
 ```bash
-config.toml
-content/
-...
-themes/
-|
-|- hugo-xmin/
-...
+├── config.toml
+├── content/
+├── ...
+├── themes/
+│   └── hugo-xmin/
+│
+└── ...
 ```
 
 The example site provided a sample `config.toml`, a home page `_index.md`, an about page `about.md`, two posts under `note/` and two under `post/`. It also overrides the `foot_custom.html` in the theme.
