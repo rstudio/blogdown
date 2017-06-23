@@ -265,7 +265,7 @@ To edit a website:
 
 1. Set `options(servr.daemon = TRUE)` unless you have already set it in `.Rprofile`. If this option does not work for you (e.g., it crashes your R session), see Section \@ref(global-options) for a workaround.
 
-1. Click the RStudio addin "Serve Site" to preview the site in RStudio Viewer. This only needs to be done once every time you open the RStudio project, or restart your R session.
+1. Click the RStudio addin "Serve Site" to preview the site in RStudio Viewer. This only needs to be done once every time you open the RStudio project, or restart your R session. Do not click the Knit button on the RStudio toolbar.
 
 1. Use the "New Post" addin to create a new post or page, then start writing the content.
 
