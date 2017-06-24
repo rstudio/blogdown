@@ -178,9 +178,13 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
 new_content = function(path, kind = 'default', open = interactive()) {
-  hugo_cmd(c('new', shQuote(path), c('-k', kind)))
-  file = content_file(path)
-  hugo_toYAML(file)
+  p = with_ext(path, '.md')  # https://github.com/gohugoio/hugo/issues/3640
+  hugo_cmd(c('new', shQuote(p), c('-k', kind)))
+  f = file = content_file(p)
+  hugo_toYAML(f)
+  if (p != path) {
+    file.rename(f, file <- content_file(path))
+  }
   if (open) open_file(file)
 }
 
