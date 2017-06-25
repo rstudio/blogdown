@@ -14,7 +14,11 @@ As we just mentioned, Netlify allows you to quickly publish a website by uploadi
 
 Basically you have to host all source files of your website in a GIT repository. You do not need to put the `public/` directory under version control^[You can add `public` to `.gitignore` to ignore it in GIT.] because it is to be automatically generated. Currently Netlify supports GIT repositories hosted on GitHub, GitLab, and BitBucket. With any of these accounts, you can log in Netlify from the its homepage and follow the guide to create a new site from your GIT repository.
 
-Netlify supports several static website generators, including Jekyll and Hugo. For a new site, you have to specify a command to build your website, as well as the path of the publish directory. Netlify also supports multiple versions of Hugo, so the build command can be the default `hugo` (see the [Netlify documentation](https://www.netlify.com/docs/continuous-deployment/) to know what the default version is), or a specific version of Hugo, e.g., `hugo_0.19`.^[We recommend you to use at least the version 0.19.] The publish directory should be `public` unless you have changed it in your `config.toml`.
+Netlify supports several static website generators, including Jekyll and Hugo. For a new site, you have to specify a command to build your website, as well as the path of the publish directory. Netlify also supports multiple versions of Hugo, so the build command can be the default `hugo`. The default version is 0.17, which is too old, and we recommend you to use at least the version 0.20. To specify a Hugo version greater or equal to 0.20, you need to create an environment variable `HUGO_VERSION` on Netlify. See the [Netlify documentation](https://www.netlify.com/docs/continuous-deployment/) for more information. The publish directory should be `public` unless you have changed it in your `config.toml`. Figure \@ref(fig:netlify-settings) shows the settings of the website https://t.yihui.name. You do not have to follow the exact settings for your own website.
+
+```{r netlify-settings, fig.cap='Example settings of a website deployed on Netlify.', echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics('images/netlify-settings.png')
+```
 
 It may take a minute or two to deploy your website on Netlify for the first time, but it can be much faster later (a few seconds) when you update your website source, because Netlify deploys incremental changes in the `public/` directory, i.e., only the newer files compared  to the last time are deployed.
 
