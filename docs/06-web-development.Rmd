@@ -121,6 +121,8 @@ tr:nth-child(even) {
 }
 ```
 
+https://github.com/rstudio/blogdown/issues/80
+
 ## JavaScript
 
 Brief introduction here...
