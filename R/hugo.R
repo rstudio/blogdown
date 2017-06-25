@@ -114,6 +114,8 @@ new_site = function(
   ) != 0) return(invisible())
 
   owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
+  # remove Hugo's default archetype (I think draft: true is a confusing default)
+  unlink(file.path('archetypes', 'default.md'))
   install_theme(theme, theme_example)
 
   if (sample) {
