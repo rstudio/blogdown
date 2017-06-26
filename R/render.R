@@ -56,7 +56,8 @@ build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom'
   config = load_config()
   files = list.files('content', '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
   # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
-  files = files[grep('^_', basename(files), invert = TRUE)]
+  # but include _index.Rmd/.md
+  files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
   # do not allow special characters in filenames so dependency names are more
   # predictable, e.g. foo_files/
   bookdown:::check_special_chars(files)
