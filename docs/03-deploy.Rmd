@@ -105,8 +105,75 @@ The source directory and the `username.github.io` directory are under the same p
 
 ## Travis + GitHub
 
-Build the website on Travis, and publish to GitHub automatically.
+If you decide not to follow our recommendation to use Netlify to deploy your website, we should warn you that the approach to be introduced in this section will require substantial knowledge about GIT, GitHub, [Travis CI](https://travis-ci.org), and Linux command line, and we will leave them to yourself to learn. The major advantage of publishing via Travis CI is that you can compile all your Rmd posts on Travis CI (on the cloud) instead of your local computer.
 
-## Travis + Amazon S3
+In case you are not familiar with Travis, it is a service to continuously check your software in a virtual machine whenever you push changes to GitHub. It is primarily for testing software, but since you can run a lot of commands in its virtual machine, you can certainly use the virtual machine to do other things, e.g., install R and the **blogdown** package to build websites. Before I show you how, I'd like to mention two issues that you should be aware of:
 
-https://docs.travis-ci.com/user/deployment/s3/
+- Personally, I prefer taking a look at the output in GIT to see the changes when I have any output that is dynamically computed from R, so that I know for sure what I'm going to publish exactly. With Travis, it is somewhat unpredictable because it is fully automatic and you do not have a chance to see the new content or results to be published. There are many factors that could affect building the site: the R version, availability of certain R packages, system dependencies, and network connection, etc.
+
+- The time of compiling all Rmd files may be very long and cause timeout on Travis, depending on how time-consuming your R code is. There is a caching mechanism in **blogdown** to speed up building the site (see Section \@ref(methods)), and if you use Travis to build your website, you will not benefit from this caching mechanism unless you take advantage of Travis' caching. You have to cache the directories `content/`, `static`, and `blogdown/`, but Travis' cache is a little fragile from my experience. Sometimes the cache may be purged for unknown reasons. What is more, you cannot directly cache `content/` and `static/`, because Travis clone your repository before restoring the cache, which means old files from the cached `content/` and `static/` may overwrite new files you pushed to GitHub.
+
+The second problem can be solved, but I do not want to explain how in this book since the solution is too involved. If you really want to use Travis to build your website and run into the problem, you may file an issue to the GitHub repository https://github.com/yihui/travis-blogdown. In fact, this repository is a minimal example I created to show how to build a website on Travis and publish to GitHub Pages.
+
+The Travis documentation has shown how to deploy a site to GitHub Pages: https://docs.travis-ci.com/user/deployment/pages/, but it did not show how to build a site. Here is the Travis configuration file, `.travis.yml`, for the `travis-blogdown` repository:
+
+```yaml
+language: r
+dist: trusty
+sudo: false
+
+branches:
+  only:
+    - master
+
+cache:
+  packages: yes
+  directories:
+    - $HOME/bin
+
+before_script:
+  - "Rscript -e 'blogdown::install_hugo()'"
+
+script:
+  - "Rscript -e 'blogdown::build_site()'"
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: master
+  local_dir: public
+  fqdn: travis-blogdown.yihui.name
+```
+
+The key is that we install Hugo via `blogdown::install_hugo()` and build the site via `blogdown::build_site()`. To trick Travis into building this repository like an R package, you must have a `DESCRIPTION` file in the repository, otherwise your website will not be built.
+
+```yaml
+Package: placeholder
+Title: Does not matter.
+Version: 0.0.1
+Imports: blogdown
+Remotes: rstudio/blogdown
+```
+
+There are a few more things to explain and emphasize in `.travis.yml`:
+
+- The `branches` option specifies that only changes in the `master` branch will trigger building on Travis.
+
+- The `cache` option specifies all R packages to be cached, so the next time it will be faster to build the site (R packages do not need to be reinstalled from source). The `bin/` directory in the home directory is also cached because Hugo is installed there, and the next time Hugo does not need to be reinstalled.
+
+- For the `deploy` option, there is an environment variable named `GITHUB_TOKEN`, and I have specified its value to be a GitHub personal access token via the Travis settings of this repository, so that Travis will be able to write to my repository after the website is built. The option `on` specifies that the deployment will only occur when the `master` branch is built. The `local_dir` option is the publish directory, which should default to `public` in Hugo. By default, the website is pushed to the `gh-pages` branch of this repository. The `fqdn` option specifies the custom domain of the website. I have set a CNAME record (see Appendix \@ref(domain-name)) to point `travis-blogdown.yihui.name` to `yihui.github.io`, so that GitHub is able to serve this website through this domain (in fact, Travis will write a `CNAME` file containing the domain to the `gh-pages` branch).
+
+If you use the `username.github.io` repository on GitHub, the website must be pushed to its `master` branch instead of `gh-pages` (this is the only exception). What I recommemnd you to do is to separate the source repository and the output repository. For example, you may have a `website-source` repository with the same settings as the above `.travis.yml` except two new options under `deploy`:
+
+```yaml
+deploy:
+  ...
+  repo: username/username.github.io
+  target_branch: master
+```
+
+This means the website will be pushed to the `master` branch of the repository `username/username.github.io` (remember to replace `username` with your actual user name).
+
+You can also deploy your website to Amazon S3, and the setup on the R side is very similar to what we have introduced for GitHub Pages. The only difference is in the last step, where you change the target from GitHub Pages to Amazon S3. For more information, please see the documentation on Traivs: https://docs.travis-ci.com/user/deployment/s3/.
