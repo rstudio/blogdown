@@ -30,7 +30,10 @@ install_hugo = function(
   version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE
 ) {
 
-  if (Sys.which('hugo') != '' && !force) return(invisible())
+  if (Sys.which('hugo') != '' && !force) {
+    message('It seems Hugo has been installed. Use force = TRUE to reinstall or upgrade.')
+    return(invisible())
+  }
 
   # in theory, should access the Github API using httr/jsonlite but this
   # poor-man's version may work as well
