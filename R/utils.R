@@ -441,7 +441,7 @@ append_yaml = function(x, value = list()) {
 # modify the YAML of a file using specified new YAML options, preserve a
 # particular order, and optionally remove empty fields
 modify_yaml = function(
-  file, ..., .order = character(),
+  file, ..., .order = character(), .keep_fields = NULL,
   .keep_empty = getOption('blogdown.yaml.empty', TRUE)
 ) {
   x = readUTF8(file)
@@ -453,6 +453,7 @@ modify_yaml = function(
       if (is.function(f <- meta2[[i]])) meta2[i] = list(f(meta1[[i]]))
     }
     meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
+    if (length(.keep_fields)) meta1 = meta1[.keep_fields]
     if (length(.order)) {
       i1 = intersect(.order, names(meta1))
       i2 = setdiff(names(meta1), i1)
