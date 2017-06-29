@@ -174,3 +174,9 @@ MathJax.Hub.Config({
 ```
 
 The option `processEscapes` means that to avoid a single dollar sign being treated as the marker for a math expression, you can escape it by a leading backslash, e.g., `\$100 and $50`. When MathJax sees the backslash, it will remove it to show the literal dollar sign, so what you will actually see on the page is `$100 and $50`.
+
+## Useful resources
+
+Although static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier", and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
+
+You can also optimize images on your website. I frequently use a command-line tool named [`optipng`](http://optipng.sourceforge.net) to optimize PNG images. It is a lossless optimizer, meaning that it reduces the file size of a PNG image without loss of quality. From my experience, it works very well on PNG images generated from R, and can reduce the file size by at least 30% (sometimes even more than 50%). Personally I also use online tools like http://optimizilla.com to optimize PNG and JPEG images. For GIF images, I often use https://ezgif.com/optimize to reduce the file sizes if they are too big.
