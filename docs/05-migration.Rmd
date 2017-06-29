@@ -1,9 +1,131 @@
 # Migration
 
+Usually it is easier to start a new website than migrating an old one to a new framework, but you may have to do it anyway because of the useful content on the old website that should not simply be discarded. A lazy solution is to leave the old website as is, start a new website with a new domain, and provide a link to the old website. This may be a hassle to your readers, and they may not be able to easily discover the gems that you created on your old website, so I recommend you to migrate your old posts and pages to the new website if possible.
+
+This process may be easy or hard, depending on how complicated your old website is. The bad news is that there is unlikely to be a universal or magical solution, but I have provided some helper functions in **blogdown** as well as a Shiny application to assist you, which may make it a little easier for you to migrate from Jekyll and WordPress sites.
+
+To give you an idea about the possible amount of work required, I can tell you that it took me a whole week (from the morning to midnight every day) to migrate several of my personal Jekyll-based websites to Hugo and **blogdown**. The complication in my case was not only Jekyll, but also the fact that I built several separate Jekyll websites (because I did not have a choice in Jekyll) and I wanted to unite them in the same repository. Now my two blogs (Chinese and English), the **knitr** package documentation, and the **animation** package documentation are maintained in the same repository: https://github.com/rbind/yihui. I have about 1000 pages on this website, most of which are blog posts. It used to take me more than 30 seconds to preview my blog in Jekyll, and now it only takes less than 2 seconds to build the site in Hugo.
+
+Another complicated example is the website of [Rob J Hyndman](https://robjhyndman.com). He started his website in 1993 (12 years before me), and had accumulated a lot of content over the years. You can read the post https://support.rbind.io/2017/05/15/converting-robjhyndman-to-blogdown/ for the stories about how he migrated his WordPress website to **blogdown**. The key is that you probably need a long international flight when you want to migrate a complicated website.
+
+A simpler example is the [Simply Statistics blog](https://simplystatistics.org). Originally it was built on Jekyll^[It was migrated from WordPress a few years ago. The WordPress site was actually migrated from an earlier Tumblr blog.] and the source was hosted in the GitHub repository https://github.com/simplystats/simplystats.github.io. I volunteered to help them move to **blogdown**, and it took me about four hours. My time was mostly spent on cleaning up the YAML metadata of posts and tweaking the Hugo theme. They had about 1000 posts, which sounds like a lot, but the number does not really matter, because I wrote an R script to process all posts automatically. The new repository is at https://github.com/rbind/simplystats.
+
+If you do not really have too many pages (e.g., under 20), I recommend you to cut and paste them to Markdown files, because it may actually take longer to write a script to process these pages.
+
+It is likely that some links will be broken after the migration because Hugo renders different links for your pages and posts. In that case, you may either fix the permanent links (e.g., by tweaking the slug of a post), or use 301 redirects (e.g., on Netlify).
+
 ## From Jekyll
+
+When converting a Jekyll website to Hugo, the most challenging part is the theme. If you want to keep exactly the same theme, you will have to rewrite your Jekyll templates using Hugo's syntax (see Section \@ref(templates)). However, if you can find an existing theme in Hugo (https://themes.gohugo.io), things will be much easier, and you only need to move the content of your website to Hugo, which is relatively easy. Basically you copy the Markdown pages and posts to the `content/` directory in Hugo, and tweak these text files.
+
+Usually posts in Jekyll are under the `_posts/` directory, and you can move them to `content/post/` (you are free to use other directories). Then you need to define a custom rule for permanent URLs in `config.toml` like (see Section \@ref(options)):
+
+```js
+[permalinks]
+    post = "/:year/:month/:day/:slug/"
+```
+
+This depends on the format of URLs you used in Jekyll (see the `permalink` option in your `_config.yml`).
+
+If there are static assets like images, they can be moved to the `static/` directory in Hugo.
+
+Then you need to use your favorite tool with some string manipulation techniques to process all Markdown files. If you use R, you can list all Markdown files and process them one by one in a loop. Below is a sketch of the code:
+
+```{r eval=FALSE, tidy=FALSE}
+files = list.files(
+  'content/', '[.](md|markdown)$', full.names = TRUE,
+  recursive = TRUE
+)
+for (f in files) {
+  blogdown:::process_file(f, function(x) {
+    # process x here and return the modified x
+    x
+  })
+}
+```
+
+The `process_file()` function is an internal helper function in **blogdown**. It takes a filename and a processor function to manipulate the content of the file, and writes the modified text back to the file.
+
+To give you an idea of what a processor function may look like, I provided two simple helper functions in **blogdown**:
+
+```{r comment=''}
+blogdown:::remove_extra_empty_lines
+blogdown:::process_bare_urls
+```
+
+The first function substitutes two or more empty lines with a single empty line. The second function replaces links of the form `[url](url)` with `<url>`. There is not anything wrong with excessive empty lines or the syntax `[url](url)`, though. These helper functions may make your Markdown text a little cleaner.
+
+The YAML metadata of your posts may not be completely clean, especially when your Jekyll website was actually converted from an ealier WordPress website. There is an internal helper function `blogdown:::modify_yaml()`, which may help you clean up the metadata. For example, below is the YAML metadata of a blog post of Simply Statistics when it was built on Jekyll:
+
+```yaml
+---
+id: 4155
+title: Announcing the JHU Data Science Hackathon 2015
+date: 2015-07-28T13:31:04+00:00
+author: Roger Peng
+layout: post
+guid: http://simplystatistics.org/?p=4155
+permalink: /2015/07/28/announcing-the-jhu-data-science-hackathon-2015
+pe_theme_meta:
+  - 'O:8:"stdClass":2:{s:7:"gallery";O:8:"stdClass":...}'
+al2fb_facebook_link_id:
+  - 136171103105421_837886222933902
+al2fb_facebook_link_time:
+  - 2015-07-28T17:31:11+00:00
+al2fb_facebook_link_picture:
+  - post=http://simplystatistics.org/?al2fb_image=1
+dsq_thread_id:
+  - 3980278933
+categories:
+  - Uncategorized
+---
+```
+
+You can discard the YAML fields that are not useful in Hugo. For example, you may only keep the fields `title`, `author`, `date`, `categories`, and `tags`, and discard other fields. Actually you may also want to add a `slug` field that takes the base filename of the post (with the leading date removed). For example, when the post filename is `2015-07-28-announcing-the-jhu-data-science-hackathon-2015.md`, you may want to add `slug: announcing-the-jhu-data-science-hackathon-2015` to make sure the URL of the post on the new site remains the same.
+
+Here is the code to process the YAML metadata of all posts:
+
+```{r eval=FALSE, tidy=FALSE}
+for (f in files) {
+  blogdown:::modify_yaml(f, slug = function(old) {
+    # YYYY-mm-dd-name.md -> name
+    gsub('^\\d{4}-\\d{2}-\\d{2}-|[.](md|markdown)', '', f)
+  }, categories = function(old) {
+    # remove the Uncategorized category
+    setdiff(old, 'Uncategorized')
+  }, .keep_fields = c(
+    'title', 'author', 'date', 'categories', 'tags', 'slug'
+  ), .keep_empty = FALSE)
+}
+```
+
+You can pass a file path to `modify_yaml()`, define new YAML values (or functions to return new values based on the old values), and decide which fields to preserve (`.keep_fields`). You may discard empty fields via `.keep_empty = FALSE`. The processed YAML medata is below, which looks much cleaner:
+
+```yaml
+---
+title: Announcing the JHU Data Science Hackathon 2015
+author: Roger Peng
+date: '2015-07-28T13:31:04+00:00'
+slug: announcing-the-jhu-data-science-hackathon-2015
+---
+```
 
 ## From WordPress
 
-From our experience, the best way to import WordPress blog posts to Hugo is to import them to Jekyll, and write an R script to clean up the YAML metadata of all pages if necessary, instead of using the migration tools listed on the [official guide](https://gohugo.io/tools/), including the WordPress plugin wordpress-to-hugo-exporter.
+From our experience, the best way to import WordPress blog posts to Hugo is to import them to Jekyll, and write an R script to clean up the YAML metadata of all pages if necessary, instead of using the migration tools listed on the [official guide](https://gohugo.io/tools/), including the WordPress plugin `wordpress-to-hugo-exporter`.
 
-To our knowledge, the best tool to convert a WordPress website to Jekyll is the Python tool [Exitwp](https://github.com/thomasf/exitwp). Its author has provided detailed instructions on how to use it. You have to know how to install Python libraries and execute Python scripts.
+To our knowledge, the best tool to convert a WordPress website to Jekyll is the Python tool [Exitwp](https://github.com/thomasf/exitwp). Its author has provided detailed instructions on how to use it. You have to know how to install Python libraries and execute Python scripts. If you do not, I have provided an online tool at https://github.com/yihui/travis-exitwp. You can upload your WordPress XML file there, and get a download link to a ZIP archive that contains your posts in Markdown.
+
+## From other systems
+
+If you have a website built by other applications or systems, your best way to go may be to import your website to WordPress first, export it to Jekyll, and clean up the Markdown files. You can try to search for solutions like "how to import blogger.com to WordPress" or "how to import Tumblr to WordPress".
+
+If you are very familiar with web scraping techniques, you can also scrape the HTML pages of your website, and convert them to Markdown via Pandoc, e.g.,
+
+```{r eval=FALSE, tidy=FALSE}
+rmarkdown::pandoc_convert(
+  'foo.html', to = 'markdown', output = 'foo.md'
+)
+```
+
+I have actually tried this way on a website, but was not satisfied, since I still had to heavily clean up the Markdown files. If your website is simpler, this approach may work better for you.
