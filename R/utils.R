@@ -158,6 +158,15 @@ load_config = function() {
     config = parser(f)
     attr(config, 'config_time') = file.info(f)[, 'mtime']
     opts$set(config = config)
+    base = config[['baseurl']]
+    if (is_example_url(base)) {
+      open_file(f)
+      warning(
+        'You should change the "baseurl" option in ', f, ' from ', base,
+        ' to your actual domain; if you do not have a domain, set "baseurl" to "/"',
+        immediate. = TRUE
+      )
+    }
     config
   }
 
@@ -168,6 +177,12 @@ load_config = function() {
 
   if (file_exists('config.yaml'))
     return(read_config('config.yaml', yaml::yaml.load_file))
+}
+
+is_example_url = function(url) {
+  is.character(url) && grepl(
+    '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
+  )
 }
 
 # only support TOML and YAML (no JSON)
