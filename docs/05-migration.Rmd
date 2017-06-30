@@ -87,10 +87,10 @@ Here is the code to process the YAML metadata of all posts:
 
 ```{r eval=FALSE, tidy=FALSE}
 for (f in files) {
-  blogdown:::modify_yaml(f, slug = function(old) {
+  blogdown:::modify_yaml(f, slug = function(old, yaml) {
     # YYYY-mm-dd-name.md -> name
     gsub('^\\d{4}-\\d{2}-\\d{2}-|[.](md|markdown)', '', f)
-  }, categories = function(old) {
+  }, categories = function(old, yaml) {
     # remove the Uncategorized category
     setdiff(old, 'Uncategorized')
   }, .keep_fields = c(

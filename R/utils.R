@@ -468,7 +468,7 @@ modify_yaml = function(
     meta1 = res$yaml_list
     meta2 = list(...)
     for (i in names(meta2)) {
-      if (is.function(f <- meta2[[i]])) meta2[i] = list(f(meta1[[i]]))
+      if (is.function(f <- meta2[[i]])) meta2[i] = list(f(meta1[[i]], meta1))
     }
     meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
     if (length(.keep_fields)) meta1 = meta1[.keep_fields]
