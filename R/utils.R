@@ -503,52 +503,6 @@ filter_list = function(x) {
   x
 }
 
-# a wrapper function to read a file as UTF-8, process the text, and write back
-process_file = function(f, FUN) {
-  x = readUTF8(f)
-  x = FUN(x)
-  writeUTF8(x, f)
-}
-
-# replace three or more \n with two
-remove_extra_empty_lines = function(f) process_file(f, function(x) {
-  x = paste(gsub('\\s+$', '', x), collapse = '\n')
-  trim_ws(gsub('\n{3,}', '\n\n', x))
-})
-
-# replace [url](url) with <url>
-process_bare_urls = function(f) process_file(f, function(x) {
-  gsub('\\[([^]]+)]\\(\\1/?\\)', '<\\1>', x)
-})
-
-normalize_chars = function(f) process_file(f, function(x) {
-  # curly quotes
-  x = gsub(paste0('[', intToUtf8(8216:8217), ']'), "'", x)
-  x = gsub(paste0('[', intToUtf8(8220:8221), ']'), '"', x)
-  x = gsub(intToUtf8(8230), '...', x)  # ellipses
-  x = gsub(intToUtf8(160), ' ', x)  # zero-width space
-  x
-})
-
-remove_highlight_tags = function(f) process_file(f, function(x) {
-  clean = function(x) {
-    # remove the <code></code> tags
-    x = gsub('^(\\s+)<code( class="[^"]*")?>(.*)', '\\1\\3', x)
-    x = gsub('</code>\\s*$', '', x)
-    # remove <span></span>
-    x = gsub('</?span([^>])*>', '', x)
-    x
-  }
-  # only process lines that are indented by at least 4 spaces
-  i = grep('^( {4,}.*)', x)
-  x[i] = clean(x[i])
-  x
-})
-
-fix_img_tags = function(f) process_file(f, function(x) {
-  gsub('></img>', ' />', x)
-})
-
 # prevent sort(NULL), which will trigger a warning "is.na() applied to non-(list
 # or vector) of type 'NULL'"
 sort2 = function(x, ...) {
