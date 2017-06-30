@@ -325,11 +325,14 @@ scan_yaml = function(dir = 'content') {
 }
 
 # collect specific fields of all YAML metadata
-collect_yaml = function(fields = c('categories', 'tags'), dir = 'content', uniq = TRUE) {
+collect_yaml = function(
+  fields = c('categories', 'tags'), dir = 'content', uniq = TRUE, sort = TRUE
+) {
   res = list()
   meta = scan_yaml(dir)
   for (i in fields) {
-    res[[i]] = sort2(unlist(lapply(meta, `[[`, i)))
+    res[[i]] = unlist(lapply(meta, `[[`, i))
+    if (sort) res[[i]] = sort2(res[[i]])
     if (uniq) res[[i]] = unique(res[[i]])
   }
   res
