@@ -512,7 +512,7 @@ process_file = function(f, FUN) {
 
 # replace three or more \n with two
 remove_extra_empty_lines = function(f) process_file(f, function(x) {
-  x = paste(trim_ws(x), collapse = '\n')
+  x = paste(gsub('\\s+$', '', x), collapse = '\n')
   trim_ws(gsub('\n{3,}', '\n\n', x))
 })
 
