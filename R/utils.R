@@ -135,10 +135,10 @@ download2 = function(url, ...) {
     if ((res <- download(method = 'curl', extra = '-L')) == 0) return(res)
   }
   if (Sys.which('wget') != '') {
-    if ((res <- download.file(method = 'wget')) == 0) return(res)
+    if ((res <- download(method = 'wget')) == 0) return(res)
   }
   if (Sys.which('lynx') != '') {
-    if ((res <- download.file(method = 'lynx')) == 0) return(res)
+    if ((res <- download(method = 'lynx')) == 0) return(res)
   }
   if (is.na(res)) stop('no download method found (wget/curl/lynx)')
 
