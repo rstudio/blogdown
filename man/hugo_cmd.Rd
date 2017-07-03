@@ -59,7 +59,8 @@ default, but this function adds sample content by default).}
 \item{theme}{A Hugo theme on Github (a chararacter string of the form
 \code{user/repo}, and you can optionally sepecify a GIT branch or tag name
 after \code{@}, i.e. \code{theme} can be of the form
-\code{user/repo@branch}).}
+\code{user/repo@branch}). If \code{theme = NA}, no themes will be
+installed, and you have to manually install a theme.}
 
 \item{theme_example}{Whether to copy the example in the \file{exampleSite}
 directory if it exists in the theme. Not all themes provide example sites.}
