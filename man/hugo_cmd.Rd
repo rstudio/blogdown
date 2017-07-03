@@ -18,7 +18,7 @@ hugo_build(local = FALSE, config = load_config())
 
 new_site(dir = ".", install_hugo = TRUE, format = "toml", 
     sample = TRUE, theme = "yihui/hugo-lithium-theme", theme_example = TRUE, 
-    serve = TRUE)
+    serve = interactive())
 
 new_content(path, kind = "default", open = interactive())
 
