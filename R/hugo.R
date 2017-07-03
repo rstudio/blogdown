@@ -101,7 +101,7 @@ change_config = function(name, value) {
 #'   site}. The directory of the new site should be empty,
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
-  theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = TRUE
+  theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = interactive()
 ) {
   files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)
   files = setdiff(files, c('LICENSE', 'README', 'README.md'))
