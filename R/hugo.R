@@ -90,7 +90,8 @@ change_config = function(name, value) {
 #' @param theme A Hugo theme on Github (a chararacter string of the form
 #'   \code{user/repo}, and you can optionally sepecify a GIT branch or tag name
 #'   after \code{@@}, i.e. \code{theme} can be of the form
-#'   \code{user/repo@@branch}).
+#'   \code{user/repo@@branch}). If \code{theme = NA}, no themes will be
+#'   installed, and you have to manually install a theme.
 #' @param theme_example Whether to copy the example in the \file{exampleSite}
 #'   directory if it exists in the theme. Not all themes provide example sites.
 #' @param serve Whether to start a local server to serve the site.
@@ -116,7 +117,8 @@ new_site = function(
   owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
   # remove Hugo's default archetype (I think draft: true is a confusing default)
   unlink(file.path('archetypes', 'default.md'))
-  install_theme(theme, theme_example)
+  if (is.character(theme) && length(theme) == 1 && !is.na(theme))
+    install_theme(theme, theme_example)
 
   if (sample) {
     dir_create(file.path('content', 'post'))
