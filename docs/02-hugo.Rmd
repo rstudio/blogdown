@@ -136,8 +136,6 @@ Besides the built-in Hugo options, you can set other arbitrary options in `confi
 
 The goal of all these options is to avoid hard-coding anything in Hugo themes, so that users can easily edit a single config file to apply the theme to their websites, instead of going through many HTML files and make changes one by one.
 
-Option names are case-insensitive, so `.Site.Params.AUTHOR` is the same as `.Site.Params.author`.
-
 ## Content
 
 The structure of the `content/` directory can be arbitrary. A common structure is that there are a few static pages under the root of `content/`, and a subdirectory `post/` containing blog posts:
