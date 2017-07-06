@@ -4,13 +4,14 @@
 \alias{html_page}
 \title{An R Markdown output format for \pkg{blogdown} web pages}
 \usage{
-html_page(..., number_sections = FALSE, self_contained = FALSE, template = NULL)
+html_page(..., number_sections = FALSE, self_contained = FALSE, highlight = NULL, 
+    template = NULL)
 }
 \arguments{
 \item{..., number_sections, self_contained, template}{Arguments passed to
-\code{bookdown::html_document2()} (note the options \code{theme}, and
-\code{highlight} are not supported, and when \code{template = NULL}, a
-default template in \pkg{blogdown} will be used).}
+\code{bookdown::html_document2()} (note the option \code{theme} is not
+supported and set to \code{NULL} internally, and when \code{template =
+NULL}, a default template in \pkg{blogdown} will be used).}
 }
 \description{
 This function is a simple wrapper of \code{bookdown::\link{html_document2}()}
@@ -30,6 +31,10 @@ figures/tables.
 \note{
 Do not use a custom template unless you understand how the default
   template actually works (see the \pkg{blogdown} book).
+
+  The argument \code{highlight} does not support the value \code{"textmate"},
+  and the argument \code{template} does not support the value
+  \code{"default"}.
 }
 \references{
 See Chapter 2 of the \pkg{bookdown} book for the Markdown syntax:
