@@ -13,19 +13,32 @@
 #' features are supported, such as numbering and cross-referencing
 #' figures/tables.
 #' @param ...,number_sections,self_contained,template Arguments passed to
-#'   \code{bookdown::html_document2()} (note the options \code{theme}, and
-#'   \code{highlight} are not supported, and when \code{template = NULL}, a
-#'   default template in \pkg{blogdown} will be used).
+#'   \code{bookdown::html_document2()} (note the option \code{theme} is not
+#'   supported and set to \code{NULL} internally, and when \code{template =
+#'   NULL}, a default template in \pkg{blogdown} will be used).
 #' @note Do not use a custom template unless you understand how the default
 #'   template actually works (see the \pkg{blogdown} book).
+#'
+#'   The argument \code{highlight} does not support the value \code{"textmate"},
+#'   and the argument \code{template} does not support the value
+#'   \code{"default"}.
 #' @references See Chapter 2 of the \pkg{bookdown} book for the Markdown syntax:
 #'   \url{https://bookdown.org/yihui/bookdown}. See the \pkg{blogdown} book for
 #'   full details: \url{https://bookdown.org/yihui/blogdown}.
 #' @export
 html_page = function(
-  ..., number_sections = FALSE, self_contained = FALSE, template = NULL
-) bookdown::html_document2(
-  ..., number_sections = number_sections, theme = NULL,
-  self_contained = self_contained, highlight = NULL,
-  template = template %n% pkg_file('resources', 'template-minimal.html')
-)
+  ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
+  template = NULL
+) {
+  if (identical(template, 'default')) stop(
+    'blogdown::html_page() does not support template = "default"'
+  )
+  if (identical(highlight, 'textmate')) stop(
+    'blogdown::html_page() does not support highlight = "textmate"'
+  )
+  bookdown::html_document2(
+    ..., number_sections = number_sections, theme = NULL,
+    self_contained = self_contained, highlight = highlight,
+    template = template %n% pkg_file('resources', 'template-minimal.html')
+  )
+}
