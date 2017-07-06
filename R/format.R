@@ -12,8 +12,8 @@
 #' The fact that it is based on \pkg{bookdown} means most \pkg{bookdown}
 #' features are supported, such as numbering and cross-referencing
 #' figures/tables.
-#' @param ...,number_sections,self_contained,template Arguments passed to
-#'   \code{bookdown::html_document2()} (note the option \code{theme} is not
+#' @param ...,number_sections,self_contained,highlight,template Arguments passed
+#'   to \code{bookdown::html_document2()} (note the option \code{theme} is not
 #'   supported and set to \code{NULL} internally, and when \code{template =
 #'   NULL}, a default template in \pkg{blogdown} will be used).
 #' @note Do not use a custom template unless you understand how the default

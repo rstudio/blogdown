@@ -8,8 +8,8 @@ html_page(..., number_sections = FALSE, self_contained = FALSE, highlight = NULL
     template = NULL)
 }
 \arguments{
-\item{..., number_sections, self_contained, template}{Arguments passed to
-\code{bookdown::html_document2()} (note the option \code{theme} is not
+\item{..., number_sections, self_contained, highlight, template}{Arguments passed
+to \code{bookdown::html_document2()} (note the option \code{theme} is not
 supported and set to \code{NULL} internally, and when \code{template =
 NULL}, a default template in \pkg{blogdown} will be used).}
 }
