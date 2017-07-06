@@ -92,11 +92,19 @@ build_rmds = function(files, config, local, raw = FALSE) {
 
   root = getwd()
   base = site_base_dir()
+  shared_yml = file.path(root, '_output.yml')
+  if (!file.exists(shared_yml)) shared_yml = NA
+  copied_yaml = character(); on.exit(unlink(copied_yaml), add = TRUE)
+
   for (f in files) in_dir(d <- dirname(f), {
     f = basename(f)
     html = with_ext(f, 'html')
     # do not recompile Rmd if html is newer when building for local preview
     if (local && !require_rebuild(html, f)) next
+    if (!is.na(shared_yml) && !file.exists('_output.yml')) {
+      file.copy(shared_yml, './')
+      copied_yaml = c(copied_yaml, normalizePath('_output.yml'))
+    }
     render_page(f)
     x = readUTF8(html)
     x = encode_paths(x, by_products(f, '_files'), d, raw, root, base)
