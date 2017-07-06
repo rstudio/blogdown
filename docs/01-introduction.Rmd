@@ -216,7 +216,16 @@ output:
 ---
 ```
 
-At the moment, not all features of `rmarkdown::html_document` are supported in **blogdown**, such as `df_print`, `code_folding`, `code_download`, `theme`, `highlight`,^[Syntax highlighting can be added through the JavaScript highlight.js. See \@ref(how-to) for details.] and so on.
+To set options for `blogdown::html_page()` globally (i.e., apply certain options to all Rmd files), you can create a `_output.yml` file under the root directory of your website. This YAML file should contain the output format directly (do not put the output format under the `output` option), e.g.,
+
+```yaml
+blogdown::html_page:
+  toc: true
+  fig_width: 6
+  dev: "svg"
+```
+
+At the moment, not all features of `rmarkdown::html_document` are supported in **blogdown**, such as `df_print`, `code_folding`, `code_download`, and so on.
 
 If your code chunk has graphics output, we recommend that you avoid special characters like spaces in the chunk label. Ideally, you should only use alphanumeric characters and dashes, e.g., ```` ```{r, my-label}```` instead of ```` ```{r, my label}````.
 
