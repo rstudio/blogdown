@@ -97,7 +97,7 @@ There are much better tutorials on HTML than this section, such as those offered
     
     - If you link to a different website or web page, you have to include the domain in the link, but it may not be necessary to include the protocol, e.g., `//test.example.com/foo.css` is a valid path. The actual protocol of this path matches the protocol of the current page, e.g., if the current page is `https://example.com/`, this link means `https://test.example.com/foo.css`. It may be benefitial to omit the protocol because HTTP resources cannot be embedded on pages served through HTTPS (for security reasons), e.g., an image at `http://example.com/foo.png` cannot be embedded on a page `https://example.com/hi.html` via `<img src="http://example.com/foo.png" />`, but `<img src="//example.com/foo.png" />` will work if the image can be accessed via HTTPS, i.e., `https://example.com/foo.png`. The main drawback of not including the protocol is that such links and paths do not work if you open the HTML file locally without using a web server, e.g., only double-click the HTML file in your file browser and show it in the browser.^[That is because without a web server, an HTML file is viewed via the protocol `file`. For example, you may see a URL of the form `file://path/to/the/file.html` in the address bar of your browser. The path `//example.com/foo.png` will be interpreted as `file://example.com/foo.png`, which is unlikely to exist as a local file on your computer.]
     
-    - A very common mistake that people make is a link without the leading double slashes before the domain. You may think `www.example.com` is a valid link. It is not! At least it does not link to the website that you intend to link to. It works when you type it in the address bar of your browser because your browser will normally autocomplete it to `http://www.example.com`. However, if you write a link `<a href="www.example.com">See this link</a>`, you will be in trouble. The browser will interpret this as a relative link, and it is relative to the domain of the current web page, e.g., if you are currently viewing `http://yihui.name/cn/`, the link `www.example.com` actually means `http://yihui.name/cn/www.example.com`! Now you should know the Markdown text `[Link](www.example.com)` is typically a mistake, unless you really mean to link to a subdirectory of the current page or a file with literally the name `www.example.com`.
+    - A very common mistake that people make is a link without the leading double slashes before the domain. You may think `www.example.com` is a valid link. It is not! At least it does not link to the website that you intend to link to. It works when you type it in the address bar of your browser because your browser will normally autocomplete it to `http://www.example.com`. However, if you write a link `<a href="www.example.com">See this link</a>`, you will be in trouble. The browser will interpret this as a relative link, and it is relative to the URL of the current web page, e.g., if you are currently viewing `http://yihui.name/cn/`, the link `www.example.com` actually means `http://yihui.name/cn/www.example.com`! Now you should know the Markdown text `[Link](www.example.com)` is typically a mistake, unless you really mean to link to a subdirectory of the current page or a file with literally the name `www.example.com`.
 
 ## CSS
 
@@ -120,6 +120,8 @@ tr:nth-child(even) {
   background: #eee
 }
 ```
+
+https://github.com/rstudio/blogdown/issues/80
 
 ## JavaScript
 
@@ -172,3 +174,9 @@ MathJax.Hub.Config({
 ```
 
 The option `processEscapes` means that to avoid a single dollar sign being treated as the marker for a math expression, you can escape it by a leading backslash, e.g., `\$100 and $50`. When MathJax sees the backslash, it will remove it to show the literal dollar sign, so what you will actually see on the page is `$100 and $50`.
+
+## Useful resources
+
+Although static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier", and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
+
+You can also optimize images on your website. I frequently use a command-line tool named [`optipng`](http://optipng.sourceforge.net) to optimize PNG images. It is a lossless optimizer, meaning that it reduces the file size of a PNG image without loss of quality. From my experience, it works very well on PNG images generated from R, and can reduce the file size by at least 30% (sometimes even more than 50%). Personally I also use online tools like http://optimizilla.com to optimize PNG and JPEG images. For GIF images, I often use https://ezgif.com/optimize to reduce the file sizes if they are too big.

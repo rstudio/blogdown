@@ -1,9 +1,0 @@
-# Migration
-
-## From Jekyll
-
-## From WordPress
-
-From our experience, the best way to import WordPress blog posts to Hugo is to import them to Jekyll, and write an R script to clean up the YAML metadata of all pages if necessary, instead of using the migration tools listed on the [official guide](https://gohugo.io/tools/), including the WordPress plugin wordpress-to-hugo-exporter.
-
-To our knowledge, the best tool to convert a WordPress website to Jekyll is the Python tool [Exitwp](https://github.com/thomasf/exitwp). Its author has provided detailed instructions on how to use it. You have to know how to install Python libraries and execute Python scripts.

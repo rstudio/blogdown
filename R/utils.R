@@ -135,10 +135,10 @@ download2 = function(url, ...) {
     if ((res <- download(method = 'curl', extra = '-L')) == 0) return(res)
   }
   if (Sys.which('wget') != '') {
-    if ((res <- download.file(method = 'wget')) == 0) return(res)
+    if ((res <- download(method = 'wget')) == 0) return(res)
   }
   if (Sys.which('lynx') != '') {
-    if ((res <- download.file(method = 'lynx')) == 0) return(res)
+    if ((res <- download(method = 'lynx')) == 0) return(res)
   }
   if (is.na(res)) stop('no download method found (wget/curl/lynx)')
 
@@ -158,6 +158,15 @@ load_config = function() {
     config = parser(f)
     attr(config, 'config_time') = file.info(f)[, 'mtime']
     opts$set(config = config)
+    base = config[['baseurl']]
+    if (is_example_url(base)) {
+      open_file(f)
+      warning(
+        'You should change the "baseurl" option in ', f, ' from ', base,
+        ' to your actual domain; if you do not have a domain, set "baseurl" to "/"',
+        immediate. = TRUE
+      )
+    }
     config
   }
 
@@ -168,6 +177,12 @@ load_config = function() {
 
   if (file_exists('config.yaml'))
     return(read_config('config.yaml', yaml::yaml.load_file))
+}
+
+is_example_url = function(url) {
+  is.character(url) && grepl(
+    '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
+  )
 }
 
 # only support TOML and YAML (no JSON)
@@ -310,11 +325,14 @@ scan_yaml = function(dir = 'content') {
 }
 
 # collect specific fields of all YAML metadata
-collect_yaml = function(fields = c('categories', 'tags'), dir = 'content', uniq = TRUE) {
+collect_yaml = function(
+  fields = c('categories', 'tags'), dir = 'content', uniq = TRUE, sort = TRUE
+) {
   res = list()
   meta = scan_yaml(dir)
   for (i in fields) {
-    res[[i]] = sort2(unlist(lapply(meta, `[[`, i)))
+    res[[i]] = unlist(lapply(meta, `[[`, i))
+    if (sort) res[[i]] = sort2(res[[i]])
     if (uniq) res[[i]] = unique(res[[i]])
   }
   res
@@ -441,7 +459,7 @@ append_yaml = function(x, value = list()) {
 # modify the YAML of a file using specified new YAML options, preserve a
 # particular order, and optionally remove empty fields
 modify_yaml = function(
-  file, ..., .order = character(),
+  file, ..., .order = character(), .keep_fields = NULL,
   .keep_empty = getOption('blogdown.yaml.empty', TRUE)
 ) {
   x = readUTF8(file)
@@ -450,9 +468,10 @@ modify_yaml = function(
     meta1 = res$yaml_list
     meta2 = list(...)
     for (i in names(meta2)) {
-      if (is.function(f <- meta2[[i]])) meta2[i] = list(f(meta1[[i]]))
+      if (is.function(f <- meta2[[i]])) meta2[i] = list(f(meta1[[i]], meta1))
     }
     meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
+    if (length(.keep_fields)) meta1 = meta1[.keep_fields]
     if (length(.order)) {
       i1 = intersect(.order, names(meta1))
       i2 = setdiff(names(meta1), i1)
@@ -483,24 +502,6 @@ filter_list = function(x) {
   }
   x
 }
-
-# a wrapper function to read a file as UTF-8, process the text, and write back
-process_file = function(f, FUN) {
-  x = readUTF8(f)
-  x = FUN(x)
-  writeUTF8(x, f)
-}
-
-# replace three or more \n with two
-remove_extra_empty_lines = function(f) process_file(f, function(x) {
-  x = paste(x, collapse = '\n')
-  trim_ws(gsub('\n{3,}', '\n\n', x))
-})
-
-# replace [url](url) with <url>
-process_bare_urls = function(f) process_file(f, function(x) {
-  gsub('\\[([^]]+)]\\(\\1/?\\)', '<\\1>', x)
-})
 
 # prevent sort(NULL), which will trigger a warning "is.na() applied to non-(list
 # or vector) of type 'NULL'"

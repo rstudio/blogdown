@@ -32,7 +32,7 @@ The function `blogdown::build_site()` has an argument `local` that defaults to `
 
 - Draft and future posts are always rendered when `local = TRUE`, but not when `local = FALSE`. This is for you to preview draft and future posts locally. If you know the [Hugo command line](https://gohugo.io/commands/hugo/), it means the `hugo` command is called with the flags `-D -F`, or equivalently, `--buildDrafts --buildFuture`.
 
-- There is a caching mechanism to speed up building your website: an Rmd file will not be recompiled when its `*.html` output file is newer (in terms of file modification times). If you want to force `build_site(local = TRUE)` to recompile the Rmd file even if it is older than the HTML output, you need to delete the HTML output, or edit the Rmd file so that its modification time will be newer. This caching mechanism does not apply to `local = FALSE`, i.e., `build_site(local = FALSE)` will always recompile all Rmd files, because when you want to publish a site, you may need to recompile everything to make sure the site is fully regenerated. If you have time-consuming code chunks in any Rmd files, you have to use either of these methods to save time:
+- There is a caching mechanism to speed up building your website: an Rmd file will not be recompiled when its `*.html` output file is newer (in terms of file modification time). If you want to force `build_site(local = TRUE)` to recompile the Rmd file even if it is older than the HTML output, you need to delete the HTML output, or edit the Rmd file so that its modification time will be newer. This caching mechanism does not apply to `local = FALSE`, i.e., `build_site(local = FALSE)` will always recompile all Rmd files, because when you want to publish a site, you may need to recompile everything to make sure the site is fully regenerated. If you have time-consuming code chunks in any Rmd files, you have to use either of these methods to save time:
 
     - Turn on **knitr**'s caching for time-consuming code chunks, i.e., the chunk option `cache = TRUE`.
 
@@ -85,7 +85,7 @@ The `public/` directory should be ignored if your website is to going to be auto
 
 As we mentioned in Section \@ref(dep-path), R plots will be copied to `static/`, so you may see new files in GIT after you render an Rmd file that has graphics output. You need to add and commit these new files in GIT, because the website will use them.
 
-Although it is not relevant to **blogdown**, but macOS users should remember to ignore `.DS_Store` and Windows users should ignore `Thumbs.db`.
+Although it is not relevant to **blogdown**, macOS users should remember to ignore `.DS_Store` and Windows users should ignore `Thumbs.db`.
 
 If you are relatively familiar with GIT, there is a special technique that may be useful for you to manage Hugo themes, which is called "GIT submodules". A submodule in GIT allows you to manage a particular folder of the main repository using a different remote repository. For example, if you used the default `hugo-lithium-theme` from my GitHub repository, and want to sync it with my repository occasionally, because I may update it from time to time. You can add the GIT submodule via command line: 
 

@@ -30,16 +30,18 @@ install_hugo = function(
   version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE
 ) {
 
-  if (Sys.which('hugo') != '' && !force) return(invisible())
+  if (Sys.which('hugo') != '' && !force) {
+    message('It seems Hugo has been installed. Use force = TRUE to reinstall or upgrade.')
+    return(invisible())
+  }
 
   # in theory, should access the Github API using httr/jsonlite but this
   # poor-man's version may work as well
   if (version == 'latest') {
-    json = readLines(
-      'https://api.github.com/repos/gohugoio/hugo/releases/latest', warn = FALSE
-    )
-    r = '^.*?"tag_name":\\s*"([^"]+)",.*'
-    version = gsub(r, '\\1', grep(r, json, value = TRUE)[1])
+    h = readLines('https://github.com/gohugoio/hugo/releases/latest', warn = FALSE)
+    r = '^.*?releases/tag/v([0-9.]+)".*'
+    version = gsub(r, '\\1', grep(r, h, value = TRUE)[1])
+    message('The latest Hugo version is ', version)
   } else if (use_brew) warning(
     "when use_brew = TRUE, only the latest version of Hugo can be installed"
   )

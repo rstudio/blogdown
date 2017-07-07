@@ -90,7 +90,8 @@ change_config = function(name, value) {
 #' @param theme A Hugo theme on Github (a chararacter string of the form
 #'   \code{user/repo}, and you can optionally sepecify a GIT branch or tag name
 #'   after \code{@@}, i.e. \code{theme} can be of the form
-#'   \code{user/repo@@branch}).
+#'   \code{user/repo@@branch}). If \code{theme = NA}, no themes will be
+#'   installed, and you have to manually install a theme.
 #' @param theme_example Whether to copy the example in the \file{exampleSite}
 #'   directory if it exists in the theme. Not all themes provide example sites.
 #' @param serve Whether to start a local server to serve the site.
@@ -101,7 +102,7 @@ change_config = function(name, value) {
 #'   site}. The directory of the new site should be empty,
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
-  theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = TRUE
+  theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = interactive()
 ) {
   files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)
   files = setdiff(files, c('LICENSE', 'README', 'README.md'))
@@ -109,12 +110,15 @@ new_site = function(
   if (!force) warning("The directory '", dir, "' is not empty")
   if (install_hugo) tryCatch(find_hugo(), error = function(e) install_hugo())
   if (hugo_cmd(
-    c('new site', shQuote(dir), if (force) '--force', '-f', format),
+    c('new site', shQuote(path.expand(dir)), if (force) '--force', '-f', format),
     stdout = FALSE
   ) != 0) return(invisible())
 
   owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
-  install_theme(theme, theme_example)
+  # remove Hugo's default archetype (I think draft: true is a confusing default)
+  unlink(file.path('archetypes', 'default.md'))
+  if (is.character(theme) && length(theme) == 1 && !is.na(theme))
+    install_theme(theme, theme_example)
 
   if (sample) {
     dir_create(file.path('content', 'post'))
