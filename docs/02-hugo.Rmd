@@ -836,6 +836,8 @@ The XMin is actually a highly functional theme, but we understand that it may be
       GithubEdit = "https://github.com/rbind/yihui/edit/master/content/"
     ```
     
+    Please note that if you use Hugo on Windows to build and deploy your site, you may have to replace the file path separators from backslashes to forward slashes, e.g., you may need `{{ $.Scratch.Set "FilePath" (replace ($.Scratch.Get "FilePath") "\\" "/") }}` in the template. To avoid this complication, we do not recommend you to deploy your site through Windows (see Chapter \@ref(deployment) for deployment methods).
+    
     You may see https://github.com/yihui/hugo-xmin/pull/6 for an actual implementation with R Markdown examples, and see the footer of this page for the Edit link: https://deploy-preview-6--hugo-xmin.netlify.com. You can actually see a link in the footer of every page, except the lists of pages (because they do not have source files).
 
 ```{r github-edit, fig.cap='Edit a text file online on GitHub.', echo=FALSE, fig.align='center', out.width='100%'}
