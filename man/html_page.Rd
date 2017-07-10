@@ -4,14 +4,18 @@
 \alias{html_page}
 \title{An R Markdown output format for \pkg{blogdown} web pages}
 \usage{
-html_page(..., number_sections = FALSE, self_contained = FALSE, highlight = NULL, 
-    template = NULL)
+html_page(..., number_sections = FALSE, self_contained = FALSE,
+  highlight = NULL, template = NULL, post_processor = NULL)
 }
 \arguments{
 \item{..., number_sections, self_contained, highlight, template}{Arguments passed
 to \code{bookdown::html_document2()} (note the option \code{theme} is not
 supported and set to \code{NULL} internally, and when \code{template =
 NULL}, a default template in \pkg{blogdown} will be used).}
+
+\item{post_processor}{An optional post-processor function that receives the
+`metadata`, `input_file`, `output_file`, `clean`, and `verbose` parameters,
+and can return an alternative `output_file`.}
 }
 \description{
 This function is a simple wrapper of \code{bookdown::\link{html_document2}()}
