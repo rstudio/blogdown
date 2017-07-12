@@ -17,10 +17,7 @@
 #'   to \code{bookdown::html_document2()} (note the option \code{theme} is not
 #'   supported and set to \code{NULL} internally, and when \code{template =
 #'   NULL}, a default template in \pkg{blogdown} will be used).
-#'
-#' @param post_processor An optional post-processor function that receives the
-#' `metadata`, `input_file`, `output_file`, `clean`, and `verbose` parameters,
-#' and can return an alternative `output_file`.
+#' @param post_processor Passed to \code{rmarkdown::\link{output_format}}.
 #'
 #' @note Do not use a custom template unless you understand how the default
 #'   template actually works (see the \pkg{blogdown} book).
