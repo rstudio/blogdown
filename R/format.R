@@ -12,10 +12,16 @@
 #' The fact that it is based on \pkg{bookdown} means most \pkg{bookdown}
 #' features are supported, such as numbering and cross-referencing
 #' figures/tables.
+#'
 #' @param ...,number_sections,self_contained,highlight,template Arguments passed
 #'   to \code{bookdown::html_document2()} (note the option \code{theme} is not
 #'   supported and set to \code{NULL} internally, and when \code{template =
 #'   NULL}, a default template in \pkg{blogdown} will be used).
+#'
+#' @param post_processor An optional post-processor function that receives the
+#' `metadata`, `input_file`, `output_file`, `clean`, and `verbose` parameters,
+#' and can return an alternative `output_file`.
+#'
 #' @note Do not use a custom template unless you understand how the default
 #'   template actually works (see the \pkg{blogdown} book).
 #'
@@ -28,7 +34,7 @@
 #' @export
 html_page = function(
   ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
-  template = NULL
+  template = NULL, post_processor = NULL
 ) {
   if (identical(template, 'default')) stop(
     'blogdown::html_page() does not support template = "default"'
@@ -36,9 +42,16 @@ html_page = function(
   if (identical(highlight, 'textmate')) stop(
     'blogdown::html_page() does not support highlight = "textmate"'
   )
-  bookdown::html_document2(
-    ..., number_sections = number_sections, theme = NULL,
-    self_contained = self_contained, highlight = highlight,
-    template = template %n% pkg_file('resources', 'template-minimal.html')
+  if (is.character(post_processor))
+    post_processor <- eval(parse(text = post_processor))
+  rmarkdown::output_format(
+    knitr = NULL,
+    pandoc = NULL,
+    post_processor = post_processor,
+    base_format = bookdown::html_document2(
+      ..., number_sections = number_sections, theme = NULL,
+      self_contained = self_contained, highlight = highlight,
+      template = template %n% pkg_file('resources', 'template-minimal.html')
+    )
   )
 }
