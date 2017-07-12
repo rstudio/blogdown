@@ -231,6 +231,8 @@ If your code chunk has graphics output, we recommend that you avoid special char
 
 It is not recommended to change the **knitr** chunk options `fig.path` or `cache.path` in R Markdown. The default values of these options work best with **blogdown**. Please read Section \@ref(dep-path) to know the technical reasons if you prefer.
 
+If you are working on an R Markdown post, but do not want **blogdown** to compile it, you can temporarily change its filename extension from `.Rmd` to `.Rmarkdown`.
+
 ## Other themes
 
 In the beginning, you will probably spend much time on looking for a Hugo theme that you like from the collection listed at http://themes.gohugo.io, if you care a lot about the appearance of your website. Please note that not all themes have been tested against **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason, but it can be time-consuming to learn and understand how a new theme works, so we recommend you to learn more about Hugo by yourself before asking, and we also encourage users to help each other there.
