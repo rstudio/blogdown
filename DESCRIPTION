@@ -1,7 +1,7 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.0.51
+Version: 0.0.52
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name"),
     person("Forest", "Fang", role = "ctb"),
@@ -23,6 +23,7 @@ Suggests:
   shiny,
   miniUI,
   RcppTOML,
+  stringr,
   rprojroot,
   rstudioapi
 LazyData: true
