@@ -23,6 +23,7 @@ Suggests:
   shiny,
   miniUI,
   RcppTOML,
+  stringr,
   rprojroot,
   rstudioapi
 LazyData: true
