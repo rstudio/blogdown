@@ -433,7 +433,7 @@ fetch_yaml2 = function(f) {
   yaml = fetch_yaml(f)
   n = length(yaml)
   if (n < 2) return()
-  if (n == 2 || length(grep(knitr::all_patterns$md$inline.code, yaml)) == 0)
+  if (n == 2 || length(grep(knitr::all_patterns$md$inline.code, yaml, perl = TRUE)) == 0)
     return(yaml)
   res = local({
     knitr::knit(text = yaml[-c(1, n)], quiet = TRUE)
