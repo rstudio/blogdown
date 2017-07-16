@@ -363,7 +363,7 @@ find_yaml = function(field = character(), value = character(), open = FALSE) {
   meta = scan_yaml()
   if (length(meta) == 0) return()
   files = names(which(unlist(lapply(meta, function(m) {
-    any(value %in% m[[field]])
+    identical(value, m[[field]]) || any(value %in% m[[field]])
   }))))
   n = length(files)
   if (n == 0) return(invisible(files))
