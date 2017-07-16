@@ -44,7 +44,7 @@ html_page = function(
   rmarkdown::output_format(
     knitr = NULL,
     pandoc = NULL,
-    clean_supporting = FALSE,
+    clean_supporting = self_contained,
     post_processor = post_processor,
     base_format = bookdown::html_document2(
       ..., number_sections = number_sections, theme = NULL,
