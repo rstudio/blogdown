@@ -101,7 +101,70 @@ There are much better tutorials on HTML than this section, such as those offered
 
 ## CSS
 
-CSS is a lot of fun to play with, but it can also easily steal your time.
+The Cascading Stylesheets (CSS) language is used to describe the look and formatting of documents written in HTML or XML. CSS is responsible for the visual style of your site. CSS is a lot of fun to play with, but it can also easily steal your time.
+
+In the Hugo framework (https://gohugo.io/tutorials/creating-a-new-theme/), CSS is one of the major “non-content” files that shapes the look and feel of your site (the others are images, JavaScript, and Hugo templates). What does the ["look and feel"](https://en.wikipedia.org/w/index.php?title=Look_and_feel&oldid=731052704) of a site mean? “Look” generally refers to static style components including, but not limited to:
+
+* Color palettes
+* Images
+* Layouts/margins
+* Fonts
+
+Whereas “feel” relates to dynamic components that the user interacts with like:
+
+* Dropdown menus
+* Buttons
+* Forms
+
+There are 3 ways to define styles. The first is inline with HTML. For example, this code:
+
+
+```html
+<text style="color:red">Marco!</text>
+Polo!
+```
+Would produce text that looks like this:
+<text style="color:red">Marco!</text>
+Polo!
+
+However, this method is generally not preferred for [numerous reasons](https://stackoverflow.com/questions/12013532/inline-style-tags-vs-inline-css-properties). 
+
+A second way is to internally define the CSS by placing a style section in your HTML:
+
+```html
+<html>
+<style> 
+#vehicle {
+    font-style: italic;
+}
+</style>
+<div id="book">
+  <p id="name">My name is Bananas Gorilla.</p>
+  <p id="aboutme">I wear lots of watches on both wrists.</p>
+  <p id="vehicle">I drive a bananamobile.</p>
+</div>
+</html>
+```
+
+In this example, the last line of text, <em>"I drive a bananamobile."</em>, is italicized. 
+
+The third method is the most popular because it is more flexible and the least repetitive, which is to define the CSS in an external file that is then referenced as a link in your HTML:
+
+```html
+<html>
+    <link rel="stylesheet" href="/css/style.css" />
+</html>
+```
+
+What goes inside the linked CSS document is essentially a list of rules (the same list could appear internally between the style tags, if you are using the second method). Each rule must include both a selector or group of selectors, and a declarations block within curly braces that contains one or more `property: value;` pairs. Here is the [general structure for a rule](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference):
+
+```css
+/* CSS pseudo-code */
+selectorlist {
+    property: value;
+    /* more property: value; pairs*/
+}
+```
 
 A few one-liner examples.
 
@@ -120,6 +183,77 @@ tr:nth-child(even) {
   background: #eee
 }
 ```
+
+[Selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#Selectors) can be based on HTML element types or attributes, such as `id` or `class` (and combinations of these): 
+
+```css
+/* by element type */
+li { 
+    color: yellow; /* all <li> elements are yellow */
+}
+
+/* by ID with the # symbol */
+#my-id { 
+    color: yellow; /* elements with id = "my-id" are yellow */
+}
+
+/* by class with the . symbol */
+.my-class { 
+    color: yellow; /* elements with class = "my-class" are yellow  */
+}
+```
+
+Because each HTML element may match several different selectors, the CSS standard determines which set of rules has precedence for any given element, and which properties to inherit. This is where the cascade algorithm comes into play. For example, take this simple unordered list:
+
+```html
+<ul id="book-characters">
+   <li>Bananas Gorilla</li>
+   <li>Lowly the worm</li>
+   <li>Captain Anteater</li>
+   <li>Waveband the radioman</li>
+</ul>
+```
+
+Now, let's say we want to highlight main characters here, so we'll use a class attribute.
+
+```html
+<ul id="book-characters">
+   <li class="main">Bananas Gorilla</li>
+   <li>Lowly the worm</li>
+   <li class="main">Captain Anteater</li>
+   <li>Waveband the radioman</li>
+</ul>
+```
+
+We can use this class attribute as a selector in our CSS. Let's say we want the main characters to be bolded and have a background color of yellow, so our CSS would look like this:
+
+```css
+.main {
+  font-weight: bold;
+  background-color: yellow;
+}
+```
+
+Now, suppose you want all list items to be italicized with no background color, so you set up another rule:
+
+```css
+li { 
+  font-style: italic;
+  background-color: white;
+}
+```
+
+If you play with this code (which you can do easily using sites like http://jsbin.com, https://jsfiddle.net, or https://codepen.io/pen/), you'll see that the two main characters names are still highlighted in yellow. This is because the CSS rule about `.main` as a class is more specific than the rule about `li` type elements. To override the `.main` rule, you need to be as specific as you can be when choosing your group of selectors:
+
+```css
+ul#book-characters li.main {
+  background-color: white;
+}
+```
+
+This example just scratches the surface on [cascade and inheritance](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Cascade_and_inheritance).
+
+For any Hugo theme that you install, you can find the CSS file in the `themes/` folder. For example, the default lithium theme is located in: `themes/hugo-lithium-theme/static/css/main.css`. Once you are familiar with CSS, you can understand how each set of rules work to shape the visual style of your website, and how to alter the rules. For some themes (i.e., the [hugo-academic theme](https://github.com/gcushen/hugo-academic)), you have the option of linking to a [custom CSS](https://gist.github.com/gcushen/d5525a4506b9ccf83f2bce592a895495), which you can use to further customize the visual style of your site.
 
 https://github.com/rstudio/blogdown/issues/80
 
