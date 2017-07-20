@@ -460,11 +460,13 @@ append_yaml = function(x, value = list()) {
 # particular order, and optionally remove empty fields
 modify_yaml = function(
   file, ..., .order = character(), .keep_fields = NULL,
-  .keep_empty = getOption('blogdown.yaml.empty', TRUE)
+  .keep_empty = getOption('blogdown.yaml.empty', TRUE),
+  .keep_seq = TRUE
 ) {
   x = readUTF8(file)
   res = split_yaml_body(x)
   if (length(yml <- res$yaml) > 2) {
+    meta0 = res$yaml_list
     meta1 = res$yaml_list
     meta2 = list(...)
     for (i in names(meta2)) {
@@ -480,8 +482,16 @@ modify_yaml = function(
     if (!.keep_empty) meta1 = filter_list(meta1)
     if (is.null(meta1[['draft']])) meta1$draft = NULL
     for (i in names(meta1)) {
-      if (identical(attr(meta1[[i]], 'yml_type'), 'seq')) {
-        meta1[[i]] = as.list(meta1[[i]])
+      if (.keep_seq) {
+        if (!is.null(meta0[[i]]) && !is.null(meta1[[i]])) {
+          if (!is.null(attributes(meta0[[i]])$yml_type) && attributes(meta0[[i]])$yml_type == "seq") {
+            meta1[[i]] = as.list(meta1[[i]])
+          }
+        }
+      } else {
+        if (identical(attr(meta1[[i]], "yml_type"), "seq")) {
+          meta1[[i]] = as.list(meta1[[i]])
+        }
       }
     }
     yml = as.yaml(meta1)
