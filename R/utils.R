@@ -481,7 +481,7 @@ modify_yaml = function(
     if (!.keep_empty) meta1 = filter_list(meta1)
     if (is.null(meta1[['draft']])) meta1$draft = NULL
     for (i in names(meta1)) {
-      if (identical(attr(meta1[[i]], "yml_type"), "seq")) {
+      if (identical(attr(meta0[[i]], "yml_type"), "seq")) {
         meta1[[i]] = as.list(meta1[[i]])
       }
     }
