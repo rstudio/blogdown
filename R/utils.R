@@ -458,50 +458,35 @@ append_yaml = function(x, value = list()) {
 
 # modify the YAML of a file using specified new YAML options, preserve a
 # particular order, and optionally remove empty fields
-
-modify_yaml = function (file, ..., .order = character(), .keep_fields = NULL,
-          .keep_empty = getOption("blogdown.yaml.empty", TRUE), .keep_seq = TRUE)
-{
+modify_yaml = function(
+  file, ..., .order = character(), .keep_fields = NULL,
+  .keep_empty = getOption('blogdown.yaml.empty', TRUE)
+) {
   x = readUTF8(file)
   res = split_yaml_body(x)
   if (length(yml <- res$yaml) > 2) {
-    meta0 = res$yaml_list
     meta1 = res$yaml_list
     meta2 = list(...)
     for (i in names(meta2)) {
-      if (is.function(f <- meta2[[i]]))
-        meta2[i] = list(f(meta1[[i]], meta1))
+      if (is.function(f <- meta2[[i]])) meta2[i] = list(f(meta1[[i]], meta1))
     }
     meta1 = c(meta2, meta1[setdiff(names(meta1), names(meta2))])
-    if (length(.keep_fields))
-      meta1 = meta1[.keep_fields]
+    if (length(.keep_fields)) meta1 = meta1[.keep_fields]
     if (length(.order)) {
       i1 = intersect(.order, names(meta1))
       i2 = setdiff(names(meta1), i1)
       meta1 = meta1[c(i1, i2)]
     }
-    if (!.keep_empty)
-      meta1 = filter_list(meta1)
-    if (is.null(meta1[["draft"]]))
-      meta1$draft = NULL
+    if (!.keep_empty) meta1 = filter_list(meta1)
+    if (is.null(meta1[['draft']])) meta1$draft = NULL
     for (i in names(meta1)) {
-      if (.keep_seq) {
-        if (!is.null(meta0[[i]]) && !is.null(meta1[[i]])) {
-          if (!is.null(attributes(meta0[[i]])$yml_type) && attributes(meta0[[i]])$yml_type == "seq") {
-            meta1[[i]] = as.list(meta1[[i]])
-          }
-        }
-      } else {
-        if (identical(attr(meta1[[i]], "yml_type"), "seq")) {
-          meta1[[i]] = as.list(meta1[[i]])
-        }
+      if (identical(attr(meta1[[i]], 'yml_type'), 'seq')) {
+        meta1[[i]] = as.list(meta1[[i]])
       }
     }
     yml = as.yaml(meta1)
-    writeUTF8(c("---", yml, "---", res$body), file)
-  }
-  else warning("Could not detect YAML metadata in the post '",
-               file, "'")
+    writeUTF8(c('---', yml, '---', res$body), file)
+  } else warning("Could not detect YAML metadata in the post '", file, "'")
 }
 
 # prepend YAML of one file to another file
