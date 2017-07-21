@@ -465,8 +465,7 @@ modify_yaml = function(
   x = readUTF8(file)
   res = split_yaml_body(x)
   if (length(yml <- res$yaml) > 2) {
-    meta0 = res$yaml_list
-    meta1 = res$yaml_list
+    meta0 = meta1 = res$yaml_list
     meta2 = list(...)
     for (i in names(meta2)) {
       if (is.function(f <- meta2[[i]])) meta2[i] = list(f(meta1[[i]], meta1))
@@ -481,7 +480,7 @@ modify_yaml = function(
     if (!.keep_empty) meta1 = filter_list(meta1)
     if (is.null(meta1[['draft']])) meta1$draft = NULL
     for (i in names(meta1)) {
-      if (identical(attr(meta0[[i]], "yml_type"), "seq")) {
+      if (identical(attr(meta0[[i]], 'yml_type'), 'seq')) {
         meta1[[i]] = as.list(meta1[[i]])
       }
     }
