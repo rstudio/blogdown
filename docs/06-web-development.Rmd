@@ -282,7 +282,7 @@ To solve these problems, I have provided a solution in the JavaScript code at ht
     if (code.parentNode.tagName !== 'PRE' &&
         code.childElementCount === 0) {
       text = code.textContent;
-      if (/^\$[^$](.|\s)+[^$]\$$/.test(text)) {
+      if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
         text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
         code.textContent = text;
       }
