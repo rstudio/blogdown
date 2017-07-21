@@ -101,16 +101,16 @@ There are much better tutorials on HTML than this section, such as those offered
 
 ## CSS
 
-The Cascading Stylesheets (CSS) language is used to describe the look and formatting of documents written in HTML or XML. CSS is responsible for the visual style of your site. CSS is a lot of fun to play with, but it can also easily steal your time.
+The Cascading Stylesheets (CSS) language is used to describe the look and formatting of documents written in HTML. CSS is responsible for the visual style of your site. CSS is a lot of fun to play with, but it can also easily steal your time.
 
-In the Hugo framework (https://gohugo.io/tutorials/creating-a-new-theme/), CSS is one of the major “non-content” files that shapes the look and feel of your site (the others are images, JavaScript, and Hugo templates). What does the ["look and feel"](https://en.wikipedia.org/w/index.php?title=Look_and_feel&oldid=731052704) of a site mean? “Look” generally refers to static style components including, but not limited to:
+In the Hugo framework (https://gohugo.io/tutorials/creating-a-new-theme/), CSS is one of the major "non-content" files that shapes the look and feel of your site (the others are images, JavaScript, and Hugo templates). What does the ["look and feel"](https://en.wikipedia.org/w/index.php?title=Look_and_feel&oldid=731052704) of a site mean? "Look" generally refers to static style components including, but not limited to:
 
 * Color palettes
 * Images
 * Layouts/margins
 * Fonts
 
-Whereas “feel” relates to dynamic components that the user interacts with like:
+Whereas "feel" relates to dynamic components that the user interacts with like:
 
 * Dropdown menus
 * Buttons
@@ -120,12 +120,9 @@ There are 3 ways to define styles. The first is inline with HTML. For example, t
 
 
 ```html
-<text style="color:red">Marco!</text>
-Polo!
+<p>Marco! <em>Polo!</em> 
 ```
-Would produce text that looks like this:
-<text style="color:red">Marco!</text>
-Polo!
+Would produce text that looks like this: Marco! _Polo!_
 
 However, this method is generally not preferred for [numerous reasons](https://stackoverflow.com/questions/12013532/inline-style-tags-vs-inline-css-properties). 
 
@@ -146,7 +143,7 @@ A second way is to internally define the CSS by placing a style section in your 
 </html>
 ```
 
-In this example, the last line of text, <em>"I drive a bananamobile."</em>, is italicized. 
+In this example, the last line of text, _"I drive a bananamobile."_, is italicized. 
 
 The third method is the most popular because it is more flexible and the least repetitive, which is to define the CSS in an external file that is then referenced as a link in your HTML:
 
@@ -166,23 +163,7 @@ selectorlist {
 }
 ```
 
-A few one-liner examples.
 
-To make circular or rounded images, you may assign a class `img-circle` to images (e.g., `<img class="img-circle" src="foo.png" />`) and define the CSS:
-
-```css
-.img-circle {
-  border-radius: 50%;
-}
-```
-
-To make striped tables, you can add background colors to odd or even rows of the table, e.g.,
-
-```css
-tr:nth-child(even) {
-  background: #eee
-}
-```
 
 [Selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#Selectors) can be based on HTML element types or attributes, such as `id` or `class` (and combinations of these): 
 
@@ -254,6 +235,24 @@ ul#book-characters li.main {
 This example just scratches the surface on [cascade and inheritance](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Cascade_and_inheritance).
 
 For any Hugo theme that you install, you can find the CSS file in the `themes/` folder. For example, the default lithium theme is located in: `themes/hugo-lithium-theme/static/css/main.css`. Once you are familiar with CSS, you can understand how each set of rules work to shape the visual style of your website, and how to alter the rules. For some themes (i.e., the [hugo-academic theme](https://github.com/gcushen/hugo-academic)), you have the option of linking to a [custom CSS](https://gist.github.com/gcushen/d5525a4506b9ccf83f2bce592a895495), which you can use to further customize the visual style of your site.
+
+A few one-liner examples illustrate how simple CSS rules can be used to make dramatic changes.
+
+To make circular or rounded images, you may assign a class `img-circle` to images (e.g., `<img class="img-circle" src="foo.png" />`) and define the CSS:
+
+```css
+.img-circle {
+  border-radius: 50%;
+}
+```
+
+To make striped tables, you can add background colors to odd or even rows of the table, e.g.,
+
+```css
+tr:nth-child(even) {
+  background: #eee
+}
+```
 
 https://github.com/rstudio/blogdown/issues/80
 
