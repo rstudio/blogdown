@@ -101,7 +101,7 @@ There are much better tutorials on HTML than this section, such as those offered
 
 ## CSS
 
-The Cascading Stylesheets (CSS) language is used to describe the look and formatting of documents written in HTML or XML. CSS is responsible for the visual style of your site. CSS is a lot of fun to play with, but it can also easily steal your time.
+The Cascading Stylesheets (CSS) language is used to describe the look and formatting of documents written in HTML. CSS is responsible for the visual style of your site. CSS is a lot of fun to play with, but it can also easily steal your time.
 
 In the Hugo framework (https://gohugo.io/tutorials/creating-a-new-theme/), CSS is one of the major "non-content" files that shapes the look and feel of your site (the others are images, JavaScript, and Hugo templates). What does the ["look and feel"](https://en.wikipedia.org/w/index.php?title=Look_and_feel&oldid=731052704) of a site mean? "Look" generally refers to static style components including, but not limited to:
 
