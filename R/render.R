@@ -144,9 +144,10 @@ render_page = function(input) {
 # parent = 'content/post'; root = ~/Websites/Frida/
 encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
   if (!dir_exists(deps)) return(x)
+  if (!grepl('/$', parent)) parent = paste0(parent, '/')
   # find the dependencies referenced in HTML, add a marker ##### to their paths
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
-  if (!raw) return(gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x))
+  if (!raw) return(gsub(r, paste0('\\1\\2#####', parent, '\\3'), x))
 
   # move figures to /static/path/to/post/foo_files/figure-html
   if (FALSE) {
@@ -158,7 +159,7 @@ encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
     x = gsub(r1, paste0('\\1\\2', gsub('^content/', base, parent), '/\\3\\4'), x)
   }
   r1 = sprintf('("\'?)(%s/figure-html/)', deps)
-  x = gsub(r1, paste0('\\1', gsub('^content/', base, parent), '/\\2'), x, perl = TRUE)
+  x = gsub(r1, paste0('\\1', gsub('^content/', base, parent), '\\2'), x, perl = TRUE)
   # move other HTML dependencies to /static/rmarkdown-libs/
   r2 = paste0(r, '([^/]+)/')
   x2 = grep(r2, x, value = TRUE)
