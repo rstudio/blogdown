@@ -53,7 +53,6 @@ build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom'
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
 
-  config = load_config()
   files = list.files('content', '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
   # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
   # but include _index.Rmd/.md
@@ -67,7 +66,7 @@ build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom'
   run_script('R/build.R', as.character(local))
 
   if (method != 'custom') {
-    build_rmds(files, config, local, method == 'html')
+    build_rmds(files, load_config(), local, method == 'html')
   }
 
   invisible()
