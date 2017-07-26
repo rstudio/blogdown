@@ -242,7 +242,9 @@ new_post = function(
   file = trim_ws(file)  # trim (accidental) white spaces
   if (is.null(slug)) slug = post_slug(file)
   slug = trim_ws(slug)
-  file = new_content(file, kind, FALSE)
+  if (generator() == 'hugo') file = new_content(file, kind, FALSE) else {
+    writeLines(c('---', '', '---'), file)
+  }
 
   do.call(modify_yaml, c(list(
     file, title = title, author = author, date = format(date), slug = slug,
