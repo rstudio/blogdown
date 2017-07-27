@@ -4,7 +4,7 @@ We mentioned the possibility to bypass Hugo and use your own building method in 
 
 ## Jekyll
 
-For Jekyll users, I have prepared a minimal example in the GitHub repository [yihui/blogdown-jekyll](https://github.com/yihui/blogdown-jekyll). If you clone or download this repository and open `blogdown-jekyll.Rproj` in RStudio, you can still use all addins mentioned in Section \@ref(rstudio-ide), such as "New Post", "Serve Site", and "Update Metadata", but it is Jekyll instead of Hugo that builds the website behind the scenes now.
+For [Jekyll](https://jekyllrb.com) users, I have prepared a minimal example in the GitHub repository [yihui/blogdown-jekyll](https://github.com/yihui/blogdown-jekyll). If you clone or download this repository and open `blogdown-jekyll.Rproj` in RStudio, you can still use all addins mentioned in Section \@ref(rstudio-ide), such as "New Post", "Serve Site", and "Update Metadata", but it is Jekyll instead of Hugo that builds the website behind the scenes now.
 
 I assume you are familiar with Jekyll, and I'm not going to introduce the basics of Jekyll in this section. For example, you should know what the `_posts/` and `_site/` directories mean.
 
@@ -76,7 +76,7 @@ local({
 
 - The **knitr** package option `base.url` is a URL to be prepended to figure paths. We need to set this option to make sure figures generated from R code chunks can be found when they are displayed on a web page. A normal figure path is often like `figure/foo.png`, and it may not work when the image is rendered to an HTML file, because `figure/foo.png` is a relative path, and there is no guarantee that this image file will be copied to the directory of the final HTML file. For example, for an Rmd source file `_posts/2015-07-23-hello.Rmd` that generates `figure/foo.png` (under `_posts/`), the final HTML file may be `_site/2015/07/23/hello/index.html`. Jekyll knows how to render an HTML file to this location, but it does not understand the image dependency and will not copy the image file to this location. To solve this issue, we render figures at the root directory `/figure/`, which will be copied to `_site/` by Jekyll. To refer to an image under `_site/figure/`, we need the leading slash (`baseurl`), e.g., `<img src="/figure/foo.png">`. This is an absolute path, so no matter where the HTML is rendered, this path always works.
 
-- What `knitr::render_jekyll()` does is mainly to set up some **knitr** output hooks so that source code and text output from R code chunks will be wrapped in Liquid tags `{% highlight %}`.
+- What `knitr::render_jekyll()` does is mainly to set up some **knitr** output hooks so that source code and text output from R code chunks will be wrapped in Liquid tags `{% highlight %}` and `{% end highlight %}`.
 
 - Remember in `build.R`, we passed the variable `io` to the Rscript call `blogdown:::Rscript`. Here in `build_one.R`, we can receive them from `commandArgs(TRUE)`. The variable `a` contains a `.Rmd` and a `.md` file path. We removed the possible leading underscore (`^_`) and the extension (`[.][a-zA-Z]$`) in the path. Next we set figure and cache paths using this string. For example, for a post `_posts/foo.Rmd`, its figures will be written to `figure/foo/` and its cache databases (if there are any) will be stored under `cache/foo/`. Both directories are under the root directory of the project.
 
@@ -98,7 +98,48 @@ It may be possible for us to remove these limitations in a future version of **b
 
 ## Hexo
 
+The ideas of using [Hexo](https://hexo.io) are very similar to what we have applied to Jekyll in the previous section. I have also prepared a minimal example in the GitHub repository [yihui/blogdown-hexo](https://github.com/yihui/blogdown-hexo).
 
+The key components of this repository are still `.Rprofile`, `R/build.R`, and `R/build_one.R`. We set the option `blogdown.generator` to `hexo`, the `build.method` to `custom`, and the default subdirectory for new posts to `source/_posts`.
+
+```r
+options(
+  blogdown.generator = 'hexo',
+  blogdown.method = 'custom',
+  blogdown.subdir = 'source/_posts'
+)
+```
+
+The script `R/build.R` is similar to the one in the `blogdown-jekyll` repository. The main differences are:
+
+1. We find all Rmd files under the `source/` directory instead of the root directory, because Hexo's convention is to put all source files under `source/`.
+
+1. We call `system2('hexo', 'generate')` to build the website.
+
+For the script `R/build_one.R`, the major difference with the script in the `blogdown-jekyll` repository is that we set the `base.dir` option for **knitr**, so that all R figures are generated to the `source/` directory. This is because Hexo copies everything under `source/` to `public/`, whereas Jekyll copies everything under the root directory to `_site/`.
+
+```r
+local({
+  # fall back on '/' if baseurl is not specified
+  baseurl = blogdown:::get_config2('root', '/')
+  knitr::opts_knit$set(
+    base.url = baseurl, base.dir = normalizePath('source')
+  )
+
+  # input/output filenames as two arguments to Rscript
+  a = commandArgs(TRUE)
+  d = gsub('^source/_?|[.][a-zA-Z]+$', '', a[1])
+  knitr::opts_chunk$set(
+    fig.path   = sprintf('figure/%s/', d),
+    cache.path = sprintf('cache/%s/', d)
+  )
+  knitr::knit(
+    a[1], a[2], quiet = TRUE, encoding = 'UTF-8', envir = .GlobalEnv
+  )
+})
+```
+
+This repository is also automatically built and deployed through Netlify when I push changes to it. Since Hexo is a Node package, and Netlify supports Node, you can easily install Hexo on Netlify. For example, ths example repository uses the command `npm install && hexo generate` to build the website; `npm install` will install the Node packages specified in `packages.json` (a file under the root directory of the repository), and `hexo generate` is the command to build the website from `source/` to `public/`.
 
 ## Default site generator in rmarkdown {#rmd-website}
 
