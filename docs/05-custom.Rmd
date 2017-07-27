@@ -34,8 +34,8 @@ build_one = function(io) {
   }
 }
 
-# Rmd files under the content directory
-rmds = list.files('.', '[.]Rmd$', recursive = TRUE, full.names = TRUE)
+# Rmd files under the root directory
+rmds = list.files('.', '[.]Rmd$', recursive = T, full.names = T)
 files = cbind(rmds, blogdown:::with_ext(rmds, '.md'))
 
 for (i in seq_len(nrow(files))) build_one(files[i, ])
@@ -54,7 +54,7 @@ The script `R/build_one.R` looks like this (I have omitted some non-essential se
 ```r
 local({
   # fall back on "/" if baseurl is not specified
-  baseurl = blogdown:::get_config("baseurl", default = "/")
+  baseurl = blogdown:::get_config2("baseurl", default = "/")
   knitr::opts_knit$set(base.url = baseurl)
   knitr::render_jekyll()  # set output hooks
 

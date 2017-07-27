@@ -10,12 +10,12 @@ serve_site = function(...) {
   serve = switch(
     generator(), hugo = serve_it(),
     jekyll = serve_it(
-      '_config.yml', baseurl = get_config('baseurl', ''),
-      pdir = get_config('destination', '_site')
+      '_config.yml', baseurl = get_config2('baseurl', ''),
+      pdir = get_config2('destination', '_site')
     ),
     hexo = serve_it(
-      '_config.yml', baseurl = get_config('root', ''),
-      pdir = get_config('public_dir', 'public')
+      '_config.yml', baseurl = get_config2('root', ''),
+      pdir = get_config2('public_dir', 'public')
     ),
     stop("Cannot recognize the site (only Hugo, Jekyll, and Hexo are supported)")
   )
@@ -43,7 +43,7 @@ serve_it = function(
   }
 }
 
-get_config = function(key, default) {
+get_config2 = function(key, default) {
   res = yaml::yaml.load_file('_config.yml')
   res[[key]] %n% default
 }
