@@ -129,8 +129,8 @@ build_rmds = function(files, config, local, raw = FALSE) {
   unlink(lib1, recursive = TRUE)
 }
 
-render_page = function(input) {
-  args = c(pkg_file('scripts', 'render_page.R'), input)
+render_page = function(input, script = 'render_page.R') {
+  args = c(pkg_file('scripts', script), input)
   if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
 }
 
