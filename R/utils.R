@@ -121,7 +121,33 @@ dirs_copy = function(from, to) {
 # line of the HTML is not --- (meaning it is not produced from build_rmds() but
 # possibly from clicking the Knit button)
 require_rebuild = function(html, rmd) {
-  !file_exists(html) || file_test('-ot', html, rmd) || (readLines(html, n = 1) != '---')
+  older_than(html, rmd) || (readLines(html, n = 1) != '---')
+}
+
+#' Build all Rmd files under a directory
+#'
+#' List all Rmd files recursively under a directory, and compile them using
+#' \code{rmarkdown::\link{render}()}.
+#' @param dir A directory name.
+#' @param force Whether to force building all Rmd files. By default, an Rmd file
+#'   is built only if it is newer than its output file(s).
+#' @export
+build_dir = function(dir, force = FALSE) {
+  for (f in list_rmds(dir)) {
+    render_it = function() render_page(f, 'render_rmarkdown.R')
+    if (force) {
+      render_it(); next
+    }
+    files = list.files(dirname(f), full.names = TRUE)
+    i = files == f  # should be only one in files matching f
+    bases = with_ext(files, '')
+    files = files[!i & bases == bases[i]]  # files with same basename as f (Rmd)
+    if (length(files) == 0 || any(older_than(files, f))) render_it()
+  }
+}
+
+older_than = function(file1, file2) {
+  !file_exists(file1) | file_test('-ot', file1, file2)
 }
 
 is_windows = function() .Platform$OS.type == 'windows'
