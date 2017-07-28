@@ -52,15 +52,7 @@
 build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom')) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
-
-  files = list.files('content', '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
-  # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
-  # but include _index.Rmd/.md
-  files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
-  # do not allow special characters in filenames so dependency names are more
-  # predictable, e.g. foo_files/
-  bookdown:::check_special_chars(files)
-
+  files = list_rmds('content', TRUE)
   if (getOption('knitr.use.cwd', FALSE)) knitr::opts_knit$set(root.dir = getwd())
 
   run_script('R/build.R', as.character(local))
@@ -70,6 +62,17 @@ build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom'
   }
 
   invisible()
+}
+
+list_rmds = function(dir, check = FALSE) {
+  files = list.files(dir, '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
+  # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
+  # but include _index.Rmd/.md
+  files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
+  # do not allow special characters in filenames so dependency names are more
+  # predictable, e.g. foo_files/
+  if (check) bookdown:::check_special_chars(files)
+  files
 }
 
 # raw indicates paths of dependencies are not encoded in the HTML output
