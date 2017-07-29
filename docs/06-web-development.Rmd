@@ -262,9 +262,60 @@ A few one-liner examples illustrate how simple CSS rules can be used to make dra
 
 ## JavaScript
 
-Brief introduction here...
+It is way more challenging to briefly introduce JavaScript than HTML and CSS, since it is a programming language. There are many books and tutorials about this language. Anyway, we will try to scratch the surface for R users in this section.
 
-Next we show a slightly advanced application. In Section \@ref(how-to), we mentioned how to enable MathJax on a Hugo website. The easy part is to include the script `MathJax.js` via a `<script>` tag, and there are two hard parts:
+In a nutshell, JavaScript is a langauge that is typically used to manipulate elements on a web page. An effective way to learn it is through the JavaScript console in the Developer Tools of your web browser (see Figure \@ref(fig:chrome-devtools)), because you can interactively type code inthe console and execute it, which feels similar to executing R code in the R console (e.g., in RStudio). You may open any web page in your web browser (e.g., <https://yihui.name>), then open the JavaScript console, and try the code below on any web page:
+
+```js
+document.body.style.background = 'orange';
+```
+
+It should change the background color of the page to orange, unless the page has already defined background colors for certain elements.
+
+To effectively use JavaScript, you have to learn both the basic syntax of JavaScript and how to select elements on a page before you can manipulate them. You may partially learn the former from a short JavaScript snippet below:
+
+```js
+var x = 1;  // assignments
+1 + 2 - 3 * 4 / 5;  // arithmetic
+
+if (x < 2) console.log(x);  // "print" x
+
+var y = [9, 1, 0, 2, 1, 4];  // array
+
+// function
+var sum = function(x) {
+  var s = 0;
+  // a naive way to compute the sum
+  for (var i=0; i < x.length; i++) {
+    s += x[i];
+  }
+  return s;
+};
+
+sum(y);
+
+var y = "Hello World";
+y = y.replace(" ", ", ");  // string manipulation
+```
+
+You may feel the syntax is similar to R to some degree. JavaScript is an object-oriented language, and usually there are several methods that you can apply to an object. The string manipulation above is a typical example of the `Object.method()` syntax. To know the possible methods on an object, you can type the object name in your JavaScript console followed by a dot, and you should see all candidates.
+
+For R users, you have to be extremely cautious that JavaScript objects are often mutable, meaning that it could be modified anywhere. Below is a quick example:
+
+```js
+var x = {a: 1, b: 2};  // like a list in R
+var f = function(z) {
+  z.a = 100;
+};
+f(x);
+x;  // modified! x.a is 100 now
+```
+
+There are many mature JavaScript libraries that can help you select and manipulate elements on a page, and the most popular one may be [jQuery](https://jquery.com). However, you should know that sometimes you can probably do well enough without these third-party libraries. There are some basic methods to select elements, such as `document.getElementById()`, `document.getElementsByClassName()`, `document.querySelector()`, and so on. For example, you can select all paragraphs using `document.querySelectorAll('p')`.
+
+Next we show a slightly advanced application, in which you will see anonymous functions, selection of elements by HTML tag names, regular expressions, and manipulation of HTML elements.
+
+In Section \@ref(how-to), we mentioned how to enable MathJax on a Hugo website. The easy part is to include the script `MathJax.js` via a `<script>` tag, and there are two hard parts:
 
 1. How to protect the math content from the Markdown engine (Blackfriday), e.g., we need to make sure underscores in math expressions are not interpreted as `<em></em>`. This problem only exists in plain Markdown posts, and has been mentioned in Section \@ref(output-format) without explaining the solution.
 
@@ -299,10 +350,12 @@ To solve these problems, I have provided a solution in the JavaScript code at ht
 })();
 ```
 
-It is not a perfect solution, but it should be very rare that you run into problems. What it does is to identify possible math expressions in `<code>`, and strip the `<code>` tag, e.g., replace `<code>$x$</code>` with `\(x\)`. After this script is executed, we load the MathJax script. This way, we do not need to force MathJax to search for math expressions in `<code>` tags, and your math expressions will not inherit any styles from `<code>`. The JavaScript code above is not too long, and should be self-explanatory. The trickiest part is `i++`. I will leave it readers to figure out why the `for` loop is not the usual form `for (i = 0; i < codes.length; i++)`. It took me quite a few minutes to realize my mistake when I wrote the loop with the usual form.
+It is not a perfect solution, but it should be very rare that you run into problems. What it does is to identify possible math expressions in `<code>`, and strip the `<code>` tag, e.g., replace `<code>$x$</code>` with `\(x\)`. After this script is executed, we load the MathJax script. This way, we do not need to force MathJax to search for math expressions in `<code>` tags, and your math expressions will not inherit any styles from `<code>`. The JavaScript code above is not too long, and should be self-explanatory. The trickiest part is `i++`. I will leave it readers to figure out why the `for` loop is not the usual form `for (i = 0; i < codes.length; i++)`. It took me quite a few minutes to realize my mistake when I wrote the loop in the usual form.
 
 ## Useful resources
 
 Although static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier", and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
 
 You can also optimize images on your website. I frequently use a command-line tool named [`optipng`](http://optipng.sourceforge.net) to optimize PNG images. It is a lossless optimizer, meaning that it reduces the file size of a PNG image without loss of quality. From my experience, it works very well on PNG images generated from R, and can reduce the file size by at least 30% (sometimes even more than 50%). Personally I also use online tools like http://optimizilla.com to optimize PNG and JPEG images. For GIF images, I often use https://ezgif.com/optimize to reduce the file sizes if they are too big.
+
+Note that Netlify has provided the optimization features on the server side for free at the moment, so you may just want ot enable them there instead of doing all the hard work by yourself.
