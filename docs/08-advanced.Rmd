@@ -66,9 +66,17 @@ If you do not understand all these technical details, we recommend you to use th
 
 ## HTML widgets
 
-We do not recommend you to use different HTML widgets from many R packages on the same page, because it is likely to cause conflicts in JavaScript.
+We do not recommend you to use different HTML widgets from many R packages on the same page, because it is likely to cause conflicts in JavaScript. For example, if you theme uses the jQuery library, it may conflict with the jQuery library used by a certain HTML widget. In this case, you can conditionally load the theme's jQuery library by setting a parameter in the YAML metadata of your post and revising the Hugo template that loads jQuery. Below is the example code to load jQuery conditionally in a Hugo template:
 
-If you theme uses the jQuery library, it is also likely that the theme's jQuery library will conflict with the jQuery library used by a certain HTML widget.
+```html
+{{ if not .Params.exclude_jquery}}
+<script src="path/to/jquery.js"></script>
+{{ end }}
+```
+
+Then if you set `exclude_jquery: true` in the YAML metadata of a post, the theme's jQuery will not be loaded, so there will not be conflicts when your HTML widgets also depend on jQuery.
+
+Another solution is the [**widgetframe** package](https://github.com/bhaskarvk/widgetframe). It solves this problem by embedding HTML widgets in `<iframe></iframe>`. Since an iframe is isolated from the main web page on which it is embedded, there will not be any JavaScript conflicts.
 
 ## Version control
 
