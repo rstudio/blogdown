@@ -177,4 +177,4 @@ deploy:
 
 This means the website will be pushed to the `master` branch of the repository `username/username.github.io` (remember to replace `username` with your actual user name).
 
-You can also deploy your website to Amazon S3, and the setup on the R side is very similar to what we have introduced for GitHub Pages. The only difference is in the last step, where you change the target from GitHub Pages to Amazon S3. For more information, please see the documentation on Traivs: https://docs.travis-ci.com/user/deployment/s3/.
+You can also deploy your website to Amazon S3, and the setup on the R side is very similar to what we have introduced for GitHub Pages. The only difference is in the last step, where you change the target from GitHub Pages to Amazon S3. For more information, please see the documentation on Travis: https://docs.travis-ci.com/user/deployment/s3/.

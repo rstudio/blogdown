@@ -55,7 +55,7 @@ blogdown:::process_bare_urls
 
 The first function substitutes two or more empty lines with a single empty line. The second function replaces links of the form `[url](url)` with `<url>`. There is not anything wrong with excessive empty lines or the syntax `[url](url)`, though. These helper functions may make your Markdown text a little cleaner. You can find all such helper functions at https://github.com/rstudio/blogdown/blob/master/R/clean.R. Note they are not exported from **blogdown**, so you need triple colons to access them.
 
-The YAML metadata of your posts may not be completely clean, especially when your Jekyll website was actually converted from an ealier WordPress website. There is an internal helper function `blogdown:::modify_yaml()`, which may help you clean up the metadata. For example, below is the YAML metadata of a blog post of Simply Statistics when it was built on Jekyll:
+The YAML metadata of your posts may not be completely clean, especially when your Jekyll website was actually converted from an earlier WordPress website. There is an internal helper function `blogdown:::modify_yaml()`, which may help you clean up the metadata. For example, below is the YAML metadata of a blog post of Simply Statistics when it was built on Jekyll:
 
 ```yaml
 ---
@@ -99,7 +99,7 @@ for (f in files) {
 }
 ```
 
-You can pass a file path to `modify_yaml()`, define new YAML values (or functions to return new values based on the old values), and decide which fields to preserve (`.keep_fields`). You may discard empty fields via `.keep_empty = FALSE`. The processed YAML medata is below, which looks much cleaner:
+You can pass a file path to `modify_yaml()`, define new YAML values (or functions to return new values based on the old values), and decide which fields to preserve (`.keep_fields`). You may discard empty fields via `.keep_empty = FALSE`. The processed YAML metadata is below, which looks much cleaner:
 
 ```yaml
 ---

@@ -8,7 +8,7 @@ If you want to tweak the appearance of your website, or even design your own the
 
 We only aim at getting you started with HTML, CSS, and JavaScript. HTML is relatively simple to learn, but CSS and JavaScript can be much more complicated, depending on how much you want to learn and what you want to do with them. After reading this chapter, you will have to use other resources to teach yourself. When you search for these technologies online, the most likely websites that you may hit are [MDN](https://developer.mozilla.org) (Mozilla Developer Network), [w3schools.com](https://www.w3schools.com), and [StackOverflow](https://stackoverflow.com). Among these websites, w3schools often provides simple examples and tutorials that may be more friendly to beginners, but we often hear [negative comments](https://meta.stackoverflow.com/q/280478/559676) about it, so please use it with your own caution. I often read all three websites when looking for solutions.
 
-If we were only allowed to give one single most useful tip about web development, it would be: use the "Developer Tools" of your web browser. Most modern web browsers provde these tools. For example, you can find these tools from the menu of Google Chrome `View -> Developer`, Firefox's menu `Tools -> Web Developer`, or Safari's menu `Develop -> Show Web Inspector`. Figure \@ref(fig:chrome-devtools) is a screenshot of using the Developer Tools in Chrome.
+If we were only allowed to give one single most useful tip about web development, it would be: use the "Developer Tools" of your web browser. Most modern web browsers provide these tools. For example, you can find these tools from the menu of Google Chrome `View -> Developer`, Firefox's menu `Tools -> Web Developer`, or Safari's menu `Develop -> Show Web Inspector`. Figure \@ref(fig:chrome-devtools) is a screenshot of using the Developer Tools in Chrome.
 
 ```{r chrome-devtools, fig.cap='Developer Tools in Google Chrome.', fig.align='center', out.width='100%', echo=FALSE}
 knitr::include_graphics('images/chrome-devtools.png')
@@ -24,7 +24,7 @@ HTML stands for Hyper Text Markup Language, and it is the language behind most w
 
 The good thing about HTML is that the language only has a limited number of tags, and the number is not very big (especially the number of commonly used tags). This means there is hope that you can master this language fully and quickly.
 
-Most HTML tags appear in pairs, with an opening tag and an closing tag, e.g., `<p></p>`. You write the content between the opending and closing tag, e.g., `<p>This is a paragraph.</p>`. There are a few exceptions, such as the `<img>` tag, which can be closed by a slash `/` in the opening tag, e.g., `<img src="foo.png" />`. You can specify attributes of an element in the opening tag using the syntax `name=value` (a few attributes do not require `value`).
+Most HTML tags appear in pairs, with an opening tag and an closing tag, e.g., `<p></p>`. You write the content between the opening and closing tag, e.g., `<p>This is a paragraph.</p>`. There are a few exceptions, such as the `<img>` tag, which can be closed by a slash `/` in the opening tag, e.g., `<img src="foo.png" />`. You can specify attributes of an element in the opening tag using the syntax `name=value` (a few attributes do not require `value`).
 
 HTML documents often have the filename extension `.html` (or `.htm`). Below is an overall structure of an HTML document:
 
@@ -210,7 +210,7 @@ Now, let's say we want to highlight our favorite teas again, so we'll use a clas
 </ul>
 ```
 
-We can use this class attribute as a selector in our CSS. Let's say we want our favorite teas to be bolded and have a background color of yellow, so our CSS would look like this:
+We can use this class attribute as a selector in our CSS. Let's say we want our favorite teas to be in bold and have a background color of yellow, so our CSS would look like this:
 
 ```css
 .favorite {
@@ -264,7 +264,7 @@ A few one-liner examples illustrate how simple CSS rules can be used to make dra
 
 It is way more challenging to briefly introduce JavaScript than HTML and CSS, since it is a programming language. There are many books and tutorials about this language. Anyway, we will try to scratch the surface for R users in this section.
 
-In a nutshell, JavaScript is a langauge that is typically used to manipulate elements on a web page. An effective way to learn it is through the JavaScript console in the Developer Tools of your web browser (see Figure \@ref(fig:chrome-devtools)), because you can interactively type code inthe console and execute it, which feels similar to executing R code in the R console (e.g., in RStudio). You may open any web page in your web browser (e.g., <https://yihui.name>), then open the JavaScript console, and try the code below on any web page:
+In a nutshell, JavaScript is a language that is typically used to manipulate elements on a web page. An effective way to learn it is through the JavaScript console in the Developer Tools of your web browser (see Figure \@ref(fig:chrome-devtools)), because you can interactively type code in the console and execute it, which feels similar to executing R code in the R console (e.g., in RStudio). You may open any web page in your web browser (e.g., <https://yihui.name>), then open the JavaScript console, and try the code below on any web page:
 
 ```js
 document.body.style.background = 'orange';
@@ -358,4 +358,4 @@ Although static websites are fast in general, you can certainly further optimize
 
 You can also optimize images on your website. I frequently use a command-line tool named [`optipng`](http://optipng.sourceforge.net) to optimize PNG images. It is a lossless optimizer, meaning that it reduces the file size of a PNG image without loss of quality. From my experience, it works very well on PNG images generated from R, and can reduce the file size by at least 30% (sometimes even more than 50%). Personally I also use online tools like http://optimizilla.com to optimize PNG and JPEG images. For GIF images, I often use https://ezgif.com/optimize to reduce the file sizes if they are too big.
 
-Note that Netlify has provided the optimization features on the server side for free at the moment, so you may just want ot enable them there instead of doing all the hard work by yourself.
+Note that Netlify has provided the optimization features on the server side for free at the moment, so you may just want to enable them there instead of doing all the hard work by yourself.

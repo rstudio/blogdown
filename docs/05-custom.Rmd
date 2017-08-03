@@ -1,6 +1,6 @@
 # Other Generators
 
-We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Baiscally you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show how you can possibly work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package, and we will introduce it in Section \@ref(rmd-website).
+We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Basically you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show how you can possibly work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package, and we will introduce it in Section \@ref(rmd-website).
 
 ## Jekyll
 
@@ -88,7 +88,7 @@ A small caveat is that since we have both `.Rmd` and `.md` files, Jekyll will tr
 exclude: ['*.Rmd']
 ```
 
-Compared to the Hugo support in **blogdown**, this approach is limitted in a few aspects:
+Compared to the Hugo support in **blogdown**, this approach is limited in a few aspects:
 
 1. It does not support Pandoc, so you cannot use Pandoc's Markdown. Since it uses the **knitr** package instead of **rmarkdown**, you cannot use any **bookdown**'s Markdown features, either. You are at the mercy of the Markdown renderers supported by Jekyll.
 
@@ -139,7 +139,7 @@ local({
 })
 ```
 
-This repository is also automatically built and deployed through Netlify when I push changes to it. Since Hexo is a Node package, and Netlify supports Node, you can easily install Hexo on Netlify. For example, ths example repository uses the command `npm install && hexo generate` to build the website; `npm install` will install the Node packages specified in `packages.json` (a file under the root directory of the repository), and `hexo generate` is the command to build the website from `source/` to `public/`.
+This repository is also automatically built and deployed through Netlify when I push changes to it. Since Hexo is a Node package, and Netlify supports Node, you can easily install Hexo on Netlify. For example, this example repository uses the command `npm install && hexo generate` to build the website; `npm install` will install the Node packages specified in `packages.json` (a file under the root directory of the repository), and `hexo generate` is the command to build the website from `source/` to `public/`.
 
 ## Default site generator in rmarkdown {#rmd-website}
 
