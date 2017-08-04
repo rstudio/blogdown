@@ -52,25 +52,27 @@
 build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom')) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
-
-  config = load_config()
-  files = list.files('content', '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
-  # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
-  # but include _index.Rmd/.md
-  files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
-  # do not allow special characters in filenames so dependency names are more
-  # predictable, e.g. foo_files/
-  bookdown:::check_special_chars(files)
-
+  files = list_rmds('content', TRUE)
   if (getOption('knitr.use.cwd', FALSE)) knitr::opts_knit$set(root.dir = getwd())
 
   run_script('R/build.R', as.character(local))
 
   if (method != 'custom') {
-    build_rmds(files, config, local, method == 'html')
+    build_rmds(files, load_config(), local, method == 'html')
   }
 
   invisible()
+}
+
+list_rmds = function(dir, check = FALSE) {
+  files = list.files(dir, '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
+  # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
+  # but include _index.Rmd/.md
+  files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
+  # do not allow special characters in filenames so dependency names are more
+  # predictable, e.g. foo_files/
+  if (check) bookdown:::check_special_chars(files)
+  files
 }
 
 # raw indicates paths of dependencies are not encoded in the HTML output
@@ -127,8 +129,8 @@ build_rmds = function(files, config, local, raw = FALSE) {
   unlink(lib1, recursive = TRUE)
 }
 
-render_page = function(input) {
-  args = c(pkg_file('scripts', 'render_page.R'), input)
+render_page = function(input, script = 'render_page.R') {
+  args = c(pkg_file('scripts', script), input)
   if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
 }
 
@@ -145,9 +147,10 @@ render_page = function(input) {
 # parent = 'content/post'; root = ~/Websites/Frida/
 encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
   if (!dir_exists(deps)) return(x)
+  if (!grepl('/$', parent)) parent = paste0(parent, '/')
   # find the dependencies referenced in HTML, add a marker ##### to their paths
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
-  if (!raw) return(gsub(r, paste0('\\1\\2#####', parent, '/\\3'), x))
+  if (!raw) return(gsub(r, paste0('\\1\\2#####', parent, '\\3'), x))
 
   # move figures to /static/path/to/post/foo_files/figure-html
   if (FALSE) {
@@ -159,7 +162,7 @@ encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
     x = gsub(r1, paste0('\\1\\2', gsub('^content/', base, parent), '/\\3\\4'), x)
   }
   r1 = sprintf('("\'?)(%s/figure-html/)', deps)
-  x = gsub(r1, paste0('\\1', gsub('^content/', base, parent), '/\\2'), x, perl = TRUE)
+  x = gsub(r1, paste0('\\1', gsub('^content/', base, parent), '\\2'), x, perl = TRUE)
   # move other HTML dependencies to /static/rmarkdown-libs/
   r2 = paste0(r, '([^/]+)/')
   x2 = grep(r2, x, value = TRUE)

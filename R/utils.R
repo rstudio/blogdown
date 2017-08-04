@@ -7,26 +7,45 @@
 #'   hence you cannot customize these arguments).
 #' @export
 serve_site = function(...) {
-  dir = '.'
-  if (!has_config(dir)) {
-    warning('There is no config.toml or config.yaml under ', normalizePath(dir))
-    dir2 = tryCatch(rprojroot::find_rstudio_root_file(), error = function(e) dir)
-    if (dir2 != dir && has_config(dir2)) {
-      message('Using the directory ', dir2, ' as the root directory of the website')
-      dir = dir2
-    }
+  serve = switch(
+    generator(), hugo = serve_it(),
+    jekyll = serve_it(
+      '_config.yml', baseurl = get_config2('baseurl', ''),
+      pdir = get_config2('destination', '_site')
+    ),
+    hexo = serve_it(
+      '_config.yml', baseurl = get_config2('root', ''),
+      pdir = get_config2('public_dir', 'public')
+    ),
+    stop("Cannot recognize the site (only Hugo, Jekyll, and Hexo are supported)")
+  )
+  serve(...)
+}
+
+generator = function() getOption('blogdown.generator', 'hugo')
+
+serve_it = function(
+  config = c('config.toml', 'config.yaml'), pdir = publish_dir(),
+  baseurl = site_base_dir()
+) {
+  function(...) {
+    owd = setwd(site_root(config)); on.exit(setwd(owd), add = TRUE)
+    build_site(TRUE)
+    n = nchar(pdir)
+    servr::httw(site.dir = pdir, baseurl = baseurl, handler = function(...) {
+      files = c(...)
+      # exclude changes in the publish dir
+      files = files[substr(files, 1, n) != pdir]
+      # re-generate only if Rmd/md or config files or layouts were updated
+      if (length(grep('(_?layouts?|static)/|[.]([Rr]?md|toml|yaml)$', files)))
+        build_site(TRUE)
+    }, dir = '.', ...)
   }
-  owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
-  build_site(TRUE)
-  pdir = publish_dir(); n = nchar(pdir)
-  servr::httw(site.dir = pdir, baseurl = site_base_dir(), handler = function(...) {
-    files = c(...)
-    # exclude changes in the publish dir
-    files = files[substr(files, 1, n) != pdir]
-    # re-generate only if Rmd/md or config files or layouts were updated
-    if (length(grep('(layouts|static)/|[.]([Rr]?md|toml|yaml)$', files)))
-      build_site(TRUE)
-  }, dir = '.', ...)
+}
+
+get_config2 = function(key, default) {
+  res = yaml::yaml.load_file('_config.yml')
+  res[[key]] %n% default
 }
 
 # figure out the base dir of the website, e.g. http://example.com/project/ ->
@@ -42,10 +61,6 @@ site_base_dir = function() {
   if (x == '') x = '/'
   if (!grepl('^/', x)) x = paste0('/', x)
   x
-}
-
-has_config = function(dir) {
-  length(grep('^config[.](toml|yaml)$', list.files(dir))) > 0
 }
 
 #' A helper function to return a dependency path name
@@ -106,7 +121,33 @@ dirs_copy = function(from, to) {
 # line of the HTML is not --- (meaning it is not produced from build_rmds() but
 # possibly from clicking the Knit button)
 require_rebuild = function(html, rmd) {
-  !file_exists(html) || file_test('-ot', html, rmd) || (readLines(html, n = 1) != '---')
+  older_than(html, rmd) || (readLines(html, n = 1) != '---')
+}
+
+#' Build all Rmd files under a directory
+#'
+#' List all Rmd files recursively under a directory, and compile them using
+#' \code{rmarkdown::\link{render}()}.
+#' @param dir A directory name.
+#' @param force Whether to force building all Rmd files. By default, an Rmd file
+#'   is built only if it is newer than its output file(s).
+#' @export
+build_dir = function(dir, force = FALSE) {
+  for (f in list_rmds(dir)) {
+    render_it = function() render_page(f, 'render_rmarkdown.R')
+    if (force) {
+      render_it(); next
+    }
+    files = list.files(dirname(f), full.names = TRUE)
+    i = files == f  # should be only one in files matching f
+    bases = with_ext(files, '')
+    files = files[!i & bases == bases[i]]  # files with same basename as f (Rmd)
+    if (length(files) == 0 || any(older_than(files, f))) render_it()
+  }
+}
+
+older_than = function(file1, file2) {
+  !file_exists(file1) | file_test('-ot', file1, file2)
 }
 
 is_windows = function() .Platform$OS.type == 'windows'
@@ -186,17 +227,18 @@ is_example_url = function(url) {
 }
 
 # only support TOML and YAML (no JSON)
-find_config = function(error = TRUE) {
-  f = existing_files(c('config.toml', 'config.yaml'), first = TRUE)
+find_config = function(files = c('config.toml', 'config.yaml'), error = TRUE) {
+  f = existing_files(files, first = TRUE)
   if (length(f) == 0 && error) stop(
-    'Cannot find the configuration file config.toml or config.yaml of the website'
+    'Cannot find the configuration file ', paste(files, collapse = ' | '), ' of the website'
   )
   f
 }
 
 # figure out the possible root directory of the website
-site_root = function() {
-  while (length(find_config(FALSE)) == 0) {
+site_root = function(...) {
+  owd = getwd(); on.exit(setwd(owd), add = TRUE)
+  while (length(find_config(error = FALSE, ...)) == 0) {
     w1 = getwd(); w2 = dirname(w1)
     if (w1 == w2) stop(
       'Cannot find a website under the current working directory or upper-level directories'
@@ -309,6 +351,9 @@ update_meta_addin = function() {
 
 # scan YAML metadata of all Rmd/md files
 scan_yaml = function(dir = 'content') {
+  if (missing(dir)) dir = switch(generator(),
+    hugo = 'content', jekyll = '.', hexo = 'source'
+  )
   files = list.files(dir, '[.][Rr]?md$', recursive = TRUE, full.names = TRUE)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
@@ -326,7 +371,7 @@ scan_yaml = function(dir = 'content') {
 
 # collect specific fields of all YAML metadata
 collect_yaml = function(
-  fields = c('categories', 'tags'), dir = 'content', uniq = TRUE, sort = TRUE
+  fields = c('categories', 'tags'), dir, uniq = TRUE, sort = TRUE
 ) {
   res = list()
   meta = scan_yaml(dir)
@@ -363,7 +408,7 @@ find_yaml = function(field = character(), value = character(), open = FALSE) {
   meta = scan_yaml()
   if (length(meta) == 0) return()
   files = names(which(unlist(lapply(meta, function(m) {
-    any(value %in% m[[field]])
+    identical(value, m[[field]]) || any(value %in% m[[field]])
   }))))
   n = length(files)
   if (n == 0) return(invisible(files))

@@ -28,7 +28,7 @@ The option `blogdown.widgetsID` is only relevant if your website source is under
 
 The function `blogdown::build_site()` has an argument `local` that defaults to `FALSE`, which means building the website for publishing instead of local previewing. The mode `local = TRUE` is primarily for `blogdown::serve_site()` to serve the website locally. There are three major differences between `local = FALSE` and `TRUE`. When `local = TRUE`:
 
-- The `baseurl` option in `config.toml` is temporarily overridden by `"/"` even if you have set it to a full URL like `"http://www.example.com/"`.^[If your `baseurl` contains a subdirectory, it will be overridden by the subdirectory name. For example, for `baseurl = "http://www.example.com/project/"`, `build_site(local = TRUE)` will temporarily remove the domain name and only use the value `/project/`.] This is because when a website is to be previewed locally, links should refer to local files. For example, `/about/index.html` should be used instead of the full link `http://www.example.com/about/index.html`; `serve_site()` knows that `/about/index.html` means the file under the `public/` directory, and can fetch it and display the conten to you, otherwise your browser will take you to the website `http://www.example.com` instead of displaying a local file.
+- The `baseurl` option in `config.toml` is temporarily overridden by `"/"` even if you have set it to a full URL like `"http://www.example.com/"`.^[If your `baseurl` contains a subdirectory, it will be overridden by the subdirectory name. For example, for `baseurl = "http://www.example.com/project/"`, `build_site(local = TRUE)` will temporarily remove the domain name and only use the value `/project/`.] This is because when a website is to be previewed locally, links should refer to local files. For example, `/about/index.html` should be used instead of the full link `http://www.example.com/about/index.html`; `serve_site()` knows that `/about/index.html` means the file under the `public/` directory, and can fetch it and display the content to you, otherwise your browser will take you to the website `http://www.example.com` instead of displaying a local file.
 
 - Draft and future posts are always rendered when `local = TRUE`, but not when `local = FALSE`. This is for you to preview draft and future posts locally. If you know the [Hugo command line](https://gohugo.io/commands/hugo/), it means the `hugo` command is called with the flags `-D -F`, or equivalently, `--buildDrafts --buildFuture`.
 
@@ -66,9 +66,17 @@ If you do not understand all these technical details, we recommend you to use th
 
 ## HTML widgets
 
-We do not recommend you to use different HTML widgets from many R packages on the same page, because it is likely to cause conflicts in JavaScript.
+We do not recommend you to use different HTML widgets from many R packages on the same page, because it is likely to cause conflicts in JavaScript. For example, if you theme uses the jQuery library, it may conflict with the jQuery library used by a certain HTML widget. In this case, you can conditionally load the theme's jQuery library by setting a parameter in the YAML metadata of your post and revising the Hugo template that loads jQuery. Below is the example code to load jQuery conditionally in a Hugo template:
 
-If you theme uses the jQuery library, it is also likely that the theme's jQuery library will conflict with the jQuery library used by a certain HTML widget.
+```html
+{{ if not .Params.exclude_jquery}}
+<script src="path/to/jquery.js"></script>
+{{ end }}
+```
+
+Then if you set `exclude_jquery: true` in the YAML metadata of a post, the theme's jQuery will not be loaded, so there will not be conflicts when your HTML widgets also depend on jQuery.
+
+Another solution is the [**widgetframe** package](https://github.com/bhaskarvk/widgetframe). It solves this problem by embedding HTML widgets in `<iframe></iframe>`. Since an iframe is isolated from the main web page on which it is embedded, there will not be any JavaScript conflicts.
 
 ## Version control
 
@@ -175,7 +183,7 @@ Both `html` and `html_encoded` use `rmarkdown::render()` to render Rmd files to 
 
 1. An Rmd file may generate two directories for figures (`*_files/`) and cache (`*_cache/`), respectively, if you have plot output or HTML widgets [@R-htmlwidgets] in your R code chunks, or enabled the chunk option `cache = TRUE` for caching. In the figure directory, there will be a subdirectory `figure-html/` that contains your plot output files, and possibly other subdirectories containing HTML dependencies from HTML widgets (e.g., `jquery/`). For `method = 'html'`, it moves the figure directory to `/static/`, and the cache directory to `/blogdown/`. For `method = 'html_encoded'`, all output files and directories are moved to `/blogdown/`, including figures, cache, and `*.html`.
 
-1. The name of the method `'html_encoded'` comes from the fact that the paths of R plot files and HTML widgets are first encoded in the `*.html` output, then Hugo is called to build the website, and finally all HTML files under the `/public/` directory are post-processed to decode the paths. The main reason for this trouble is that it is not easy to predict where a certain page will be rendered in the `/public/` directory,^[For example, a source file `/content/about.md` may be rendered to `/public/about/index.html`, and `/content/post/2017-02-14-hello.Rmd` could be rendered to `/public/2017/02/14/hello/index.html` (the content of the post could also be used in `/public/categories/index.html`). It dependes on the rules for permanent links you set for Hugo.] so the relative paths of figures and widgets may fail to work after a site is rendered, and they need to be resolved by post-processing. By comparison, `method = 'html'` does not need post-processing due to the fact that the relative paths will be resolved to absolute paths at the pre-processing stage.
+1. The name of the method `'html_encoded'` comes from the fact that the paths of R plot files and HTML widgets are first encoded in the `*.html` output, then Hugo is called to build the website, and finally all HTML files under the `/public/` directory are post-processed to decode the paths. The main reason for this trouble is that it is not easy to predict where a certain page will be rendered in the `/public/` directory,^[For example, a source file `/content/about.md` may be rendered to `/public/about/index.html`, and `/content/post/2017-02-14-hello.Rmd` could be rendered to `/public/2017/02/14/hello/index.html` (the content of the post could also be used in `/public/categories/index.html`). It depends on the rules for permanent links you set for Hugo.] so the relative paths of figures and widgets may fail to work after a site is rendered, and they need to be resolved by post-processing. By comparison, `method = 'html'` does not need post-processing due to the fact that the relative paths will be resolved to absolute paths at the pre-processing stage.
 
 We must have successfully confused you now, but do not worry. You do not have to understand these technical details, unless you want to help us with hacking. For an average user, you only need to know the pros and cons of the two methods.
 

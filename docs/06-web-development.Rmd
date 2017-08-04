@@ -8,7 +8,7 @@ If you want to tweak the appearance of your website, or even design your own the
 
 We only aim at getting you started with HTML, CSS, and JavaScript. HTML is relatively simple to learn, but CSS and JavaScript can be much more complicated, depending on how much you want to learn and what you want to do with them. After reading this chapter, you will have to use other resources to teach yourself. When you search for these technologies online, the most likely websites that you may hit are [MDN](https://developer.mozilla.org) (Mozilla Developer Network), [w3schools.com](https://www.w3schools.com), and [StackOverflow](https://stackoverflow.com). Among these websites, w3schools often provides simple examples and tutorials that may be more friendly to beginners, but we often hear [negative comments](https://meta.stackoverflow.com/q/280478/559676) about it, so please use it with your own caution. I often read all three websites when looking for solutions.
 
-If we were only allowed to give one single most useful tip about web development, it would be: use the "Developer Tools" of your web browser. Most modern web browsers provde these tools. For example, you can find these tools from the menu of Google Chrome `View -> Developer`, Firefox's menu `Tools -> Web Developer`, or Safari's menu `Develop -> Show Web Inspector`. Figure \@ref(fig:chrome-devtools) is a screenshot of using the Developer Tools in Chrome.
+If we were only allowed to give one single most useful tip about web development, it would be: use the "Developer Tools" of your web browser. Most modern web browsers provide these tools. For example, you can find these tools from the menu of Google Chrome `View -> Developer`, Firefox's menu `Tools -> Web Developer`, or Safari's menu `Develop -> Show Web Inspector`. Figure \@ref(fig:chrome-devtools) is a screenshot of using the Developer Tools in Chrome.
 
 ```{r chrome-devtools, fig.cap='Developer Tools in Google Chrome.', fig.align='center', out.width='100%', echo=FALSE}
 knitr::include_graphics('images/chrome-devtools.png')
@@ -24,7 +24,7 @@ HTML stands for Hyper Text Markup Language, and it is the language behind most w
 
 The good thing about HTML is that the language only has a limited number of tags, and the number is not very big (especially the number of commonly used tags). This means there is hope that you can master this language fully and quickly.
 
-Most HTML tags appear in pairs, with an opening tag and an closing tag, e.g., `<p></p>`. You write the content between the opending and closing tag, e.g., `<p>This is a paragraph.</p>`. There are a few exceptions, such as the `<img>` tag, which can be closed by a slash `/` in the opening tag, e.g., `<img src="foo.png" />`. You can specify attributes of an element in the opening tag using the syntax `name=value` (a few attributes do not require `value`).
+Most HTML tags appear in pairs, with an opening tag and an closing tag, e.g., `<p></p>`. You write the content between the opening and closing tag, e.g., `<p>This is a paragraph.</p>`. There are a few exceptions, such as the `<img>` tag, which can be closed by a slash `/` in the opening tag, e.g., `<img src="foo.png" />`. You can specify attributes of an element in the opening tag using the syntax `name=value` (a few attributes do not require `value`).
 
 HTML documents often have the filename extension `.html` (or `.htm`). Below is an overall structure of an HTML document:
 
@@ -101,33 +101,221 @@ There are much better tutorials on HTML than this section, such as those offered
 
 ## CSS
 
-CSS is a lot of fun to play with, but it can also easily steal your time.
+The Cascading Stylesheets (CSS) language is used to describe the look and formatting of documents written in HTML. CSS is responsible for the visual style of your site. CSS is a lot of fun to play with, but it can also easily steal your time.
 
-A few one-liner examples.
+In the Hugo framework (https://gohugo.io/tutorials/creating-a-new-theme/), CSS is one of the major "non-content" files that shapes the look and feel of your site (the others are images, JavaScript, and Hugo templates). What does the ["look and feel"](https://en.wikipedia.org/wiki/Look_and_feel) of a site mean? "Look" generally refers to static style components including, but not limited to:
 
-To make circular or rounded images, you may assign a class `img-circle` to images (e.g., `<img class="img-circle" src="foo.png" />`) and define the CSS:
+* Color palettes
+* Images
+* Layouts/margins
+* Fonts
+
+Whereas "feel" relates to dynamic components that the user interacts with like:
+
+* Dropdown menus
+* Buttons
+* Forms
+
+There are 3 ways to define styles. The first is inline with HTML. For example, this code:
+
+
+```html
+<p>Marco! <em>Polo!</em></p> 
+```
+Would produce text that looks like this: Marco! _Polo!_
+
+However, this method is generally not preferred for [numerous reasons](https://stackoverflow.com/q/12013532/559676). 
+
+A second way is to internally define the CSS by placing a style section in your HTML:
+
+```html
+<html>
+<style> 
+#favorite {
+    font-style: italic;
+}
+</style>
+<ul id="tea-list">
+  <li>Earl Grey</li>
+  <li>Darjeeling</li>
+  <li>Oolong</li>
+  <li>Chamomile</li>
+  <li id="favorite">Chai</li>
+</ul>
+</html>
+```
+
+In this example, only the last tea listed, _Chai_, is italicized. 
+
+The third method is the most popular because it is more flexible and the least repetitive, which is to define the CSS in an external file that is then referenced as a link in your HTML:
+
+```html
+<html>
+    <link rel="stylesheet" href="/css/style.css" />
+</html>
+```
+
+What goes inside the linked CSS document is essentially a list of rules (the same list could appear internally between the style tags, if you are using the second method). Each rule must include both a selector or group of selectors, and a declarations block within curly braces that contains one or more `property: value;` pairs. Here is the [general structure for a rule](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference):
 
 ```css
-.img-circle {
-  border-radius: 50%;
+/* CSS pseudo-code */
+selectorlist {
+    property: value;
+    /* more property: value; pairs*/
 }
 ```
 
-To make striped tables, you can add background colors to odd or even rows of the table, e.g.,
+
+
+[Selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#Selectors) can be based on HTML element types or attributes, such as `id` or `class` (and combinations of these): 
 
 ```css
-tr:nth-child(even) {
-  background: #eee
+/* by element type */
+li { 
+    color: yellow; /* all <li> elements are yellow */
+}
+
+/* by ID with the # symbol */
+#my-id { 
+    color: yellow; /* elements with id = "my-id" are yellow */
+}
+
+/* by class with the . symbol */
+.my-class { 
+    color: yellow; /* elements with class = "my-class" are yellow  */
 }
 ```
 
-https://github.com/rstudio/blogdown/issues/80
+Because each HTML element may match several different selectors, the CSS standard determines which set of rules has precedence for any given element, and which properties to inherit. This is where the cascade algorithm comes into play. For example, take a simple unordered list:
+
+```html
+<ul id="tea-list">
+  <li>Earl Grey</li>
+  <li>Darjeeling</li>
+  <li>Oolong</li>
+  <li>Chamomile</li>
+  <li>Chai</li>
+</ul>
+```
+
+Now, let's say we want to highlight our favorite teas again, so we'll use a class attribute.
+
+```html
+<ul>
+  <li>Earl Grey</li>
+  <li class="favorite">Darjeeling</li>
+  <li>Oolong</li>
+  <li>Chamomile</li>
+  <li class="favorite">Chai</li>
+</ul>
+```
+
+We can use this class attribute as a selector in our CSS. Let's say we want our favorite teas to be in bold and have a background color of yellow, so our CSS would look like this:
+
+```css
+.favorite {
+  font-weight: bold;
+  background-color: yellow;
+}
+```
+
+Now, suppose you want every list item to be italicized with a white background, you can set up another rule:
+
+```css
+li { 
+  font-style: italic;
+  background-color: white;
+}
+```
+
+If you play with this code (which you can do easily using sites like http://jsbin.com, https://jsfiddle.net, or https://codepen.io/pen/), you'll see that the two favorite teas are still highlighted in yellow. This is because the CSS rule about `.favorite` as a class is more specific than the rule about `li` type elements. To override the `.favorite` rule, you need to be as specific as you can be when choosing your group of selectors:
+
+```css
+ul#tea-list li.favorite {
+  background-color: white;
+}
+```
+
+This example just scratches the surface on [cascade and inheritance](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Cascade_and_inheritance).
+
+For any Hugo theme that you install, you can find the CSS file in the `themes/` folder. For example, the default lithium theme is located in: `themes/hugo-lithium-theme/static/css/main.css`. Once you are familiar with CSS, you can understand how each set of rules work to shape the visual style of your website, and how to alter the rules. For some themes (i.e., the [hugo-academic theme](https://github.com/gcushen/hugo-academic)), you have the option of linking to a [custom CSS](https://gist.github.com/gcushen/d5525a4506b9ccf83f2bce592a895495), which you can use to further customize the visual style of your site.
+
+A few one-liner examples illustrate how simple CSS rules can be used to make dramatic changes:
+
+- To make circular or rounded images, you may assign a class `img-circle` to images (e.g., `<img class="img-circle" src="foo.png" />`) and define the CSS:
+
+    ```css
+    .img-circle {
+      border-radius: 50%;
+    }
+    ```
+
+- To make striped tables, you can add background colors to odd or even rows of the table, e.g.,
+
+    ```css
+    tr:nth-child(even) {
+      background: #eee;
+    }
+    ```
+
+- You can append or prepend content to elements via pseudo-elements `::after` and `::before`. Here is an example of adding a period after section numbers: https://github.com/rstudio/blogdown/issues/80.
 
 ## JavaScript
 
-Brief introduction here...
+It is way more challenging to briefly introduce JavaScript than HTML and CSS, since it is a programming language. There are many books and tutorials about this language. Anyway, we will try to scratch the surface for R users in this section.
 
-Next we show a slightly advanced application. In Section \@ref(how-to), we mentioned how to enable MathJax on a Hugo website. The easy part is to include the script `MathJax.js` via a `<script>` tag, and there are two hard parts:
+In a nutshell, JavaScript is a language that is typically used to manipulate elements on a web page. An effective way to learn it is through the JavaScript console in the Developer Tools of your web browser (see Figure \@ref(fig:chrome-devtools)), because you can interactively type code in the console and execute it, which feels similar to executing R code in the R console (e.g., in RStudio). You may open any web page in your web browser (e.g., <https://yihui.name>), then open the JavaScript console, and try the code below on any web page:
+
+```js
+document.body.style.background = 'orange';
+```
+
+It should change the background color of the page to orange, unless the page has already defined background colors for certain elements.
+
+To effectively use JavaScript, you have to learn both the basic syntax of JavaScript and how to select elements on a page before you can manipulate them. You may partially learn the former from a short JavaScript snippet below:
+
+```js
+var x = 1;  // assignments
+1 + 2 - 3 * 4 / 5;  // arithmetic
+
+if (x < 2) console.log(x);  // "print" x
+
+var y = [9, 1, 0, 2, 1, 4];  // array
+
+// function
+var sum = function(x) {
+  var s = 0;
+  // a naive way to compute the sum
+  for (var i=0; i < x.length; i++) {
+    s += x[i];
+  }
+  return s;
+};
+
+sum(y);
+
+var y = "Hello World";
+y = y.replace(" ", ", ");  // string manipulation
+```
+
+You may feel the syntax is similar to R to some degree. JavaScript is an object-oriented language, and usually there are several methods that you can apply to an object. The string manipulation above is a typical example of the `Object.method()` syntax. To know the possible methods on an object, you can type the object name in your JavaScript console followed by a dot, and you should see all candidates.
+
+For R users, you have to be extremely cautious that JavaScript objects are often mutable, meaning that it could be modified anywhere. Below is a quick example:
+
+```js
+var x = {a: 1, b: 2};  // like a list in R
+var f = function(z) {
+  z.a = 100;
+};
+f(x);
+x;  // modified! x.a is 100 now
+```
+
+There are many mature JavaScript libraries that can help you select and manipulate elements on a page, and the most popular one may be [jQuery](https://jquery.com). However, you should know that sometimes you can probably do well enough without these third-party libraries. There are some basic methods to select elements, such as `document.getElementById()`, `document.getElementsByClassName()`, `document.querySelector()`, and so on. For example, you can select all paragraphs using `document.querySelectorAll('p')`.
+
+Next we show a slightly advanced application, in which you will see anonymous functions, selection of elements by HTML tag names, regular expressions, and manipulation of HTML elements.
+
+In Section \@ref(how-to), we mentioned how to enable MathJax on a Hugo website. The easy part is to include the script `MathJax.js` via a `<script>` tag, and there are two hard parts:
 
 1. How to protect the math content from the Markdown engine (Blackfriday), e.g., we need to make sure underscores in math expressions are not interpreted as `<em></em>`. This problem only exists in plain Markdown posts, and has been mentioned in Section \@ref(output-format) without explaining the solution.
 
@@ -145,7 +333,7 @@ To solve these problems, I have provided a solution in the JavaScript code at ht
     if (code.parentNode.tagName !== 'PRE' &&
         code.childElementCount === 0) {
       text = code.textContent;
-      if (/^\$[^$](.|\s)+[^$]\$$/.test(text)) {
+      if (/^\$[^$]/.test(text) && /[^$]\$$/.test(text)) {
         text = text.replace(/^\$/, '\\(').replace(/\$$/, '\\)');
         code.textContent = text;
       }
@@ -162,10 +350,12 @@ To solve these problems, I have provided a solution in the JavaScript code at ht
 })();
 ```
 
-It is not a perfect solution, but it should be very rare that you run into problems. What it does is to identify possible math expressions in `<code>`, and strip the `<code>` tag, e.g., replace `<code>$x$</code>` with `\(x\)`. After this script is executed, we load the MathJax script. This way, we do not need to force MathJax to search for math expressions in `<code>` tags, and your math expressions will not inherit any styles from `<code>`. The JavaScript code above is not too long, and should be self-explanatory. The trickiest part is `i++`. I will leave it readers to figure out why the `for` loop is not the usual form `for (i = 0; i < codes.length; i++)`. It took me quite a few minutes to realize my mistake when I wrote the loop with the usual form.
+It is not a perfect solution, but it should be very rare that you run into problems. What it does is to identify possible math expressions in `<code>`, and strip the `<code>` tag, e.g., replace `<code>$x$</code>` with `\(x\)`. After this script is executed, we load the MathJax script. This way, we do not need to force MathJax to search for math expressions in `<code>` tags, and your math expressions will not inherit any styles from `<code>`. The JavaScript code above is not too long, and should be self-explanatory. The trickiest part is `i++`. I will leave it readers to figure out why the `for` loop is not the usual form `for (i = 0; i < codes.length; i++)`. It took me quite a few minutes to realize my mistake when I wrote the loop in the usual form.
 
 ## Useful resources
 
 Although static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier", and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
 
 You can also optimize images on your website. I frequently use a command-line tool named [`optipng`](http://optipng.sourceforge.net) to optimize PNG images. It is a lossless optimizer, meaning that it reduces the file size of a PNG image without loss of quality. From my experience, it works very well on PNG images generated from R, and can reduce the file size by at least 30% (sometimes even more than 50%). Personally I also use online tools like http://optimizilla.com to optimize PNG and JPEG images. For GIF images, I often use https://ezgif.com/optimize to reduce the file sizes if they are too big.
+
+Note that Netlify has provided the optimization features on the server side for free at the moment, so you may just want to enable them there instead of doing all the hard work by yourself.

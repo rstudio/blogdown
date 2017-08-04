@@ -1,6 +1,6 @@
 # About the Authors {#author .unnumbered}
 
-Yihui is the main developer of the **blogdown** package. He did not start working on the systematic documentation (i.e., this book) until four months after he started the **blogdown** project. One day, he found a very nice **blogdown** tutorial via Twitter written by Amber Thomas. Being surprised that she could create a great personal website using **blogdown** and write a tutorial _when there was no official documentation_, Yihui immediately invited her to join him to write this book, although they had never met each other before. This definitely would not happen if Amber did not have a website.
+Yihui is the main developer of the **blogdown** package. He did not start working on the systematic documentation (i.e., this book) until four months after he started the **blogdown** project. One day, he found a very nice **blogdown** tutorial on Twitter written by Amber Thomas. Being surprised that she could create a great personal website using **blogdown** and write a tutorial _when there was no official documentation_, Yihui immediately invited her to join him to write this book, although they had never met each other before. This definitely would not happen if Amber did not have a website.
 
 About half a year later, Yihui noticed another very well-written **blogdown** tutorial by Alison on her personal website, when this book was still not complete. The same story happened, and Alison became the third author of this book. The three authors have never met each other.
 

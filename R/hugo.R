@@ -186,6 +186,7 @@ new_content = function(path, kind = 'default', open = interactive()) {
   file = content_file(path)
   hugo_toYAML(file)
   if (open) open_file(file)
+  file
 }
 
 # Hugo cannot convert a single file: https://github.com/gohugoio/hugo/issues/3632
@@ -241,15 +242,17 @@ new_post = function(
   file = trim_ws(file)  # trim (accidental) white spaces
   if (is.null(slug)) slug = post_slug(file)
   slug = trim_ws(slug)
-  new_content(file, kind, FALSE)
+  if (generator() == 'hugo') file = new_content(file, kind, FALSE) else {
+    writeLines(c('---', '', '---'), file)
+  }
 
-  file = content_file(file)
   do.call(modify_yaml, c(list(
     file, title = title, author = author, date = format(date), slug = slug,
     categories = as.list(categories), tags = as.list(tags)
   ), if (!file.exists('archetypes/default.md')) list(draft = NULL)
   ))
   if (open) open_file(file)
+  file
 }
 
 #' @param to A format to convert to.

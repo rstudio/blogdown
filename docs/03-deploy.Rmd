@@ -26,7 +26,7 @@ After your GIT repository is connected with Netlify, the last issue you may want
 
 If you are not familiar with domain names or do not want to learn more about them, something to consider is a free subdomain `*.rbind.io` offered by RStudio, Inc. Please visit the Rbind support website <https://support.rbind.io> to learn how to apply for a subdomain. In fact, the Rbind organization also offers free help on how to set up a website based on **blogdown**, thanks to a lot of volunteers from the R and statistics community.
 
-Netlify is the only solution in this chapter that does not require you to prebuild your website. You only need to update the source files, push them to GitHub, and Netlify will build the website for you.^[This is called "continuous deployment".] The rest of the solutions in this chapter will require you to build your website locally and upload the `public/` folder explicitly or implicitly.
+Netlify is the only solution in this chapter that does not require you to prebuild your website. You only need to update the source files, push them to GitHub, and Netlify will build the website for you.^[This is called "continuous deployment".] The rest of the solutions in this chapter will require you to build your website locally and upload the `public/` folder explicitly or implicitly. That said, you can certainly prebuild your website using any tools, push it to GitHub, and Netlify is still able to deploy it for you. What you need to do is to leave the build command empty, and tell Netlify your publish directory (e.g., Hugo's default `public/`). Then Netlify simply uploads all files under this directory to its servers.
 
 ## Updog
 
@@ -111,7 +111,7 @@ In case you are not familiar with Travis, it is a service to continuously check 
 
 - Personally, I prefer taking a look at the output in GIT to see the changes when I have any output that is dynamically computed from R, so that I know for sure what I'm going to publish exactly. With Travis, it is somewhat unpredictable because it is fully automatic and you do not have a chance to see the new content or results to be published. There are many factors that could affect building the site: the R version, availability of certain R packages, system dependencies, and network connection, etc.
 
-- The time required to compile all Rmd files may be very long and cause timeouts on Travis, depending on how time-consuming your R code is. There is a caching mechanism in **blogdown** to speed up the building of your site (see Section \@ref(methods)), and if you use Travis to build your website, you will not benefit from this caching mechanism unless you take advantage of Travis' caching. You have to cache the directories `content/`, `static`, and `blogdown/`, but Travis' cache is a little fragile in my experience. Sometimes the cache may be purged for unknown reasons. What is more, you cannot directly cache `content/` and `static/`, because Travis clones your repository before restoring the cache, which means old files from the cached `content/` and `static/` may overwrite new files you pushed to GitHub.
+- The time required to compile all Rmd files may be very long and cause timeouts on Travis, depending on how time-consuming your R code is. There is a caching mechanism in **blogdown** to speed up the building of your site (see Section \@ref(methods)), and if you use Travis to build your website, you will not benefit from this caching mechanism unless you take advantage of Travis' caching. You have to cache the directories `content/`, `static/`, and `blogdown/`, but Travis' cache is a little fragile in my experience. Sometimes the cache may be purged for unknown reasons. What is more, you cannot directly cache `content/` and `static/`, because Travis clones your repository before restoring the cache, which means old files from the cached `content/` and `static/` may overwrite new files you pushed to GitHub.
 
 The second problem can be solved, but I do not want to explain how in this book since the solution is too involved. If you really want to use Travis to build your website and run into the problem, you may file an issue to the GitHub repository https://github.com/yihui/travis-blogdown. In fact, this repository is a minimal example I created to show how to build a website on Travis and publish to GitHub Pages.
 
@@ -151,6 +151,7 @@ The key is that we install Hugo via `blogdown::install_hugo()` and build the sit
 
 ```yaml
 Package: placeholder
+Type: Website
 Title: Does not matter.
 Version: 0.0.1
 Imports: blogdown
@@ -176,4 +177,4 @@ deploy:
 
 This means the website will be pushed to the `master` branch of the repository `username/username.github.io` (remember to replace `username` with your actual user name).
 
-You can also deploy your website to Amazon S3, and the setup on the R side is very similar to what we have introduced for GitHub Pages. The only difference is in the last step, where you change the target from GitHub Pages to Amazon S3. For more information, please see the documentation on Traivs: https://docs.travis-ci.com/user/deployment/s3/.
+You can also deploy your website to Amazon S3, and the setup on the R side is very similar to what we have introduced for GitHub Pages. The only difference is in the last step, where you change the target from GitHub Pages to Amazon S3. For more information, please see the documentation on Travis: https://docs.travis-ci.com/user/deployment/s3/.

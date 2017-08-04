@@ -1,12 +1,145 @@
 # Other Generators
 
-We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Baiscally you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show how you can possibly work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package, and we will introduce it in Section \@ref(rmd-website).
+We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Basically you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show how you can possibly work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package, and we will introduce it in Section \@ref(rmd-website).
 
 ## Jekyll
 
-https://github.com/yihui/knitr-jekyll
+For [Jekyll](https://jekyllrb.com) users, I have prepared a minimal example in the GitHub repository [yihui/blogdown-jekyll](https://github.com/yihui/blogdown-jekyll). If you clone or download this repository and open `blogdown-jekyll.Rproj` in RStudio, you can still use all addins mentioned in Section \@ref(rstudio-ide), such as "New Post", "Serve Site", and "Update Metadata", but it is Jekyll instead of Hugo that builds the website behind the scenes now.
+
+I assume you are familiar with Jekyll, and I'm not going to introduce the basics of Jekyll in this section. For example, you should know what the `_posts/` and `_site/` directories mean.
+
+The key pieces of this **blogdown-jekyll** project are the files `.Rprofile`, `R/build.R`, and `R/build_one.R`. I have set some global R options for this project in `.Rprofile`:^[If you are not familiar with this file, please read Section \@ref(global-options).]
+
+```r
+options(
+  blogdown.generator = "jekyll",
+  blogdown.method = "custom",
+  blogdown.subdir = "_posts"
+)
+```
+
+First, the website generator was set to `jekyll` using the option `blogdown.generator`, so that **blogdown** knows that it should use Jekyll to build the site. Second, the build method `blogdown.method` was set to `custom`, so that we can define our custom R script `R/build.R` to build the Rmd files (I will explain the reason later). Third, the default subdirectory for new posts was set to `_posts`, which is Jekyll's convention. After you set this option, the "New Post" addin will create new posts under the `_posts/` directory.
+
+When the option `blogdown.method` is `custom`, **blogdown** will call the R script `R/build.R` to build the site. You have full freedom to do whatever you want in this script. Below is an example script:
+
+```{r eval=FALSE}
+build_one = function(io) {
+  # if output is not older than input, skip the compilation
+  if (!blogdown:::require_rebuild(io[2], io[1])) return()
+
+  message('* knitting ', io[1])
+  if (blogdown:::Rscript(shQuote(c('R/build_one.R', io))) != 0) {
+    unlink(io[2])
+    stop('Failed to compile ', io[1], ' to ', io[2])
+  }
+}
+
+# Rmd files under the root directory
+rmds = list.files('.', '[.]Rmd$', recursive = T, full.names = T)
+files = cbind(rmds, blogdown:::with_ext(rmds, '.md'))
+
+for (i in seq_len(nrow(files))) build_one(files[i, ])
+
+system2('jekyll', 'build')
+```
+
+- Basically it contains a function `build_one()` that takes an argument `io`, which is a character vector of length 2. The first element is the input (Rmd) filename, and the second element is the output filename.
+
+- Then we search for all Rmd files under the current directory, prepare the output filenames by substituting the Rmd file extensions with `.md`, and build the Rmd files one by one. Note there is a caching mechanism in `build_one()` that makes use of an internal **blogdown** function `require_rebuild()`. This function returns `FALSE` if the output file is not older than the input file in terms of the modification time. This can save you some time because those Rmd files that have been compiled before will not be compiled again every time. The key step in `build_one()` is to run the R script `R/build_one.R`, which we will explain later.
+
+- Lastly, we build the website through a system call of the command `jekyll build`.
+
+The script `R/build_one.R` looks like this (I have omitted some non-essential settings for simplicity):
+
+```r
+local({
+  # fall back on "/" if baseurl is not specified
+  baseurl = blogdown:::get_config2("baseurl", default = "/")
+  knitr::opts_knit$set(base.url = baseurl)
+  knitr::render_jekyll()  # set output hooks
+
+  # input/output filenames as two arguments to Rscript
+  a = commandArgs(TRUE)
+  d = gsub("^_|[.][a-zA-Z]+$", "", a[1])
+  knitr::opts_chunk$set(
+    fig.path   = sprintf("figure/%s/", d),
+    cache.path = sprintf("cache/%s/", d)
+  )
+  knitr::knit(
+    a[1], a[2], quiet = TRUE, encoding = "UTF-8",
+    envir = globalenv()
+  )
+})
+```
+
+- The script is wrapped in `local()` so that an Rmd file is knitted in a clean global environment, and the variables such as `baseurl`, `a`, and `d` will not be created in the global environment, i.e., `globalenv()` used by `knitr::knit()` below.
+
+- The **knitr** package option `base.url` is a URL to be prepended to figure paths. We need to set this option to make sure figures generated from R code chunks can be found when they are displayed on a web page. A normal figure path is often like `figure/foo.png`, and it may not work when the image is rendered to an HTML file, because `figure/foo.png` is a relative path, and there is no guarantee that this image file will be copied to the directory of the final HTML file. For example, for an Rmd source file `_posts/2015-07-23-hello.Rmd` that generates `figure/foo.png` (under `_posts/`), the final HTML file may be `_site/2015/07/23/hello/index.html`. Jekyll knows how to render an HTML file to this location, but it does not understand the image dependency and will not copy the image file to this location. To solve this issue, we render figures at the root directory `/figure/`, which will be copied to `_site/` by Jekyll. To refer to an image under `_site/figure/`, we need the leading slash (`baseurl`), e.g., `<img src="/figure/foo.png">`. This is an absolute path, so no matter where the HTML is rendered, this path always works.
+
+- What `knitr::render_jekyll()` does is mainly to set up some **knitr** output hooks so that source code and text output from R code chunks will be wrapped in Liquid tags `{% highlight %}` and `{% end highlight %}`.
+
+- Remember in `build.R`, we passed the variable `io` to the Rscript call `blogdown:::Rscript`. Here in `build_one.R`, we can receive them from `commandArgs(TRUE)`. The variable `a` contains a `.Rmd` and a `.md` file path. We removed the possible leading underscore (`^_`) and the extension (`[.][a-zA-Z]$`) in the path. Next we set figure and cache paths using this string. For example, for a post `_posts/foo.Rmd`, its figures will be written to `figure/foo/` and its cache databases (if there are any) will be stored under `cache/foo/`. Both directories are under the root directory of the project.
+
+- Lastly, we call `knitr::knit()` to knit the Rmd file to a Markdown output file, which will be processed by Jekyll later.
+
+A small caveat is that since we have both `.Rmd` and `.md` files, Jekyll will treat both types of files as Markdown files by default. You have to ask Jekyll to ignore `.Rmd` files and only build `.md` files. You can set the option `exclude` in `_config.yml`:
+
+```yaml
+exclude: ['*.Rmd']
+```
+
+Compared to the Hugo support in **blogdown**, this approach is limited in a few aspects:
+
+1. It does not support Pandoc, so you cannot use Pandoc's Markdown. Since it uses the **knitr** package instead of **rmarkdown**, you cannot use any **bookdown**'s Markdown features, either. You are at the mercy of the Markdown renderers supported by Jekyll.
+
+1. Without **rmarkdown**, you cannot use HTML widgets. Basically, all you can have are dynamic text output and R graphics output from R code chunks. They may or may not suffice, depending on your specific use cases.
+
+It may be possible for us to remove these limitations in a future version of **blogdown**, if there are enough happy Jekyll users in the R community.
 
 ## Hexo
+
+The ideas of using [Hexo](https://hexo.io) are very similar to what we have applied to Jekyll in the previous section. I have also prepared a minimal example in the GitHub repository [yihui/blogdown-hexo](https://github.com/yihui/blogdown-hexo).
+
+The key components of this repository are still `.Rprofile`, `R/build.R`, and `R/build_one.R`. We set the option `blogdown.generator` to `hexo`, the `build.method` to `custom`, and the default subdirectory for new posts to `source/_posts`.
+
+```r
+options(
+  blogdown.generator = 'hexo',
+  blogdown.method = 'custom',
+  blogdown.subdir = 'source/_posts'
+)
+```
+
+The script `R/build.R` is similar to the one in the `blogdown-jekyll` repository. The main differences are:
+
+1. We find all Rmd files under the `source/` directory instead of the root directory, because Hexo's convention is to put all source files under `source/`.
+
+1. We call `system2('hexo', 'generate')` to build the website.
+
+For the script `R/build_one.R`, the major difference with the script in the `blogdown-jekyll` repository is that we set the `base.dir` option for **knitr**, so that all R figures are generated to the `source/` directory. This is because Hexo copies everything under `source/` to `public/`, whereas Jekyll copies everything under the root directory to `_site/`.
+
+```r
+local({
+  # fall back on '/' if baseurl is not specified
+  baseurl = blogdown:::get_config2('root', '/')
+  knitr::opts_knit$set(
+    base.url = baseurl, base.dir = normalizePath('source')
+  )
+
+  # input/output filenames as two arguments to Rscript
+  a = commandArgs(TRUE)
+  d = gsub('^source/_?|[.][a-zA-Z]+$', '', a[1])
+  knitr::opts_chunk$set(
+    fig.path   = sprintf('figure/%s/', d),
+    cache.path = sprintf('cache/%s/', d)
+  )
+  knitr::knit(
+    a[1], a[2], quiet = TRUE, encoding = 'UTF-8', envir = .GlobalEnv
+  )
+})
+```
+
+This repository is also automatically built and deployed through Netlify when I push changes to it. Since Hexo is a Node package, and Netlify supports Node, you can easily install Hexo on Netlify. For example, this example repository uses the command `npm install && hexo generate` to build the website; `npm install` will install the Node packages specified in `packages.json` (a file under the root directory of the repository), and `hexo generate` is the command to build the website from `source/` to `public/`.
 
 ## Default site generator in rmarkdown {#rmd-website}
 
@@ -32,4 +165,4 @@ Please note that the **rmarkdown** site generator is extensible, too. For exampl
 
 ## pkgdown
 
-https://github.com/hadley/pkgdown
+The **pkgdown** package (https://github.com/hadley/pkgdown) can help you quickly turn the R documentation of an R package (including help pages and vignettes) into a website. It is independent of **blogdown** and solves a specific problem. It is not a general-purpose website generator. We want to mention it in this book because it is very easy to use, and also highly useful. You can find the instructions on its website or in its GitHub repository.
