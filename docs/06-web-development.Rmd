@@ -300,7 +300,7 @@ y = y.replace(" ", ", ");  // string manipulation
 
 You may feel the syntax is similar to R to some degree. JavaScript is an object-oriented language, and usually there are several methods that you can apply to an object. The string manipulation above is a typical example of the `Object.method()` syntax. To know the possible methods on an object, you can type the object name in your JavaScript console followed by a dot, and you should see all candidates.
 
-For R users, you have to be extremely cautious that JavaScript objects are often mutable, meaning that it could be modified anywhere. Below is a quick example:
+For R users, you have to be extremely cautious that JavaScript objects are often mutable, meaning that an object could be modified anywhere. Below is a quick example:
 
 ```js
 var x = {a: 1, b: 2};  // like a list in R
