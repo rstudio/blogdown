@@ -130,7 +130,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
 }
 
 render_page = function(input, script = 'render_page.R') {
-  args = c(pkg_file('scripts', script), input)
+  args = c(pkg_file('scripts', script), input, getwd())
   if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
 }
 
