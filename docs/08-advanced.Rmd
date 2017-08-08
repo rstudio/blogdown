@@ -78,6 +78,8 @@ Then if you set `exclude_jquery: true` in the YAML metadata of a post, the theme
 
 Another solution is the [**widgetframe** package](https://github.com/bhaskarvk/widgetframe). It solves this problem by embedding HTML widgets in `<iframe></iframe>`. Since an iframe is isolated from the main web page on which it is embedded, there will not be any JavaScript conflicts.
 
+A widget is typically not of full width on the page. To set its width to 100%, you can use the chunk option `out.width = "100%"`.
+
 ## Version control
 
 If your website source files are under version control, we recommend you to add at least these two folder names to your `.gitignore` file:
