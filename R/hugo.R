@@ -182,11 +182,20 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
 new_content = function(path, kind = 'default', open = interactive()) {
+  if (missing(kind)) kind = default_kind(path)
   hugo_cmd(c('new', shQuote(path), c('-k', kind)))
   file = content_file(path)
   hugo_toYAML(file)
   if (open) open_file(file)
   file
+}
+
+default_kind = function(path) {
+  path = normalizePath(path, '/', mustWork = FALSE)
+  if (!grepl('/', path)) return('default')
+  atype = gsub('/.*', '.md', path)
+  if (!file.exists(file.path('archetypes', atype))) return('default')
+  gsub('/.*', '', path)
 }
 
 # Hugo cannot convert a single file: https://github.com/gohugoio/hugo/issues/3632
@@ -240,6 +249,7 @@ new_post = function(
 ) {
   if (is.null(file)) file = post_filename(title, subdir, rmd, date)
   file = trim_ws(file)  # trim (accidental) white spaces
+  if (missing(kind)) kind = default_kind(file)
   if (is.null(slug)) slug = post_slug(file)
   slug = trim_ws(slug)
   if (generator() == 'hugo') file = new_content(file, kind, FALSE) else {
