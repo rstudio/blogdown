@@ -228,7 +228,7 @@ The `config.toml` of the theme hugo-lithium-theme contains the following options
 
 ```js
 baseurl = "/"
-relativeurls = true
+relativeurls = false
 languageCode = "en-us"
 title = "A Hugo website"
 theme = "hugo-lithium-theme"
