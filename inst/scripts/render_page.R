@@ -5,7 +5,7 @@ local({
   if (length(args) > 1) setwd(args[2])
   input = args[1]
   to_md = blogdown:::is_rmarkdown(input)
-  if (to_md) options(bookdown.output.markdown = TRUE)
+  if (to_md) options(bookdown.output.markdown = TRUE, knitr.table.format = 'markdown')
   out = rmarkdown::render(
     input, 'blogdown::html_page', envir = globalenv(), quiet = TRUE,
     encoding = 'UTF-8', run_pandoc = !to_md, clean = !to_md
