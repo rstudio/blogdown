@@ -155,6 +155,13 @@ is_windows = function() .Platform$OS.type == 'windows'
 is_osx = function() Sys.info()[['sysname']] == 'Darwin'
 is_linux = function() Sys.info()[['sysname']] == 'Linux'
 
+is_rmarkdown = function(x) grepl('[.][Rr]markdown$', x)
+
+# build .Rmarkdown to .markdown, and .Rmd to .html
+output_file = function(file, md = is_rmarkdown(file)) {
+  with_ext(file, if (md) 'markdown' else 'html')
+}
+
 # adapted from webshot:::download_no_libcurl due to the fact that
 # download.file() cannot download Github release assets:
 # https://stat.ethz.ch/pipermail/r-devel/2016-June/072852.html

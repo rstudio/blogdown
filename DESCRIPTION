@@ -29,7 +29,8 @@ Suggests:
   RcppTOML,
   stringr,
   rprojroot,
-  rstudioapi
+  rstudioapi,
+  xaringan
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues

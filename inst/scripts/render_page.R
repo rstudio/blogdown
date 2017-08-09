@@ -3,7 +3,31 @@ local({
   library(methods)
   args = commandArgs(TRUE)
   if (length(args) > 1) setwd(args[2])
-  rmarkdown::render(
-    args[1], 'blogdown::html_page', envir = globalenv(), quiet = TRUE, encoding = 'UTF-8'
+  input = args[1]
+  to_md = blogdown:::is_rmarkdown(input)
+  if (to_md) options(bookdown.output.markdown = TRUE)
+  out = rmarkdown::render(
+    input, 'blogdown::html_page', envir = globalenv(), quiet = TRUE,
+    encoding = 'UTF-8', run_pandoc = !to_md, clean = !to_md
   )
+  if (to_md) {
+    file.rename(out, out2 <- blogdown:::output_file(input, to_md))
+    unlink(knitr:::attr(out, 'intermediates'))
+    if (length(knitr:::attr(out, 'knit_meta'))) warning(
+      "Objects that have dependencies (e.g. HTML widgets) do not work when the ",
+      "output format is Markdown instead of HTML."
+    )
+    # resolve bookdown references (figures, tables, sections, ...)
+    resolve = bookdown:::process_markdown
+    # TODO: wait for bookdown v0.5
+    if ('to_md' %in% names(formals(resolve))) {
+      bookdown:::process_markdown(out2, 'markdown', NULL, TRUE, to_md)
+    } else {
+      resolve(out2, 'markdown', NULL, TRUE)
+    }
+    # protect math expressions in backticks
+    if (knitr:::loadable('xaringan')) {
+      blogdown:::process_file(out2, xaringan:::protect_math)
+    }
+  }
 })

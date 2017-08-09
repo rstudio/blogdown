@@ -120,7 +120,7 @@ All built-in options that you may set for Hugo are listed on [this page](https:/
 
 - `theme`: The directory name of the Hugo theme under `themes/`.
 
-- `ignoreFiles`: A list of filename patterns (regular expressions) for Hugo to ignore certain files when building the site. You are recommended to specify at least these patterns `["\\.Rmd$", "_files$", "_cache$"]`. You should ignore `.Rmd` files because **blogdown** will compile them to `.html`, and it suffices for Hugo to use the `.html` files. There is no need for Hugo to build `.Rmd` files, and actually Hugo does not know how. Directories with suffixes `_files` and `_cache` should be ignored because they contain auxiliary files after an Rmd file is compiled, and **blogdown** will store them. Hugo should not copy them again to the `public/` directory.
+- `ignoreFiles`: A list of filename patterns (regular expressions) for Hugo to ignore certain files when building the site. You are recommended to specify at least these patterns `["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]`. You should ignore `.Rmd` files because **blogdown** will compile them to `.html`, and it suffices for Hugo to use the `.html` files. There is no need for Hugo to build `.Rmd` files, and actually Hugo does not know how. Directories with suffixes `_files` and `_cache` should be ignored because they contain auxiliary files after an Rmd file is compiled, and **blogdown** will store them. Hugo should not copy them again to the `public/` directory.
 
 - `uglyURLs`: By default, Hugo generate "clean" URLs. This may be a little surprising and requires you to understand how URLs work when your browser fetches a page from a server. Basically Hugo generates `foo/index.html` for `foo.md` by default instead of `foo.html`, because the former allows you to visit the page via the clean URL `foo/` without `index.html`. Most web servers understand requests like `http://www.example.com/foo/` and will present `index.html` under `foo/` to you. If you prefer the strict mapping from `*.md` to `*.html`, you may enable "ugly" URLs by setting `uglyURLs` to `true`.
 
@@ -234,7 +234,7 @@ title = "A Hugo website"
 theme = "hugo-lithium-theme"
 googleAnalytics = ""
 disqusShortname = ""
-ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
