@@ -233,21 +233,21 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #' @param subdir If specified (not \code{NULL}), the post will be generated
 #'   under a subdirectory under \file{content/}. It can be a nested subdirectory
 #'   like \file{post/joe/}.
-#' @param rmd Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
-#'   file. Ignored if \code{file} has been specified.
+#' @param ext The filename extension (e.g., \file{.md}, \file{.Rmd}, or
+#'   \file{.Rmarkdown}). Ignored if \code{file} has been specified.
 #' @export
-#' @describeIn hugo_cmd A wrapper function to create a new (R) Markdown post
-#'   under the \file{content/post/} directory via \code{new_content()}. If your
-#'   post will use R code chunks, you can set \code{rmd = TRUE} or the global
-#'   option \code{options(blogdown.rmd = TRUE)} in your \file{~/.Rprofile}.
+#' @describeIn hugo_cmd A wrapper function to create a new post under the
+#'   \file{content/post/} directory via \code{new_content()}. If your post will
+#'   use R code chunks, you can set \code{ext = '.Rmd'} or the global option
+#'   \code{options(blogdown.ext = '.Rmd')} in your \file{~/.Rprofile}.
 #'   Similarly, you can set \code{options(blogdown.author = 'Your Name')} so
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
   categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = NULL,
-  subdir = getOption('blogdown.subdir', 'post'), rmd = getOption('blogdown.rmd', FALSE)
+  subdir = getOption('blogdown.subdir', 'post'), ext = getOption('blogdown.ext', '.md')
 ) {
-  if (is.null(file)) file = post_filename(title, subdir, rmd, date)
+  if (is.null(file)) file = post_filename(title, subdir, ext, date)
   file = trim_ws(file)  # trim (accidental) white spaces
   if (missing(kind)) kind = default_kind(file)
   if (is.null(slug)) slug = post_slug(file)

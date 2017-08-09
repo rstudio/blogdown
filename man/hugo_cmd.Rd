@@ -25,8 +25,8 @@ new_content(path, kind = "default", open = interactive())
 new_post(title, kind = "default", open = interactive(), 
     author = getOption("blogdown.author"), categories = NULL, 
     tags = NULL, date = Sys.Date(), file = NULL, slug = NULL, 
-    subdir = getOption("blogdown.subdir", "post"), rmd = getOption("blogdown.rmd", 
-        FALSE))
+    subdir = getOption("blogdown.subdir", "post"), ext = getOption("blogdown.ext", 
+        ".md"))
 
 hugo_convert(to = c("YAML", "TOML", "JSON"), unsafe = FALSE, 
     ...)
@@ -100,8 +100,8 @@ e.g., if \code{file = 'post/2015-07-23-hi-there.md'}, \code{slug} will be
 under a subdirectory under \file{content/}. It can be a nested subdirectory
 like \file{post/joe/}.}
 
-\item{rmd}{Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
-file. Ignored if \code{file} has been specified.}
+\item{ext}{The filename extension (e.g., \file{.md}, \file{.Rmd}, or
+\file{.Rmarkdown}). Ignored if \code{file} has been specified.}
 
 \item{to}{A format to convert to.}
 
@@ -130,10 +130,10 @@ site}. The directory of the new site should be empty,
 \item \code{new_content}: Create a new (R) Markdown file via \command{hugo new}
 (e.g. a post or a page).
 
-\item \code{new_post}: A wrapper function to create a new (R) Markdown post
-under the \file{content/post/} directory via \code{new_content()}. If your
-post will use R code chunks, you can set \code{rmd = TRUE} or the global
-option \code{options(blogdown.rmd = TRUE)} in your \file{~/.Rprofile}.
+\item \code{new_post}: A wrapper function to create a new post under the
+\file{content/post/} directory via \code{new_content()}. If your post will
+use R code chunks, you can set \code{ext = '.Rmd'} or the global option
+\code{options(blogdown.ext = '.Rmd')} in your \file{~/.Rprofile}.
 Similarly, you can set \code{options(blogdown.author = 'Your Name')} so
 that the author field is automatically filled out when creating a new post.
 
