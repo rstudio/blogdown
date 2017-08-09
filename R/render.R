@@ -65,7 +65,7 @@ build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom'
 }
 
 list_rmds = function(dir, check = FALSE) {
-  files = list.files(dir, '[.][Rr]md$', recursive = TRUE, full.names = TRUE)
+  files = list.files(dir, rmd_pattern, recursive = TRUE, full.names = TRUE)
   # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
   # but include _index.Rmd/.md
   files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
