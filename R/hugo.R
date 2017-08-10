@@ -171,11 +171,12 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE, for
       'because not all Hugo themes work with any config files.'
     )
     newdir = gsub(sprintf('-%s$', branch), '', zipdir)
-    if (force) unlink(newdir, recursive = TRUE)
-    withCallingHandlers(file.rename(zipdir, newdir), error = function(e) message(
-      'If the theme already exists, try install_theme("', theme, '", force = TRUE) ',
-      'after you read the help page ?blogdown::install_theme'
-    ))
+    if (!force && dir_exists(newdir)) stop(
+      'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
+      'after you read the help page ?blogdown::install_theme.', call. = FALSE
+    )
+    unlink(newdir, recursive = TRUE)
+    file.rename(zipdir, newdir)
     unlink(zipfile)
   })
   if (update_config) {
