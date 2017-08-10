@@ -207,16 +207,7 @@ load_config = function() {
     config = parser(f)
     attr(config, 'config_time') = file.info(f)[, 'mtime']
     opts$set(config = config)
-    base = config[['baseurl']]
-    if (is_example_url(base)) {
-      open_file(f)
-      warning(
-        'You should change the "baseurl" option in ', f, ' from ', base,
-        ' to your actual domain; if you do not have a domain, set "baseurl" to "/"',
-        immediate. = TRUE
-      )
-    }
-    config
+    check_config(config, f)
   }
 
   find_config()
@@ -226,6 +217,25 @@ load_config = function() {
 
   if (file_exists('config.yaml'))
     return(read_config('config.yaml', yaml::yaml.load_file))
+}
+
+check_config = function(config, f) {
+  base = config[['baseurl']]
+  if (is_example_url(base)) {
+    open_file(f)
+    warning(
+      'You should change the "baseurl" option in ', f, ' from ', base,
+      ' to your actual domain; if you do not have a domain, set "baseurl" to "/"',
+      immediate. = TRUE, call. = FALSE
+    )
+  }
+  if (is.null(config[['ignoreFiles']])) warning(
+    'You are recommended to ignore certain files in ', f, ': set the option ignoreFiles',
+    if (grepl('[.]toml$', f)) ' = ' else ': ',
+    '["\\\\.Rmd$", "\\\\.Rmarkdown$", "_files$", "_cache$"]',
+    immediate. = TRUE, call. = FALSE
+  )
+  config
 }
 
 is_example_url = function(url) {
