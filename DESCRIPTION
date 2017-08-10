@@ -28,7 +28,6 @@ Suggests:
   miniUI,
   RcppTOML,
   stringr,
-  rprojroot,
   rstudioapi,
   xaringan
 LazyData: true
