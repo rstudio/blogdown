@@ -28,6 +28,8 @@ local({
     # protect math expressions in backticks
     if (knitr:::loadable('xaringan')) {
       blogdown:::process_file(out2, xaringan:::protect_math)
+    } else {
+      warning('The xaringan package is not installed. LaTeX math may not work well.')
     }
   }
 })

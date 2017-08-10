@@ -49,7 +49,6 @@ You have to know three most basic concepts for a Hugo-based website:
 
     ```js
     baseurl = "/"
-    relativeurls = true
     languageCode = "en-us"
     title = "A Hugo website"
     theme = "hugo-lithium-theme"
@@ -180,7 +179,23 @@ When you create a new post, you have to decide whether you want to use R Markdow
     ```
     ````
 
-2. A plain Markdown post is rendered to HTML through [Blackfriday](https://gohugo.io/overview/configuration/) (a package written in the Go language and adopted by Hugo), and an R Markdown document is compiled through the **rmarkdown** package and Pandoc.
+2. A plain Markdown post is rendered to HTML through [Blackfriday](https://gohugo.io/overview/configuration/) (a package written in the Go language and adopted by Hugo). An R Markdown document is compiled through the packages **rmarkdown**, **bookdown**, and Pandoc, which means you can use most features of [Pandoc's Markdown](http://pandoc.org/MANUAL.html#pandocs-markdown) and [**bookdown**'s Markdown extensions](https://bookdown.org/yihui/bookdown/components.html) in **blogdown**. If you use R Markdown with **blogdown**, we recommend that you read the documentation of Pandoc and **bookdown** at least once to know all the possible features. We will not repeat the details in this book, but list the features briefly below:
+
+    - Inline formatting: `_italic_` / `**bold**` text and `` `inline code` ``.
+    
+    - Inline elements: subscripts and superscripts; links (`[text](url)`) and images `![title](url)`; footnotes `text^[footnote]`.
+    
+    - Block-level elements: paragraphs; numbered and unnumbered section headers; ordered and unordered lists; block quotations; fenced code blocks; tables; horizontal rules.
+    
+    - Math expressions and equations.
+    
+    - Theorems and proofs.
+    
+    - R code blocks that can be used to produce text output (including tables) and graphics. Note that equations, theorems, tables, and figures can be numbered and cross-referenced.
+    
+    - Citations and bibliography.
+    
+    - HTML widgets, and Shiny apps embedded via `<iframe>`.
 
 There are many differences in syntax between Blackfriday's Markdown and Pandoc's Markdown. For example, you can write a task list with Blackfriday but not with Pandoc:
 
@@ -197,7 +212,15 @@ If you find it is pain to have to remember the differences between R Markdown an
 
 1. You may sacrifice some speed in rendering the website, but this may not be noticeable due to a caching mechanism in **blogdown** (more on this in Section \@ref(methods)). Hugo is very fast when processing plain Markdown files, and typically it should take less than one second to render a few hundreds Markdown files.
 
-1. You may have some intermediate HTML files in the source directory of your website, because **blogdown** has to call **rmarkdown** to pre-render `*.Rmd` files `*.html`. You will also have intermediate folders for figures (`*_files/`) and cache (`*_cache/`) if you have plot output in R code chunks or have enabled **knitr**'s caching. Unless you care a lot about the "cleanness" of the source repository of your website (especially when you use a version control tool like GIT), these intermediate files should not matter.
+1. You will have some intermediate HTML files in the source directory of your website, because **blogdown** has to call **rmarkdown** to pre-render `*.Rmd` files `*.html`. You will also have intermediate folders for figures (`*_files/`) and cache (`*_cache/`) if you have plot output in R code chunks or have enabled **knitr**'s caching. Unless you care a lot about the "cleanness" of the source repository of your website (especially when you use a version control tool like GIT), these intermediate files should not matter.
+
+In this book, we usually mean `.Rmd` files when we say "R Markdown documents", which are compiled to `.html` by default. However, there is another type of R Markdown documents with the filename extension `.Rmarkdown`. Such R Markdown documents are compiled to Markdown documents with the extension `.markdown`, which will be processed by Hugo instead of Pandoc. There are two major limitations of using `.Rmarkdown` compared to `.Rmd`:
+
+- You cannot use Markdown features only supported by Pandoc, such as citations. Math expressions only work if you have installed the **xaringan** package and applied the JavaScript solution mentioned in Section \@ref(javascript).
+
+- HTML widgets are not supported.
+
+The main advantage of using `.Rmarkdown` is that the output files are cleaner because they are Markdown files. It can be easier for you to read the output of your posts without looking at the actual web pages rendered. This can be particularly helpful when reviewing GitHub pull requests. Note that numbered tables, figures, equations, and theorems are also supported. You cannot directly use Markdown syntax in table or figure captions, but you can use text references as a workaround (see **bookdown**'s documentation).
 
 For any R Markdown documents (not specific to **blogdown**), you have to specify an output format. There are many possible output formats in the **rmarkdown** package (such as `html_document` and `pdf_document`) and other extension packages (such as `tufte::tufte_html` and `bookdown::gitbook`). Of course, the output format for websites should be HTML. We have provided an output format function `blogdown::html_page` in **blogdown**, and all R Markdown files are rendered using this format. It is based on the output format `bookdown::html_document2`, which means it has inherited a lot of features from **bookdown** in additional to features in Pandoc. For example, you can number and cross-reference math equations, figures, tables, and theorems, etc. See Chapter 2 of the **bookdown** book [@xie2016] for more details on the syntax.
 
@@ -231,7 +254,7 @@ If your code chunk has graphics output, we recommend that you avoid special char
 
 It is not recommended to change the **knitr** chunk options `fig.path` or `cache.path` in R Markdown. The default values of these options work best with **blogdown**. Please read Section \@ref(dep-path) to know the technical reasons if you prefer.
 
-If you are working on an R Markdown post, but do not want **blogdown** to compile it, you can temporarily change its filename extension from `.Rmd` to `.Rmarkdown`.
+If you are working on an R Markdown post, but do not want **blogdown** to compile it, you can temporarily change its filename extension from `.Rmd` to another unknown extension such as `.Rmkd`.
 
 ## Other themes
 
