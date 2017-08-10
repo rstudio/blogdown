@@ -128,7 +128,7 @@ Depending on your personal preferences, you can set a few global options before 
 knitr::kable(matrix(c(
   'servr.daemon', 'FALSE', 'whether to use a daemonized server',
   'blogdown.author', '', 'the default author of new posts',
-  'blogdown.rmd', 'FALSE', 'default new post format to Rmd?',
+  'blogdown.ext', '.md', 'default extension of new posts',
   'blogdown.subdir', 'post', 'a subdirectory under content/',
   'blogdown.yaml.empty', TRUE, 'preserve empty fields in YAML?',
   NULL
