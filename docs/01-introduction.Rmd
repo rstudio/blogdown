@@ -100,7 +100,7 @@ knitr::include_graphics('images/update-meta.png')
 
 With these addins, you should rarely need to run any R commands manually after you have set up your website, since all your posts will be automatically compiled whenever you create a new post or modify an existing post due to the LiveReload feature.
 
-If your RStudio version is higher than v1.1.28,^[Currently it is only available in RStudio daily builds: <https://dailies.rstudio.com>. Please note that daily builds are for testing purposes only.] you can actually create a website project directly from the menu `File -> New Project -> New Directory` (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
+If your RStudio version is higher than v1.1.28,^[Before an official update is provided, you may download a preview version from <https://www.rstudio.com/products/rstudio/download/preview/>.] you can actually create a website project directly from the menu `File -> New Project -> New Directory` (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
 
 ```{r new-project, echo=FALSE, fig.cap='Create a new website project in RStudio.', out.width='80%', fig.align='center'}
 knitr::include_graphics('images/new-project.png')
