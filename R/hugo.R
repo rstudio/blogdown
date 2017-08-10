@@ -136,10 +136,14 @@ new_site = function(
 #' Download the specified theme from Github and install to the \file{themes}
 #' directory. Available themes are listed at \url{http://themes.gohugo.io}.
 #' @inheritParams new_site
+#' @param force Whether to override the existing theme of the same name. If you
+#'   have made changes to this existing theme, your changes will be lost when
+#'   \code{force = TRUE}! Please consider backing up the theme by renaming it
+#'   before you try \code{force = TRUE}.
 #' @param update_config Whether to update the \code{theme} option in the site
 #'   configurations.
 #' @export
-install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
+install_theme = function(theme, theme_example = FALSE, update_config = TRUE, force = FALSE) {
   r = '^([^/]+/[^/@]+)(@.+)?$'
   if (!is.character(theme) || length(theme) != 1 || !grepl(r, theme)) {
     warning("'theme' must be a character string of the form 'user/repo' or 'user/repo@branch'")
@@ -157,12 +161,21 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
     files = utils::unzip(zipfile)
     zipdir = dirname(files[1])
     expdir = file.path(zipdir, 'exampleSite')
-    if (theme_example && dir_exists(expdir)) {
+    if (dir_exists(expdir)) if (theme_example) {
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
       # remove the themesDir setting; it is unlikely that you need it
       in_dir('..', change_config('themesDir', NA))
-    }
-    file.rename(zipdir, gsub(sprintf('-%s$', branch), '', zipdir))
+    } else warning(
+      "The theme has provided an example site. You should read the theme's documentation ",
+      'and at least take a look at the config file config.toml of the example site, ',
+      'because not all Hugo themes work with any config files.'
+    )
+    newdir = gsub(sprintf('-%s$', branch), '', zipdir)
+    if (force) unlink(newdir, recursive = TRUE)
+    withCallingHandlers(file.rename(zipdir, newdir), error = function(e) message(
+      'If the theme already exists, try install_theme("', theme, '", force = TRUE) ',
+      'after you read the help page ?blogdown::install_theme'
+    ))
     unlink(zipfile)
   })
   if (update_config) {
