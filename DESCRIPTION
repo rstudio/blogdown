@@ -17,7 +17,7 @@ License: GPL-3
 Imports:
     rmarkdown,
     bookdown (>= 0.4),
-    knitr,
+    knitr (>= 1.17),
     htmltools,
     yaml (>= 2.1.14),
     httpuv,
