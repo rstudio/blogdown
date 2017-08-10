@@ -265,6 +265,10 @@ parse_toml = function(
     return(RcppTOML::parseTOML(f, fromFile = !no_file))
   }
   z = list()
+  # arbitrary values
+  r = '^([[:alnum:]]+?)\\s*=\\s*(.+)\\s*$'
+  y = grep(r, x, value = TRUE)
+  z[gsub(r, '\\1', y)] = as.list(gsub(r, '\\2', y))
   # strings
   r = '^([[:alnum:]]+?)\\s*=\\s*"([^"]*?)"\\s*$'
   y = grep(r, x, value = TRUE)
