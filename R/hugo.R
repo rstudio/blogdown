@@ -28,10 +28,6 @@ hugo_version = function() {
 #'   \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
 #'   via \code{hugo_build()} to build the site.
 hugo_build = function(local = FALSE, config = load_config()) {
-  if (FALSE) {
-    oconf = change_config('relativeurls', 'true')
-    on.exit(writeUTF8(oconf$text, oconf$file), add = TRUE)
-  }
   hugo_cmd(c(
     if (local) c('-b', site_base_dir(), '-D', '-F'),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
