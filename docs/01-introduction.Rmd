@@ -6,7 +6,7 @@ In this chapter, we show how to create a simple website from scratch. The websit
 
 ## Installation
 
-We assume you have already installed R (https://www.r-project.org) and the RStudio IDE (https://www.rstudio.com). Next we need to install the **blogdown** package in R. Currently it is only available on GitHub (still a beta version), and you can install it using the **devtools** package:
+We assume you have already installed R (https://www.r-project.org) and the RStudio IDE (https://www.rstudio.com). Next we need to install the **blogdown** package in R. Currently it is only available on GitHub, and you can install it using the **devtools** package:
 
 ```{r eval=FALSE}
 if (!requireNamespace("devtools")) install.packages('devtools')
@@ -23,7 +23,13 @@ By default, it installs the latest version of Hugo, but you can choose a specifi
 
 For macOS users, `install_hugo()` uses the package manager Homebrew (https://brew.sh) if it has already been installed, otherwise it just downloads the Hugo binary directly.
 
+### Update
+
 To upgrade or reinstall Hugo, you may use `blogdown::update_hugo()`, which is equivalent to `install_hugo(force = TRUE)`. You can check the installed Hugo version via `blogdown::hugo_version()`, and find the latest version of Hugo at <https://github.com/gohugoio/hugo/releases>.
+
+<!--
+To update **blogdown**, use `update.packages()` or `install.packages('blogdown')`.
+-->
 
 ## A quick example
 
