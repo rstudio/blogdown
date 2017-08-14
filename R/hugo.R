@@ -34,7 +34,7 @@ hugo_build = function(local = FALSE, config = load_config()) {
   ))
 }
 
-theme_flag = function(config) {
+theme_flag = function(config = load_config()) {
   d = list.files(get_config('themesDir', 'themes', config))
   d = if (length(d) > 0) d[1]
   theme = getOption('blogdown.theme') %n% get_config('theme', d, config)
