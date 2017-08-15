@@ -8,6 +8,7 @@
 \alias{new_content}
 \alias{new_post}
 \alias{hugo_convert}
+\alias{hugo_server}
 \title{Run Hugo commands}
 \usage{
 hugo_cmd(...)
@@ -30,6 +31,8 @@ new_post(title, kind = "default", open = interactive(),
 
 hugo_convert(to = c("YAML", "TOML", "JSON"), unsafe = FALSE, 
     ...)
+
+hugo_server(host, port, ...)
 }
 \arguments{
 \item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
@@ -108,6 +111,9 @@ like \file{post/joe/}.}
 \item{unsafe}{Whether to enable unsafe operations, such as overwriting
 Markdown source documents. If you have backed up the website, or the
 website is under version control, you may try \code{unsafe = TRUE}.}
+
+\item{host, port}{The host IP address and port; see
+\code{servr::\link{server_config}()}.}
 }
 \description{
 Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
@@ -139,6 +145,8 @@ that the author field is automatically filled out when creating a new post.
 
 \item \code{hugo_convert}: A wrapper function to convert source content to
 different formats via \command{hugo convert}.
+
+\item \code{hugo_server}: Start a Hugo server.
 }}
 
 \references{
