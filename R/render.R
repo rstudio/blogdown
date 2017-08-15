@@ -40,6 +40,8 @@
 #' @param method Different methods to build a website (each with pros and cons).
 #'   See Details. The value of this argument will be obtained from the global
 #'   option \code{getOption('blogdown.method')} when it is set.
+#' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
+#'   compiled.
 #' @note For \code{method = "html_encoded"}, when \code{local = TRUE}, the site
 #'   configurations \code{baseurl} will be set to \code{/} temporarily, and RSS
 #'   feeds (typically the files named \code{index.xml} under the \file{public}
@@ -49,16 +51,20 @@
 #'   not care about RSS feeds. To build a website for production, you should
 #'   always call \code{build_site(local = FALSE)}.
 #' @export
-build_site = function(local = FALSE, method = c('html', 'html_encoded', 'custom')) {
+build_site = function(
+  local = FALSE, method = c('html', 'html_encoded', 'custom'),
+  run_hugo = TRUE
+) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
+  if (!run_hugo && method == 'html_encoded') stop(
+    "build_site(method = 'html_encoded') requires run_hugo = TRUE"
+  )
   files = list_rmds('content', TRUE)
-  if (getOption('knitr.use.cwd', FALSE)) knitr::opts_knit$set(root.dir = getwd())
-
   run_script('R/build.R', as.character(local))
 
   if (method != 'custom') {
-    build_rmds(files, load_config(), local, method == 'html')
+    build_rmds(files, load_config(), local, method == 'html', run_hugo)
   }
 
   invisible()
@@ -76,7 +82,7 @@ list_rmds = function(dir, check = FALSE) {
 }
 
 # raw indicates paths of dependencies are not encoded in the HTML output
-build_rmds = function(files, config, local, raw = FALSE) {
+build_rmds = function(files, config, local, raw = FALSE, run_hugo = TRUE) {
   if (length(files) == 0) return(hugo_build(local, config))
 
   # copy by-products {/content/.../foo_(files|cache) dirs and foo.html} from
@@ -123,7 +129,7 @@ build_rmds = function(files, config, local, raw = FALSE) {
   # source directory clean (e.g. only .Rmd stays there when method = 'html_encoded')
   dirs_copy(lib1, lib2)
 
-  hugo_build(local, config)
+  if (run_hugo) hugo_build(local, config)
   if (!raw) {
     in_dir(publish_dir(config), process_pages(local, root))
     i = file_exists(lib1)

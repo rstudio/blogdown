@@ -4,7 +4,7 @@
 \alias{build_site}
 \title{Build a website}
 \usage{
-build_site(local = FALSE, method = c("html", "html_encoded", "custom"))
+build_site(local = FALSE, method = c("html", "html_encoded", "custom"), run_hugo = TRUE)
 }
 \arguments{
 \item{local}{Whether to build the website locally to be served via
@@ -13,6 +13,9 @@ build_site(local = FALSE, method = c("html", "html_encoded", "custom"))
 \item{method}{Different methods to build a website (each with pros and cons).
 See Details. The value of this argument will be obtained from the global
 option \code{getOption('blogdown.method')} when it is set.}
+
+\item{run_hugo}{Whether to run \code{hugo_build()} after R Markdown files are
+compiled.}
 }
 \description{
 Compile all Rmd files, build the site through Hugo, and post-process HTML
