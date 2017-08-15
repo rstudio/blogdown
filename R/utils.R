@@ -38,7 +38,7 @@ serve_it = function(
       files = files[substr(files, 1, n) != pdir]
       # re-generate only if Rmd/md or config files or layouts were updated
       if (length(grep('(_?layouts?|static)/|[.](toml|yaml)$', files)) ||
-          length(grep(rmd_pattern, files)))
+          length(grep(md_pattern, files)))
         build_site(TRUE)
     }, dir = '.', ...)
   }
@@ -372,13 +372,14 @@ update_meta_addin = function() {
 }
 
 rmd_pattern = '[.][Rr](md|markdown)$'
+md_pattern  = '[.][Rr]?(md|markdown)$'
 
 # scan YAML metadata of all Rmd/md files
 scan_yaml = function(dir = 'content') {
   if (missing(dir)) dir = switch(generator(),
     hugo = 'content', jekyll = '.', hexo = 'source'
   )
-  files = list.files(dir, rmd_pattern, recursive = TRUE, full.names = TRUE)
+  files = list.files(dir, md_pattern, recursive = TRUE, full.names = TRUE)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
     yaml = fetch_yaml(f)
