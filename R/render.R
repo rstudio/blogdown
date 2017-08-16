@@ -1,29 +1,15 @@
 #' Build a website
 #'
-#' Compile all Rmd files, build the site through Hugo, and post-process HTML
-#' files generated from Rmd if necessary (e.g. fix figure paths).
+#' Compile all Rmd files and build the site through Hugo.
 #'
 #' You can use \code{\link{serve_site}()} to preview your website locally, and
 #' \code{build_site()} to build the site for publishing.
 #'
-#' For the \code{method} argument: \code{method = "html_encoded"} means to
-#' render all Rmd files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()}
-#' (which means Markdown is processed through Pandoc), copy all external
-#' dependencies generated from R code chunks, including images and HTML
-#' dependencies, to the website output directory (e.g. \file{public/}), and fix
-#' their paths in the HTML output because the relative locations of the
-#' \file{.html} file and its dependencies may have changed.
-#'
-#' \code{method = "html"} is similar to \code{method = "html_encoded"}, and the
-#' major differences are: (1) the HTML files under the \file{public} directory
-#' are not post-processed to fix image or dependency paths (so it is faster to
-#' build a site); (2) the \code{"html_encoded"} method moves all output files
-#' from the \file{content} directory to the \file{blogdown} directory to keep
-#' the \file{content} directory clean, so you won't see files or directories
-#' like \code{foo.html}, \code{foo_files/}, or \code{foo_cache/}, whereas the
-#' \code{"html"} method does not move any \code{*.html} files (only
-#' \code{*_files/} and \code{*_cache/} directories are moved). HTML widgets may
-#' not work well when \code{method = 'html'}.
+#' For the \code{method} argument: \code{method = "html"} means to render all
+#' Rmd files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which
+#' means Markdown is processed through Pandoc), and process the paths of
+#' external dependencies generated from R code chunks, including images and HTML
+#' dependencies.
 #'
 #' For all rendering methods, a custom R script \file{R/build.R} will be
 #' executed if you have provided it under the root directory of the website
@@ -42,29 +28,17 @@
 #'   option \code{getOption('blogdown.method')} when it is set.
 #' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
 #'   compiled.
-#' @note For \code{method = "html_encoded"}, when \code{local = TRUE}, the site
-#'   configurations \code{baseurl} will be set to \code{/} temporarily, and RSS
-#'   feeds (typically the files named \code{index.xml} under the \file{public}
-#'   directory) will not be post-processed to save time, which means if you have
-#'   Rmd posts that contain R plots, these plots will not work in RSS feeds.
-#'   Since \code{local = TRUE} is only for previewing a website locally, you may
-#'   not care about RSS feeds. To build a website for production, you should
-#'   always call \code{build_site(local = FALSE)}.
 #' @export
 build_site = function(
-  local = FALSE, method = c('html', 'html_encoded', 'custom'),
-  run_hugo = TRUE
+  local = FALSE, method = c('html', 'custom'), run_hugo = TRUE
 ) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
-  if (!run_hugo && method == 'html_encoded') stop(
-    "build_site(method = 'html_encoded') requires run_hugo = TRUE"
-  )
   files = list_rmds('content', TRUE)
   run_script('R/build.R', as.character(local))
 
   if (method != 'custom') {
-    build_rmds(files, load_config(), local, method == 'html', run_hugo)
+    build_rmds(files, load_config(), local, run_hugo)
   }
 
   invisible()
@@ -82,17 +56,15 @@ list_rmds = function(dir, check = FALSE) {
 }
 
 # raw indicates paths of dependencies are not encoded in the HTML output
-build_rmds = function(files, config, local, raw = FALSE, run_hugo = TRUE) {
-  if (length(files) == 0) return(hugo_build(local, config))
+build_rmds = function(files, config, local, run_hugo = TRUE) {
+  if (length(files) == 0) return(if (run_hugo) hugo_build(local, config))
 
   # copy by-products {/content/.../foo_(files|cache) dirs and foo.html} from
   # /blogdown/ or /static/ to /content/
-  lib1 = by_products(files, c('_files', '_cache', if (!raw) '.html'))
+  lib1 = by_products(files, c('_files', '_cache'))
   lib2 = gsub('^content', 'blogdown', lib1)  # /blogdown/.../foo_(files|cache)
-  if (raw) {
-    i = grep('_files$', lib2)
-    lib2[i] = gsub('^blogdown', 'static', lib2[i])  # _files are copied to /static
-  }
+  i = grep('_files$', lib2)
+  lib2[i] = gsub('^blogdown', 'static', lib2[i])  # _files are copied to /static
   # TODO: it may be faster to file.rename() than file.copy()
   for (i in seq_along(lib2)) if (file_exists(lib2[i])) {
     file.rename(lib2[i], lib1[i])
@@ -116,12 +88,12 @@ build_rmds = function(files, config, local, raw = FALSE, run_hugo = TRUE) {
     message('Rendering ', file)
     render_page(f)
     x = readUTF8(out)
-    x = encode_paths(x, by_products(f, '_files'), d, raw, root, base)
+    x = encode_paths(x, by_products(f, '_files'), d, root, base)
     if (to_md) {
       writeUTF8(x, out)
     } else {
       if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
-      if (raw) x = split_html_tokens(x, FALSE)$body
+      x = split_html_tokens(x, FALSE)$body
       prepend_yaml(f, out, x)
     }
   })
@@ -131,12 +103,6 @@ build_rmds = function(files, config, local, raw = FALSE, run_hugo = TRUE) {
   dirs_copy(lib1, lib2)
 
   if (run_hugo) hugo_build(local, config)
-  if (!raw) {
-    in_dir(publish_dir(config), process_pages(local, root))
-    i = file_exists(lib1)
-    lapply(unique(dirname(lib2[i])), dir_create)
-    file.rename(lib1[i], lib2[i])  # use file.rename() to preserve mtime of .html
-  }
   unlink(lib1, recursive = TRUE)
 }
 
@@ -156,12 +122,11 @@ render_page = function(input, script = 'render_page.R') {
 
 # example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
 # parent = 'content/post'; root = ~/Websites/Frida/
-encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
+encode_paths = function(x, deps, parent, root, base = '/') {
   if (!dir_exists(deps)) return(x)
   if (!grepl('/$', parent)) parent = paste0(parent, '/')
   # find the dependencies referenced in HTML, add a marker ##### to their paths
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
-  if (!raw) return(gsub(r, paste0('\\1\\2#####', parent, '\\3'), x))
 
   # move figures to /static/path/to/post/foo_files/figure-html
   if (FALSE) {
@@ -186,87 +151,6 @@ encode_paths = function(x, deps, parent, raw = TRUE, root, base = '/') {
   x
 }
 
-decode_paths = function(x, dcur, env, root) {
-  r = '(<img src|<script src|<link href)="#####([^"]+_files/[^"]+)"'
-  m = gregexpr(r, x)
-  regmatches(x, m) = lapply(regmatches(x, m), function(p) {
-    if (length(p) == 0) return(p)
-    path = decode_uri(gsub(r, '\\2', p))
-    path = file.path(root, path)
-    d0 = gsub('^(.+_files)/.+', '\\1', path)
-
-    # process figure paths
-    i = grepl('_files/figure-html/', path)
-    d1 = gsub('^.+_files/figure-html/', 'figures/', path[i])
-    d2 = dirname(file.path(dcur, d1))
-    lapply(d2, dir_create)
-    file.copy2(path[i], d2, overwrite = TRUE)
-    env$files = c(env$files, path[i])
-    path[i] = d1
-
-    # process JS/CSS dependencies
-    i = !i
-    d3 = gsub('^(.+_files/[^/]+)/.+', '\\1', path[i])
-    dir_create('rmarkdown-libs')
-    file.copy2(d3, 'rmarkdown-libs/', recursive = TRUE, overwrite = TRUE)
-    env$files = c(env$files, d3)
-    up = paste(rep('../', length(gregexpr('/', dcur)[[1]])), collapse = '')
-    path[i] = gsub('^.+_files/', paste0(up, 'rmarkdown-libs/'), path[i])
-
-    env$dirs = c(env$dirs, unique(d0))
-
-    paste0(gsub(r, '\\1="', p), encode_uri(path), '"')
-  })
-  x
-}
-
-decode_paths_xml = function(x, root) {
-  r1 = '(&lt;img src=&#34;)#####.+?_files/figure-html/'
-  if (length(grep(r1, x)) == 0) return(x)
-  m = gregexpr(r1, x)
-  z = regmatches(x, m)
-  r2 = '^\\s*<link>(.+)</link>\\s*$'
-  l = NULL
-  for (i in seq_along(x)) {
-    if (grepl(r2, x[i])) l = gsub(r2, '\\1', x[i])
-    if (is.null(l) || length(z[[i]]) == 0) next
-    z[[i]] = paste0(gsub(r1, '\\1', z[[i]]), l, 'figures/')
-  }
-  regmatches(x, m) = z
-  x
-}
-
-process_pages = function(local = FALSE, root) {
-  files = list.files(
-    '.', if (local) '[.]html$' else '[.](ht|x)ml$', recursive = TRUE,
-    full.names = TRUE
-  )
-  # collect a list of dependencies to be cleaned up (e.g. figure/foo.png, libs/jquery.js)
-  clean = new.env(parent = emptyenv())
-  clean$files = clean$dirs = NULL
-  for (f in files) process_page(f, clean, local, root)
-  unlink(unique(clean$files), recursive = TRUE)
-  lapply(unique(clean$dirs), bookdown:::clean_empty_dir)
-}
-
-process_page = function(f, env, local = FALSE, root) {
-  x = readUTF8(f)
-  if (!local && grepl('[.]xml$', f)) {
-    x = decode_paths_xml(x, root)
-    return(writeUTF8(x, f))
-  }
-  res = split_html_tokens(x)
-  x = res$body; h = res$head
-  # if you have provided a token in your Hugo template, I'll use it, otherwise I
-  # will insert the head code introduced by HTML dependencies before </head>
-  i6 = grep('<!-- RMARKDOWN-HEADER -->', x)
-  if (length(i6) == 1) x[i6] = h else {
-    i6 = grep('</head>', x)[1]
-    x[i6] = paste0(h, '\n', x[i6])
-  }
-  x = decode_paths(x, dirname(f), env, root)
-  writeUTF8(x, f)
-}
 
 split_html_tokens = function(x, extract_head = TRUE) {
   i1 = grep('<!-- BLOGDOWN-HEAD -->', x)
