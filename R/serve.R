@@ -65,9 +65,9 @@ serve_it = function(
     }
 
     if (!knitr:::loadable('processx') || !knitr:::loadable('later')) stop(
-      'Please install the packages processx and later', call. = FALSE
+      "Please install the packages 'processx' and 'later'", call. = FALSE
     )
-    server = servr:::server_config(...)
+    server = servr::server_config(...)
 
     # launch the hugo/jekyll/hexo server
     g = generator()
