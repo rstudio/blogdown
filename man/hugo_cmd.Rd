@@ -32,7 +32,7 @@ new_post(title, kind = "default", open = interactive(),
 hugo_convert(to = c("YAML", "TOML", "JSON"), unsafe = FALSE, 
     ...)
 
-hugo_server(host, port, ...)
+hugo_server(host, port)
 }
 \arguments{
 \item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
