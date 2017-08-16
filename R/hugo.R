@@ -291,11 +291,15 @@ hugo_convert = function(to = c('YAML', 'TOML', 'JSON'), unsafe = FALSE, ...) {
 #'   \code{servr::\link{server_config}()}.
 #' @export
 #' @describeIn hugo_cmd Start a Hugo server.
-hugo_server = function(host, port, ...) {
-  hugo_cmd(c(
-    'server', '--bind', host, '-p', as.integer(port),
+hugo_server = function(host, port) {
+  hugo_cmd(hugo_server_args(host, port))
+}
+
+hugo_server_args = function(host, port) {
+  c(
+    'server', '--bind', host, '-p', port,
     getOption('blogdown.hugo.server', c('-D', '-F')), theme_flag()
-  ), ...)
+  )
 }
 
 #' Helper functions to write Hugo shortcodes using the R syntax
