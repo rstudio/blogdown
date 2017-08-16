@@ -71,7 +71,7 @@ dirs_copy = function(from, to) {
 # line of the HTML is not --- (meaning it is not produced from build_rmds() but
 # possibly from clicking the Knit button)
 require_rebuild = function(html, rmd) {
-  older_than(html, rmd) || (readLines(html, n = 1) != '---')
+  older_than(html, rmd) || length(x <- readLines(html, n = 1)) == 0 || x != '---'
 }
 
 #' Build all Rmd files under a directory
