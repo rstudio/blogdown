@@ -9,6 +9,7 @@ Authors@R: c(
     person("Hiroaki", "Yutani", role = "ctb"),
     person("JJ", "Allaire", role = "ctb"),
     person("Kevin", "Ushey", role = "ctb"),
+    person(family = "RStudio Inc", role = "cph"),
     person()
     )
 Description: Write blog posts and web pages in R Markdown. This package uses the
