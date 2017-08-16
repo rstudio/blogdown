@@ -104,8 +104,8 @@ build_rmds = function(files, config, local, raw = FALSE, run_hugo = TRUE) {
   if (!file.exists(shared_yml)) shared_yml = NA
   copied_yaml = character(); on.exit(unlink(copied_yaml), add = TRUE)
 
-  for (f in files) in_dir(d <- dirname(f), {
-    f = basename(f)
+  for (file in files) in_dir(d <- dirname(file), {
+    f = basename(file)
     out = output_file(f, to_md <- is_rmarkdown(f))
     # do not recompile Rmd if output is newer when building for local preview
     if (local && !require_rebuild(out, f)) next
@@ -113,6 +113,7 @@ build_rmds = function(files, config, local, raw = FALSE, run_hugo = TRUE) {
       file.copy(shared_yml, './')
       copied_yaml = c(copied_yaml, normalizePath('_output.yml'))
     }
+    message('Rendering ', file)
     render_page(f)
     x = readUTF8(out)
     x = encode_paths(x, by_products(f, '_files'), d, raw, root, base)
