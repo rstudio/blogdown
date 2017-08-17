@@ -117,10 +117,12 @@ new_site = function(
     install_theme(theme, theme_example)
 
   if (sample) {
-    dir_create(file.path('content', 'post'))
-    file.copy(pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd'), 'content/post/')
+    d = file.path('content', 'blog')
+    if (!dir_exists(d)) d = file.path('content', 'post')
+    dir_create(d)
+    file.copy(pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd'), d)
     if (interactive() && getOption('blogdown.open_sample', TRUE))
-      open_file('content/post/2015-07-23-r-rmarkdown.Rmd')
+      open_file(file.path(d, '2015-07-23-r-rmarkdown.Rmd'))
   }
   if (!file.exists('index.Rmd'))
     writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
