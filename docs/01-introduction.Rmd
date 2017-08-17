@@ -277,7 +277,7 @@ To save you some time, we list a few themes below that match our taste:
 
 - Simple/minimal themes: [XMin](https://github.com/yihui/hugo-xmin), [simple-a](https://github.com/AlexFinn/simple-a), and [ghostwriter](https://github.com/jbub/ghostwriter).
 
-- Sophisticated themes: [hugo-academic](https://github.com/gcushen/hugo-academic) (strongly recommended for users in academia), [hugo-future-imperfect](https://github.com/jpescador/hugo-future-imperfect), and [hugo-tranquilpeak-theme](https://github.com/kakawait/hugo-tranquilpeak-theme).
+- Sophisticated themes: [hugo-academic](https://github.com/gcushen/hugo-academic) (strongly recommended for users in academia), [hugo-tranquilpeak-theme](https://github.com/kakawait/hugo-tranquilpeak-theme), [hugo-creative-portfolio-theme](https://github.com/kishaningithub/hugo-creative-portfolio-theme), and [hugo-universal-theme](https://github.com/devcows/hugo-universal-theme).
 
 - Multimedia content themes: If you are interested in adding multimedia content to your site (such as audio files of a podcast), the [castanet](https://github.com/mattstratton/castanet) theme provides an excellent framework tailored for this application.  An example of a site using **blogdown** with the castanet theme is the [R-Podcast](https://www.r-podcast.org).
 
