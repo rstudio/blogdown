@@ -34,14 +34,13 @@ build_site = function(
 ) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
-  files = list_rmds('content', TRUE)
   run_script('R/build.R', as.character(local))
-
-  if (method != 'custom') {
-    build_rmds(files, load_config(), local, run_hugo)
+  if (method == 'custom') return(invisible())
+  files = list_rmds('content', TRUE)
+  if (local && length(files)) {
+    files = files[mapply(require_rebuild, output_file(files), files)]
   }
-
-  invisible()
+  build_rmds(files, load_config(), local, run_hugo)
 }
 
 list_rmds = function(dir, check = FALSE) {
@@ -65,10 +64,14 @@ build_rmds = function(files, config, local, run_hugo = TRUE) {
   lib2 = gsub('^content', 'blogdown', lib1)  # /blogdown/.../foo_(files|cache)
   i = grep('_files$', lib2)
   lib2[i] = gsub('^blogdown', 'static', lib2[i])  # _files are copied to /static
-  # TODO: it may be faster to file.rename() than file.copy()
-  for (i in seq_along(lib2)) if (file_exists(lib2[i])) {
-    file.rename(lib2[i], lib1[i])
-  } else dir_copy(lib2[i], lib1[i])
+  # move by-products of a previous run to content/
+  dirs_rename(lib2, lib1)
+  # move (new) by-products from content/ to blogdown/ or static/ to make the
+  # source directory clean
+  on.exit({
+    dirs_rename(lib1, lib2)
+    if (run_hugo) hugo_build(local, config)
+  }, add = TRUE)
 
   root = getwd()
   base = site_base_dir()
@@ -80,7 +83,6 @@ build_rmds = function(files, config, local, run_hugo = TRUE) {
     f = basename(file)
     out = output_file(f, to_md <- is_rmarkdown(f))
     # do not recompile Rmd if output is newer when building for local preview
-    if (local && !require_rebuild(out, f)) next
     if (!is.na(shared_yml) && !file.exists('_output.yml')) {
       file.copy(shared_yml, './')
       copied_yaml = c(copied_yaml, normalizePath('_output.yml'))
@@ -97,13 +99,6 @@ build_rmds = function(files, config, local, run_hugo = TRUE) {
       prepend_yaml(f, out, x)
     }
   })
-
-  # copy (new) by-products from /content/ to /blogdown/ or /static to make the
-  # source directory clean (e.g. only .Rmd stays there when method = 'html_encoded')
-  dirs_copy(lib1, lib2)
-
-  if (run_hugo) hugo_build(local, config)
-  unlink(lib1, recursive = TRUE)
 }
 
 render_page = function(input, script = 'render_page.R') {
@@ -111,14 +106,12 @@ render_page = function(input, script = 'render_page.R') {
   if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
 }
 
-# given the content of a .html file: (1) if method = 'html_encoded', encode the
-# figure paths (to be restored later), and other dependencies will be moved to
-# /public/rmarkdown-libs/; (2) if method = 'html', replace
-# content/*_files/figure-html with /*_files/figure-html since this dir will be
-# moved to /static/, and move the rest of dirs under content/*_files/ to
-# /static/rmarkdown-libs/ (HTML dependencies), so all posts share the same libs
-# (otherwise each post has its own dependencies, and there will be a lot of
-# duplicated libs when HTML widgets are used extensively in a website)
+# given the content of a .html file: replace content/*_files/figure-html with
+# /*_files/figure-html since this dir will be moved to /static/, and move the
+# rest of dirs under content/*_files/ to /static/rmarkdown-libs/ (HTML
+# dependencies), so all posts share the same libs (otherwise each post has its
+# own dependencies, and there will be a lot of duplicated libs when HTML widgets
+# are used extensively in a website)
 
 # example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
 # parent = 'content/post'; root = ~/Websites/Frida/
@@ -146,8 +139,7 @@ encode_paths = function(x, deps, parent, root, base = '/') {
   libs = unique(gsub(r2, '\\3\\4', unlist(regmatches(x2, gregexpr(r2, x2)))))
   x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
   to = file.path(root, 'static', 'rmarkdown-libs', basename(libs))
-  dirs_copy(libs, to)
-  unlink(libs, recursive = TRUE)
+  dirs_rename(libs, to)
   x
 }
 

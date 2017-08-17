@@ -52,19 +52,19 @@ file.copy2 = function(from, to, ...) {
 # make sure it is a file instead of an existing dir
 file_exists = function(x) file_test('-f', x)
 
-dir_copy = function(from, to) {
-  if (dir_exists(from)) {
-    dir_create(dirname(to))
-    file.copy(from, dirname(to), recursive = TRUE)
-  }
+dir_rename = function(from, to, clean = FALSE) {
+  if (!dir_exists(from)) return()
+  if (clean) unlink(to, recursive = TRUE)
+  dir_create(dirname(to))
+  file.rename(from, to)
 }
 
-dirs_copy = function(from, to) {
+dirs_rename = function(from, to, ...) {
   n = length(from); if (n == 0) return()
   if (length(to) != n) stop(
     'The number of source dirs must be equal to the number of target dirs'
   )
-  for (i in seq_len(n)) dir_copy(from[i], to[i])
+  for (i in seq_len(n)) dir_rename(from[i], to[i], ...)
 }
 
 # when html output file does not exist, or html is older than Rmd, or the first
@@ -108,7 +108,7 @@ is_rmarkdown = function(x) grepl('[.][Rr]markdown$', x)
 
 # build .Rmarkdown to .markdown, and .Rmd to .html
 output_file = function(file, md = is_rmarkdown(file)) {
-  with_ext(file, if (md) 'markdown' else 'html')
+  with_ext(file, ifelse(md, 'markdown', 'html'))
 }
 
 # adapted from webshot:::download_no_libcurl due to the fact that
