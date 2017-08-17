@@ -73,6 +73,7 @@ serve_it = function(
     g = generator()
     cmd = if (g == 'hugo') find_hugo() else g
     host = server$host; port = server$port; intv = server$interval
+    if (is.null(server$url)) server$url = sprintf('http://%s:%d', host, port)
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
     p1 = proc_new(cmd, cmd_args, stdout = NULL)
