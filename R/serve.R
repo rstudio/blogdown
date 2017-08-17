@@ -75,7 +75,7 @@ serve_it = function(
     host = server$host; port = server$port; intv = server$interval
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
-    p1 = proc_new(cmd, cmd_args)
+    p1 = proc_new(cmd, cmd_args, stdout = NULL)
     pid = p1$get_pid()
     opts$set(pids = c(opts$get('pids'), pid))
     p1_print = function() {
@@ -102,7 +102,6 @@ serve_it = function(
       'Launched the ', g, ' server in the background (process ID: ', pid, '). ',
       'To stop it, call blogdown::stop_server() or restart the R session.'
     )
-    p1$read_output_lines()  # discard initial output in stdout
     p1_print()
 
     p2 = proc_new(
@@ -127,8 +126,8 @@ hexo_server_args = function(host, port) {
   c('server', '-p', port, '-i', host)
 }
 
-proc_new = function(...) {
-  processx::process$new(..., stdout = '|', stderr = '|')
+proc_new = function(..., stdout = '|', stderr = '|') {
+  processx::process$new(..., stdout = stdout, stderr = stderr)
 }
 
 # control = c(show_out, show_error)
