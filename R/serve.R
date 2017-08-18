@@ -76,7 +76,7 @@ serve_it = function(
     if (is.null(server$url)) server$url = sprintf('http://%s:%d', host, port)
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
-    p1 = proc_new(cmd, cmd_args, stdout = NULL)
+    p1 = proc_new(cmd, cmd_args)
     pid = p1$get_pid()
     opts$set(pids = c(opts$get('pids'), pid))
     p1_print = function() {
@@ -107,7 +107,7 @@ serve_it = function(
 
     p2 = proc_new(
       file.path(R.home('bin'), 'Rscript'),
-      c(pkg_file('scripts', 'watch_rmd.R'), getwd(), intv, pid)
+      c(pkg_file('scripts', 'watch_rmd.R'), getwd(), intv, pid), stdout = '|'
     )
     opts$set(pids = c(opts$get('pids'), p2$get_pid()))
     p2_print = function() {
@@ -127,8 +127,8 @@ hexo_server_args = function(host, port) {
   c('server', '-p', port, '-i', host)
 }
 
-proc_new = function(..., stdout = '|', stderr = '|') {
-  processx::process$new(..., stdout = stdout, stderr = stderr)
+proc_new = function(..., stderr = '|') {
+  processx::process$new(..., stderr = stderr)
 }
 
 # control = c(show_out, show_error)
