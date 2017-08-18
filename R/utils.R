@@ -463,6 +463,7 @@ fetch_yaml2 = function(f) {
 # a wrapper of yaml::as.yaml() to indent sublists by default and trim white spaces
 as.yaml = function(..., .trim_ws = TRUE) {
   res = yaml::as.yaml(..., indent.mapping.sequence = TRUE)
+  Encoding(res) = 'UTF-8'
   if (.trim_ws) sub('\\s+$', '', res) else res
 }
 
