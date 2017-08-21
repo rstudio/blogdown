@@ -34,13 +34,15 @@ build_site = function(
 ) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
-  run_script('R/build.R', as.character(local))
-  if (method == 'custom') return(invisible())
-  files = list_rmds('content', TRUE)
-  if (local && length(files)) {
-    files = files[mapply(require_rebuild, output_file(files), files)]
+  if (method == 'html') {
+    files = list_rmds('content', TRUE)
+    if (local && length(files)) {
+      files = files[mapply(require_rebuild, output_file(files), files)]
+    }
+    build_rmds(files, load_config(), local, run_hugo)
   }
-  build_rmds(files, load_config(), local, run_hugo)
+  run_script('R/build.R', as.character(local))
+  invisible()
 }
 
 list_rmds = function(dir, check = FALSE) {
