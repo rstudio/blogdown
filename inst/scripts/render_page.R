@@ -18,13 +18,7 @@ local({
       "output format is Markdown instead of HTML."
     )
     # resolve bookdown references (figures, tables, sections, ...)
-    resolve = bookdown:::process_markdown
-    # TODO: wait for bookdown v0.5
-    if ('to_md' %in% names(formals(resolve))) {
-      bookdown:::process_markdown(out2, 'markdown', NULL, TRUE, to_md)
-    } else {
-      resolve(out2, 'markdown', NULL, TRUE)
-    }
+    bookdown:::process_markdown(out2, 'markdown', NULL, TRUE, to_md)
     # protect math expressions in backticks
     if (knitr:::loadable('xaringan')) {
       blogdown:::process_file(out2, xaringan:::protect_math)

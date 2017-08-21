@@ -17,7 +17,7 @@ Description: Write blog posts and web pages in R Markdown. This package uses the
 License: GPL-3
 Imports:
     rmarkdown,
-    bookdown (>= 0.4),
+    bookdown (>= 0.5),
     knitr (>= 1.17),
     htmltools,
     yaml (>= 2.1.14),
@@ -39,4 +39,3 @@ URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<http://pandoc.org>)
 RoxygenNote: 6.0.1
-Remotes: rstudio/bookdown
