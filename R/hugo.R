@@ -41,13 +41,6 @@ theme_flag = function(config = load_config()) {
   if (length(theme) == 1) c('-t', theme)
 }
 
-# in theory, we should use environment variables HUGO_FOO, but it does seem to
-# really work (e.g. HUGO_RELATIVEURLS does not work), so we have to physically
-# write the config into config.toml/yaml using change_config() below
-reset_env = function(name, value) {
-  if (is.na(value)) Sys.unsetenv(name) else Sys.setenv(name, value)
-}
-
 change_config = function(name, value) {
   f = find_config()
   x = readUTF8(f)
@@ -59,7 +52,7 @@ change_config = function(name, value) {
     v = if (!is.na(value)) paste(name, value, sep = ': ')
   }
   i = grep(r, x)
-  if (length(i) > 1) stop("Duplicate configuration for '", name, "' in ", f)
+  if (length(i) > 1) stop("Duplicated configuration for '", name, "' in ", f)
   x0 = x
   if (length(i) == 1) {
     if (is.null(v)) x = x[-i] else x[i] = v  # replace old config
