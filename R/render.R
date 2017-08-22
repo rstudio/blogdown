@@ -57,8 +57,8 @@ list_rmds = function(dir, check = FALSE) {
 }
 
 # raw indicates paths of dependencies are not encoded in the HTML output
-build_rmds = function(files, config, local, run_hugo = TRUE) {
-  if (length(files) == 0) return(if (run_hugo) hugo_build(local, config))
+build_rmds = function(files) {
+  if (length(files) == 0) return()
 
   # copy by-products {/content/.../foo_(files|cache) dirs and foo.html} from
   # /blogdown/ or /static/ to /content/
@@ -70,10 +70,7 @@ build_rmds = function(files, config, local, run_hugo = TRUE) {
   dirs_rename(lib2, lib1)
   # move (new) by-products from content/ to blogdown/ or static/ to make the
   # source directory clean
-  on.exit({
-    dirs_rename(lib1, lib2)
-    if (run_hugo) hugo_build(local, config)
-  }, add = TRUE)
+  on.exit(dirs_rename(lib1, lib2), add = TRUE)
 
   root = getwd()
   base = site_base_dir()
@@ -84,7 +81,6 @@ build_rmds = function(files, config, local, run_hugo = TRUE) {
   for (file in files) in_dir(d <- dirname(file), {
     f = basename(file)
     out = output_file(f, to_md <- is_rmarkdown(f))
-    # do not recompile Rmd if output is newer when building for local preview
     if (!is.na(shared_yml) && !file.exists('_output.yml')) {
       file.copy(shared_yml, './')
       copied_yaml = c(copied_yaml, normalizePath('_output.yml'))
