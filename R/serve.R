@@ -105,15 +105,17 @@ serve_it = function(
     )
     p1_print()
 
-    p2 = proc_new(
-      file.path(R.home('bin'), 'Rscript'),
-      c(pkg_file('scripts', 'watch_rmd.R'), getwd(), intv, pid), stdout = '|'
-    )
-    opts$set(pids = c(opts$get('pids'), p2$get_pid()))
-    p2_print = function() {
-      if (proc_print(p2)) later::later(p2_print, intv)
+    watch = servr:::watch_dir('.', rmd_pattern)
+    unix = .Platform$OS.type == 'unix'
+    watch_build = function() {
+      if (watch()) {
+        if (unix) tools::pskill(pid, tools::SIGSTOP)
+        try(build_site(TRUE, run_hugo = FALSE))
+        if (unix) tools::pskill(pid, tools::SIGCONT)
+      }
+      later::later(watch_build, intv)
     }
-    p2_print()
+    watch_build()
 
     return(invisible())
   }
@@ -159,20 +161,6 @@ stop_server = function() {
   if (getOption('blogdown.generator.server', FALSE)) {
     for (i in opts$get('pids')) proc_kill(i)
   } else servr::daemon_stop()
-}
-
-watch_build = function(interval, pid) {
-  watch = servr:::watch_dir('.', rmd_pattern)
-  unix = .Platform$OS.type == 'unix'
-  while (TRUE) {
-    if (watch()) {
-      if (unix) tools::pskill(pid, tools::SIGSTOP)
-      res = try(build_site(TRUE, run_hugo = FALSE))
-      if (inherits(res, 'try-error')) cat(res, sep = '\n', file = stderr())
-      if (unix) tools::pskill(pid, tools::SIGCONT)
-    }
-    Sys.sleep(interval)
-  }
 }
 
 get_config2 = function(key, default) {
