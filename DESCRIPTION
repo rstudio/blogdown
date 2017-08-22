@@ -1,7 +1,8 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.0.73
+Version: 0.1
+Date: 2017-08-22
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name"),
     person("Beilei", "Bian", role = "ctb"),
