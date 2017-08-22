@@ -12,7 +12,7 @@ hugo_cmd = function(...) {
 #'   extracted from the output of \code{hugo_cmd('version')}.
 hugo_version = function() {
   x = hugo_cmd('version', stdout = TRUE)
-  r = '^.* v([0-9.]{2,}) .*$'
+  r = '^.* v([0-9.]{2,}).*$'
   if (grepl(r, x)) return(as.numeric_version(gsub(r, '\\1', x)))
   warning('Cannot extract the version number from Hugo:')
   cat(x, sep = '\n')
