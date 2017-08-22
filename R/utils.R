@@ -78,11 +78,11 @@ require_rebuild = function(html, rmd) {
 #'
 #' List all Rmd files recursively under a directory, and compile them using
 #' \code{rmarkdown::\link{render}()}.
-#' @param dir A directory name.
+#' @param dir A directory path.
 #' @param force Whether to force building all Rmd files. By default, an Rmd file
 #'   is built only if it is newer than its output file(s).
 #' @export
-build_dir = function(dir, force = FALSE) {
+build_dir = function(dir = '.', force = FALSE) {
   for (f in list_rmds(dir)) {
     render_it = function() render_page(f, 'render_rmarkdown.R')
     if (force) { render_it(); next }
