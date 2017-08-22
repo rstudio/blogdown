@@ -85,9 +85,7 @@ require_rebuild = function(html, rmd) {
 build_dir = function(dir, force = FALSE) {
   for (f in list_rmds(dir)) {
     render_it = function() render_page(f, 'render_rmarkdown.R')
-    if (force) {
-      render_it(); next
-    }
+    if (force) { render_it(); next }
     files = list.files(dirname(f), full.names = TRUE)
     i = files == f  # should be only one in files matching f
     bases = with_ext(files, '')
