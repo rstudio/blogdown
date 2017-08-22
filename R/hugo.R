@@ -88,6 +88,8 @@ change_config = function(name, value) {
 #' @export
 #' @describeIn hugo_cmd Create a new site (skeleton) via \command{hugo new
 #'   site}. The directory of the new site should be empty,
+#' @examples library(blogdown)
+#' if (interactive()) new_site()
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
   theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = interactive()

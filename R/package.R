@@ -11,6 +11,7 @@
 #' @aliases blogdown-package
 #' @import utils
 #' @import stats
+#' @examples if (interactive()) blogdown::new_site()
 NULL
 
 with_ext = bookdown:::with_ext

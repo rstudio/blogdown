@@ -15,7 +15,7 @@ hugo_cmd(...)
 
 hugo_version()
 
-hugo_build(local = FALSE, config = load_config())
+hugo_build(local = FALSE)
 
 new_site(dir = ".", install_hugo = TRUE, format = "toml", 
     sample = TRUE, theme = "yihui/hugo-lithium-theme", theme_example = TRUE, 
@@ -42,9 +42,6 @@ run the command \command{hugo new path}).}
 \item{local}{Whether to build the site for local preview (if \code{TRUE}, all
 drafts and future posts will also be built, and the site configuration
 \code{baseurl} will be set to \code{/} temporarily).}
-
-\item{config}{A list of the site configurations (by default, read from
-\file{config.toml} or \file{config.yaml}).}
 
 \item{dir}{The directory of the new site. It should be empty or only contain
 hidden files, RStudio project (\file{*.Rproj}) files, \file{LICENSE},
@@ -149,6 +146,10 @@ different formats via \command{hugo convert}.
 \item \code{hugo_server}: Start a Hugo server.
 }}
 
+\examples{
+library(blogdown)
+if (interactive()) new_site()
+}
 \references{
 The full list of Hugo commands: \url{https://gohugo.io/commands},
   and themes: \url{http://themes.gohugo.io}.

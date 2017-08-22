@@ -4,10 +4,10 @@
 \alias{build_dir}
 \title{Build all Rmd files under a directory}
 \usage{
-build_dir(dir, force = FALSE)
+build_dir(dir = ".", force = FALSE)
 }
 \arguments{
-\item{dir}{A directory name.}
+\item{dir}{A directory path.}
 
 \item{force}{Whether to force building all Rmd files. By default, an Rmd file
 is built only if it is newer than its output file(s).}
