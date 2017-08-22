@@ -21,13 +21,12 @@ hugo_version = function() {
 #' @param local Whether to build the site for local preview (if \code{TRUE}, all
 #'   drafts and future posts will also be built, and the site configuration
 #'   \code{baseurl} will be set to \code{/} temporarily).
-#' @param config A list of the site configurations (by default, read from
-#'   \file{config.toml} or \file{config.yaml}).
 #' @export
 #' @describeIn hugo_cmd Build a plain Hugo website. Note that the function
 #'   \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
 #'   via \code{hugo_build()} to build the site.
-hugo_build = function(local = FALSE, config = load_config()) {
+hugo_build = function(local = FALSE) {
+  config = load_config()
   hugo_cmd(c(
     if (local) c('-b', site_base_dir(), '-D', '-F'),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
