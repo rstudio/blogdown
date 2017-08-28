@@ -201,7 +201,7 @@ Because each HTML element may match several different selectors, the CSS standar
 Now, let's say we want to highlight our favorite teas again, so we'll use a class attribute.
 
 ```html
-<ul>
+<ul id="tea-list">
   <li>Earl Grey</li>
   <li class="favorite">Darjeeling</li>
   <li>Oolong</li>
