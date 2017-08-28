@@ -221,6 +221,8 @@ parse_toml = function(
     if (no_file <- missing(f)) f = paste(x, collapse = '\n')
     return(RcppTOML::parseTOML(f, fromFile = !no_file))
   }
+  # remove comments
+  x = gsub('\\s+#.+', '', x)
   z = list()
   # arbitrary values
   r = '^([[:alnum:]]+?)\\s*=\\s*(.+)\\s*$'
