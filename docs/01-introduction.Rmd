@@ -160,7 +160,9 @@ R only reads one startup profile file. For example, if you have a `.Rprofile` un
 
 ```{r eval=FALSE}
 # in .Rprofile of the website project
-if (file.exists('~/.Rprofile')) base::sys.source('~/.Rprofile')
+if (file.exists('~/.Rprofile')) {
+  base::sys.source('~/.Rprofile', envir = environment())
+}
 # then set options(blogdown.author = 'Your Name') in ~/.Rprofile
 ```
 
