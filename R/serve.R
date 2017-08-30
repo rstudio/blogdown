@@ -164,6 +164,6 @@ stop_server = function() {
 }
 
 get_config2 = function(key, default) {
-  res = yaml::yaml.load_file('_config.yml')
+  res = yaml_load_file('_config.yml')
   res[[key]] %n% default
 }

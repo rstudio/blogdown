@@ -163,7 +163,7 @@ load_config = function() {
     return(read_config('config.toml', parse_toml))
 
   if (file_exists('config.yaml'))
-    return(read_config('config.yaml', yaml::yaml.load_file))
+    return(read_config('config.yaml', yaml_load_file))
 }
 
 check_config = function(config, f) {
@@ -446,6 +446,13 @@ yaml_load = function(x) yaml::yaml.load(
   )
 )
 
+# remove the three dashes in the YAML file before parsing it (the yaml package
+# cannot handle three dashes)
+yaml_load_file = function(f) {
+  x = paste(readUTF8(f), collapse = '\n')
+  x = gsub('^\\s*---\\s*|\\s*---\\s*$', '', x)
+  yaml::yaml.load(x)
+}
 
 # if YAML contains inline code, evaluate it and return the YAML
 fetch_yaml2 = function(f) {
