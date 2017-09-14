@@ -590,8 +590,10 @@ args_string = function(...) {
   if (length(v) == 0) return('')
   if (any(unlist(lapply(v, length)) != 1)) stop('All argument values must be of length 1')
   m = names(v)
+  i = vapply(v, is.character, logical(1))
   v = as.character(v)
-  i = grep('\\s', v)  # quote values that contain spaces
+  i = i | grepl('\\s', v)  # quote values that contain spaces
+  i = i & !grepl('^".+"$', v)  # not already quoted
   v[i] = sprintf('"%s"', v[i])
   if (is.null(m)) {
     paste(v, collapse = ' ')
