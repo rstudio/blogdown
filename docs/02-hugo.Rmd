@@ -155,7 +155,7 @@ The structure of the `content/` directory can be arbitrary. A common structure i
 
 Each page should start with YAML metadata specifying information like the title, date, author, categories, tags, and so on. Depending on the specific Hugo theme and templates you use, some of these fields may be optional.
 
-Among all YAML fields, we want bring these to your attention:
+Among all YAML fields, we want to bring these to your attention:
 
 - `draft`: You can mark a document as a draft by setting `draft: true` in its YAML metadata. Draft posts will not be rendered if the site is built via `blogdown::build_site()` or `blogdown::hugo_build()`, but will be rendered in the local preview mode (see Section \@ref(local-preview)).
 
