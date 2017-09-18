@@ -718,7 +718,7 @@ The XMin is actually a highly functional theme, but we understand that it may be
 - **Enable syntax highlighting via highlight.js.** Add this to `head_custom.html`
 
     ```html
-    <link href="//YOUR-CDN-LINK/github.min.css" rel="stylesheet">
+    <link href="//YOUR-CDN-LINK/styles/github.min.css" rel="stylesheet">
     ```
     
     and this to `foot_custom.html`:
