@@ -6,7 +6,7 @@ In this chapter, we show how to create a simple website from scratch. The websit
 
 ## Installation
 
-We assume you have already installed R (https://www.r-project.org) and the RStudio IDE (https://www.rstudio.com). Next we need to install the **blogdown** package in R. Currently it is only available on GitHub, and you can install it using the **devtools** package:
+We assume you have already installed R (https://www.r-project.org) and the RStudio IDE (https://www.rstudio.com). If you do not have RStudio IDE installed, please install Pandoc (http://pandoc.org). Next we need to install the **blogdown** package in R. Currently it is only available on GitHub, and you can install it using the **devtools** package:
 
 ```{r eval=FALSE}
 if (!requireNamespace("devtools")) install.packages('devtools')
