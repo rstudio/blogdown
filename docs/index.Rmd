@@ -17,7 +17,7 @@ site: bookdown::bookdown_site
 description: "A guide to creating websites with R Markdown and the R package blogdown."
 url: 'https\://bookdown.org/yihui/blogdown/'
 github-repo: rstudio/blogdown
-#cover-image: images/cover.jpg
+cover-image: images/cover.png
 ---
 
 ```{r setup, include=FALSE}
@@ -49,8 +49,8 @@ Please do not be misled by the word "blog" in the package name: **blogdown** is 
 
 If you do not prefer using Hugo, there are other options, too. Chapter \@ref(other-generators) has shown possibilities of using other site generators, such as Jekyll and **rmarkdown**'s default site generator.
 
-```{r fig.align='center', echo=FALSE, eval=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://www.crcpress.com/product/isbn/9781138700109'}
-knitr::include_graphics('images/cover.jpg', dpi = NA)
+```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://github.com/rstudio/blogdown', out.width='50%'}
+knitr::include_graphics('images/cover.png', dpi = NA)
 ```
 
 The online version of this book is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
