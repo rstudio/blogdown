@@ -30,7 +30,7 @@ knitr::include_graphics('images/folder-structure.png')
 
 ## Configuration
 
-The first file that you may want to look at is the configuration or `config` file, in which you can set global configurations of your site. It may contain options like the title and description of your site, as well as other global options like links to your social networks, the navigation menu, and the base URL for your website.
+The first file that you may want to look at is the configuration or `config` file in your root directory, in which you can set global configurations of your site. It may contain options like the title and description of your site, as well as other global options like links to your social networks, the navigation menu, and the base URL for your website.
 
 When generating your site, Hugo will search for a file called `config.toml` first. If it cannot find one, it will continue to search for `config.yaml`.^[Hugo also supports `config.json`, but **blogdown** does not support it, so we do not recommend you to use it.] Since most Hugo themes contain example sites that ship `config.toml` files, and the TOML (Tom's Obvious, Minimal Language) format appears to be more popular in the Hugo community, we will mainly discuss `config.toml` here.
 
@@ -105,7 +105,7 @@ All built-in options that you may set for Hugo are listed on [this page](https:/
         post = "/:year/:month/:day/:title/"
     ```
     
-    Personally I recommend you to use the `:slug` variable instead of `:title`:
+    Personally I recommend you to use the `:slug` variable^[A slug is simply a character string that you can use to identify a specific post. A slug will not change, even if the title changes. For instance, if you decide to change the title of your post from "I love blogdown" to "Why blogdown is the best package ever", and you had used the post's title in the URL, your old links will now be broken. If instead, you had specified the URL via a slug (something like "blogdown-love"), then you can change the title as many times as you'd like and you won't end up with any broken links.] instead of `:title`:
     
     ```js
     [permalinks]
@@ -279,7 +279,7 @@ Some of these options may be obvious to understand, and some may need explanatio
 
 - `googleAnalytics`: The Google Analytics tracking ID (like `UA-000000-2`). You can sign up at https://analytics.google.com to obtain a tracking ID.
 
-- `disqusShortname`: The Disqus ID. You may register an account at https://disqus.com. Please note that you have to set up a functional `baseurl` and publish your website before Disqus comments can work.
+- `disqusShortname`: The Disqus ID that you created during the account setup process at https://disqus.com. This is required to enable commenting on your site^[As we mentioned in Chapter \@ref(static-sites), `blogdown` generates static and unchanging content. To add something dynamic and always changing (like the ability for your fans to leave comments), you must incorporate an outside commenting system like Disqus.]. Please note that you have to set up a functional `baseurl` and publish your website before Disqus comments can work.
 
 - `ignoreFiles` and `permalinks`: These options have been explained in Section \@ref(options).
 
@@ -695,7 +695,7 @@ Lastly, this theme provided an example site under `exampleSite/`. The directory 
 
 The example site provided a sample `config.toml`, a home page `_index.md`, an about page `about.md`, two posts under `note/` and two under `post/`. It also overrides the `foot_custom.html` in the theme.
 
-### How-to
+### How-to update
 
 The XMin is actually a highly functional theme, but we understand that it may be too minimal to you. There are a few commonly used features (intentionally) missing in this theme, and we will teach you how to add them by yourself if desired. All these features and the source code can be applied to other themes, too.
 
@@ -840,7 +840,7 @@ After you digest the XMin theme and the implementations of additional features, 
 
 ## Custom layouts
 
-It is very likely that you want to customize a theme unless it is designed by yourself. The most straightforward way is to simply make changes directly in the theme, but the problem is that a Hugo theme may be constantly updated by its original author for improvements or bug fixes. Similar to the "you break it, you buy it" policy (the [Pottery Barn rule](https://en.wikipedia.org/wiki/Pottery_Barn_rule)), once you touch other people's source code, you will be responsible for future maintenance by yourself, and the original author should not be responsible for the changes you made on your side. That means it may not be easy to pull future updates of this theme to your website (you have to carefully read the changes and make sure they do not conflict with your changes), but if you are completely satisfied with the current state of the theme, and do not want future updates, it is fine to modify the theme files directly.
+It is very likely that you want to customize a theme unless it is designed by yourself. The most straightforward way is to simply make changes directly in the theme^[If you are new to web development, be careful changing content within the theme. Minor changes like colors and font-sizes can be found within the CSS files of the theme and can be altered simply with minimal risk of breaking the theme's functionality.], but the problem is that a Hugo theme may be constantly updated by its original author for improvements or bug fixes. Similar to the "you break it, you buy it" policy (the [Pottery Barn rule](https://en.wikipedia.org/wiki/Pottery_Barn_rule)), once you touch other people's source code, you will be responsible for future maintenance by yourself, and the original author should not be responsible for the changes you made on your side. That means it may not be easy to pull future updates of this theme to your website (you have to carefully read the changes and make sure they do not conflict with your changes), but if you are completely satisfied with the current state of the theme, and do not want future updates, it is fine to modify the theme files directly.
 
 For a theme author aware of the fact that users may customize her theme, she will typically provide two ways: one is to provide options in `config.toml`, so that you can change these options without touching the template files; the other is to leave a few lightweight template files under `layouts/` in the theme, so that you can override them without touching the core template files. Take the XMin theme for example:
 
