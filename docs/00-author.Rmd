@@ -18,17 +18,12 @@ He enjoys spicy food as much as classical Chinese literature.
 
 ## Amber Thomas {-}
 
-Amber Thomas (<https://proquestionasker.github.io>) has always loved science, exploration, and discovery. Her natural curiosity, love of animals and the environment, and constant pursuit of knowledge led her into a marine biology and chemistry double major in college (BS/BA) and a Master's degree in Marine Sciences. That generally leads people to think that she was "playing with animals" all day.
+Amber Thomas (<https://proquestionasker.github.io) is a data journalist and "maker" at the online journal of visual essays: [The Pudding](https://pudding.cool). Her educational background, however, was in quite a different field altogether: Marine Biology. She has a Bachelor's Degree in marine biology and chemistry from Roger Williams University and a Master's Degree in Marine Sciences from the University of New England. Throughout her academic and professional career as a marine biologist, she realized that she had a love of data analysis, visualization, and story-telling and thus, she switched career paths to something a bit more data-focused. 
 
-And while she _did_ get to work with some amazing animals over the years...
+While looking for work, she began conducting personal projects to expand her knowledge of R's inner-workings. She decided to put all of her projects in a single place online (so that she could be discovered, naturally) and after lots of searching, she stumbled upon an early release of the **blogdown** package. She was hooked right away and spent a few days setting up her personal website and writing a tutorial of how she did it. You can find that tutorial and some of her other projects and musings on her **blogdown** site. 
 
-Only about **5 - 10%** of her time was spent working with animals. The rest was spent designing experiments and working with data.
+When she's not crunching numbers and trying to stay on top of her email inbox, Amber is usually getting some fresh-Seattle air or cuddling with her dog, Sherlock. If you're looking for her in the digital world, try [Twitter](www.twitter.com/proquesasker). 
 
-When a co-worker introduced her by saying "This is Amber, she does data analysis", she realized that, indeed, she was a data analyst (who happened to work with marine data).
-
-So, she decided to pursue the analytical side of her work and enter the world of data science. She has been taking lots of classes, working on lots of personal projects, joining local Meetups, and looking for work in the field.
-
-She is always looking for new people to chat with and new problems to solve, so feel free to reach out to her!
 
 ## Alison Presmanes Hill {-}
 
