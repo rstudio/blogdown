@@ -105,7 +105,7 @@ All built-in options that you may set for Hugo are listed on [this page](https:/
         post = "/:year/:month/:day/:title/"
     ```
     
-    Personally I recommend you to use the `:slug` variable^[A slug is simply a character string that you can use to identify a specific post. A slug will not change, even if the title changes. For instance, if you decide to change the title of your post from "I love blogdown" to "Why blogdown is the best package ever", and you had used the post's title in the URL, your old links will now be broken. If instead, you had specified the URL via a slug (something like "blogdown-love"), then you can change the title as many times as you'd like and you won't end up with any broken links.] instead of `:title`:
+    Personally I recommend you to use the `:slug` variable^[A slug is simply a character string that you can use to identify a specific post. A slug will not change, even if the title changes. For instance, if you decide to change the title of your post from "I love blogdown" to "Why blogdown is the best package ever", and you had used the post's title in the URL, your old links will now be broken. If instead, you had specified the URL via a slug (something like "blogdown-love"), then you can change the title as many times as you'd like and you will not end up with any broken links.] instead of `:title`:
     
     ```js
     [permalinks]
@@ -695,7 +695,7 @@ Lastly, this theme provided an example site under `exampleSite/`. The directory 
 
 The example site provided a sample `config.toml`, a home page `_index.md`, an about page `about.md`, two posts under `note/` and two under `post/`. It also overrides the `foot_custom.html` in the theme.
 
-### How-to update
+### Implementing More Features
 
 The XMin is actually a highly functional theme, but we understand that it may be too minimal to you. There are a few commonly used features (intentionally) missing in this theme, and we will teach you how to add them by yourself if desired. All these features and the source code can be applied to other themes, too.
 
