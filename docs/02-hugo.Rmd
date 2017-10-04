@@ -695,7 +695,7 @@ Lastly, this theme provided an example site under `exampleSite/`. The directory 
 
 The example site provided a sample `config.toml`, a home page `_index.md`, an about page `about.md`, two posts under `note/` and two under `post/`. It also overrides the `foot_custom.html` in the theme.
 
-### Implementing More Features
+### Implementing more features {#how-to}
 
 The XMin is actually a highly functional theme, but we understand that it may be too minimal to you. There are a few commonly used features (intentionally) missing in this theme, and we will teach you how to add them by yourself if desired. All these features and the source code can be applied to other themes, too.
 
