@@ -18,11 +18,11 @@ He enjoys spicy food as much as classical Chinese literature.
 
 ## Amber Thomas {-}
 
-Amber Thomas (<https://proquestionasker.github.io>) is a data journalist and "maker" at the online publication of visual essays: [The Pudding](https://pudding.cool). Her educational background, however, was in quite a different field altogether: Marine Biology. She has a Bachelor's Degree in marine biology and chemistry from Roger Williams University and a Master's Degree in Marine Sciences from the University of New England. Throughout her academic and professional career as a marine biologist, she realized that she had a love of data analysis, visualization, and story-telling and thus, she switched career paths to something a bit more data-focused.
+Amber Thomas (<https://proquestionasker.github.io>) is a data journalist and "maker" at the online publication of visual essays: The Pudding (<https://pudding.cool>). Her educational background, however, was in quite a different field altogether: Marine Biology. She has a Bachelor's Degree in marine biology and chemistry from Roger Williams University and a Master's Degree in Marine Sciences from the University of New England. Throughout her academic and professional career as a marine biologist, she realized that she had a love of data analysis, visualization, and story-telling and thus, she switched career paths to something a bit more data-focused.
 
 While looking for work, she began conducting personal projects to expand her knowledge of R's inner-workings. She decided to put all of her projects in a single place online (so that she could be discovered, naturally) and after lots of searching, she stumbled upon an early release of the **blogdown** package. She was hooked right away and spent a few days setting up her personal website and writing a tutorial of how she did it. You can find that tutorial and some of her other projects and musings on her blogdown site.
 
-When she's not crunching numbers and trying to stay on top of her email inbox, Amber is usually getting some fresh-Seattle air or cuddling with her dog, Sherlock. If you're looking for her in the digital world, try [Twitter](https://twitter.com/ProQuesAsker).
+When she is not crunching numbers and trying to stay on top of her email inbox, Amber is usually getting some fresh-Seattle air or cuddling with her dog, Sherlock. If you are looking for her in the digital world, try <https://twitter.com/ProQuesAsker>.
 
 ## Alison Presmanes Hill {-}
 
