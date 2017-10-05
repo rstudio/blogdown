@@ -55,6 +55,16 @@ knitr::include_graphics('images/cover.png', dpi = NA)
 
 The online version of this book is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
+## Structure of the book {-}
+
+Chapter \@ref(get-started) aims at getting you started with a new website based on **blogdown**: it contains an installation guide, a quick example, an introduction to RStudio addins related to **blogdown**, and comparisons of different source document formats. All readers of this book should finish at least this chapter (to know how to create a website locally) and Section \@ref(netlify) (to know how to publish a website). The rest of the book is mainly for those who want to further customize their websites.
+
+Chapter \@ref(hugo) briefly introduces the static website generator Hugo, on which **blogdown** is based. We tried to summarize the official Hugo documentation in a short chapter. You should consult the official documentation when in doubt. You may skip Section \@ref(templates) if you do not have basic knowledge of web technologies. However, this section is critical for you to fully understand Hugo. We have spent the most time on this section in this chapter. It is very technical, but should be helpful nonetheless.
+
+Chapter \@ref(deployment) tells you how to publish a website, so that other people can visit it through a link. Chapter \@ref(migration) shows how to migrate existing websites from other platforms to Hugo and **blogdown**. Chapter \@ref(other-generators) gives a few other options if you do not wish to use Hugo as your site generator.
+
+The appendix contains basic knowledge about websites, such as HTML, CSS, and JavaScript. If you really care about your website, you will have to learn them someday. We have also covered some optional topics in the appendix for advanced users.
+
 ## Software information and conventions {#software-info .unnumbered}
 
 The R session information when compiling this book is shown below:
@@ -86,3 +96,12 @@ A "post" often does not literally mean a blog post, but refers to any source doc
 The URL `http://www.example.com` is used only for illustration purposes. We do not mean you should actually visit this website. In most cases, you should replace `www.example.com` with your actual domain name.
 
 An asterisk `*` in a character string often means an arbitrary string. For example, `*.example.com` denotes an arbitrary subdomain of `example.com`. It could be `foo.example.com` or `123.example.com`. Actually, `foo` and `bar` also indicate arbitrary characters or objects.
+
+## Acknowledgments {-}
+
+Yihui thanks Tareef.
+
+```{block2, type='flushright', html.tag='p'}
+Yihui Xie  
+Elkhorn, Nebraska
+```
