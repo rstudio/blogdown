@@ -68,6 +68,40 @@ You do not need to worry about these details if your website is automatically ge
 
 - If your drafts and future posts contain (time-)sensitive information, you are strongly recommended to delete the `/public/` directory before you rebuild the site for publishing every time, because Hugo never deletes it, and your sensitive information may be rendered by a certain `build_site(local = TRUE)` call last time and left in the directory. If the website is really important, and you need to make sure you absolutely will not screw up anything every time you publish it, put the `/public/` directory under version control, so you have a chance to see which files were changed before you publish the new site.
 
+## Functions in the blogdown package {#functions}
+
+There are about 20 exported functions in the **blogdown** package, and many more non-exported functions. Exported functions are documented and you can use them after `library(blogdown)` (or via `blogdown::`). Non-exported functions are not documented, but you can access them via `blogdown:::` (the triple-colon syntax). This package is not very complicated, and consists of only about 1800 lines of R code (the number is given by the word-counting command `wc`):
+
+```{bash, comment=''}
+wc -l ../R/*.R ../inst/scripts/*.R
+```
+
+You may take a look at the source code (https://github.com/rstudio/blogdown) if you want to know more about a non-exported function. In this section, we selectively list some exported and non-exported functions in the package for your reference.
+
+### Exported functions
+
+Installation: you can install Hugo with `install_hugo()`, update Hugo with `update_hugo()`, and install a Hugo theme with `install_theme()`.
+
+Wrappers of Hugo commands: `hugo_cmd()` is a general wrapper of `system2('hugo', ...)`, and all later functions execute specific Hugo commands based on this general wrapper function; `hugo_version()` executes the command `hugo version` (i.e., `system2('hugo', 'version')` in R); `hugo_build()` executes `hugo` with optional parameters; `new_site()` executes `hugo new site`; `new_content()` executes `hugo new` to create a new content file, and `new_post()` is a wrapper based on `new_content()` to create a new blog post with appropriate YAML metadata and filename; `hugo_convert()` executes `hugo convert`; `hugo_server()` executes `hugo server`.
+
+Output format: `html_page()` is the only R Markdown output format function in the package. It inherits from `bookdown::html_document2()`, which in turn inherits from `rmarkdown::html_document()`. You need to read the documentation of these two functions to know the possible arguments. Section \@ref(output-format) has more detailed information about it.
+
+Helper functions: `shortcode()` is a helper function to write a Hugo shortcode `{{% %}}` in an Rmd post; `shortcode_html()` writes out `{{< >}}`.
+
+Serving a site: `serve_site()` starts a local web server to build and preview a site continuously; you can stop the server via `stop_server()`, or restart your R session.
+
+Dealing with YAML metadata: `find_yaml()` can be used to find content files that contain a specified YAML field with specified values; `find_tags()` and `find_categories()` are wrapper functions based on `find_yaml()` to match specific tags and categories in content files, respectively; `count_yaml()` can be used to calculate the frequencies of specified fields.
+
+### Non-exported functions
+
+Some functions are not exported in this package because average users are unlikely to use them directly, and we list a subset of them below:
+
+- You can find the path to the Hugo executable via `blogdown:::find_hugo()`. If the executable can be found via the `PATH` environment variable, it just returns `'hugo'`.
+
+- The helper function `modify_yaml()` can be used to modify the YAML metadata of a file. It has a `...` argument that takes arbitrary YAML fields, e.g., `blogdown:::modify_yaml('foo.md', author = 'Frida Gomam', date = '2015-07-23')` will change the `author` field in the file `foo.md` to `Frida Gomam`, and `date` to `2015-07-23`. We have shown the advanced usage of this function in Section \@ref(from-jekyll).
+
+- We have also mentioned a series of functions to clean up Markdown posts in Section \@ref(from-jekyll). They include `process_file()`, `remove_extra_empty_lines()`, `process_bare_urls()`, `normalize_chars()`, `remove_highlight_tags()`, and `fix_img_tags()`.
+
 ## Paths of figures and other dependencies {#dep-path}
 
 One of the most challenging tasks in developing the **blogdown** package is to properly handle dependency files of web pages. If all pages of a website were plain text without dependencies like images or JavaScript libraries, it would be much easier for me to develop the **blogdown** package.
