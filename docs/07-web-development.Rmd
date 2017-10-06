@@ -1,7 +1,3 @@
-\cleardoublepage 
-
-# (APPENDIX) Appendix {-}
-
 # Website Basics
 
 If you want to tweak the appearance of your website, or even design your own theme, you must have some basic knowledge for web development. In this chapter, we briefly introduce HTML, CSS, and JavaScript, which are the most common components of a web page, although CSS and JavaScript are optional.

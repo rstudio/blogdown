@@ -168,7 +168,7 @@ if (file.exists('~/.Rprofile')) {
 
 ## R Markdown vs Markdown {#output-format}
 
-When you create a new post, you have to decide whether you want to use R Markdown or plain Markdown, as you can see from Figure \@ref(fig:new-post). The main differences are:
+If you are not familiar with R Markdown, please see Appendix \@ref(r-markdown) for a quick tutorial. When you create a new post, you have to decide whether you want to use R Markdown or plain Markdown, as you can see from Figure \@ref(fig:new-post). The main differences are:
 
 1. You cannot execute any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```` ```{r} ````). However, you can still embed R code in plain Markdown using the syntax for fenced code blocks ```` ```r ```` (note there are no curly braces `{}`). Such code blocks will not be executed, and may be suitable for pure demonstration purposes. Below is an example of an R code chunk in R Markdown:
 
