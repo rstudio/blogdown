@@ -169,6 +169,8 @@ Among all YAML fields, we want to bring these to your attention:
 
 As we mentioned in Section \@ref(output-format), your post can be written in either R Markdown or plain Markdown. Please be cautious about the syntax differences between the two formats when you write the body of a post.
 
+### Shortcode
+
 Besides all Markdown features, Hugo provided a useful feature named "shortcodes". You can use a shortcode in the body of your post. When Hugo renders the post, it can automatically generate an HTML snippet based on the parameters you pass to the shortcode. This is convenient because you do not have to type or embed a large amount of HTML code in your post. For example, Hugo has a built-in shortcode for embedding Twitter cards. Normally this is how you embed a Twitter card (Figure \@ref(fig:jtleek-tweet)) on a page:
 
 ```html
