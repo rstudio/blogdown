@@ -102,6 +102,10 @@ Some functions are not exported in this package because average users are unlike
 
 - We have also mentioned a series of functions to clean up Markdown posts in Section \@ref(from-jekyll). They include `process_file()`, `remove_extra_empty_lines()`, `process_bare_urls()`, `normalize_chars()`, `remove_highlight_tags()`, and `fix_img_tags()`.
 
+- In Section \@ref(local-preview), we mentioned a caching mechanism based on the file modification time. It is implemented in `blogdown:::require_rebuild()`, which takes two arguments of filenames. The first file is the output file, and the second is the source file. When the source file is older than the output file, or the output file does not exist or is empty, this function returns `TRUE`.
+
+- The function `blogdown:::Rscript()` is a wrapper function to execute the command `Rscript`, which basically means to execute an R script in a new R session. We have mentioned this function in Chapter \@ref(other-generators).
+
 ## Paths of figures and other dependencies {#dep-path}
 
 One of the most challenging tasks in developing the **blogdown** package is to properly handle dependency files of web pages. If all pages of a website were plain text without dependencies like images or JavaScript libraries, it would be much easier for me to develop the **blogdown** package.
