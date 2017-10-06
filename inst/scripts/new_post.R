@@ -42,7 +42,7 @@ local({
       shiny::observe({
         if (!empty_title()) shiny::updateTextInput(
           session, 'file', value = blogdown:::post_filename(
-            input$title, input$subdir, input$format, input$date
+            input$title, input$subdir, shiny::isolate(input$format), input$date
           )
         )
       })
@@ -51,6 +51,12 @@ local({
           session, 'slug', value = blogdown:::post_slug(input$file)
         )
       })
+      shiny::observeEvent(input$format, {
+        f = input$file
+        if (f != '') shiny::updateTextInput(
+          session, 'file', value = blogdown:::with_ext(f, input$format)
+        )
+      }, ignoreInit = TRUE)
       shiny::observeEvent(input$done, {
         if (grepl('^\\s*$', input$file)) return(
           warning('The filename is empty!', call. = FALSE)
