@@ -16,7 +16,7 @@
 #' executable for your operating system, especially if you are not on Windows or
 #' Mac or a major Linux distribution. When in doubt, read the Hugo documentation
 #' and install it by yourself: \url{https://gohugo.io}.
-#' @param version The Hugo version number, e.g., \code{0.19}; the special value
+#' @param version The Hugo version number, e.g., \code{0.26}; the special value
 #'   \code{latest} means the latest version (fetched from Github releases).
 #' @param use_brew Whether to use Homebrew (\url{https://brew.sh}) on macOS to
 #'   install Hugo (recommended if you have already installed Homebrew). Note

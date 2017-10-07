@@ -4,7 +4,7 @@
 \alias{build_site}
 \title{Build a website}
 \usage{
-build_site(local = FALSE, method = c("html", "html_encoded", "custom"))
+build_site(local = FALSE, method = c("html", "custom"), run_hugo = TRUE)
 }
 \arguments{
 \item{local}{Whether to build the website locally to be served via
@@ -13,33 +13,22 @@ build_site(local = FALSE, method = c("html", "html_encoded", "custom"))
 \item{method}{Different methods to build a website (each with pros and cons).
 See Details. The value of this argument will be obtained from the global
 option \code{getOption('blogdown.method')} when it is set.}
+
+\item{run_hugo}{Whether to run \code{hugo_build()} after R Markdown files are
+compiled.}
 }
 \description{
-Compile all Rmd files, build the site through Hugo, and post-process HTML
-files generated from Rmd if necessary (e.g. fix figure paths).
+Compile all Rmd files and build the site through Hugo.
 }
 \details{
 You can use \code{\link{serve_site}()} to preview your website locally, and
 \code{build_site()} to build the site for publishing.
 
-For the \code{method} argument: \code{method = "html_encoded"} means to
-render all Rmd files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()}
-(which means Markdown is processed through Pandoc), copy all external
-dependencies generated from R code chunks, including images and HTML
-dependencies, to the website output directory (e.g. \file{public/}), and fix
-their paths in the HTML output because the relative locations of the
-\file{.html} file and its dependencies may have changed.
-
-\code{method = "html"} is similar to \code{method = "html_encoded"}, and the
-major differences are: (1) the HTML files under the \file{public} directory
-are not post-processed to fix image or dependency paths (so it is faster to
-build a site); (2) the \code{"html_encoded"} method moves all output files
-from the \file{content} directory to the \file{blogdown} directory to keep
-the \file{content} directory clean, so you won't see files or directories
-like \code{foo.html}, \code{foo_files/}, or \code{foo_cache/}, whereas the
-\code{"html"} method does not move any \code{*.html} files (only
-\code{*_files/} and \code{*_cache/} directories are moved). HTML widgets may
-not work well when \code{method = 'html'}.
+For the \code{method} argument: \code{method = "html"} means to render all
+Rmd files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which
+means Markdown is processed through Pandoc), and process the paths of
+external dependencies generated from R code chunks, including images and HTML
+dependencies.
 
 For all rendering methods, a custom R script \file{R/build.R} will be
 executed if you have provided it under the root directory of the website
@@ -51,14 +40,4 @@ command line \command{Rscript "R/build.R"}, which means it is executed in a
 separate R session. The value of the argument \code{local} is passed to the
 command line (you can retrieve the command-line arguments via
 \code{\link{commandArgs}(TRUE)}).
-}
-\note{
-For \code{method = "html_encoded"}, when \code{local = TRUE}, the site
-  configurations \code{baseurl} will be set to \code{/} temporarily, and RSS
-  feeds (typically the files named \code{index.xml} under the \file{public}
-  directory) will not be post-processed to save time, which means if you have
-  Rmd posts that contain R plots, these plots will not work in RSS feeds.
-  Since \code{local = TRUE} is only for previewing a website locally, you may
-  not care about RSS feeds. To build a website for production, you should
-  always call \code{build_site(local = FALSE)}.
 }

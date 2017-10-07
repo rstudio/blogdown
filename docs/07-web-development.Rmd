@@ -1,7 +1,3 @@
-\cleardoublepage 
-
-# (APPENDIX) Appendix {-}
-
 # Website Basics
 
 If you want to tweak the appearance of your website, or even design your own theme, you must have some basic knowledge for web development. In this chapter, we briefly introduce HTML, CSS, and JavaScript, which are the most common components of a web page, although CSS and JavaScript are optional.
@@ -201,7 +197,7 @@ Because each HTML element may match several different selectors, the CSS standar
 Now, let's say we want to highlight our favorite teas again, so we'll use a class attribute.
 
 ```html
-<ul>
+<ul id="tea-list">
   <li>Earl Grey</li>
   <li class="favorite">Darjeeling</li>
   <li>Oolong</li>
@@ -300,7 +296,7 @@ y = y.replace(" ", ", ");  // string manipulation
 
 You may feel the syntax is similar to R to some degree. JavaScript is an object-oriented language, and usually there are several methods that you can apply to an object. The string manipulation above is a typical example of the `Object.method()` syntax. To know the possible methods on an object, you can type the object name in your JavaScript console followed by a dot, and you should see all candidates.
 
-For R users, you have to be extremely cautious that JavaScript objects are often mutable, meaning that it could be modified anywhere. Below is a quick example:
+For R users, you have to be extremely cautious that JavaScript objects are often mutable, meaning that an object could be modified anywhere. Below is a quick example:
 
 ```js
 var x = {a: 1, b: 2};  // like a list in R

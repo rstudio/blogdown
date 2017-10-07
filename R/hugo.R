@@ -12,7 +12,7 @@ hugo_cmd = function(...) {
 #'   extracted from the output of \code{hugo_cmd('version')}.
 hugo_version = function() {
   x = hugo_cmd('version', stdout = TRUE)
-  r = '^.* v([0-9.]{2,}) .*$'
+  r = '^.* v([0-9.]{2,}).*$'
   if (grepl(r, x)) return(as.numeric_version(gsub(r, '\\1', x)))
   warning('Cannot extract the version number from Hugo:')
   cat(x, sep = '\n')
@@ -21,35 +21,23 @@ hugo_version = function() {
 #' @param local Whether to build the site for local preview (if \code{TRUE}, all
 #'   drafts and future posts will also be built, and the site configuration
 #'   \code{baseurl} will be set to \code{/} temporarily).
-#' @param config A list of the site configurations (by default, read from
-#'   \file{config.toml} or \file{config.yaml}).
 #' @export
 #' @describeIn hugo_cmd Build a plain Hugo website. Note that the function
 #'   \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
 #'   via \code{hugo_build()} to build the site.
-hugo_build = function(local = FALSE, config = load_config()) {
-  if (FALSE) {
-    oconf = change_config('relativeurls', 'true')
-    on.exit(writeUTF8(oconf$text, oconf$file), add = TRUE)
-  }
+hugo_build = function(local = FALSE) {
+  config = load_config()
   hugo_cmd(c(
     if (local) c('-b', site_base_dir(), '-D', '-F'),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
   ))
 }
 
-theme_flag = function(config) {
+theme_flag = function(config = load_config()) {
   d = list.files(get_config('themesDir', 'themes', config))
   d = if (length(d) > 0) d[1]
   theme = getOption('blogdown.theme') %n% get_config('theme', d, config)
   if (length(theme) == 1) c('-t', theme)
-}
-
-# in theory, we should use environment variables HUGO_FOO, but it does seem to
-# really work (e.g. HUGO_RELATIVEURLS does not work), so we have to physically
-# write the config into config.toml/yaml using change_config() below
-reset_env = function(name, value) {
-  if (is.na(value)) Sys.unsetenv(name) else Sys.setenv(name, value)
 }
 
 change_config = function(name, value) {
@@ -63,7 +51,7 @@ change_config = function(name, value) {
     v = if (!is.na(value)) paste(name, value, sep = ': ')
   }
   i = grep(r, x)
-  if (length(i) > 1) stop("Duplicate configuration for '", name, "' in ", f)
+  if (length(i) > 1) stop("Duplicated configuration for '", name, "' in ", f)
   x0 = x
   if (length(i) == 1) {
     if (is.null(v)) x = x[-i] else x[i] = v  # replace old config
@@ -100,6 +88,8 @@ change_config = function(name, value) {
 #' @export
 #' @describeIn hugo_cmd Create a new site (skeleton) via \command{hugo new
 #'   site}. The directory of the new site should be empty,
+#' @examples library(blogdown)
+#' if (interactive()) new_site()
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
   theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = interactive()
@@ -121,10 +111,12 @@ new_site = function(
     install_theme(theme, theme_example)
 
   if (sample) {
-    dir_create(file.path('content', 'post'))
-    file.copy(pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd'), 'content/post/')
+    d = file.path('content', 'blog')
+    if (!dir_exists(d)) d = file.path('content', 'post')
+    dir_create(d)
+    file.copy(pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd'), d)
     if (interactive() && getOption('blogdown.open_sample', TRUE))
-      open_file('content/post/2015-07-23-r-rmarkdown.Rmd')
+      open_file(file.path(d, '2015-07-23-r-rmarkdown.Rmd'))
   }
   if (!file.exists('index.Rmd'))
     writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
@@ -136,10 +128,14 @@ new_site = function(
 #' Download the specified theme from Github and install to the \file{themes}
 #' directory. Available themes are listed at \url{http://themes.gohugo.io}.
 #' @inheritParams new_site
+#' @param force Whether to override the existing theme of the same name. If you
+#'   have made changes to this existing theme, your changes will be lost when
+#'   \code{force = TRUE}! Please consider backing up the theme by renaming it
+#'   before you try \code{force = TRUE}.
 #' @param update_config Whether to update the \code{theme} option in the site
 #'   configurations.
 #' @export
-install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
+install_theme = function(theme, theme_example = FALSE, update_config = TRUE, force = FALSE) {
   r = '^([^/]+/[^/@]+)(@.+)?$'
   if (!is.character(theme) || length(theme) != 1 || !grepl(r, theme)) {
     warning("'theme' must be a character string of the form 'user/repo' or 'user/repo@branch'")
@@ -157,12 +153,22 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
     files = utils::unzip(zipfile)
     zipdir = dirname(files[1])
     expdir = file.path(zipdir, 'exampleSite')
-    if (theme_example && dir_exists(expdir)) {
+    if (dir_exists(expdir)) if (theme_example) {
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
       # remove the themesDir setting; it is unlikely that you need it
       in_dir('..', change_config('themesDir', NA))
-    }
-    file.rename(zipdir, gsub(sprintf('-%s$', branch), '', zipdir))
+    } else warning(
+      "The theme has provided an example site. You should read the theme's documentation ",
+      'and at least take a look at the config file config.toml of the example site, ',
+      'because not all Hugo themes work with any config files.'
+    )
+    newdir = gsub(sprintf('-%s$', branch), '', zipdir)
+    if (!force && dir_exists(newdir)) stop(
+      'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
+      'after you read the help page ?blogdown::install_theme.', call. = FALSE
+    )
+    unlink(newdir, recursive = TRUE)
+    file.rename(zipdir, newdir)
     unlink(zipfile)
   })
   if (update_config) {
@@ -182,11 +188,20 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE) {
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
 new_content = function(path, kind = 'default', open = interactive()) {
+  if (missing(kind)) kind = default_kind(path)
   hugo_cmd(c('new', shQuote(path), c('-k', kind)))
   file = content_file(path)
   hugo_toYAML(file)
   if (open) open_file(file)
   file
+}
+
+default_kind = function(path) {
+  path = normalizePath(path, '/', mustWork = FALSE)
+  if (!grepl('/', path)) return('default')
+  atype = gsub('/.*', '.md', path)
+  if (!file.exists(file.path('archetypes', atype))) return('default')
+  gsub('/.*', '', path)
 }
 
 # Hugo cannot convert a single file: https://github.com/gohugoio/hugo/issues/3632
@@ -224,22 +239,23 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #' @param subdir If specified (not \code{NULL}), the post will be generated
 #'   under a subdirectory under \file{content/}. It can be a nested subdirectory
 #'   like \file{post/joe/}.
-#' @param rmd Whether to create an R Markdown (.Rmd) or plain Markdown (.md)
-#'   file. Ignored if \code{file} has been specified.
+#' @param ext The filename extension (e.g., \file{.md}, \file{.Rmd}, or
+#'   \file{.Rmarkdown}). Ignored if \code{file} has been specified.
 #' @export
-#' @describeIn hugo_cmd A wrapper function to create a new (R) Markdown post
-#'   under the \file{content/post/} directory via \code{new_content()}. If your
-#'   post will use R code chunks, you can set \code{rmd = TRUE} or the global
-#'   option \code{options(blogdown.rmd = TRUE)} in your \file{~/.Rprofile}.
+#' @describeIn hugo_cmd A wrapper function to create a new post under the
+#'   \file{content/post/} directory via \code{new_content()}. If your post will
+#'   use R code chunks, you can set \code{ext = '.Rmd'} or the global option
+#'   \code{options(blogdown.ext = '.Rmd')} in your \file{~/.Rprofile}.
 #'   Similarly, you can set \code{options(blogdown.author = 'Your Name')} so
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
   categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = NULL,
-  subdir = getOption('blogdown.subdir', 'post'), rmd = getOption('blogdown.rmd', FALSE)
+  subdir = getOption('blogdown.subdir', 'post'), ext = getOption('blogdown.ext', '.md')
 ) {
-  if (is.null(file)) file = post_filename(title, subdir, rmd, date)
+  if (is.null(file)) file = post_filename(title, subdir, ext, date)
   file = trim_ws(file)  # trim (accidental) white spaces
+  if (missing(kind)) kind = default_kind(file)
   if (is.null(slug)) slug = post_slug(file)
   slug = trim_ws(slug)
   if (generator() == 'hugo') file = new_content(file, kind, FALSE) else {
@@ -265,6 +281,21 @@ new_post = function(
 hugo_convert = function(to = c('YAML', 'TOML', 'JSON'), unsafe = FALSE, ...) {
   to = match.arg(to)
   hugo_cmd(c('convert', paste0('to', to), if (unsafe) '--unsafe', ...))
+}
+
+#' @param host,port The host IP address and port; see
+#'   \code{servr::\link{server_config}()}.
+#' @export
+#' @describeIn hugo_cmd Start a Hugo server.
+hugo_server = function(host, port) {
+  hugo_cmd(hugo_server_args(host, port))
+}
+
+hugo_server_args = function(host, port) {
+  c(
+    'server', '--bind', host, '-p', port,
+    getOption('blogdown.hugo.server', c('-D', '-F')), theme_flag()
+  )
 }
 
 #' Helper functions to write Hugo shortcodes using the R syntax

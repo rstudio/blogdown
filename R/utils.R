@@ -1,53 +1,3 @@
-#' Live preview a site
-#'
-#' Calls \code{servr::\link{httw}()} to watch for changes in the site, rebuild
-#' the site if necessary, and refresh the web page automatically.
-#' @param ... Arguments passed to \code{servr::httw()} (arguments \code{dir},
-#'   \code{site.dir}, \code{baseurl}, and \code{handler} have been provided,
-#'   hence you cannot customize these arguments).
-#' @export
-serve_site = function(...) {
-  serve = switch(
-    generator(), hugo = serve_it(),
-    jekyll = serve_it(
-      '_config.yml', baseurl = get_config2('baseurl', ''),
-      pdir = get_config2('destination', '_site')
-    ),
-    hexo = serve_it(
-      '_config.yml', baseurl = get_config2('root', ''),
-      pdir = get_config2('public_dir', 'public')
-    ),
-    stop("Cannot recognize the site (only Hugo, Jekyll, and Hexo are supported)")
-  )
-  serve(...)
-}
-
-generator = function() getOption('blogdown.generator', 'hugo')
-
-serve_it = function(
-  config = c('config.toml', 'config.yaml'), pdir = publish_dir(),
-  baseurl = site_base_dir()
-) {
-  function(...) {
-    owd = setwd(site_root(config)); on.exit(setwd(owd), add = TRUE)
-    build_site(TRUE)
-    n = nchar(pdir)
-    servr::httw(site.dir = pdir, baseurl = baseurl, handler = function(...) {
-      files = c(...)
-      # exclude changes in the publish dir
-      files = files[substr(files, 1, n) != pdir]
-      # re-generate only if Rmd/md or config files or layouts were updated
-      if (length(grep('(_?layouts?|static)/|[.]([Rr]?md|toml|yaml)$', files)))
-        build_site(TRUE)
-    }, dir = '.', ...)
-  }
-}
-
-get_config2 = function(key, default) {
-  res = yaml::yaml.load_file('_config.yml')
-  res[[key]] %n% default
-}
-
 # figure out the base dir of the website, e.g. http://example.com/project/ ->
 # project/, so that serve_site() works as a local server when the website is to
 # be generated to a subdirectory of a domain (see the baseurl argument of
@@ -102,42 +52,40 @@ file.copy2 = function(from, to, ...) {
 # make sure it is a file instead of an existing dir
 file_exists = function(x) file_test('-f', x)
 
-dir_copy = function(from, to) {
-  if (dir_exists(from)) {
-    dir_create(dirname(to))
-    file.copy(from, dirname(to), recursive = TRUE)
-  }
+dir_rename = function(from, to, clean = FALSE) {
+  if (!dir_exists(from)) return()
+  if (clean) unlink(to, recursive = TRUE)
+  dir_create(dirname(to))
+  file.rename(from, to)
 }
 
-dirs_copy = function(from, to) {
+dirs_rename = function(from, to, ...) {
   n = length(from); if (n == 0) return()
   if (length(to) != n) stop(
     'The number of source dirs must be equal to the number of target dirs'
   )
-  for (i in seq_len(n)) dir_copy(from[i], to[i])
+  for (i in seq_len(n)) dir_rename(from[i], to[i], ...)
 }
 
 # when html output file does not exist, or html is older than Rmd, or the first
 # line of the HTML is not --- (meaning it is not produced from build_rmds() but
 # possibly from clicking the Knit button)
 require_rebuild = function(html, rmd) {
-  older_than(html, rmd) || (readLines(html, n = 1) != '---')
+  older_than(html, rmd) || length(x <- readLines(html, n = 1)) == 0 || x != '---'
 }
 
 #' Build all Rmd files under a directory
 #'
 #' List all Rmd files recursively under a directory, and compile them using
 #' \code{rmarkdown::\link{render}()}.
-#' @param dir A directory name.
+#' @param dir A directory path.
 #' @param force Whether to force building all Rmd files. By default, an Rmd file
 #'   is built only if it is newer than its output file(s).
 #' @export
-build_dir = function(dir, force = FALSE) {
+build_dir = function(dir = '.', force = FALSE) {
   for (f in list_rmds(dir)) {
     render_it = function() render_page(f, 'render_rmarkdown.R')
-    if (force) {
-      render_it(); next
-    }
+    if (force) { render_it(); next }
     files = list.files(dirname(f), full.names = TRUE)
     i = files == f  # should be only one in files matching f
     bases = with_ext(files, '')
@@ -153,6 +101,13 @@ older_than = function(file1, file2) {
 is_windows = function() .Platform$OS.type == 'windows'
 is_osx = function() Sys.info()[['sysname']] == 'Darwin'
 is_linux = function() Sys.info()[['sysname']] == 'Linux'
+
+is_rmarkdown = function(x) grepl('[.][Rr]markdown$', x)
+
+# build .Rmarkdown to .markdown, and .Rmd to .html
+output_file = function(file, md = is_rmarkdown(file)) {
+  with_ext(file, ifelse(md, 'markdown', 'html'))
+}
 
 # adapted from webshot:::download_no_libcurl due to the fact that
 # download.file() cannot download Github release assets:
@@ -199,16 +154,7 @@ load_config = function() {
     config = parser(f)
     attr(config, 'config_time') = file.info(f)[, 'mtime']
     opts$set(config = config)
-    base = config[['baseurl']]
-    if (is_example_url(base)) {
-      open_file(f)
-      warning(
-        'You should change the "baseurl" option in ', f, ' from ', base,
-        ' to your actual domain; if you do not have a domain, set "baseurl" to "/"',
-        immediate. = TRUE
-      )
-    }
-    config
+    check_config(config, f)
   }
 
   find_config()
@@ -217,7 +163,26 @@ load_config = function() {
     return(read_config('config.toml', parse_toml))
 
   if (file_exists('config.yaml'))
-    return(read_config('config.yaml', yaml::yaml.load_file))
+    return(read_config('config.yaml', yaml_load_file))
+}
+
+check_config = function(config, f) {
+  base = config[['baseurl']]
+  if (is_example_url(base)) {
+    open_file(f)
+    warning(
+      'You should change the "baseurl" option in ', f, ' from ', base,
+      ' to your actual domain; if you do not have a domain, set "baseurl" to "/"',
+      immediate. = TRUE, call. = FALSE
+    )
+  }
+  if (is.null(config[['ignoreFiles']])) warning(
+    'You are recommended to ignore certain files in ', f, ': set the option ignoreFiles',
+    if (grepl('[.]toml$', f)) ' = ' else ': ',
+    '["\\\\.Rmd$", "\\\\.Rmarkdown$", "_files$", "_cache$"]',
+    immediate. = TRUE, call. = FALSE
+  )
+  config
 }
 
 is_example_url = function(url) {
@@ -256,7 +221,13 @@ parse_toml = function(
     if (no_file <- missing(f)) f = paste(x, collapse = '\n')
     return(RcppTOML::parseTOML(f, fromFile = !no_file))
   }
+  # remove comments
+  x = gsub('\\s+#.+', '', x)
   z = list()
+  # arbitrary values
+  r = '^([[:alnum:]]+?)\\s*=\\s*(.+)\\s*$'
+  y = grep(r, x, value = TRUE)
+  z[gsub(r, '\\1', y)] = as.list(gsub(r, '\\2', y))
   # strings
   r = '^([[:alnum:]]+?)\\s*=\\s*"([^"]*?)"\\s*$'
   y = grep(r, x, value = TRUE)
@@ -305,8 +276,8 @@ dash_filename = function(string, pattern = '[^[:alnum:]]+') {
 }
 
 # return a filename for a post based on title, date, etc
-post_filename = function(title, subdir, rmd, date) {
-  file = paste0(dash_filename(title), ifelse(rmd, '.Rmd', '.md'))
+post_filename = function(title, subdir, ext, date) {
+  file = paste0(dash_filename(title), ext)
   d = dirname(file); f = basename(file)
   if (is.null(subdir) || subdir == '') subdir = '.'
   d = if (d == '.') subdir else file.path(subdir, d)
@@ -349,12 +320,15 @@ update_meta_addin = function() {
   sys.source(pkg_file('scripts', 'update_meta.R'))
 }
 
+rmd_pattern = '[.][Rr](md|markdown)$'
+md_pattern  = '[.][Rr]?(md|markdown)$'
+
 # scan YAML metadata of all Rmd/md files
 scan_yaml = function(dir = 'content') {
   if (missing(dir)) dir = switch(generator(),
     hugo = 'content', jekyll = '.', hexo = 'source'
   )
-  files = list.files(dir, '[.][Rr]?md$', recursive = TRUE, full.names = TRUE)
+  files = list.files(dir, md_pattern, recursive = TRUE, full.names = TRUE)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
     yaml = fetch_yaml(f)
@@ -472,6 +446,13 @@ yaml_load = function(x) yaml::yaml.load(
   )
 )
 
+# remove the three dashes in the YAML file before parsing it (the yaml package
+# cannot handle three dashes)
+yaml_load_file = function(f) {
+  x = paste(readUTF8(f), collapse = '\n')
+  x = gsub('^\\s*---\\s*|\\s*---\\s*$', '', x)
+  yaml::yaml.load(x)
+}
 
 # if YAML contains inline code, evaluate it and return the YAML
 fetch_yaml2 = function(f) {
@@ -489,6 +470,7 @@ fetch_yaml2 = function(f) {
 # a wrapper of yaml::as.yaml() to indent sublists by default and trim white spaces
 as.yaml = function(..., .trim_ws = TRUE) {
   res = yaml::as.yaml(..., indent.mapping.sequence = TRUE)
+  Encoding(res) = 'UTF-8'
   if (.trim_ws) sub('\\s+$', '', res) else res
 }
 
@@ -608,8 +590,10 @@ args_string = function(...) {
   if (length(v) == 0) return('')
   if (any(unlist(lapply(v, length)) != 1)) stop('All argument values must be of length 1')
   m = names(v)
+  i = vapply(v, is.character, logical(1))
   v = as.character(v)
-  i = grep('\\s', v)  # quote values that contain spaces
+  i = i | grepl('\\s', v)  # quote values that contain spaces
+  i = i & !grepl('^".+"$', v)  # not already quoted
   v[i] = sprintf('"%s"', v[i])
   if (is.null(m)) {
     paste(v, collapse = ' ')

@@ -29,8 +29,9 @@ local({
       shiny::fillRow(txt_input('slug', 'Slug', '', '(optional)'), height = '70px'),
       shiny::fillRow(
         shiny::radioButtons(
-          'format', 'Format', c('Markdown', 'R Markdown'), inline = TRUE,
-          selected = ifelse(getOption('blogdown.rmd', FALSE), 'R Markdown', 'Markdown')
+          'format', 'Format', inline = TRUE,
+          c('Markdown' = '.md', 'R Markdown (.Rmd)' = '.Rmd', 'R Markdown (.Rmarkdown)' = '.Rmarkdown'),
+          selected = getOption('blogdown.ext', '.md')
         ),
         height = '70px'
       ),
@@ -41,7 +42,7 @@ local({
       shiny::observe({
         if (!empty_title()) shiny::updateTextInput(
           session, 'file', value = blogdown:::post_filename(
-            input$title, input$subdir, input$format == 'R Markdown', input$date
+            input$title, input$subdir, shiny::isolate(input$format), input$date
           )
         )
       })
@@ -50,13 +51,19 @@ local({
           session, 'slug', value = blogdown:::post_slug(input$file)
         )
       })
+      shiny::observeEvent(input$format, {
+        f = input$file
+        if (f != '') shiny::updateTextInput(
+          session, 'file', value = blogdown:::with_ext(f, input$format)
+        )
+      }, ignoreInit = TRUE)
       shiny::observeEvent(input$done, {
         if (grepl('^\\s*$', input$file)) return(
           warning('The filename is empty!', call. = FALSE)
         )
         if (is.null(getOption('blogdown.author'))) options(blogdown.author = input$author)
         blogdown::new_post(
-          input$title, author = input$author, rmd = input$format == 'R Markdown',
+          input$title, author = input$author, ext = input$format,
           categories = input$cat, tags = input$tag,
           file = gsub('[-[:space:]]+', '-', input$file),
           slug = input$slug, subdir = input$subdir, date = input$date

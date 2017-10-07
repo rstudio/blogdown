@@ -1,7 +1,8 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.0.57
+Version: 0.1.5
+Date: 2017-08-22
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name"),
     person("Beilei", "Bian", role = "ctb"),
@@ -9,27 +10,32 @@ Authors@R: c(
     person("Hiroaki", "Yutani", role = "ctb"),
     person("JJ", "Allaire", role = "ctb"),
     person("Kevin", "Ushey", role = "ctb"),
+    person(family = "RStudio Inc", role = "cph"),
     person()
     )
-Description: Write blog posts and web pages in R Markdown. This package uses the
-    static site generator Hugo (<https://gohugo.io>).
+Description: Write blog posts and web pages in R Markdown. This package supports
+    the static site generator 'Hugo' (<https://gohugo.io>) best, and it also
+    supports 'Jekyll' (<http://jekyllrb.com>) and 'Hexo' (<https://hexo.io>).
 License: GPL-3
 Imports:
     rmarkdown,
-    bookdown (>= 0.4),
-    knitr,
+    bookdown (>= 0.5),
+    knitr (>= 1.17),
     htmltools,
     yaml (>= 2.1.14),
     httpuv,
-    servr (>= 0.4.1)
+    servr (>= 0.7)
 Suggests:
   testit,
   shiny,
   miniUI,
   RcppTOML,
   stringr,
-  rprojroot,
-  rstudioapi
+  rstudioapi,
+  tools,
+  processx,
+  later,
+  xaringan
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues

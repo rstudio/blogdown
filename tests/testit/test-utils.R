@@ -27,6 +27,14 @@ assert(
     c('foo-bar', 'foo-bar-hi', 'foo-hello-world')
 )
 
+assert('arg_string() turns a series of arguments to a single string', {
+  (args_string('hi') %==% '"hi"')
+  (args_string('"hi"') %==% '"hi"')
+  (args_string('hi there') %==% '"hi there"')
+  (args_string(a = 'hi') %==% 'a="hi"')
+  (args_string(a = 'hi', b = 1) %==% 'a="hi" b=1')
+})
+
 test_rmd_file = tempfile()
 test_rmd = '---
 date: \'2017-05-01\'

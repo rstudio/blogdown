@@ -10,7 +10,7 @@ install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FAL
 update_hugo()
 }
 \arguments{
-\item{version}{The Hugo version number, e.g., \code{0.19}; the special value
+\item{version}{The Hugo version number, e.g., \code{0.26}; the special value
 \code{latest} means the latest version (fetched from Github releases).}
 
 \item{use_brew}{Whether to use Homebrew (\url{https://brew.sh}) on macOS to

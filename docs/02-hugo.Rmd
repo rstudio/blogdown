@@ -30,7 +30,7 @@ knitr::include_graphics('images/folder-structure.png')
 
 ## Configuration
 
-The first file that you may want to look at is the configuration or `config` file, in which you can set global configurations of your site. It may contain options like the title and description of your site, as well as other global options like links to your social networks, the navigation menu, and the base URL for your website.
+The first file that you may want to look at is the configuration or `config` file in your root directory, in which you can set global configurations of your site. It may contain options like the title and description of your site, as well as other global options like links to your social networks, the navigation menu, and the base URL for your website.
 
 When generating your site, Hugo will search for a file called `config.toml` first. If it cannot find one, it will continue to search for `config.yaml`.^[Hugo also supports `config.json`, but **blogdown** does not support it, so we do not recommend you to use it.] Since most Hugo themes contain example sites that ship `config.toml` files, and the TOML (Tom's Obvious, Minimal Language) format appears to be more popular in the Hugo community, we will mainly discuss `config.toml` here.
 
@@ -105,7 +105,7 @@ All built-in options that you may set for Hugo are listed on [this page](https:/
         post = "/:year/:month/:day/:title/"
     ```
     
-    Personally I recommend you to use the `:slug` variable instead of `:title`:
+    Personally I recommend you to use the `:slug` variable^[A slug is simply a character string that you can use to identify a specific post. A slug will not change, even if the title changes. For instance, if you decide to change the title of your post from "I love blogdown" to "Why blogdown is the best package ever", and you had used the post's title in the URL, your old links will now be broken. If instead, you had specified the URL via a slug (something like "blogdown-love"), then you can change the title as many times as you'd like and you will not end up with any broken links.] instead of `:title`:
     
     ```js
     [permalinks]
@@ -120,7 +120,7 @@ All built-in options that you may set for Hugo are listed on [this page](https:/
 
 - `theme`: The directory name of the Hugo theme under `themes/`.
 
-- `ignoreFiles`: A list of filename patterns (regular expressions) for Hugo to ignore certain files when building the site. You are recommended to specify at least these patterns `["\\.Rmd$", "_files$", "_cache$"]`. You should ignore `.Rmd` files because **blogdown** will compile them to `.html`, and it suffices for Hugo to use the `.html` files. There is no need for Hugo to build `.Rmd` files, and actually Hugo does not know how. Directories with suffixes `_files` and `_cache` should be ignored because they contain auxiliary files after an Rmd file is compiled, and **blogdown** will store them. Hugo should not copy them again to the `public/` directory.
+- `ignoreFiles`: A list of filename patterns (regular expressions) for Hugo to ignore certain files when building the site. You are recommended to specify at least these patterns `["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]`. You should ignore `.Rmd` files because **blogdown** will compile them to `.html`, and it suffices for Hugo to use the `.html` files. There is no need for Hugo to build `.Rmd` files, and actually Hugo does not know how. Directories with suffixes `_files` and `_cache` should be ignored because they contain auxiliary files after an Rmd file is compiled, and **blogdown** will store them. Hugo should not copy them again to the `public/` directory.
 
 - `uglyURLs`: By default, Hugo generate "clean" URLs. This may be a little surprising and requires you to understand how URLs work when your browser fetches a page from a server. Basically Hugo generates `foo/index.html` for `foo.md` by default instead of `foo.html`, because the former allows you to visit the page via the clean URL `foo/` without `index.html`. Most web servers understand requests like `http://www.example.com/foo/` and will present `index.html` under `foo/` to you. If you prefer the strict mapping from `*.md` to `*.html`, you may enable "ugly" URLs by setting `uglyURLs` to `true`.
 
@@ -155,7 +155,7 @@ The structure of the `content/` directory can be arbitrary. A common structure i
 
 Each page should start with YAML metadata specifying information like the title, date, author, categories, tags, and so on. Depending on the specific Hugo theme and templates you use, some of these fields may be optional.
 
-Among all YAML fields, we want bring these to your attention:
+Among all YAML fields, we want to bring these to your attention:
 
 - `draft`: You can mark a document as a draft by setting `draft: true` in its YAML metadata. Draft posts will not be rendered if the site is built via `blogdown::build_site()` or `blogdown::hugo_build()`, but will be rendered in the local preview mode (see Section \@ref(local-preview)).
 
@@ -168,6 +168,8 @@ Among all YAML fields, we want bring these to your attention:
 ### Body
 
 As we mentioned in Section \@ref(output-format), your post can be written in either R Markdown or plain Markdown. Please be cautious about the syntax differences between the two formats when you write the body of a post.
+
+### Shortcode
 
 Besides all Markdown features, Hugo provided a useful feature named "shortcodes". You can use a shortcode in the body of your post. When Hugo renders the post, it can automatically generate an HTML snippet based on the parameters you pass to the shortcode. This is convenient because you do not have to type or embed a large amount of HTML code in your post. For example, Hugo has a built-in shortcode for embedding Twitter cards. Normally this is how you embed a Twitter card (Figure \@ref(fig:jtleek-tweet)) on a page:
 
@@ -228,13 +230,13 @@ The `config.toml` of the theme hugo-lithium-theme contains the following options
 
 ```js
 baseurl = "/"
-relativeurls = true
+relativeurls = false
 languageCode = "en-us"
 title = "A Hugo website"
 theme = "hugo-lithium-theme"
 googleAnalytics = ""
 disqusShortname = ""
-ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
@@ -279,7 +281,7 @@ Some of these options may be obvious to understand, and some may need explanatio
 
 - `googleAnalytics`: The Google Analytics tracking ID (like `UA-000000-2`). You can sign up at https://analytics.google.com to obtain a tracking ID.
 
-- `disqusShortname`: The Disqus ID. You may register an account at https://disqus.com. Please note that you have to set up a functional `baseurl` and publish your website before Disqus comments can work.
+- `disqusShortname`: The Disqus ID that you created during the account setup process at https://disqus.com. This is required to enable commenting on your site^[As we mentioned in Chapter \@ref(static-sites), `blogdown` generates static and unchanging content. To add something dynamic and always changing (like the ability for your fans to leave comments), you must incorporate an outside commenting system like Disqus.]. Please note that you have to set up a functional `baseurl` and publish your website before Disqus comments can work.
 
 - `ignoreFiles` and `permalinks`: These options have been explained in Section \@ref(options).
 
@@ -695,7 +697,7 @@ Lastly, this theme provided an example site under `exampleSite/`. The directory 
 
 The example site provided a sample `config.toml`, a home page `_index.md`, an about page `about.md`, two posts under `note/` and two under `post/`. It also overrides the `foot_custom.html` in the theme.
 
-### How-to
+### Implementing more features {#how-to}
 
 The XMin is actually a highly functional theme, but we understand that it may be too minimal to you. There are a few commonly used features (intentionally) missing in this theme, and we will teach you how to add them by yourself if desired. All these features and the source code can be applied to other themes, too.
 
@@ -718,7 +720,7 @@ The XMin is actually a highly functional theme, but we understand that it may be
 - **Enable syntax highlighting via highlight.js.** Add this to `head_custom.html`
 
     ```html
-    <link href="//YOUR-CDN-LINK/github.min.css" rel="stylesheet">
+    <link href="//YOUR-CDN-LINK/styles/github.min.css" rel="stylesheet">
     ```
     
     and this to `foot_custom.html`:
@@ -840,7 +842,7 @@ After you digest the XMin theme and the implementations of additional features, 
 
 ## Custom layouts
 
-It is very likely that you want to customize a theme unless it is designed by yourself. The most straightforward way is to simply make changes directly in the theme, but the problem is that a Hugo theme may be constantly updated by its original author for improvements or bug fixes. Similar to the "you break it, you buy it" policy (the [Pottery Barn rule](https://en.wikipedia.org/wiki/Pottery_Barn_rule)), once you touch other people's source code, you will be responsible for future maintenance by yourself, and the original author should not be responsible for the changes you made on your side. That means it may not be easy to pull future updates of this theme to your website (you have to carefully read the changes and make sure they do not conflict with your changes), but if you are completely satisfied with the current state of the theme, and do not want future updates, it is fine to modify the theme files directly.
+It is very likely that you want to customize a theme unless it is designed by yourself. The most straightforward way is to simply make changes directly in the theme^[If you are new to web development, be careful changing content within the theme. Minor changes like colors and font-sizes can be found within the CSS files of the theme and can be altered simply with minimal risk of breaking the theme's functionality.], but the problem is that a Hugo theme may be constantly updated by its original author for improvements or bug fixes. Similar to the "you break it, you buy it" policy (the [Pottery Barn rule](https://en.wikipedia.org/wiki/Pottery_Barn_rule)), once you touch other people's source code, you will be responsible for future maintenance by yourself, and the original author should not be responsible for the changes you made on your side. That means it may not be easy to pull future updates of this theme to your website (you have to carefully read the changes and make sure they do not conflict with your changes), but if you are completely satisfied with the current state of the theme, and do not want future updates, it is fine to modify the theme files directly.
 
 For a theme author aware of the fact that users may customize her theme, she will typically provide two ways: one is to provide options in `config.toml`, so that you can change these options without touching the template files; the other is to leave a few lightweight template files under `layouts/` in the theme, so that you can override them without touching the core template files. Take the XMin theme for example:
 
@@ -872,7 +874,7 @@ All files under `layouts/` under the root directory will override files with the
 
 ## Static files
 
-All files under the `static/` directory copied to `public/` when Hugo renders a website. This directory is often used to store static web assets like images, CSS, and JavaScript files. For example, an image `static/foo/bar.png` can be embedded in your post using the Markdown syntax `![](/foo/bar.png)`.^[The link of the image depends on your `baseurl` setting in `config.toml`. If it does not contain a subpath, `/foo/bar.png` will be the link of the image, otherwise you may have to adjust it, e.g., for `baseurl = "http://example.com/subpath/"`, the link to the image should be `/subpath/foo/bar.png`.]
+All files under the `static/` directory are copied to `public/` when Hugo renders a website. This directory is often used to store static web assets like images, CSS, and JavaScript files. For example, an image `static/foo/bar.png` can be embedded in your post using the Markdown syntax `![](/foo/bar.png)`.^[The link of the image depends on your `baseurl` setting in `config.toml`. If it does not contain a subpath, `/foo/bar.png` will be the link of the image, otherwise you may have to adjust it, e.g., for `baseurl = "http://example.com/subpath/"`, the link to the image should be `/subpath/foo/bar.png`.]
 
 Usually a theme has a `static/` folder, and you can partially override its files using the same mechanism as overriding `layouts/` files, i.e., `static/file` will override `themes/theme-name/static/file`. In the XMin theme, I have two CSS files `style.css` and `fonts.css`. The former is the main style sheet, and the latter is a quite small file to define typefaces only. You may want to define your own typefaces, and you can only provide a `static/css/fonts.css` to override the one in the theme, e.g.,
 

@@ -13,3 +13,6 @@ introduction to \pkg{blogdown} (e.g., you are very familiar with creating
 websites), set your working directory to an empty directory, and run
 \code{blogdown::\link{new_site}()} to get started right away.
 }
+\examples{
+if (interactive()) blogdown::new_site()
+}
