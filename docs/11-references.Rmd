@@ -4,6 +4,6 @@
 
 ```{r include=FALSE}
 knitr::write_bib(c(
-  .packages(), 'blogdown', 'bookdown', 'knitr', 'rmarkdown', 'htmlwidgets', 'webshot', 'servr'
+  .packages(), 'blogdown', 'bookdown', 'knitr', 'rmarkdown', 'htmlwidgets', 'webshot', 'servr', 'xaringan', 'animation',  'processx', 'later', 'widgetframe', 'pkgdown'
 ), 'packages.bib')
 ```
