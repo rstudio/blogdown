@@ -1,6 +1,6 @@
 # Migration
 
-Usually it is easier to start a new website than migrating an old one to a new framework, but you may have to do it anyway because of the useful content on the old website that should not simply be discarded. A lazy solution is to leave the old website as is, start a new website with a new domain, and provide a link to the old website. This may be a hassle to your readers, and they may not be able to easily discover the gems that you created on your old website, so I recommend you to migrate your old posts and pages to the new website if possible.
+Usually it is easier to start a new website than migrating\index{Site Migration} an old one to a new framework, but you may have to do it anyway because of the useful content on the old website that should not simply be discarded. A lazy solution is to leave the old website as is, start a new website with a new domain, and provide a link to the old website. This may be a hassle to your readers, and they may not be able to easily discover the gems that you created on your old website, so I recommend you to migrate your old posts and pages to the new website if possible.
 
 This process may be easy or hard, depending on how complicated your old website is. The bad news is that there is unlikely to be a universal or magical solution, but I have provided some helper functions in **blogdown** as well as a Shiny application to assist you, which may make it a little easier for you to migrate from Jekyll and WordPress sites.
 
@@ -16,7 +16,7 @@ It is likely that some links will be broken after the migration because Hugo ren
 
 ## From Jekyll
 
-When converting a Jekyll website to Hugo, the most challenging part is the theme. If you want to keep exactly the same theme, you will have to rewrite your Jekyll templates using Hugo's syntax (see Section \@ref(templates)). However, if you can find an existing theme in Hugo (https://themes.gohugo.io), things will be much easier, and you only need to move the content of your website to Hugo, which is relatively easy. Basically you copy the Markdown pages and posts to the `content/` directory in Hugo, and tweak these text files.
+When converting a Jekyll\index{Jekyll} website to Hugo, the most challenging part is the theme. If you want to keep exactly the same theme, you will have to rewrite your Jekyll templates using Hugo's syntax (see Section \@ref(templates)). However, if you can find an existing theme in Hugo (https://themes.gohugo.io), things will be much easier, and you only need to move the content of your website to Hugo, which is relatively easy. Basically you copy the Markdown pages and posts to the `content/` directory in Hugo, and tweak these text files.
 
 Usually posts in Jekyll are under the `_posts/` directory, and you can move them to `content/post/` (you are free to use other directories). Then you need to define a custom rule for permanent URLs in `config.toml` like (see Section \@ref(options)):
 
@@ -112,7 +112,7 @@ slug: announcing-the-jhu-data-science-hackathon-2015
 
 ## From WordPress
 
-From our experience, the best way to import WordPress blog posts to Hugo is to import them to Jekyll, and write an R script to clean up the YAML metadata of all pages if necessary, instead of using the migration tools listed on the [official guide](https://gohugo.io/tools/), including the WordPress plugin `wordpress-to-hugo-exporter`.
+From our experience, the best way to import WordPress\index{WordPress} blog posts to Hugo is to import them to Jekyll, and write an R script to clean up the YAML metadata of all pages if necessary, instead of using the migration tools listed on the [official guide](https://gohugo.io/tools/), including the WordPress plugin `wordpress-to-hugo-exporter`.
 
 To our knowledge, the best tool to convert a WordPress website to Jekyll is the Python tool [Exitwp](https://github.com/thomasf/exitwp). Its author has provided detailed instructions on how to use it. You have to know how to install Python libraries and execute Python scripts. If you do not, I have provided an online tool at https://github.com/yihui/travis-exitwp. You can upload your WordPress XML file there, and get a download link to a ZIP archive that contains your posts in Markdown.
 

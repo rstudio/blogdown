@@ -10,7 +10,7 @@ If you do not mind using command-line tools or are familiar with GIT/GitHub, you
 
 ## Netlify
 
-As we just mentioned, Netlify allows you to quickly publish a website by uploading the `public/` folder through its web interface, and you will be assigned a random subdomain `*.netlify.com`^[You don't have to keep the `*.netlify.com` domain. See Appendix \@ref(domain-name) for more information.]. This approach is good for those websites that are not updated frequently (or at all). However, it is unlikely that you do not need to update your website, so we introduce a better approach in this section,^[Please bear in mind that the purpose of this section is to outline the basic steps of publishing a website with Netlify, and the technical details may change from time to time, so the official Netlify documentation should be the most reliable source if you have any questions or anything we introduced here does not work.] which will take you a few more minutes to complete the configurations. Once it is properly configured, all you need to do in the future is to update the source repository, and Netlify will call Hugo to render your website automatically.
+As we just mentioned, Netlify\index{Netlify} allows you to quickly publish a website by uploading the `public/` folder through its web interface, and you will be assigned a random subdomain `*.netlify.com`^[You don't have to keep the `*.netlify.com` domain. See Appendix \@ref(domain-name) for more information.]. This approach is good for those websites that are not updated frequently (or at all). However, it is unlikely that you do not need to update your website, so we introduce a better approach in this section,^[Please bear in mind that the purpose of this section is to outline the basic steps of publishing a website with Netlify, and the technical details may change from time to time, so the official Netlify documentation should be the most reliable source if you have any questions or anything we introduced here does not work.] which will take you a few more minutes to complete the configurations. Once it is properly configured, all you need to do in the future is to update the source repository, and Netlify will call Hugo to render your website automatically.
 
 Basically you have to host all source files of your website in a GIT repository^[If the contents of your `blogdown` site are not in the root directory of your GIT repository, Netlify will not build.]. You do not need to put the `public/` directory under version control^[You can add `public` to `.gitignore` to ignore it in GIT.] because it will be automatically generated. Currently Netlify supports GIT repositories hosted on GitHub, GitLab, and BitBucket. With any of these accounts, you can log into Netlify from its homepage and follow the guide to create a new site from your GIT repository.
 
@@ -22,7 +22,7 @@ knitr::include_graphics('images/netlify-settings.png')
 
 It may take a minute or two to deploy your website on Netlify for the first time, but it can be much faster later (a few seconds) when you update your website source, because Netlify deploys incremental changes in the `public/` directory, i.e., only the newer files compared  to the last time are deployed.
 
-After your GIT repository is connected with Netlify, the last issue you may want to solve is the domain name, unless you are satisfied with the free Netlify subdomain. If you want to use a different domain, you need to configure some DNS records of the domain to point it to the Netlify server. See Appendix \@ref(domain-name) for some background knowledge on domain names.
+After your GIT repository is connected with Netlify, the last issue you may want to solve is the domain name\index{Domain Name}, unless you are satisfied with the free Netlify subdomain. If you want to use a different domain, you need to configure some DNS records of the domain to point it to the Netlify server. See Appendix \@ref(domain-name) for some background knowledge on domain names.
 
 If you are not familiar with domain names or do not want to learn more about them, something to consider is a free subdomain `*.rbind.io` offered by RStudio, Inc. Please visit the Rbind support website <https://support.rbind.io> to learn how to apply for a subdomain. In fact, the Rbind organization also offers free help on how to set up a website based on **blogdown**, thanks to a lot of volunteers from the R and statistics community.
 
@@ -30,7 +30,7 @@ Netlify is the only solution in this chapter that does not require you to prebui
 
 ## Updog
 
-[Updog](https://updog.co) provides a simple service: it turns a specified Dropbox (or Google Drive) folder into a website. The idea is that you grant Updog the permission to read the folder, and it will act as a middleman to serve your files under this folder to your visitors. This folder has to be accessed via a domain name, and Updog offers a free subdomain `*.updog.co`. For example, if you have assigned the domain `example.updog.co` to your Dropbox folder, and a visitor wants to see the page `https://example.updog.co/foo/index.html`, Updog will read the file `foo/index.html` in your Dropbox folder and display it to the visitor.
+[Updog](https://updog.co) provides\index{Updog} a simple service: it turns a specified Dropbox (or Google Drive) folder into a website. The idea is that you grant Updog the permission to read the folder, and it will act as a middleman to serve your files under this folder to your visitors. This folder has to be accessed via a domain name, and Updog offers a free subdomain `*.updog.co`. For example, if you have assigned the domain `example.updog.co` to your Dropbox folder, and a visitor wants to see the page `https://example.updog.co/foo/index.html`, Updog will read the file `foo/index.html` in your Dropbox folder and display it to the visitor.
 
 At the moment, the free plan of Updog only allows one website per account, and will insert a footer "Hosted on UpDog" on your web pages. You may not like these limitations. The major benefit of using Updog is that publishing a website becomes implicit since Dropbox will continuously sync files. All you need to do is to make sure your website is generated to the correct Dropbox folder. This can be easily achieved by setting the option `publishDir` in `config.toml`. For example, suppose the folder that you assign to Updog is `~/Dropbox/Apps/updog/my-website/`, and your source folder is at `~/Dropbox/Apps/updog/my-source/`, then you can set `publishDir: "../my-website"` in `~/Dropbox/Apps/updog/my-source/config.toml`.
 
@@ -38,7 +38,7 @@ You can also use your custom domain name if you do not want the default Updog su
 
 ## GitHub pages
 
-[GitHub pages](https://pages.github.com/) is a very popular way to host static websites (especially those built with Jekyll), but its advantages are not obvious or appealing compared to Netlify. We recommend you to consider Netlify + Hugo due to these reasons:
+[GitHub pages](https://pages.github.com/) \index{GitHub Pages} is a very popular way to host static websites (especially those built with Jekyll), but its advantages are not obvious or appealing compared to Netlify. We recommend you to consider Netlify + Hugo due to these reasons:
 
 - Currently GitHub pages does not support HTTPS for custom domain names. HTTPS only works for `*.github.io` subdomains. This limitation does not exist on Netlify. You may read the article "[Why HTTPS for Everything?](https://https.cio.gov/everything/)" to know why it is important, and you are encouraged to turn on HTTPS for your website whenever you can.
 
@@ -105,7 +105,7 @@ The source directory and the `username.github.io` directory are under the same p
 
 ## Travis + GitHub
 
-If you decide not to follow our recommendation to use Netlify to deploy your website, we should warn you that the approach in this section will require substantial knowledge about GIT, GitHub, [Travis CI](https://travis-ci.org), and the Linux command line, which we will leave for you to learn on your own. The major advantage of publishing via Travis CI is that you can compile all your Rmd posts on Travis CI (on the cloud) instead of your local computer.
+If \index{Travis CI} you decide not to follow our recommendation to use Netlify to deploy your website, we should warn you that the approach in this section will require substantial knowledge about GIT, GitHub, [Travis CI](https://travis-ci.org), and the Linux command line, which we will leave for you to learn on your own. The major advantage of publishing via Travis CI is that you can compile all your Rmd posts on Travis CI (on the cloud) instead of your local computer.
 
 In case you are not familiar with Travis, it is a service to continuously check your software in a virtual machine whenever you push changes to GitHub. It is primarily for testing software, but since you can run a lot of commands in its virtual machine, you can certainly use the virtual machine to do other things, e.g., install R and the **blogdown** package to build websites. Before I show you how, I'd like to mention two issues that you should be aware of:
 
@@ -177,4 +177,4 @@ deploy:
 
 This means the website will be pushed to the `master` branch of the repository `username/username.github.io` (remember to replace `username` with your actual user name).
 
-You can also deploy your website to Amazon S3, and the setup on the R side is very similar to what we have introduced for GitHub Pages. The only difference is in the last step, where you change the target from GitHub Pages to Amazon S3. For more information, please see the documentation on Travis: https://docs.travis-ci.com/user/deployment/s3/.
+You can also deploy your website to Amazon S3\index{Amazon S3}, and the setup on the R side is very similar to what we have introduced for GitHub Pages. The only difference is in the last step, where you change the target from GitHub Pages to Amazon S3. For more information, please see the documentation on Travis: https://docs.travis-ci.com/user/deployment/s3/.
