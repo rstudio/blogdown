@@ -573,7 +573,7 @@ To understand `layouts/`, you must know some basics about HTML (see Section \@re
         </html>
         ```
         
-        The purpose of the partial template `foot_custom.html` is the same as `head_custom.html`.
+        The purpose of the partial template `foot_custom.html` is the same as `head_custom.html`; that is, to allow the user to add customized code to the `<footer>` without rewriting the whole template.
         
         Lastly, we use the variable `.Site.Params.footer` to generate a page footer. Note we used the `with` function again. The function `markdownify` can convert Markdown to HTML. This means we can define a `footer` option using Markdown under `params` in `config.toml`, e.g.,
         
