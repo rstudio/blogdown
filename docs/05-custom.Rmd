@@ -1,6 +1,6 @@
 # Other Generators
 
-We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Basically you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show how you can possibly work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package, and we will introduce it in Section \@ref(rmd-website).
+We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Basically you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show how you can possibly work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package [@R-rmarkdown], and we will introduce it in Section \@ref(rmd-website).
 
 ## Jekyll
 
@@ -165,4 +165,4 @@ Please note that the **rmarkdown** site generator is extensible, too. For exampl
 
 ## pkgdown
 
-The **pkgdown** package (https://github.com/hadley/pkgdown) can help you quickly turn the R documentation of an R package (including help pages and vignettes) into a website. It is independent of **blogdown** and solves a specific problem. It is not a general-purpose website generator. We want to mention it in this book because it is very easy to use, and also highly useful. You can find the instructions on its website or in its GitHub repository.
+The **pkgdown** package (@R-pkgdown, https://github.com/hadley/pkgdown) can help you quickly turn the R documentation of an R package (including help pages and vignettes) into a website. It is independent of **blogdown** and solves a specific problem. It is not a general-purpose website generator. We want to mention it in this book because it is very easy to use, and also highly useful. You can find the instructions on its website or in its GitHub repository.
