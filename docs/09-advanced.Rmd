@@ -4,7 +4,7 @@ In this chapter, we talk about a few advanced topics that may be of interest to 
 
 ## More global options
 
-There are a few more advanced global options in addition to those introduced in Section \@ref(global-options), and they are listed in Table \@ref(tab:global-options2).
+There are a few more advanced global options\index{Global Options} in addition to those introduced in Section \@ref(global-options), and they are listed in Table \@ref(tab:global-options2).
 
 ```{r global-options2, echo=FALSE}
 knitr::kable(matrix(c(
@@ -26,7 +26,7 @@ The option `blogdown.widgetsID` is only relevant if your website source is under
 
 ## LiveReload
 
-As we briefly mentioned in Section \@ref(a-quick-example), you can use `blogdown::serve_site()` to preview a website, and the web page will be automatically rebuilt and reloaded in your web browser when the source file is modified and saved. This is called "LiveReload".
+As we briefly mentioned\index{LiveReload} in Section \@ref(a-quick-example), you can use `blogdown::serve_site()` to preview a website, and the web page will be automatically rebuilt and reloaded in your web browser when the source file is modified and saved. This is called "LiveReload".
 
 We have provided two approaches to LiveReload. The default approach is through `servr::httw()`, which will continuously watch the website directory for file changes, and rebuild the site when changes are detected. This approach has a few drawbacks:
 
@@ -36,7 +36,7 @@ We have provided two approaches to LiveReload. The default approach is through `
 
 If you are not concerned about the above issues, we recommend that you use the default approach, otherwise you can set the global option `options(blogdown.generator.server = TRUE)` to use an alternative approach to LiveReload, which is based on the native support for LiveReload from the static site generator. At the moment, this has only been tested against Hugo-based websites. It does not work with Jekyll and we were not successful with Hexo, either.
 
-This alternative approach requires two additional R packages to be installed: **processx** and **later**. You may use this approach when you primarily work on plain Markdown posts instead of R Markdown posts, because it can be much faster to preview Markdown posts using the web server of Hugo. The web server can be stopped by `blogdown::stop_server()`, and it will always be stopped when the R session is ended, so you can restart your R session if `stop_server()` fails to stop the server for some reason.
+This alternative approach requires two additional R packages to be installed: **processx** [@R-processx] and **later** [@R-later]. You may use this approach when you primarily work on plain Markdown posts instead of R Markdown posts, because it can be much faster to preview Markdown posts using the web server of Hugo. The web server can be stopped by `blogdown::stop_server()`, and it will always be stopped when the R session is ended, so you can restart your R session if `stop_server()` fails to stop the server for some reason.
 
 The web server is established via the command `hugo server` (see [its documentation](https://gohugo.io/commands/hugo_server/) for details). You can pass command-line arguments via the global option `blogdown.hugo.server`. The default value for this option is `c('-D', '-F')`, which means to render draft and future posts in the preview. We want to highlight a special argument `--navigateToChanged` in a recent version of Hugo, which asks Hugo to automatically navigate to the changed page. For example, you can set the options:
 
@@ -50,7 +50,7 @@ Note that Hugo renders and serves the website from memory by default, so no file
 
 ## Building a website for local preview {#local-preview}
 
-The function `blogdown::build_site()` has an argument `local` that defaults to `FALSE`, which means building the website for publishing instead of local previewing. The mode `local = TRUE` is primarily for `blogdown::serve_site()` to serve the website locally. There are three major differences between `local = FALSE` and `TRUE`. When `local = TRUE`:
+The function\index{blogdown::build\_site()} `blogdown::build_site()` has an argument `local` that defaults to `FALSE`, which means building the website for publishing instead of local previewing. The mode `local = TRUE` is primarily for `blogdown::serve_site()` to serve the website locally. There are three major differences between `local = FALSE` and `TRUE`. When `local = TRUE`:
 
 - The `baseurl` option in `config.toml` is temporarily overridden by `"/"` even if you have set it to a full URL like `"http://www.example.com/"`.^[If your `baseurl` contains a subdirectory, it will be overridden by the subdirectory name. For example, for `baseurl = "http://www.example.com/project/"`, `build_site(local = TRUE)` will temporarily remove the domain name and only use the value `/project/`.] This is because when a website is to be previewed locally, links should refer to local files. For example, `/about/index.html` should be used instead of the full link `http://www.example.com/about/index.html`; `serve_site()` knows that `/about/index.html` means the file under the `public/` directory, and can fetch it and display the content to you, otherwise your browser will take you to the website `http://www.example.com` instead of displaying a local file.
 
@@ -60,7 +60,7 @@ The function `blogdown::build_site()` has an argument `local` that defaults to `
 
     - Turn on **knitr**'s caching for time-consuming code chunks, i.e., the chunk option `cache = TRUE`.
 
-    - Do not call `build_site()` but `blogdown::hugo_build()` instead. The latter does not compile any Rmd files, but simply runs the `hugo` command to build the site. Please use this method only if you are sure that your Rmd files do not need to be recompiled.
+    - Do not call `build_site()` but `blogdown::hugo_build()` instead\index{blogdown::hugo\_build()}. The latter does not compile any Rmd files, but simply runs the `hugo` command to build the site. Please use this method only if you are sure that your Rmd files do not need to be recompiled.
 
 You do not need to worry about these details if your website is automatically generated from source via a service like Netlify, which will make use of `baseurl` and not use `-D -F` by default. If you manually publish the `public/` folder, you need to be more careful:
 
@@ -70,7 +70,7 @@ You do not need to worry about these details if your website is automatically ge
 
 ## Functions in the blogdown package {#functions}
 
-There are about 20 exported functions in the **blogdown** package, and many more non-exported functions. Exported functions are documented and you can use them after `library(blogdown)` (or via `blogdown::`). Non-exported functions are not documented, but you can access them via `blogdown:::` (the triple-colon syntax). This package is not very complicated, and consists of only about 1800 lines of R code (the number is given by the word-counting command `wc`):
+There are about 20 exported functions\index{Functions} in the **blogdown** package, and many more non-exported functions. Exported functions are documented and you can use them after `library(blogdown)` (or via `blogdown::`). Non-exported functions are not documented, but you can access them via `blogdown:::` (the triple-colon syntax). This package is not very complicated, and consists of only about 1800 lines of R code (the number is given by the word-counting command `wc`):
 
 ```{bash, comment=''}
 wc -l ../R/*.R ../inst/scripts/*.R
@@ -108,7 +108,7 @@ Some functions are not exported in this package because average users are unlike
 
 ## Paths of figures and other dependencies {#dep-path}
 
-One of the most challenging tasks in developing the **blogdown** package is to properly handle dependency files of web pages. If all pages of a website were plain text without dependencies like images or JavaScript libraries, it would be much easier for me to develop the **blogdown** package.
+One of the most challenging tasks in developing the **blogdown** package is to properly handle dependency files\index{Dependency Files} of web pages. If all pages of a website were plain text without dependencies like images or JavaScript libraries, it would be much easier for me to develop the **blogdown** package.
 
 After **blogdown** compiles each Rmd document to HTML, it will try to detect the dependencies (if there are any) from the HTML source and copy them to the `static/` folder, so that Hugo will copy them to `public/` later. The detection depends on the paths of dependencies. By default, all dependencies like R plots and libraries for HTML widgets are generated to the `foo_files/` directory if the Rmd is named `foo.Rmd`. Specifically, R plots are generated to `foo_files/figure-html/` and the rest of files under `foo_files/` are typically from HTML widgets.
 
@@ -128,7 +128,7 @@ If you do not understand all these technical details, we recommend you to use th
 
 ## HTML widgets
 
-We do not recommend you to use different HTML widgets from many R packages on the same page, because it is likely to cause conflicts in JavaScript. For example, if you theme uses the jQuery library, it may conflict with the jQuery library used by a certain HTML widget. In this case, you can conditionally load the theme's jQuery library by setting a parameter in the YAML metadata of your post and revising the Hugo template that loads jQuery. Below is the example code to load jQuery conditionally in a Hugo template:
+We do not recommend you to use different HTML widgets\index{HTML Widgets} from many R packages on the same page, because it is likely to cause conflicts in JavaScript. For example, if you theme uses the jQuery library, it may conflict with the jQuery library used by a certain HTML widget. In this case, you can conditionally load the theme's jQuery\index{jQuery} library by setting a parameter in the YAML metadata of your post and revising the Hugo template that loads jQuery. Below is the example code to load jQuery conditionally in a Hugo template:
 
 ```html
 {{ if not .Params.exclude_jquery}}
@@ -138,13 +138,13 @@ We do not recommend you to use different HTML widgets from many R packages on th
 
 Then if you set `exclude_jquery: true` in the YAML metadata of a post, the theme's jQuery will not be loaded, so there will not be conflicts when your HTML widgets also depend on jQuery.
 
-Another solution is the [**widgetframe** package](https://github.com/bhaskarvk/widgetframe). It solves this problem by embedding HTML widgets in `<iframe></iframe>`. Since an iframe is isolated from the main web page on which it is embedded, there will not be any JavaScript conflicts.
+Another solution is the [**widgetframe** package](https://github.com/bhaskarvk/widgetframe) [@R-widgetframe]. It solves this problem by embedding HTML widgets in `<iframe></iframe>`. Since an iframe is isolated from the main web page on which it is embedded, there will not be any JavaScript conflicts.
 
 A widget is typically not of full width on the page. To set its width to 100%, you can use the chunk option `out.width = "100%"`.
 
 ## Version control
 
-If your website source files are under version control, we recommend you to add at least these two folder names to your `.gitignore` file:
+If your website source files are under version control\index{Version Control}, we recommend you to add at least these two folder names to your `.gitignore` file:
 
 ```bash
 blogdown
@@ -159,7 +159,7 @@ As we mentioned in Section \@ref(dep-path), R plots will be copied to `static/`,
 
 Although it is not relevant to **blogdown**, macOS users should remember to ignore `.DS_Store` and Windows users should ignore `Thumbs.db`.
 
-If you are relatively familiar with GIT, there is a special technique that may be useful for you to manage Hugo themes, which is called "GIT submodules". A submodule in GIT allows you to manage a particular folder of the main repository using a different remote repository. For example, if you used the default `hugo-lithium-theme` from my GitHub repository, and want to sync it with my repository occasionally, because I may update it from time to time. You can add the GIT submodule via command line: 
+If you are relatively familiar with GIT\index{GIT Submodules}, there is a special technique that may be useful for you to manage Hugo themes, which is called "GIT submodules". A submodule in GIT allows you to manage a particular folder of the main repository using a different remote repository. For example, if you used the default `hugo-lithium-theme` from my GitHub repository, and want to sync it with my repository occasionally, because I may update it from time to time. You can add the GIT submodule via command line: 
 
 ```bash
 git submodule add \
@@ -177,7 +177,7 @@ In general, if you are happy with how your website looks, you do not need to man
 
 ## The default HTML template {#default-template}
 
-As we mentioned in Section \@ref(output-format), the default output format for an Rmd document in **blogdown** is `blogdown::html_page`. This format passes a minimal HTML template to Pandoc by default:
+As we mentioned in Section \@ref(output-format), the default output format for an Rmd document in **blogdown** is `blogdown::html_page`. This format passes a minimal HTML template to Pandoc\index{Pandoc} by default:
 
 ```{r default-template, engine='cat', code=readLines(blogdown:::pkg_file('resources', 'template-minimal.html')), class.source='html'}
 ```
