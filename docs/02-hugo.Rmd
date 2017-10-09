@@ -214,7 +214,7 @@ blogdown::shortcode('tweet', '852205086956818432')
 
 ## Themes
 
-A Hugo theme\index{themes} is a collection of template files and optional website assets such as CSS and JavaScript files. In a nutshell, a theme defines what your website looks like after your source content is rendered through the templates.
+A Hugo theme\index{Themes} is a collection of template files and optional website assets such as CSS and JavaScript files. In a nutshell, a theme defines what your website looks like after your source content is rendered through the templates.
 
 Hugo has provided a large number of user-contributed themes at https://themes.gohugo.io. Unless you are an experienced web designer, you'd better start from an existing theme here. The quality and complexity of these themes vary a lot, and you should choose one with caution. For example, you may take a look at the number of stars of a theme repository on GitHub, as well as whether the repository is still relatively active. We do not recommend you to use a theme that has not been updated for over a year.
 
@@ -320,13 +320,13 @@ Some of these options may be obvious to understand, and some may need explanatio
     
     - `MathJax*`: The JavaScript library MathJax\index{MathJax} can render LaTeX math expressions on web pages. Similar to `highlightjsCDN`, you can specify the CDN host of MathJax, e.g., `//cdnjs.cloudflare.com/ajax/libs`, and you can also specify the version of MathJax.
     
-    - `logo`: A list of options to define the logo\index{logo} of the website. By default, the image `logo.png` under the `static/` directory is used.
+    - `logo`: A list of options to define the logo\index{Logo} of the website. By default, the image `logo.png` under the `static/` directory is used.
 
 If you want to be a theme developer and fully understand all the technical details about these options, you have to understand Hugo templates, which we will introduce in Section \@ref(templates).
 
 ## Templates
 
-A Hugo theme consists of two major components: templates\index{templates}, and web assets. The former is essential, and it tells Hugo how to render a page.^[The most common functionality of templates is to render HTML pages, but there can also be special templates, for example, for RSS feeds and sitemaps, which are XML files.] The latter is optional but also important. It typically consists of CSS and JavaScript files, as well as other assets like images and videos. These assets determine the appearance and functionality of your website, and some may be embedded in the content of your web pages.
+A Hugo theme consists of two major components: templates\index{Templates}, and web assets. The former is essential, and it tells Hugo how to render a page.^[The most common functionality of templates is to render HTML pages, but there can also be special templates, for example, for RSS feeds and sitemaps, which are XML files.] The latter is optional but also important. It typically consists of CSS and JavaScript files, as well as other assets like images and videos. These assets determine the appearance and functionality of your website, and some may be embedded in the content of your web pages.
 
 You can learn more about Hugo templates from the official documentation (https://gohugo.io/templates/overview/). There are a great many different types of templates. To make it easier for you to master the key ideas, I created a very minimal Hugo theme, which covers most functionalities that an average user may need, but the total number of lines is only about 150, so we can talk about all the source code of this theme in the following subsection.
 
