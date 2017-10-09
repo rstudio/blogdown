@@ -193,7 +193,7 @@ If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \
 
     - Inline formatting: `_italic_` / `**bold**` text and `` `inline code` ``.
     
-    - Inline elements: subscripts and superscripts; links (`[text](url)`) and images `![title](url)`; footnotes `text^[footnote]`.
+    - Inline elements: subscripts (`H~2~0`) and superscripts (`r^2^`); links (`[text](url)`) and images `![title](url)`; footnotes `text^[footnote]`.
     
     - Block-level elements: paragraphs; numbered and unnumbered section headers; ordered and unordered lists; block quotations; fenced code blocks; tables; horizontal rules.
     
