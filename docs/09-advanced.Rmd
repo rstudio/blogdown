@@ -36,7 +36,7 @@ We have provided two approaches to LiveReload. The default approach is through `
 
 If you are not concerned about the above issues, we recommend that you use the default approach, otherwise you can set the global option `options(blogdown.generator.server = TRUE)` to use an alternative approach to LiveReload, which is based on the native support for LiveReload from the static site generator. At the moment, this has only been tested against Hugo-based websites. It does not work with Jekyll and we were not successful with Hexo, either.
 
-This alternative approach requires two additional R packages to be installed: **processx** and **later**. You may use this approach when you primarily work on plain Markdown posts instead of R Markdown posts, because it can be much faster to preview Markdown posts using the web server of Hugo. The web server can be stopped by `blogdown::stop_server()`, and it will always be stopped when the R session is ended, so you can restart your R session if `stop_server()` fails to stop the server for some reason.
+This alternative approach requires two additional R packages to be installed: **processx** [@R-processx] and **later** [@R-later]. You may use this approach when you primarily work on plain Markdown posts instead of R Markdown posts, because it can be much faster to preview Markdown posts using the web server of Hugo. The web server can be stopped by `blogdown::stop_server()`, and it will always be stopped when the R session is ended, so you can restart your R session if `stop_server()` fails to stop the server for some reason.
 
 The web server is established via the command `hugo server` (see [its documentation](https://gohugo.io/commands/hugo_server/) for details). You can pass command-line arguments via the global option `blogdown.hugo.server`. The default value for this option is `c('-D', '-F')`, which means to render draft and future posts in the preview. We want to highlight a special argument `--navigateToChanged` in a recent version of Hugo, which asks Hugo to automatically navigate to the changed page. For example, you can set the options:
 
@@ -138,7 +138,7 @@ We do not recommend you to use different HTML widgets\index{HTML Widgets} from m
 
 Then if you set `exclude_jquery: true` in the YAML metadata of a post, the theme's jQuery will not be loaded, so there will not be conflicts when your HTML widgets also depend on jQuery.
 
-Another solution is the [**widgetframe** package](https://github.com/bhaskarvk/widgetframe). It solves this problem by embedding HTML widgets in `<iframe></iframe>`. Since an iframe is isolated from the main web page on which it is embedded, there will not be any JavaScript conflicts.
+Another solution is the [**widgetframe** package](https://github.com/bhaskarvk/widgetframe) [@R-widgetframe]. It solves this problem by embedding HTML widgets in `<iframe></iframe>`. Since an iframe is isolated from the main web page on which it is embedded, there will not be any JavaScript conflicts.
 
 A widget is typically not of full width on the page. To set its width to 100%, you can use the chunk option `out.width = "100%"`.
 
