@@ -88,7 +88,7 @@ There are a few essential RStudio addins\index{RStudio addins} to make it easy t
 
     - As you type the title of the post, it will generate a filename for you, and you can edit it if you do not like the automatically generated one. In fact, you can also use this addin to create normal pages under any directories under `content/`. For example, if you want to add a resume page, you can change the filename to `resume.md` from the default `post/YYYY-mm-dd-resume.md`.
 
-    - You can select the date from a calendar widget provided by Shiny.
+    - You can select the date from a calendar widget provided by Shiny.^[Shiny is an R package for building interactive web apps using R. Using this addin, the calendar widget allows you to view an interactive calendar by month to select dates. This is a simple use of Shiny, but you can read more about Shiny apps here: https://shiny.rstudio.com.]
 
     - It will scan the categories and tags of existing posts, so when you want to input categories or tags, you can select them from the dropdown menus, or create new ones.
     
@@ -193,7 +193,7 @@ If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \
 
     - Inline formatting: `_italic_` / `**bold**` text and `` `inline code` ``.
     
-    - Inline elements: subscripts and superscripts; links (`[text](url)`) and images `![title](url)`; footnotes `text^[footnote]`.
+    - Inline elements: subscripts (e.g., `H~2~0`) and superscripts (e.g., `R^2^`); links (`[text](url)`) and images `![title](url)`; footnotes `text^[footnote]`.
     
     - Block-level elements: paragraphs; numbered and unnumbered section headers; ordered and unordered lists; block quotations; fenced code blocks; tables; horizontal rules.
     
