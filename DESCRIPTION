@@ -4,7 +4,7 @@ Title: Create Blogs and Websites with R Markdown
 Version: 0.1.5
 Date: 2017-08-22
 Authors@R: c(
-    person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name"),
+    person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
     person("Beilei", "Bian", role = "ctb"),
     person("Forest", "Fang", role = "ctb"),
     person("Hiroaki", "Yutani", role = "ctb"),
