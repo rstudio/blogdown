@@ -99,7 +99,17 @@ An asterisk `*` in a character string often means an arbitrary string. For examp
 
 ## Acknowledgments {-}
 
-Yihui thanks Tareef.
+Originally I planned to write only one sentence in this section: "I thank Tareef." This book and the **blogdown** package would not be completed without Tareef, the president of RStudio. He has been "gently nudging" me every week since the day one of **blogdown**. As a person without strong self-discipline and working remotely, I benefited a lot from weekly meetings with him. He also gave me a lot of good technical suggestions on improving the package. Actually he was one of the very earliest users of **blogdown**.
+
+Of course, I'd like to thank RStudio for the wonderful opportunity to work on this new project. I was even more excited about **blogdown** than **bookdown** (my previous project). I started blogging 12 years ago, and have used and quit several tools for building websites. Finally I feel satisfied with my own dog food.
+
+Many users have provided helpful feedback and bug reports through GitHub issues (https://github.com/rstudio/blogdown/issues). Two of my favorites are https://github.com/rstudio/blogdown/issues/40 and https://github.com/rstudio/blogdown/issues/97. Some users have also contributed code and improved this book through pull requests (https://github.com/rstudio/blogdown/pulls). You can find the list of contributors at https://github.com/rstudio/blogdown/graphs/contributors. Although **blogdown** is a relatively new package, many users followed my advice and started asking questions on StackOverflow (https://stackoverflow.com/tags/blogdown). I appreciate all your help, patience, and understanding.
+
+For this book, I was fortunate enough to work with my co-authors Amber and Alison, who are exceptionally good at explaining things to beginners. That is the ability I desire most. Needless to say, they have made this book more friendly to beginners. Besides, Sharon Machlis contributed some advice on search engine optimization in this book (https://github.com/rstudio/blogdown/issues/193).
+
+For some reason, a part of the R community started to adopt the "sticker-driven development" model when developing packages. I was hoping **blogdown** could have a hexbin sticker, too, so I asked for help on Twitter (https://twitter.com/xieyihui/status/907269861574930432) and got tons of draft logos. In particular, I want to thank Thomas Lin Pedersen for his hard work on a very clever design. The final version of the logo was provided by Taras Kaduk and Angelina Kaduk, and I truly appreciate it.
+
+This is the third book I have published with my editor at Chapman & Hall/CRC, John Kimmel. I always love working with him.
 
 ```{block2, type='flushright', html.tag='p'}
 Yihui Xie  
