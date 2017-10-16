@@ -350,8 +350,52 @@ It is not a perfect solution, but it should be very rare that you run into probl
 
 ## Useful resources
 
+### Optimization
+
 Although\index{Optimization} static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier", and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
 
 You can also optimize images on your website. I frequently use a command-line tool named [`optipng`](http://optipng.sourceforge.net) to optimize PNG images. It is a lossless optimizer, meaning that it reduces the file size of a PNG image without loss of quality. From my experience, it works very well on PNG images generated from R, and can reduce the file size by at least 30% (sometimes even more than 50%). Personally I also use online tools like http://optimizilla.com to optimize PNG and JPEG images. For GIF images, I often use https://ezgif.com/optimize to reduce the file sizes if they are too big.
 
 Note that Netlify has provided the optimization features on the server side for free at the moment, so you may just want to enable them there instead of doing all the hard work by yourself.
+
+### blogdown resources
+
+We have created a minimal **blogdown** example website to demonstrate how to use R Markdown features (https://blogdown-demo.rbind.io). Some example posts are:
+
+- [How to add cites in posts](https://blogdown-demo.rbind.io/2017/08/28/adding-citations-to-posts/)
+- [How to add R code to posts](https://blogdown-demo.rbind.io/2017/10/06/adding-r-code-to-r-markdown-posts/)
+- [How to include figures and other images in posts](https://blogdown-demo.rbind.io/2017/10/06/adding-figures-and-other-images-to-posts/)
+
+### Hugo resources
+
+Here we provide some useful links for beginning Hugo and **blogdown** users:
+
+- [Hugo directory structure](https://gohugo.io/getting-started/directory-structure/) explains the basics of what goes where in a Hugo project
+- [Creating and organizing content in Hugo](https://gohugo.io/content-management/organization/) explains the relationship between your site's content structure and the output file paths/URL structures that Hugo renders
+- [Hugo configuration variables](https://gohugo.io/getting-started/configuration/) provides a list of all possible options for your `config.toml` file (scroll down to the *All Variables, TOML* section)
+- [Emoji cheat sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet/) (note: your `config.toml` file must include `enableEmoji = TRUE`)
+- [Customizing Hugo themes](https://gohugo.io/themes/customizing/) explains a key concept for Hugo users, which is to *override* rather than *edit* theme files (static files, template files, and archetypes)
+
+For advanced users, here are some additional resources:
+
+- [Hugo lookup orders](https://gohugo.io/templates/lookup-order/) explains when and where Hugo looks for files in your site's directory structure
+- [Hugo homepages](https://gohugo.io/templates/homepage/) explains how to change the homepage of a site (regardless of theme), and the lookup order for the homepage template
+- [Hugo partial templates](https://gohugo.io/templates/partials/) explains lookup orders for partials and variable scoping
+- [Hugo menu variables](https://gohugo.io/variables/menus/) provides a list of the built-in options for customizing variables displayed in a Hugo menu
+
+
+
+
+### Helping people find your site
+
+Once your site is up and running, you probably want people to find it. SEO -- Search Engine Optimization -- is the art of making a Web site easy for search engines like Google to understand. And, hopefully, if the search engine knows what you're writing about, it will present links to your site high in results when someone searches for topics you cover.
+
+Entire books have been written about SEO, not to mention the many companies that are in the business of offering (paid) technical and strategic advice to help get sites atop search-engine rankings. If you're interested in finding out more, a good place to start is the Google Search Engine Optimization Starter Guide (https://static.googleusercontent.com/media/www.google.com/en//webmasters/docs/search-engine-optimization-starter-guide.pdf).
+
+A couple of key points:
+
+1. The title that you select for each page and post is a very important signal to Google and other search engines telling them what that page is about.
+
+1. Description tags are also critical to explain what a page is about. Plus the description may end up as text under the page title in a search-engine result. If your page's YAML doesn't include a description, you can add one with `description: 'Your text here'`. Not all themes will support adding the description to your HTML page (although they should!)
+
+1. URL structure also matters. You want your post's slug to have informative keywords, which gives another signal what the page is about. Have a post with interesting things to do in San Francisco? `san-francisco-events-calendar` might be a better slug than `my-guide-to-fun-things-to-do`.
