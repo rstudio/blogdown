@@ -350,7 +350,7 @@ It is not a perfect solution, but it should be very rare that you run into probl
 
 ## Useful resources
 
-### Optimization
+### File optimization
 
 Although\index{Optimization} static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier", and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
 
@@ -394,14 +394,12 @@ knitr::kable(matrix(c(
 
 ### Helping people find your site
 
-Once your site is up and running, you probably want people to find it. SEO -- Search Engine Optimization -- is the art of making a Web site easy for search engines like Google to understand. And, hopefully, if the search engine knows what you're writing about, it will present links to your site high in results when someone searches for topics you cover.
+Once your site is up and running, you probably want people to find it. SEO -- Search Engine Optimization -- is the art of making a website easy for search engines like Google to understand. And, hopefully, if the search engine knows what you are writing about, it will present links to your site high in results when someone searches for topics you cover.
 
-Entire books have been written about SEO, not to mention the many companies that are in the business of offering (paid) technical and strategic advice to help get sites atop search-engine rankings. If you're interested in finding out more, a good place to start is the Google Search Engine Optimization Starter Guide (http://bit.ly/google-seo-starter).
-
-A couple of key points:
+Entire books have been written about SEO, not to mention the many companies that are in the business of offering (paid) technical and strategic advice to help get sites atop search-engine rankings. If you are interested in finding out more, a good place to start is the Google Search Engine Optimization Starter Guide (http://bit.ly/google-seo-starter). Below are a few key points:
 
 1. The title that you select for each page and post is a very important signal to Google and other search engines telling them what that page is about.
 
-1. Description tags are also critical to explain what a page is about. In HTML documents, description tags are one way to provide metadata about the page (see: https://www.w3schools.com/tags/tag_meta.asp). Using **blogdown**, the description may end up as text under the page title in a search-engine result. If your page's YAML doesn't include a description, you can add one with `description: 'A brief description of this page'`; here, the rendered HTML would look like: `<meta name="description" content="A brief description of this page.">`. Not all themes will support adding the description to your HTML page (although they should!)
+1. Description tags are also critical to explain what a page is about. In HTML documents, [description tags](https://www.w3schools.com/tags/tag_meta.asp) are one way to provide metadata about the page. Using **blogdown**, the description may end up as text under the page title in a search-engine result. If your page's YAML does not include a description, you can add one like `description: "A brief description of this page."`; the HTML source of the rendered page would have a `<meta>` tag in `<head>` like `<meta name="description" content="A brief description of this page.">`. Not all themes support adding the description to your HTML page (although they should!)
 
 1. URL structure also matters. You want your post's slug to have informative keywords, which gives another signal what the page is about. Have a post with interesting things to do in San Francisco? `san-francisco-events-calendar` might be a better slug than `my-guide-to-fun-things-to-do`.
