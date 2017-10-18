@@ -358,40 +358,6 @@ You can also optimize images on your website. I frequently use a command-line to
 
 Note that Netlify has provided the optimization features on the server side for free at the moment, so you may just want to enable them there instead of doing all the hard work by yourself.
 
-
-### Hugo resources
-
-Some useful links for beginning Hugo and **blogdown** users are presented in Table \@ref(tab:basic-links).
-
-```{r basic-links, echo=FALSE}
-knitr::kable(matrix(c(
-  'Hugo directory structures', 'What are the files and directories that make up the most basic Hugo project?', 'https://gohugo.io/themes/customizing/',
-  'Creating and organizing content in Hugo', 'How does Hugo render output file paths and URL structures?', 'https://gohugo.io/content-management/organization/',
-  'Hugo configuration variables', 'What configuration variables are possible in the `config.toml` file?', 'https://gohugo.io/getting-started/configuration/ (scroll down to the *All Variables, TOML* section)',
-  'Emojis', 'How do you use emojis in a Hugo site?', 'https://www.webpagefx.com/tools/emoji-cheat-sheet/ (note: your `config.toml` file must include `enableEmoji = TRUE`)',
-  'Customizing Hugo themes', 'What is the difference between overriding versus editing theme files?', 'https://gohugo.io/themes/customizing/',
-  NULL
-), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Topic', 'For example', 'Link'))), booktabs = TRUE, caption = 'Resources for **blogdown** beginners.')
-```
-
-
-For advanced users, some additional resources are presented in Table \@ref(tab:adv-links).
-
-```{r adv-links, echo=FALSE}
-knitr::kable(matrix(c(
-  'Hugo lookup orders', 'Where does Hugo look for files in my site directory structure?', 'https://gohugo.io/templates/lookup-order/',
-  'Hugo homepages', 'How do homepages work in Hugo?', 'https://gohugo.io/templates/homepage/',
-  'Hugo partial templates', 'How do lookup order and variable scoping work in partial templates?', 'https://gohugo.io/templates/partials/',
-  'Hugo menu variables', 'How do I customize variables displayed in a navigation bar or menu?', 'https://gohugo.io/variables/menus/',
-  NULL
-), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Topic', 'For example', 'Link'))), booktabs = TRUE, caption = 'Additional resources for **blogdown** advanced users.')
-```
-
-
-
-
-
-
 ### Helping people find your site
 
 Once your site is up and running, you probably want people to find it. SEO -- Search Engine Optimization -- is the art of making a website easy for search engines like Google to understand. And, hopefully, if the search engine knows what you are writing about, it will present links to your site high in results when someone searches for topics you cover.
