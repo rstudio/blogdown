@@ -350,8 +350,58 @@ It is not a perfect solution, but it should be very rare that you run into probl
 
 ## Useful resources
 
+### Optimization
+
 Although\index{Optimization} static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier", and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
 
 You can also optimize images on your website. I frequently use a command-line tool named [`optipng`](http://optipng.sourceforge.net) to optimize PNG images. It is a lossless optimizer, meaning that it reduces the file size of a PNG image without loss of quality. From my experience, it works very well on PNG images generated from R, and can reduce the file size by at least 30% (sometimes even more than 50%). Personally I also use online tools like http://optimizilla.com to optimize PNG and JPEG images. For GIF images, I often use https://ezgif.com/optimize to reduce the file sizes if they are too big.
 
 Note that Netlify has provided the optimization features on the server side for free at the moment, so you may just want to enable them there instead of doing all the hard work by yourself.
+
+
+### Hugo resources
+
+Some useful links for beginning Hugo and **blogdown** users are presented in Table \@ref(tab:basic-links).
+
+```{r basic-links, echo=FALSE}
+knitr::kable(matrix(c(
+  'Hugo directory structures', 'What are the files and directories that make up the most basic Hugo project?', 'https://gohugo.io/themes/customizing/',
+  'Creating and organizing content in Hugo', 'How does Hugo render output file paths and URL structures?', 'https://gohugo.io/content-management/organization/',
+  'Hugo configuration variables', 'What configuration variables are possible in the `config.toml` file?', 'https://gohugo.io/getting-started/configuration/ (scroll down to the *All Variables, TOML* section)',
+  'Emojis', 'How do you use emojis in a Hugo site?', 'https://www.webpagefx.com/tools/emoji-cheat-sheet/ (note: your `config.toml` file must include `enableEmoji = TRUE`)',
+  'Customizing Hugo themes', 'What is the difference between overriding versus editing theme files?', 'https://gohugo.io/themes/customizing/',
+  NULL
+), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Topic', 'For example', 'Link'))), booktabs = TRUE, caption = 'Resources for **blogdown** beginners.')
+```
+
+
+For advanced users, some additional resources are presented in Table \@ref(tab:adv-links).
+
+```{r adv-links, echo=FALSE}
+knitr::kable(matrix(c(
+  'Hugo lookup orders', 'Where does Hugo look for files in my site directory structure?', 'https://gohugo.io/templates/lookup-order/',
+  'Hugo homepages', 'How do homepages work in Hugo?', 'https://gohugo.io/templates/homepage/',
+  'Hugo partial templates', 'How do lookup order and variable scoping work in partial templates?', 'https://gohugo.io/templates/partials/',
+  'Hugo menu variables', 'How do I customize variables displayed in a navigation bar or menu?', 'https://gohugo.io/variables/menus/',
+  NULL
+), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Topic', 'For example', 'Link'))), booktabs = TRUE, caption = 'Additional resources for **blogdown** advanced users.')
+```
+
+
+
+
+
+
+### Helping people find your site
+
+Once your site is up and running, you probably want people to find it. SEO -- Search Engine Optimization -- is the art of making a Web site easy for search engines like Google to understand. And, hopefully, if the search engine knows what you're writing about, it will present links to your site high in results when someone searches for topics you cover.
+
+Entire books have been written about SEO, not to mention the many companies that are in the business of offering (paid) technical and strategic advice to help get sites atop search-engine rankings. If you're interested in finding out more, a good place to start is the Google Search Engine Optimization Starter Guide (http://bit.ly/google-seo-starter).
+
+A couple of key points:
+
+1. The title that you select for each page and post is a very important signal to Google and other search engines telling them what that page is about.
+
+1. Description tags are also critical to explain what a page is about. In HTML documents, description tags are one way to provide metadata about the page (see: https://www.w3schools.com/tags/tag_meta.asp). Using **blogdown**, the description may end up as text under the page title in a search-engine result. If your page's YAML doesn't include a description, you can add one with `description: 'A brief description of this page'`; here, the rendered HTML would look like: `<meta name="description" content="A brief description of this page.">`. Not all themes will support adding the description to your HTML page (although they should!)
+
+1. URL structure also matters. You want your post's slug to have informative keywords, which gives another signal what the page is about. Have a post with interesting things to do in San Francisco? `san-francisco-events-calendar` might be a better slug than `my-guide-to-fun-things-to-do`.

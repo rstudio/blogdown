@@ -265,6 +265,8 @@ blogdown::html_page:
 
 At the moment, not all features of `rmarkdown::html_document` are supported in **blogdown**, such as `df_print`, `code_folding`, `code_download`, and so on.
 
+We have created a minimal example website to demonstrate how to use R Markdown features in a **blogdown** project (https://blogdown-demo.rbind.io), such as adding citations to posts (https://blogdown-demo.rbind.io/2017/08/28/adding-citations-to-posts/) and how to add R code (https://blogdown-demo.rbind.io/2017/10/06/adding-r-code-to-r-markdown-posts/).
+
 If your code chunk has graphics output, we recommend that you avoid special characters like spaces in the chunk label. Ideally, you should only use alphanumeric characters and dashes, e.g., ```` ```{r, my-label}```` instead of ```` ```{r, my label}````.
 
 It is not recommended to change the **knitr** chunk options `fig.path` or `cache.path` in R Markdown. The default values of these options work best with **blogdown**. Please read Section \@ref(dep-path) to know the technical reasons if you prefer.
