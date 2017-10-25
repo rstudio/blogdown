@@ -75,20 +75,22 @@ build_rmds = function(files) {
   root = getwd()
   base = site_base_dir()
   shared_yml = file.path(root, '_output.yml')
-  if (!file.exists(shared_yml)) shared_yml = NA
   copied_yaml = character(); on.exit(unlink(copied_yaml), add = TRUE)
 
-  for (file in files) in_dir(d <- dirname(file), {
-    f = basename(file)
+  copy_output_yml = function(to) {
+    if (!file.exists(shared_yml)) return()
+    if (file.exists(copy <- file.path(to, '_output.yml'))) return()
+    if (file.copy(shared_yml, copy)) copied_yaml <<- c(copied_yaml, copy)
+  }
+
+  for (f in files) {
+    d = dirname(f)
     out = output_file(f, to_md <- is_rmarkdown(f))
-    if (!is.na(shared_yml) && !file.exists('_output.yml')) {
-      file.copy(shared_yml, './')
-      copied_yaml = c(copied_yaml, normalizePath('_output.yml'))
-    }
-    message('Rendering ', file)
+    copy_output_yml(d)
+    message('Rendering ', f)
     render_page(f)
     x = readUTF8(out)
-    x = encode_paths(x, by_products(f, '_files'), d, root, base)
+    x = encode_paths(x, by_products(f, '_files'), d, base)
     if (to_md) {
       writeUTF8(x, out)
     } else {
@@ -96,7 +98,7 @@ build_rmds = function(files) {
       x = split_html_tokens(x, FALSE)$body
       prepend_yaml(f, out, x)
     }
-  })
+  }
 }
 
 render_page = function(input, script = 'render_page.R') {
@@ -112,11 +114,12 @@ render_page = function(input, script = 'render_page.R') {
 # are used extensively in a website)
 
 # example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
-# parent = 'content/post'; root = ~/Websites/Frida/
-encode_paths = function(x, deps, parent, root, base = '/') {
+# parent = 'content/post';
+encode_paths = function(x, deps, parent, base = '/') {
   if (!dir_exists(deps)) return(x)
   if (!grepl('/$', parent)) parent = paste0(parent, '/')
-  # find the dependencies referenced in HTML, add a marker ##### to their paths
+  deps = basename(deps)
+  # find the dependencies referenced in HTML
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
 
   # move figures to /static/path/to/post/foo_files/figure-html
@@ -135,8 +138,9 @@ encode_paths = function(x, deps, parent, root, base = '/') {
   x2 = grep(r2, x, value = TRUE)
   if (length(x2) == 0) return(x)
   libs = unique(gsub(r2, '\\3\\4', unlist(regmatches(x2, gregexpr(r2, x2)))))
+  libs = file.path(parent, libs)
   x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
-  to = file.path(root, 'static', 'rmarkdown-libs', basename(libs))
+  to = file.path('static', 'rmarkdown-libs', basename(libs))
   dirs_rename(libs, to)
   x
 }

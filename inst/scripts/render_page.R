@@ -4,6 +4,8 @@ local({
   args = commandArgs(TRUE)
   if (length(args) > 1) setwd(args[2])
   input = args[1]
+  setwd(dirname(input))
+  input = basename(input)
   to_md = blogdown:::is_rmarkdown(input)
   if (to_md) options(bookdown.output.markdown = TRUE, knitr.table.format = 'markdown')
   out = rmarkdown::render(

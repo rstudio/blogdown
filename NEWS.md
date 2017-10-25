@@ -6,6 +6,8 @@
 
 - Three dashes in the beginning and/or end of config.yaml are ignored (thanks, @andrewheiss, #194).
 
+- The R startup profile `.Rprofile` under the website project root directory should be respected when building R Markdown posts (thanks, @eisioriginal, #222).
+
 # CHANGES IN blogdown VERSION 0.1
 
 - The first CRAN release. For full documentation, please see the blogdown book: https://bookdown.org/yihui/blogdown.
