@@ -141,7 +141,7 @@ encode_paths = function(x, deps, parent, base = '/') {
   libs = file.path(parent, libs)
   x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
   to = file.path('static', 'rmarkdown-libs', basename(libs))
-  dirs_rename(libs, to)
+  dirs_rename(libs, to, clean = TRUE)
   x
 }
 
