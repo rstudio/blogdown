@@ -4,13 +4,13 @@ Yihui is the main developer of the **blogdown** package. He did not start workin
 
 About half a year later, Yihui noticed another very well-written **blogdown** tutorial by Alison on her personal website, when this book was still not complete. The same story happened, and Alison became the third author of this book. The three authors have never met each other.
 
-Hopefully you can better see why you should have a website now.
+Hopefully, you can better see why you should have a website now.
 
 ## Yihui Xie {-}
 
 Yihui Xie (<https://yihui.name>) is a software engineer at RStudio (<https://www.rstudio.com>). He earned his PhD from the Department of Statistics, Iowa State University. He is interested in interactive statistical graphics and statistical computing. As an active R user, he has authored several R packages, such as **knitr**, **bookdown**, **blogdown**, **animation**, **DT**, **tufte**, **formatR**, **fun**, **mime**, **highr**, **servr**, and **Rd2roxygen**, among which the **animation** package won the 2009 John M. Chambers Statistical Software Award (ASA). He also co-authored a few other R packages, including **shiny**, **rmarkdown**, and **leaflet**.
 
-In 2006, he founded the Capital of Statistics (<https://cosx.org>), which has grown into a large online community on statistics in China. He initiated the Chinese R conference in 2008, and has been involved in organizing R conferences in China since then. During his PhD training at Iowa State University, he won the Vince Sposito Statistical Computing Award (2011) and the Snedecor Award (2012) in the Department of Statistics.
+In 2006, he founded the Capital of Statistics (<https://cosx.org>), which has grown into a large online community on statistics in China. He initiated the Chinese R conference in 2008 and has been involved in organizing R conferences in China since then. During his PhD training at Iowa State University, he won the Vince Sposito Statistical Computing Award (2011) and the Snedecor Award (2012) in the Department of Statistics.
 
 He occasionally rants on Twitter (https://twitter.com/xieyihui), and most of the time you can find him on GitHub (https://github.com/yihui).
 
@@ -20,13 +20,13 @@ He enjoys spicy food as much as classical Chinese literature.
 
 Amber Thomas (<https://proquestionasker.github.io>) is a data journalist and "maker" at the online publication of visual essays: The Pudding (<https://pudding.cool>). Her educational background, however, was in quite a different field altogether: Marine Biology. She has a Bachelor's Degree in marine biology and chemistry from Roger Williams University and a Master's Degree in Marine Sciences from the University of New England. Throughout her academic and professional career as a marine biologist, she realized that she had a love of data analysis, visualization, and story-telling and thus, she switched career paths to something a bit more data-focused.
 
-While looking for work, she began conducting personal projects to expand her knowledge of R's inner-workings. She decided to put all of her projects in a single place online (so that she could be discovered, naturally) and after lots of searching, she stumbled upon an early release of the **blogdown** package. She was hooked right away and spent a few days setting up her personal website and writing a tutorial of how she did it. You can find that tutorial and some of her other projects and musings on her blogdown site.
+While looking for work, she began conducting personal projects to expand her knowledge of R's inner-workings. She decided to put all of her projects in a single place online (so that she could be discovered, naturally) and after lots of searching, she stumbled upon an early release of the **blogdown** package. She was hooked right away and spent a few days setting up her personal website and writing a tutorial on how she did it. You can find that tutorial and some of her other projects and musings on her blogdown site.
 
 When she is not crunching numbers and trying to stay on top of her email inbox, Amber is usually getting some fresh-Seattle air or cuddling with her dog, Sherlock. If you are looking for her in the digital world, try <https://twitter.com/ProQuesAsker>.
 
 ## Alison Presmanes Hill {-}
 
-Alison (<https://apreshill.rbind.io>) is a professor of pediatrics in Oregon Health and Science University's (OHSU) Center for Spoken Language Understanding in Portland, Oregon. Alison earned her PhD in developmental psychology with a concentration in quantitative methods from Vanderbilt University in 2008. Her current research focuses on developing better outcome measures to evaluate the impact of new treatments for children with autism and other neurodevelopmental disorders, using natural language processing and other computational methods. Alison is the author of numerous journal articles and book chapters, and her work has been funded by the National Institutes of Health, the Oregon Clinical and Translational Research Institute, and Autism Speaks.
+Alison (<https://apreshill.rbind.io>) is a professor of pediatrics at Oregon Health and Science University's (OHSU) Center for Spoken Language Understanding in Portland, Oregon. Alison earned her PhD in developmental psychology with a concentration in quantitative methods from Vanderbilt University in 2008. Her current research focuses on developing better outcome measures to evaluate the impact of new treatments for children with autism and other neurodevelopmental disorders, using natural language processing and other computational methods. Alison is the author of numerous journal articles and book chapters, and her work has been funded by the National Institutes of Health, the Oregon Clinical and Translational Research Institute, and Autism Speaks.
 
 In addition to research, Alison teaches graduate-level courses in OHSU's Computer Science program (https://www.ohsu.edu/csee) on statistics, data science, and data visualization using R. She has also developed and led several R workshops and smaller team-based training sessions, and loves to train new "useRs." You can find some of her workshop and teaching materials on GitHub (https://github.com/apreshill) and, of course, on her **blogdown** site.
 
