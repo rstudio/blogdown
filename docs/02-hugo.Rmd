@@ -6,7 +6,7 @@ In this chapter, we will briefly introduce\index{Hugo} [Hugo](https://gohugo.io)
 
 A static site\index{Static Site} often consists of HTML files (with optional external dependencies like images and JavaScript libraries), and the web server sends exactly the same content to the web browser no matter who visits the web pages. There is no dynamic computing on the server when a page is requested. By comparison, a dynamic site relies on a server-side language to do certain computing and sends potentially different content depending on different conditions. A common language is PHP, and a typical example of a dynamic site is a web forum. For example, each user has a profile page, but typically this does not mean the server has stored a different HTML profile page for every single user. Instead, the server will fetch the user data from a database, and render the profile page dynamically.
 
-For a static site, each URL you visit often has a corresponding HTML file stored on the server, so there is no need to compute anything before serving the file to visitors. This means static sites tend to be faster in response time than dynamic sites, and it is also much easier to deploy, since the deployment simply means to copy static files to a server. A dynamic site often relies on databases, and you will have to install more software packages to server a dynamic site. For more advantages of static sites, please read the [introduction](https://gohugo.io/overview/introduction/) on Hugo's website.
+For a static site, each URL you visit often has a corresponding HTML file stored on the server, so there is no need to compute anything before serving the file to visitors. This means static sites tend to be faster in response time than dynamic sites, and it is also much easier to deploy, since the deployment simply means to copy static files to a server. A dynamic site often relies on databases, and you will have to install more software packages to serve a dynamic site. For more advantages of static sites, please read the [introduction](https://gohugo.io/overview/introduction/) on Hugo's website.
 
 There are many existing static site generators, including Hugo, [Jekyll](http://jekyllrb.com), and [Hexo](https://hexo.io), etc. Most of them can build general-purpose websites but are often used to build blogs.
 
@@ -34,7 +34,7 @@ The first file that you may want to look at is the configuration\index{config.to
 
 When generating your site, Hugo will search for a file called `config.toml` first. If it cannot find one, it will continue to search for `config.yaml`.^[Hugo also supports `config.json`, but **blogdown** does not support it, so we do not recommend you to use it.] Since most Hugo themes contain example sites that ship `config.toml` files, and the TOML\index{TOML} (Tom's Obvious, Minimal Language) format appears to be more popular in the Hugo community, we will mainly discuss `config.toml` here.
 
-We recommend you to use the TOML syntax only for the config file (you can also use YAML if you prefer), and use YAML as the data format for the metadata of (R) Markdown pages and posts, because R Markdown and **blogdown** only fully support YAML\index{YAML}.^[TOML has its advantages but I feel they are not significant in the context of Hugo websites. It is pain to have to know yet another language TOML, when YAML stands for "Yet Another Markup Language". I'm not sure if the XKCD comic applies in this case: https://xkcd.com/927/.] If you have a website that has already used TOML, you may use `blogdown::hugo_convert(unsafe = TRUE)` to convert TOML data to YAML, but please first make sure you have backed up the website because it will overwrite your Markdown files.
+We recommend you to use the TOML syntax only for the config file (you can also use YAML if you prefer), and use YAML as the data format for the metadata of (R) Markdown pages and posts, because R Markdown and **blogdown** only fully support YAML\index{YAML}.^[TOML has its advantages but I feel they are not significant in the context of Hugo websites. It is pain to have to know yet another language TOML when YAML stands for "Yet Another Markup Language". I'm not sure if the XKCD comic applies in this case: https://xkcd.com/927/.] If you have a website that has already used TOML, you may use `blogdown::hugo_convert(unsafe = TRUE)` to convert TOML data to YAML, but please first make sure you have backed up the website because it will overwrite your Markdown files.
 
 The Hugo documentation does not use TOML or YAML consistently in its examples, which can be confusing. Please pay close attention to the configuration format when copying examples to your own website.
 
@@ -60,7 +60,7 @@ relativeURLs = true
 
 Most of your website's global variables are entered in the `config.toml` file in exactly this manner. 
 
-Further into your `config` file you may notice some values in brackets like this:
+Further into your `config` file, you may notice some values in brackets like this:
 
 ```js
 [social]
@@ -86,7 +86,7 @@ Lastly, you may find some values in double brackets like this:
     url = "/about/"
 ```
 
-In TOML, double brackets are used to indicate an array of tables. Hugo interprets this information as a menu. If the code above was found in a `config.toml` file, the resulting website would have links to Blog, Categories, and About pages in the site's main menu. The location and styling of that menu is specified elsewhere, but the names of each menu's choices and the links to each section are defined here. 
+In TOML, double brackets are used to indicate an array of tables. Hugo interprets this information as a menu. If the code above was found in a `config.toml` file, the resulting website would have links to Blog, Categories, and About pages in the site's main menu. The location and styling of that menu are specified elsewhere, but the names of each menu's choices and the links to each section are defined here. 
  
 The `config.toml` file varies between each theme. Make sure that when you choose a theme, you read its documentation thoroughly to get an understanding of what each of the configuration options does (more on themes in Section \@ref(themes)).
 
@@ -98,7 +98,7 @@ All built-in options\index{options} that you may set for Hugo are listed on [thi
 
 - `enableEmoji`: You\index{Emoji} may set it to `true` so that you can use [Emoji emoticons](http://www.emoji-cheat-sheet.com) like `:smile:` in Markdown.
 
-- `permalinks`: Rules to generate permanent links\index{permalinks} of your pages. By default, Hugo uses full filenames under `content/` to generate links, e.g., `content/about.md` will be rendered to `public/about/index.html`, and `content/post/2015-07-23-foo.md` will be rendered to `public/post/2015-07-23-foo/index.html`, so the actual links are `/about/` and `/post/2015-07-23-foo/` on the website. Although it is not required to set custom rules for permanent links, it is common to see links of the form `/YYYY/mm/dd/post-title/`. Hugo allows you use several pieces of information about a source file to generate a link, such as the date (year, month, and day), title, and filename, etc. The link can be independent of the actual filename. For example, you may ask Hugo to render pages under `content/post/` using the date and title for their links:
+- `permalinks`: Rules to generate permanent links\index{permalinks} of your pages. By default, Hugo uses full filenames under `content/` to generate links, e.g., `content/about.md` will be rendered to `public/about/index.html`, and `content/post/2015-07-23-foo.md` will be rendered to `public/post/2015-07-23-foo/index.html`, so the actual links are `/about/` and `/post/2015-07-23-foo/` on the website. Although it is not required to set custom rules for permanent links, it is common to see links of the form `/YYYY/mm/dd/post-title/`. Hugo allows you to use several pieces of information about a source file to generate a link, such as the date (year, month, and day), title, and filename, etc. The link can be independent of the actual filename. For example, you may ask Hugo to render pages under `content/post/` using the date and title for their links:
 
     ```js
     [permalinks]
@@ -112,7 +112,7 @@ All built-in options\index{options} that you may set for Hugo are listed on [thi
         post = "/:year/:month/:day/:slug/"
     ```
     
-    This is because your post title may change, and you probably do not want the link of the post to change, otherwise you have to redirect the old link to the new link, and there will other types of trouble like Disqus comments. The `:slug` variable falls back to `:title` if a field named `slug` is not set in the YAML metadata of the post. You can set a fixed slug so that the link to the post is always fixed and you will have the freedom to update the title of your post.
+    This is because your post title may change, and you probably do not want the link to the post to change, otherwise you have to redirect the old link to the new link, and there will other types of trouble like Disqus comments. The `:slug` variable falls back to `:title` if a field named `slug` is not set in the YAML metadata of the post. You can set a fixed slug so that the link to the post is always fixed and you will have the freedom to update the title of your post.
     
     You may find a list of all possible variables that you can use in the `permalinks` option on [this page](https://gohugo.io/extras/permalinks/). 
 
@@ -161,7 +161,7 @@ Among all YAML fields, we want to bring these to your attention:
 
 - `publishdate`: You may specify a future date\index{Publish Date} to publish a post. Similar to draft posts, future posts are only rendered in the local preview mode.
 
-- `weight`: This field can take a numeric value to tell Hugo the order of pages when sorting them\index{Post Weight}, e.g., when you generate a list of all pages under a directory, and if two posts have the same date, you may assign different weights to them to get your desired order in the list.
+- `weight`: This field can take a numeric value to tell Hugo the order of pages when sorting them\index{Post Weight}, e.g., when you generate a list of all pages under a directory, and if two posts have the same date, you may assign different weights to them to get your desired order on the list.
 
 - `slug`: A character string as the tail of the URL. It is particularly useful when you define custom rules for permanent URLs (see Section \@ref(options)).
 
@@ -271,13 +271,13 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
 
 Some of these options may be obvious to understand, and some may need explanations:
 
-- `baseurl`: You\index{baseURL} can configure this option later, after you have got a domain name for your website. Do not forget the trailing slash.
+- `baseurl`: You\index{baseURL} can configure this option later after you have got a domain name for your website. Do not forget the trailing slash.
 
-- `relativeurls`: It is optional. You may want to set it to `true` only if you intend to view your website locally through your file viewer, e.g., double click on an HTML file and view it in your browser. This option defaults to `false` in Hugo, and it means your website must be viewed through a web server, e.g., `blogdown::serve_site()` has provided a local web server, so you can preview your website locally when `relativeurls = false`.
+- `relativeurls`: It is optional. You may want to set it to `true` only if you intend to view your website locally through your file viewer, e.g., double-click on an HTML file and view it in your browser. This option defaults to `false` in Hugo, and it means your website must be viewed through a web server, e.g., `blogdown::serve_site()` has provided a local web server, so you can preview your website locally when `relativeurls = false`.
 
 - `title`: The title of your website. Typically this is displayed in a web browser's title bar or on a page tab.
 
-- `theme`: The directory name of the theme. You need to be very careful when changing themes, because one theme can be drastically different with another theme in terms of the configurations. It is quite possible that a different theme will not work with your current `config.toml`. Again, you have to read the documentation of a theme to know what options are supported or required.
+- `theme`: The directory name of the theme. You need to be very careful when changing themes because one theme can be drastically different with another theme in terms of the configurations. It is quite possible that a different theme will not work with your current `config.toml`. Again, you have to read the documentation of a theme to know what options are supported or required.
 
 - `googleAnalytics`: The Google Analytics\index{Google Analytics} tracking ID (like `UA-000000-2`). You can sign up at https://analytics.google.com to obtain a tracking ID.
 
@@ -314,7 +314,7 @@ Some of these options may be obvious to understand, and some may need explanatio
 
 - `params`: Miscellaneous parameters\index{params} for the theme.
 
-    - `description`: A brief description of your website. It is not visible on web pages (you can only see it from the HTML source), but should give search engines a hint about your website.
+    - `description`: A brief description of your website. It is not visible on web pages (you can only see it from the HTML source) but should give search engines a hint about your website.
     
     - `highlightjs*`: These options are used to configure the JavaScript library\index{Syntax Highlighting} [highlight.js](https://highlightjs.org) for syntax highlighting of code blocks on the web pages. You can change the version (e.g., `9.12.0`), the CND host (e.g., using [cdnjs](https://cdnjs.com): `//cdnjs.cloudflare.com/ajax/libs`), add more languages (e.g., `["r", "yaml", "tex"]`), and change the theme (e.g., `atom-one-light`). See https://highlightjs.org/static/demo/ for all languages and themes that highlight.js supports.
     
@@ -415,7 +415,7 @@ To understand `layouts/`, you must know some basics about HTML (see Section \@re
         
         The template starts with a partial template `header.html`, of which you will see the source code soon. For now, you can imagine it as all the HTML tags before the body of your page (e.g., `<html><head>`). Partial templates\index{Partials} are mainly for reusing HTML code. For example, all HTML pages may share very similar `<head></head>` tags, and you can factor out the common parts into partial templates.
         
-        The meta data of a page is included in a `<div>` element with the class `article-meta`. We recommend you to assign classes to HTML elements when designing templates, so that it will be easier to apply CSS styles to these elements using class names. In a template, you have access to many variables provided by Hugo, e.g., the `.Title` variable stores the value of the page title, and we write the title in a `<span>` in a first-level header `<h1>`. Similarly, the author and date are written in `<h2>`, but only if they are provided in the YAML metadata. The syntax `{{ with FOO }}{{ . }}{{ end }}` is a shorthand of `{{if FOO }}{{ FOO }}{{ end }}`, i.e., it saves you the effort of typing the expression `FOO` twice by using `{{ . }}`. The method `.Format` can be applied to a date object, and in this theme, we format dates to the form `YYYY/mm/dd` (`2006/01/02` is the way to specify the format in Go).
+        The metadata of a page is included in a `<div>` element with the class `article-meta`. We recommend you to assign classes to HTML elements when designing templates so that it will be easier to apply CSS styles to these elements using class names. In a template, you have access to many variables provided by Hugo, e.g., the `.Title` variable stores the value of the page title, and we write the title in a `<span>` in a first-level header `<h1>`. Similarly, the author and date are written in `<h2>`, but only if they are provided in the YAML metadata. The syntax `{{ with FOO }}{{ . }}{{ end }}` is a shorthand of `{{if FOO }}{{ FOO }}{{ end }}`, i.e., it saves you the effort of typing the expression `FOO` twice by using `{{ . }}`. The method `.Format` can be applied to a date object, and in this theme, we format dates to the form `YYYY/mm/dd` (`2006/01/02` is the way to specify the format in Go).
         
         Then we show the content of a page, which is stored in the variable `.Content`. The content is wrapped in a semantic HTML tag `<main>`.
         
@@ -472,7 +472,7 @@ To understand `layouts/`, you must know some basics about HTML (see Section \@re
         {{ partial "footer.html" . }}
         ```
         
-        Again, it uses two partial templates `header.html` and `footer.html`. The expression `{{if not .IsHome }}` means if this list is not the home page, show the page title. This is because I do not want to display the title on the home page. It is just my personal preference. You can certainly display the title in `<h1>` on the home page if you want.
+        Again, it uses two partial templates `header.html` and `footer.html`. The expression `{{if not .IsHome }}` means if this list is not the home page, show the page title. This is because I do not want to display the title on the homepage. It is just my personal preference. You can certainly display the title in `<h1>` on the home page if you want.
         
         The `{{ .Content }}` shows the content of the list. Please note that typically `.Content` is empty, which may be surprising. It is because a list page is not generated from a source Markdown file by default. However, there is an exception. When you write a special Markdown file `_index.md` under a directory corresponding to the list name, the `.Content` of the list will be the content of this Markdown file. For example, you can define the content of your homepage in `content/_index.md`, and the content of the post list page under `content/post/_index.md`.
         
@@ -607,7 +607,7 @@ You can find many existing open-source CSS frameworks online that may be applied
     }
     ```
     
-    The maximum width of the page body is set to 800 pixels because a too wide page is difficult to read (`800` is an arbitrary threshhold I picked). The body is centered using the CSS trick `margin: auto`, which means the top, right, bottom, and left margins are automatic. When a block element's left and right margins are `auto`, it will be centered. 
+    The maximum width of the page body is set to 800 pixels because a too wide page is difficult to read (`800` is an arbitrary threshold I picked). The body is centered using the CSS trick `margin: auto`, which means the top, right, bottom, and left margins are automatic. When a block element's left and right margins are `auto`, it will be centered. 
     
     ```css
     /* header and footer areas */
@@ -629,7 +629,7 @@ You can find many existing open-source CSS frameworks online that may be applied
     
     Remember our menu element is a list `<ul class="menu">` defined in `header.html`. I changed the default display style of `<li>` within the menu to `inline-block`, so that they will be laid out from left to right as inline elements, instead of being stacked vertically as a bullet list (the default behavior).
     
-    For links (`<a>`) in the menu and the meta data area of an article, the default text decoration (underlines) is removed, and a light background color is applied. The border radius is set to 5 pixels so that you can see a subtle round-corner rectangle behind each link.
+    For links (`<a>`) in the menu and the metadata area of an article, the default text decoration (underlines) is removed, and a light background color is applied. The border radius is set to 5 pixels so that you can see a subtle round-corner rectangle behind each link.
     
     The horizontal rule (`<hr>`) is set to a dashed lightgray line to make it less prominent on a page. These rules are used to separate the article body from the header and footer areas.
     
@@ -667,9 +667,9 @@ You can find many existing open-source CSS frameworks online that may be applied
     tr:nth-child(even) { background: #eee }
     ```
     
-    Embedded elements like images and videos that exceed the page margin are often ugly, so I restrict their maximum width to be 100%. Hyphenation is turned on for words in `<main>`. Blockquotes have a gray left side bar and a lightgray background. Tables are centered by default, with only three horizontal rules: the top and bottom borders of the table, and the bottom border of the table head. Table rows are striped to make it easier to read the table especially when the table is wide.
+    Embedded elements like images and videos that exceed the page margin are often ugly, so I restrict their maximum width to be 100%. Hyphenation is turned on for words in `<main>`. Blockquotes have a gray left sidebar and a lightgray background. Tables are centered by default, with only three horizontal rules: the top and bottom borders of the table, and the bottom border of the table head. Table rows are striped to make it easier to read the table especially when the table is wide.
 
-- `fonts.css` is a separate style sheet\index{fonts.css} because it plays a critical role in the appearance of a website, and it is very likely that you want to customize this file. In most cases, your readers will spend most time on reading the text on your pages, so it is important to make the text comfortable to read. I'm not an expert in web design, and I just picked Palatino for the body and Lucida Console or Monaco (whichever is available in your system) for code. It is common to use Google web fonts nowadays. You may try some web fonts and see if you like any.
+- `fonts.css` is a separate style sheet\index{fonts.css} because it plays a critical role in the appearance of a website, and it is very likely that you want to customize this file. In most cases, your readers will spend the most time on reading the text on your pages, so it is important to make the text comfortable to read. I'm not an expert in web design, and I just picked Palatino for the body and Lucida Console or Monaco (whichever is available in your system) for the code. It is common to use Google web fonts nowadays. You may try some web fonts and see if you like any.
     
     ```css
     body {
@@ -735,9 +735,9 @@ The XMin is actually a highly functional theme, but we understand that it may be
     </script>
     ```
     
-    Remember to replace `YOUR-CDN-LINK` with the link of your preferred CDN host of highlight.js, e.g., `cdn.bootcss.com/highlight.js/9.12.0`. For more information about highlight.js, please see its homepage: https://highlightjs.org. If you need to use other CDN hosts, cdnjs.com is a good choice: https://cdnjs.com/libraries/highlight.js You can also see which languages and CSS themes are supported there.
+    Remember to replace `YOUR-CDN-LINK` with the link to your preferred CDN host of highlight.js, e.g., `cdn.bootcss.com/highlight.js/9.12.0`. For more information about highlight.js, please see its homepage: https://highlightjs.org. If you need to use other CDN hosts, cdnjs.com is a good choice: https://cdnjs.com/libraries/highlight.js You can also see which languages and CSS themes are supported there.
     
-    You may see https://github.com/yihui/hugo-xmin/pull/5 for an actual implmentation, and a sample page with syntax highlighting at https://deploy-preview-5--hugo-xmin.netlify.com/post/2016/02/14/a-plain-markdown-post/.
+    You may see https://github.com/yihui/hugo-xmin/pull/5 for an actual implementation, and a sample page with syntax highlighting at https://deploy-preview-5--hugo-xmin.netlify.com/post/2016/02/14/a-plain-markdown-post/.
 
 - **Support math expressions through MathJax.** Add the code below\index{MathJax} to `foot_custom.html`.
 
@@ -789,9 +789,9 @@ The XMin is actually a highly functional theme, but we understand that it may be
 
     You may see https://github.com/yihui/hugo-xmin/pull/2 for the complete implementation and a preview at https://deploy-preview-2--hugo-xmin.netlify.com/post/2016/02/14/a-plain-markdown-post/.
 
-- **Add a GitHub Edit button or link to a page.** If none\index{GitHub Edit Page} of the above features look exciting to you (which will not surprise me), this little feature is really a great example of showing you the power of plain-text files and static websites, when combined with GitHub (or other services that support the online editing of plain-text files). I believe it will be difficult, if not impossible, to implement this feature in dynamic website frameworks like WordPress.
+- **Add a GitHub Edit button or link to a page.** If none\index{GitHub Edit Page} of the above features look exciting to you (which will not surprise me), this little feature is really a great example of showing you the power of plain-text files and static websites when combined with GitHub (or other services that support the online editing of plain-text files). I believe it will be difficult, if not impossible, to implement this feature in dynamic website frameworks like WordPress.
 
-    Basically, when you browse any text files in a repository on GitHub, you can edit them right on the page by hitting the Edit button (see Figure \@ref(fig:github-edit) for an example) if you have a GitHub account. If you have write access to the repository, you can commit the changes directly online, otherwise GitHub will fork the repository for you automatically, so that you can edit the file in your own repository, and GitHub will guide you to create a pull request to the original repository. When the original owner sees the pull request, he/she can see the changes you made and decide whether to accept them or not, or request you to make further changes. Although the terminology "pull request" is highly confusing to beginners,^[In my opinion, it really should be called "merge request" instead.] it is probably the single greatest feature invented by GitHub, because it makes it so much easier for people to make contributions.
+    Basically, when you browse any text files in a repository on GitHub, you can edit them right on the page by hitting the Edit button (see Figure \@ref(fig:github-edit) for an example) if you have a GitHub account. If you have write access to the repository, you can commit the changes directly online, otherwise GitHub will fork the repository for you automatically so that you can edit the file in your own repository, and GitHub will guide you to create a pull request to the original repository. When the original owner sees the pull request, he/she can see the changes you made and decide whether to accept them or not or request you to make further changes. Although the terminology "pull request" is highly confusing to beginners,^[In my opinion, it really should be called "merge request" instead.] it is probably the single greatest feature invented by GitHub because it makes it so much easier for people to make contributions.
     
     What is really handy is that all you need is a URL of a fixed form to edit a file on GitHub: `https://github.com/USER/REPO/edit/BRANCH/PATH/TO/FILE`. For example, https://github.com/rbind/yihui/edit/master/content/knitr/faq.md, where `USER` is `rbind`, `REPO` is `yihui`, `BRANCH` is `master`, and the file path is `content/knitr/faq.md`.
     
@@ -842,7 +842,7 @@ After you digest the XMin theme and the implementations of additional features, 
 
 ## Custom layouts
 
-It is very likely that you want to customize a theme unless it is designed by yourself. The most straightforward way is to simply make changes directly in the theme^[If you are new to web development, be careful changing content within the theme. Minor changes like colors and font-sizes can be found within the CSS files of the theme and can be altered simply with minimal risk of breaking the theme's functionality.], but the problem is that a Hugo theme may be constantly updated by its original author for improvements or bug fixes. Similar to the "you break it, you buy it" policy (the [Pottery Barn rule](https://en.wikipedia.org/wiki/Pottery_Barn_rule)), once you touch other people's source code, you will be responsible for future maintenance by yourself, and the original author should not be responsible for the changes you made on your side. That means it may not be easy to pull future updates of this theme to your website (you have to carefully read the changes and make sure they do not conflict with your changes), but if you are completely satisfied with the current state of the theme, and do not want future updates, it is fine to modify the theme files directly.
+It is very likely that you want to customize a theme unless it is designed by yourself. The most straightforward way is to simply make changes directly in the theme^[If you are new to web development, be careful changing content within the theme. Minor changes like colors and font-sizes can be found within the CSS files of the theme and can be altered simply with minimal risk of breaking the theme's functionality.], but the problem is that a Hugo theme may be constantly updated by its original author for improvements or bug fixes. Similar to the "you break it, you buy it" policy (the [Pottery Barn rule](https://en.wikipedia.org/wiki/Pottery_Barn_rule)), once you touch other people's source code, you will be responsible for future maintenance by yourself, and the original author should not be responsible for the changes you made on your side. That means it may not be easy to pull future updates of this theme to your website (you have to carefully read the changes and make sure they do not conflict with your changes), but if you are completely satisfied with the current state of the theme and do not want future updates, it is fine to modify the theme files directly.
 
 For a theme author aware of the fact that users may customize her theme, she will typically provide two ways: one is to provide options in `config.toml`, so that you can change these options without touching the template files; the other is to leave a few lightweight template files under `layouts/` in the theme, so that you can override them without touching the core template files. Take the XMin theme for example:
 
