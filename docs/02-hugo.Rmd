@@ -789,6 +789,23 @@ The XMin is actually a highly functional theme, but we understand that it may be
 
     You may see https://github.com/yihui/hugo-xmin/pull/2 for the complete implementation and a preview at https://deploy-preview-2--hugo-xmin.netlify.com/post/2016/02/14/a-plain-markdown-post/.
 
+- **Add pagination.** When you have a large number of posts on a website, you may not want to display the full list on a single page, but show N posts (e.g., N = 10) per page. It is easy to add pagination to a website using Hugo's built-in functions and templates. Instead of looping through all posts in a list template (e.g., `range .Data.Pages`), you paginate the full list of posts using the function `.Paginate` (e.g., `range (.Paginate .Data.Pages)`). Below is a template fragment that you may insert to your template file `list.html`:
+
+    ```html
+    <ul>
+      {{ $paginator := .Paginate .Data.Pages }}
+      {{ range $paginator.Pages }}
+      <li>
+        <span class="date">{{ .Date.Format "2006/01/02" }}</span>
+        <a href="{{ .URL }}">{{ .Title }}</a>
+      </li>
+      {{ end }}
+    </ul>
+    {{ template "_internal/pagination.html" . }}
+    ```
+
+    See https://github.com/yihui/hugo-xmin/pull/16 for a full implementation.
+
 - **Add a GitHub Edit button or link to a page.** If none\index{GitHub Edit Page} of the above features look exciting to you (which will not surprise me), this little feature is really a great example of showing you the power of plain-text files and static websites, when combined with GitHub (or other services that support the online editing of plain-text files). I believe it will be difficult, if not impossible, to implement this feature in dynamic website frameworks like WordPress.
 
     Basically, when you browse any text files in a repository on GitHub, you can edit them right on the page by hitting the Edit button (see Figure \@ref(fig:github-edit) for an example) if you have a GitHub account. If you have write access to the repository, you can commit the changes directly online, otherwise GitHub will fork the repository for you automatically, so that you can edit the file in your own repository, and GitHub will guide you to create a pull request to the original repository. When the original owner sees the pull request, he/she can see the changes you made and decide whether to accept them or not or request you to make further changes. Although the terminology "pull request" is highly confusing to beginners,^[In my opinion, it really should be called "merge request" instead.] it is probably the single greatest feature invented by GitHub, because it makes it so much easier for people to make contributions.
