@@ -1,6 +1,6 @@
 # Migration
 
-Usually it is easier to start a new website than migrating\index{Site Migration} an old one to a new framework, but you may have to do it anyway because of the useful content on the old website that should not simply be discarded. A lazy solution is to leave the old website as is, start a new website with a new domain, and provide a link to the old website. This may be a hassle to your readers, and they may not be able to easily discover the gems that you created on your old website, so I recommend you to migrate your old posts and pages to the new website if possible.
+Usually, it is easier to start a new website than migrating\index{Site Migration} an old one to a new framework, but you may have to do it anyway because of the useful content on the old website that should not simply be discarded. A lazy solution is to leave the old website as is, start a new website with a new domain, and provide a link to the old website. This may be a hassle to your readers, and they may not be able to easily discover the gems that you created on your old website, so I recommend you to migrate your old posts and pages to the new website if possible.
 
 This process may be easy or hard, depending on how complicated your old website is. The bad news is that there is unlikely to be a universal or magical solution, but I have provided some helper functions in **blogdown** as well as a Shiny application to assist you, which may make it a little easier for you to migrate from Jekyll and WordPress sites.
 
@@ -16,9 +16,9 @@ It is likely that some links will be broken after the migration because Hugo ren
 
 ## From Jekyll
 
-When converting a Jekyll\index{Jekyll} website to Hugo, the most challenging part is the theme. If you want to keep exactly the same theme, you will have to rewrite your Jekyll templates using Hugo's syntax (see Section \@ref(templates)). However, if you can find an existing theme in Hugo (https://themes.gohugo.io), things will be much easier, and you only need to move the content of your website to Hugo, which is relatively easy. Basically you copy the Markdown pages and posts to the `content/` directory in Hugo, and tweak these text files.
+When converting a Jekyll\index{Jekyll} website to Hugo, the most challenging part is the theme. If you want to keep exactly the same theme, you will have to rewrite your Jekyll templates using Hugo's syntax (see Section \@ref(templates)). However, if you can find an existing theme in Hugo (https://themes.gohugo.io), things will be much easier, and you only need to move the content of your website to Hugo, which is relatively easy. Basically, you copy the Markdown pages and posts to the `content/` directory in Hugo and tweak these text files.
 
-Usually posts in Jekyll are under the `_posts/` directory, and you can move them to `content/post/` (you are free to use other directories). Then you need to define a custom rule for permanent URLs in `config.toml` like (see Section \@ref(options)):
+Usually, posts in Jekyll are under the `_posts/` directory, and you can move them to `content/post/` (you are free to use other directories). Then you need to define a custom rule for permanent URLs in `config.toml` like (see Section \@ref(options)):
 
 ```js
 [permalinks]
@@ -81,7 +81,7 @@ categories:
 ---
 ```
 
-You can discard the YAML fields that are not useful in Hugo. For example, you may only keep the fields `title`, `author`, `date`, `categories`, and `tags`, and discard other fields. Actually you may also want to add a `slug` field that takes the base filename of the post (with the leading date removed). For example, when the post filename is `2015-07-28-announcing-the-jhu-data-science-hackathon-2015.md`, you may want to add `slug: announcing-the-jhu-data-science-hackathon-2015` to make sure the URL of the post on the new site remains the same.
+You can discard the YAML fields that are not useful in Hugo. For example, you may only keep the fields `title`, `author`, `date`, `categories`, and `tags`, and discard other fields. Actually, you may also want to add a `slug` field that takes the base filename of the post (with the leading date removed). For example, when the post filename is `2015-07-28-announcing-the-jhu-data-science-hackathon-2015.md`, you may want to add `slug: announcing-the-jhu-data-science-hackathon-2015` to make sure the URL of the post on the new site remains the same.
 
 Here is the code to process the YAML metadata of all posts:
 
@@ -122,7 +122,7 @@ The key is the R script https://github.com/yihui/oldblog_xml/blob/master/convert
 
 Note this script depends on the Exitwp tool. If you do not know how to run Exitwp, please use the online tool I mentioned before (travis-exitwp), and skip the R code that calls Exitwp.
 
-The Markdown posts should be fairly clean after the conversion, but there may be remaining HTML tags in your posts, such as `<table>` and `<blockquote>`. You will need to manually clean them if there exist any.
+The Markdown posts should be fairly clean after the conversion, but there may be remaining HTML tags in your posts, such as `<table>` and `<blockquote>`. You will need to manually clean them, if any exist.
 
 ## From other systems
 
