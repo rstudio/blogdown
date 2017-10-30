@@ -322,7 +322,7 @@ To publish a website:
 
 1. Restart the R session, and run `blogdown::hugo_build()`. You should get a `public/` directory under the root directory of your project.
 
-1. Log in onto\index{Netlify} https://www.netlify.com (you can use a GitHub account if you have one). If this is the first time you have published this website, you can create a new site, otherwise, you may update the existing site you created last time. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag a folder with a static site here".
+1. Log in onto\index{Netlify} https://www.netlify.com (you can use a GitHub account if you have one). If this is the first time you have published this website, you can create a new site, otherwise you may update the existing site you created last time. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag a folder with a static site here".
 
 1. Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.com` to you. You can (and should) change this random subdomain to a more meaningful one if it is still available.
 
