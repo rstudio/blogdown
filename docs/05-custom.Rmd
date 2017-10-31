@@ -1,10 +1,10 @@
 # Other Generators
 
-We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Basically you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show how you can possibly work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package [@R-rmarkdown], and we will introduce it in Section \@ref(rmd-website).
+We mentioned the possibility to bypass Hugo and use your own building method in Section \@ref(methods). Basically you have to build the site using `blogdown::build_site(method = "custom")`, and provide your own building script `/R/build.R`. In this chapter, we show you how to work with other popular static site generators like Jekyll and Hexo. Besides these static site generators written in other languages, there is actually a simple site generator written in R provided in the **rmarkdown** package [@R-rmarkdown], and we will introduce it in Section \@ref(rmd-website).
 
 ## Jekyll
 
-For [Jekyll](https://jekyllrb.com) \index{Jekyll}users, I have prepared a minimal example in the GitHub repository [yihui/blogdown-jekyll](https://github.com/yihui/blogdown-jekyll). If you clone or download this repository and open `blogdown-jekyll.Rproj` in RStudio, you can still use all addins mentioned in Section \@ref(rstudio-ide), such as "New Post", "Serve Site", and "Update Metadata", but it is Jekyll instead of Hugo that builds the website behind the scenes now.
+For [Jekyll](https://jekyllrb.com) \index{Jekyll}users, I have prepared a minimal example in the GitHub repository [yihui/blogdown-jekyll.](https://github.com/yihui/blogdown-jekyll) If you clone or download this repository and open `blogdown-jekyll.Rproj` in RStudio, you can still use all addins mentioned in Section \@ref(rstudio-ide), such as "New Post," "Serve Site," and "Update Metadata," but it is Jekyll instead of Hugo that builds the website behind the scenes now.
 
 I assume you are familiar with Jekyll, and I'm not going to introduce the basics of Jekyll in this section. For example, you should know what the `_posts/` and `_site/` directories mean.
 
@@ -78,7 +78,7 @@ local({
 
 - What `knitr::render_jekyll()` does\index{knitr::render\_jekyll()} is mainly to set up some **knitr** output hooks so that source code and text output from R code chunks will be wrapped in Liquid tags `{% highlight %}` and `{% end highlight %}`.
 
-- Remember in `build.R`, we passed the variable `io` to the Rscript call `blogdown:::Rscript`. Here in `build_one.R`, we can receive them from `commandArgs(TRUE)`. The variable `a` contains a `.Rmd` and a `.md` file path. We removed the possible leading underscore (`^_`) and the extension (`[.][a-zA-Z]$`) in the path. Next we set figure and cache paths using this string. For example, for a post `_posts/foo.Rmd`, its figures will be written to `figure/foo/` and its cache databases (if there are any) will be stored under `cache/foo/`. Both directories are under the root directory of the project.
+- Remember in `build.R`, we passed the variable `io` to the Rscript call `blogdown:::Rscript`. Here in `build_one.R`, we can receive them from `commandArgs(TRUE)`. The variable `a` contains an `.Rmd` and an `.md` file path. We removed the possible leading underscore (`^_`) and the extension (`[.][a-zA-Z]$`) in the path. Next we set figure and cache paths using this string. For example, for a post `_posts/foo.Rmd`, its figures will be written to `figure/foo/` and its cache databases (if there are any) will be stored under `cache/foo/`. Both directories are under the root directory of the project.
 
 - Lastly, we call `knitr::knit()` to knit the Rmd file to a Markdown output file, which will be processed by Jekyll later.
 
@@ -90,7 +90,7 @@ exclude: ['*.Rmd']
 
 Compared to the Hugo support in **blogdown**, this approach is limited in a few aspects:
 
-1. It does not support Pandoc, so you cannot use Pandoc's Markdown. Since it uses the **knitr** package instead of **rmarkdown**, you cannot use any **bookdown**'s Markdown features, either. You are at the mercy of the Markdown renderers supported by Jekyll.
+1. It does not support Pandoc, so you cannot use Pandoc's Markdown. Since it uses the **knitr** package instead of **rmarkdown**, you cannot use any of **bookdown**'s Markdown features, either. You are at the mercy of the Markdown renderers supported by Jekyll.
 
 1. Without **rmarkdown**, you cannot use HTML widgets. Basically, all you can have are dynamic text output and R graphics output from R code chunks. They may or may not suffice, depending on your specific use cases.
 
@@ -98,7 +98,7 @@ It may be possible for us to remove these limitations in a future version of **b
 
 ## Hexo
 
-The ideas of using\index{Hexo} [Hexo](https://hexo.io) are very similar to what we have applied to Jekyll in the previous section. I have also prepared a minimal example in the GitHub repository [yihui/blogdown-hexo](https://github.com/yihui/blogdown-hexo).
+The ideas of using\index{Hexo} [Hexo](https://hexo.io) are very similar to what we have applied to Jekyll in the previous section. I have also prepared a minimal example in the GitHub repository [yihui/blogdown-hexo.](https://github.com/yihui/blogdown-hexo)
 
 The key components of this repository are still `.Rprofile`, `R/build.R`, and `R/build_one.R`. We set the option `blogdown.generator` to `hexo`, the `build.method` to `custom`, and the default subdirectory for new posts to `source/_posts`.
 
@@ -149,7 +149,7 @@ You can find more information about this site generator in its documentation at 
 
 - The **rmarkdown** site generator requires all Rmd files to be under the root directory. Hugo has no constraints on the site structure, and you can create arbitrary directories and files under `/content/`.
 
-- Hugo is a general-purpose site generator that is highly customizable, and there are a lot of things that **rmarkdown**'s default site generator does not support, e.g., RSS feeds, metadata especially common in blogs such as categories and tags, customizing permanent links for certain pages.
+- Hugo is a general-purpose site generator that is highly customizable, and there are a lot of things that **rmarkdown**'s default site generator does not support, e.g., RSS feeds, metadata especially common in blogs such as categories and tags, and customizing permanent links for certain pages.
 
 There are still legitimate reasons to choose the **rmarkdown** default site generator, even though it does not appear to be as powerful as Hugo, including:
 
@@ -159,12 +159,11 @@ There are still legitimate reasons to choose the **rmarkdown** default site gene
 
 - You prefer the Bootstrap styles. In theory, you can also apply Bootstrap styles to Hugo websites, but it will require you to learn more about Hugo. Bootstrap is well supported in **rmarkdown**, and you can spend more time on the configurations instead of learning the technical details about how it works.
 
-- There are certain features in **rmarkdown** HTML output missing in **blogdown**. For example, currently you cannot easily print data frames as paged tables, add a floating table of contents, or fold/unfold code blocks dynamically in the output of **blogdown**. All these could be implemented via JavaScript and CSS, but it is certainly not as simple as specifying a few options in **rmarkdown** like `toc_float: true`.
+- There are certain features in **rmarkdown** HTML output that are missing in **blogdown**. For example, currently you cannot easily print data frames as paged tables, add a floating table of contents, or fold/unfold code blocks dynamically in the output of **blogdown**. All these could be implemented via JavaScript and CSS, but it is certainly not as simple as specifying a few options in **rmarkdown** like `toc_float: true`.
 
 Please note that the **rmarkdown** site generator is extensible, too. For example, the **bookdown** package [@R-bookdown] is essentially a custom site generator to generate books as websites. 
 
 ## pkgdown
-
 
 The **pkgdown** package\index{pkgdown} (@R-pkgdown, https://github.com/hadley/pkgdown) can help you quickly turn the R documentation of an R package (including help pages and vignettes) into a website. It is independent of **blogdown** and solves a specific problem. It is not a general-purpose website generator. We want to mention it in this book because it is very easy to use, and also highly useful. You can find the instructions on its website or in its GitHub repository.
 

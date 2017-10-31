@@ -1,16 +1,16 @@
 # Migration
 
-Usually, it is easier to start a new website than migrating\index{Site Migration} an old one to a new framework, but you may have to do it anyway because of the useful content on the old website that should not simply be discarded. A lazy solution is to leave the old website as is, start a new website with a new domain, and provide a link to the old website. This may be a hassle to your readers, and they may not be able to easily discover the gems that you created on your old website, so I recommend you to migrate your old posts and pages to the new website if possible.
+Usually, it is easier to start a new website than migrating\index{Site Migration} an old one to a new framework, but you may have to do it anyway because of the useful content on the old website that should not simply be discarded. A lazy solution is to leave the old website as is, start a new website with a new domain, and provide a link to the old website. This may be a hassle to your readers, and they may not be able to easily discover the gems that you created on your old website, so I recommend that you migrate your old posts and pages to the new website if possible.
 
 This process may be easy or hard, depending on how complicated your old website is. The bad news is that there is unlikely to be a universal or magical solution, but I have provided some helper functions in **blogdown** as well as a Shiny application to assist you, which may make it a little easier for you to migrate from Jekyll and WordPress sites.
 
-To give you an idea about the possible amount of work required, I can tell you that it took me a whole week (from the morning to midnight every day) to migrate several of my personal Jekyll-based websites to Hugo and **blogdown**. The complication in my case was not only Jekyll, but also the fact that I built several separate Jekyll websites (because I did not have a choice in Jekyll) and I wanted to unite them in the same repository. Now my two blogs (Chinese and English), the **knitr** [@R-knitr] package documentation, and the **animation** package [@R-animation] documentation are maintained in the same repository: https://github.com/rbind/yihui. I have about 1000 pages on this website, most of which are blog posts. It used to take me more than 30 seconds to preview my blog in Jekyll, and now it only takes less than 2 seconds to build the site in Hugo.
+To give you an idea about the possible amount of work required, I can tell you that it took me a whole week (from the morning to midnight every day) to migrate several of my personal Jekyll-based websites to Hugo and **blogdown**. The complication in my case was not only Jekyll, but also the fact that I built several separate Jekyll websites (because I did not have a choice in Jekyll) and I wanted to unite them in the same repository. Now my two blogs (Chinese and English), the **knitr** [@R-knitr] package documentation, and the **animation** package [@R-animation] documentation are maintained in the same repository: https://github.com/rbind/yihui. I have about 1000 pages on this website, most of which are blog posts. It used to take me more than 30 seconds to preview my blog in Jekyll, and now it takes less than 2 seconds to build the site in Hugo.
 
-Another complicated example is the website of [Rob J Hyndman](https://robjhyndman.com). He started his website in 1993 (12 years before me), and had accumulated a lot of content over the years. You can read the post https://support.rbind.io/2017/05/15/converting-robjhyndman-to-blogdown/ for the stories about how he migrated his WordPress website to **blogdown**. The key is that you probably need a long international flight when you want to migrate a complicated website.
+Another complicated example is the website of [Rob J Hyndman.](https://robjhyndman.com) He started his website in 1993 (12 years before me), and had accumulated a lot of content over the years. You can read the post https://support.rbind.io/2017/05/15/converting-robjhyndman-to-blogdown/ for the stories about how he migrated his WordPress website to **blogdown**. The key is that you probably need a long international flight when you want to migrate a complicated website.
 
-A simpler example is the [Simply Statistics blog](https://simplystatistics.org). Originally it was built on Jekyll^[It was migrated from WordPress a few years ago. The WordPress site was actually migrated from an earlier Tumblr blog.] and the source was hosted in the GitHub repository https://github.com/simplystats/simplystats.github.io. I volunteered to help them move to **blogdown**, and it took me about four hours. My time was mostly spent on cleaning up the YAML metadata of posts and tweaking the Hugo theme. They had about 1000 posts, which sounds like a lot, but the number does not really matter, because I wrote an R script to process all posts automatically. The new repository is at https://github.com/rbind/simplystats.
+A simpler example is the [Simply Statistics blog.](https://simplystatistics.org) Originally it was built on Jekyll^[It was migrated from WordPress a few years ago. The WordPress site was actually migrated from an earlier Tumblr blog.] and the source was hosted in the GitHub repository https://github.com/simplystats/simplystats.github.io. I volunteered to help them move to **blogdown**, and it took me about four hours. My time was mostly spent on cleaning up the YAML metadata of posts and tweaking the Hugo theme. They had about 1000 posts, which sounds like a lot, but the number does not really matter, because I wrote an R script to process all posts automatically. The new repository is at https://github.com/rbind/simplystats.
 
-If you do not really have too many pages (e.g., under 20), I recommend you to cut and paste them to Markdown files, because it may actually take longer to write a script to process these pages.
+If you do not really have too many pages (e.g., under 20), I recommend that you cut and paste them to Markdown files, because it may actually take longer to write a script to process these pages.
 
 It is likely that some links will be broken after the migration because Hugo renders different links for your pages and posts. In that case, you may either fix the permanent links (e.g., by tweaking the slug of a post), or use 301 redirects (e.g., on Netlify).
 
@@ -25,7 +25,7 @@ Usually, posts in Jekyll are under the `_posts/` directory, and you can move the
     post = "/:year/:month/:day/:slug/"
 ```
 
-This depends on the format of URLs you used in Jekyll (see the `permalink` option in your `_config.yml`).
+This depends on the format of the URLs you used in Jekyll (see the `permalink` option in your `_config.yml`).
 
 If there are static assets like images, they can be moved to the `static/` directory in Hugo.
 
@@ -53,9 +53,9 @@ blogdown:::remove_extra_empty_lines
 blogdown:::process_bare_urls
 ```
 
-The first function substitutes two or more empty lines with a single empty line. The second function replaces links of the form `[url](url)` with `<url>`. There is not anything wrong with excessive empty lines or the syntax `[url](url)`, though. These helper functions may make your Markdown text a little cleaner. You can find all such helper functions at https://github.com/rstudio/blogdown/blob/master/R/clean.R. Note they are not exported from **blogdown**, so you need triple colons to access them.
+The first function substitutes two or more empty lines with a single empty line. The second function replaces links of the form `[url](url)` with `<url>`. There is nothing wrong with excessive empty lines or the syntax `[url](url)`, though. These helper functions may make your Markdown text a little cleaner. You can find all such helper functions at https://github.com/rstudio/blogdown/blob/master/R/clean.R. Note they are not exported from **blogdown**, so you need triple colons to access them.
 
-The YAML metadata of your posts may not be completely clean, especially when your Jekyll website was actually converted from an earlier WordPress website. There is an internal helper function `blogdown:::modify_yaml()`, which may help you clean up the metadata. For example, below is the YAML metadata of a blog post of Simply Statistics when it was built on Jekyll:
+The YAML metadata of your posts may not be completely clean, especially when your Jekyll website was actually converted from an earlier WordPress website. The internal helper function `blogdown:::modify_yaml()` may help you clean up the metadata. For example, below is the YAML metadata of a blog post of Simply Statistics when it was built on Jekyll:
 
 ```yaml
 ---
@@ -112,21 +112,21 @@ slug: announcing-the-jhu-data-science-hackathon-2015
 
 ## From WordPress
 
-From our experience, the best way to import WordPress\index{WordPress} blog posts to Hugo is to import them to Jekyll, and write an R script to clean up the YAML metadata of all pages if necessary, instead of using the migration tools listed on the [official guide](https://gohugo.io/tools/), including the WordPress plugin `wordpress-to-hugo-exporter`.
+From our experience, the best way to import WordPress\index{WordPress} blog posts to Hugo is to import them to Jekyll, and write an R script to clean up the YAML metadata of all pages if necessary, instead of using the migration tools listed on the [official guide,](https://gohugo.io/tools/) including the WordPress plugin `wordpress-to-hugo-exporter`.
 
-To our knowledge, the best tool to convert a WordPress website to Jekyll is the Python tool [Exitwp](https://github.com/thomasf/exitwp). Its author has provided detailed instructions on how to use it. You have to know how to install Python libraries and execute Python scripts. If you do not, I have provided an online tool at https://github.com/yihui/travis-exitwp. You can upload your WordPress XML file there, and get a download link to a ZIP archive that contains your posts in Markdown.
+To our knowledge, the best tool to convert a WordPress website to Jekyll is the Python tool [Exitwp.](https://github.com/thomasf/exitwp) Its author has provided detailed instructions on how to use it. You have to know how to install Python libraries and execute Python scripts. If you do not, I have provided an online tool at https://github.com/yihui/travis-exitwp. You can upload your WordPress XML file there, and get a download link to a ZIP archive that contains your posts in Markdown.
 
-The biggest challenge in converting WordPress posts to Hugo is to clean up the post content in Markdown. Fortunately, I have done this for three different WordPress blogs,^[The RViews blog (https://rviews.rstudio.com), the RStudio blog (https://blog.rstudio.com), and Karl Broman's blog (http://kbroman.org). The RViews blog took me a few days. The RStudio blog took me one day. Karl Broman's blog took me an hour.] and I think I have managed to automate this process as much as possible. You may refer to the pull request I submitted to Karl Broman to convert his WordPress posts to Markdown (https://github.com/kbroman/oldblog_xml/pull/1), in which I provided both the R script and the Markdown files. I recommend you to go to the "Commits" tab and view all my GIT commits one by one to see the full process.
+The biggest challenge in converting WordPress posts to Hugo is to clean up the post content in Markdown. Fortunately, I have done this for three different WordPress blogs,^[The RViews blog (https://rviews.rstudio.com), the RStudio blog (https://blog.rstudio.com), and Karl Broman's blog (http://kbroman.org). The RViews blog took me a few days. The RStudio blog took me one day. Karl Broman's blog took me an hour.] and I think I have managed to automate this process as much as possible. You may refer to the pull request I submitted to Karl Broman to convert his WordPress posts to Markdown (https://github.com/kbroman/oldblog_xml/pull/1), in which I provided both the R script and the Markdown files. I recommend that you go to the "Commits" tab and view all my GIT commits one by one to see the full process.
 
 The key is the R script https://github.com/yihui/oldblog_xml/blob/master/convert.R, which converts the WordPress XML file to Markdown posts and cleans them. Before you run this script on your XML file, you have to adjust a few parameters, such as the XML filename, your old WordPress site's URL, and your new blog's URL.
 
-Note this script depends on the Exitwp tool. If you do not know how to run Exitwp, please use the online tool I mentioned before (travis-exitwp), and skip the R code that calls Exitwp.
+Note that this script depends on the Exitwp tool. If you do not know how to run Exitwp, please use the online tool I mentioned before (travis-exitwp), and skip the R code that calls Exitwp.
 
 The Markdown posts should be fairly clean after the conversion, but there may be remaining HTML tags in your posts, such as `<table>` and `<blockquote>`. You will need to manually clean them, if any exist.
 
 ## From other systems
 
-If you have a website built by other applications or systems, your best way to go may be to import your website to WordPress first, export it to Jekyll, and clean up the Markdown files. You can try to search for solutions like "how to import blogger.com to WordPress" or "how to import Tumblr to WordPress".
+If you have a website built by other applications or systems, your best way to go may be to import your website to WordPress first, export it to Jekyll, and clean up the Markdown files. You can try to search for solutions like "how to import blogger.com to WordPress" or "how to import Tumblr to WordPress."
 
 If you are very familiar with web scraping techniques, you can also scrape the HTML pages of your website, and convert them to Markdown via Pandoc, e.g.,
 

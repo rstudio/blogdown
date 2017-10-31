@@ -3,7 +3,10 @@
 '`
 
 ```{r include=FALSE}
-knitr::write_bib(c(
+bib = knitr::write_bib(c(
   .packages(), 'blogdown', 'bookdown', 'knitr', 'rmarkdown', 'htmlwidgets', 'webshot', 'servr', 'xaringan', 'animation',  'processx', 'later', 'widgetframe', 'pkgdown'
-), 'packages.bib')
+), file = NULL)
+bib = unlist(bib)
+bib = gsub("'(Htmlwidgets|iframes)'", '\\1', bib)
+blogdown:::writeUTF8(bib, 'packages.bib')
 ```

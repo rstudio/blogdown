@@ -1,10 +1,10 @@
 # Website Basics
 
-If you want to tweak the appearance of your website, or even design your own theme, you must have some basic knowledge for web development. In this chapter, we briefly introduce HTML, CSS, and JavaScript, which are the most common components of a web page, although CSS and JavaScript are optional.
+If you want to tweak the appearance of your website, or even design your own theme, you must have some basic knowledge of web development. In this appendix, we briefly introduce HTML, CSS, and JavaScript, which are the most common components of a web page, although CSS and JavaScript are optional.
 
-We only aim at getting you started with HTML, CSS, and JavaScript. HTML is relatively simple to learn, but CSS and JavaScript can be much more complicated, depending on how much you want to learn and what you want to do with them. After reading this chapter, you will have to use other resources to teach yourself. When you search for these technologies online, the most likely websites that you may hit are [MDN](https://developer.mozilla.org) (Mozilla Developer Network), [w3schools.com](https://www.w3schools.com), and [StackOverflow](https://stackoverflow.com). Among these websites, w3schools often provides simple examples and tutorials that may be more friendly to beginners, but we often hear [negative comments](https://meta.stackoverflow.com/q/280478/559676) about it, so please use it with your own caution. I often read all three websites when looking for solutions.
+We only aim at getting you started with HTML, CSS, and JavaScript. HTML is relatively simple to learn, but CSS and JavaScript can be much more complicated, depending on how much you want to learn and what you want to do with them. After reading this appendix, you will have to use other resources to teach yourself. When you search for these technologies online, the most likely websites that you may hit are [MDN](https://developer.mozilla.org) (Mozilla Developer Network), [w3schools.com,](https://www.w3schools.com) and [StackOverflow.](https://stackoverflow.com) Among these websites, w3schools often provides simple examples and tutorials that may be friendlier to beginners, but we often hear [negative comments](https://meta.stackoverflow.com/q/280478/559676) about it, so please use it with caution. I often read all three websites when looking for solutions.
 
-If we were only allowed to give one single most useful tip about web development, it would be: use the "Developer Tools" of your web browser. Most modern web browsers provide these tools. For example, you can find these tools from the menu of Google Chrome `View -> Developer`, Firefox's menu `Tools -> Web Developer`, or Safari's menu `Develop -> Show Web Inspector`. Figure \@ref(fig:chrome-devtools) is a screenshot of using the Developer Tools in Chrome.
+If we were only allowed to give one single most useful tip about web development, it would be: use the Developer Tools of your web browser. Most modern web browsers provide these tools. For example, you can find these tools from the menu of Google Chrome `View -> Developer`, Firefox's menu `Tools -> Web Developer`, or Safari's menu `Develop -> Show Web Inspector`. Figure \@ref(fig:chrome-devtools) is a screenshot of using the Developer Tools in Chrome.
 
 ```{r chrome-devtools, fig.cap='Developer Tools in Google Chrome.', fig.align='center', out.width='100%', echo=FALSE}
 knitr::include_graphics('images/chrome-devtools.png')
@@ -12,15 +12,15 @@ knitr::include_graphics('images/chrome-devtools.png')
 
 Typically you can also open the Developer Tools by right-clicking on a certain element on the web page and selecting the menu item `Inspect` (or `Inspect Element`). In Figure \@ref(fig:chrome-devtools), I right-clicked on the profile image of my website https://yihui.name and inspected it, and Chrome highlighted its HTML source code `<img src="..." ... />` in the left pane. You can also see the CSS styles associated with this `img` element in the right pane. What is more, you can interactively change the styles there if you know CSS, and see the (temporary) effects in real time on the page! After you are satisfied with the new styles, you can write the CSS code in files.
 
-There are a lot of amazing features of Developer Tools, which make them not only extremely useful for debugging and experimentation, but also helpful for learning web development. These tools are indispensable to me when I develop anything related to web pages. I learned a great deal about CSS and JavaScript by playing in these tools.
+There are a lot of amazing features of Developer Tools, which make them not only extremely useful for debugging and experimentation, but also helpful for learning web development. These tools are indispensable to me when I develop anything related to web pages. I learned a great deal about CSS and JavaScript by playing with these tools.
 
 ## HTML
 
 HTML\index{HTML} stands for Hyper Text Markup Language, and it is the language behind most web pages you see. You can use the menu `View -> View Source` or the context menu `View Page Source` to see the full HTML source of a web page in your browser. All elements on a page are represented by HTML tags. For example, the tag `<p>` represents paragraphs, and `<img>` represents images.
 
-The good thing about HTML is that the language only has a limited number of tags, and the number is not very big (especially the number of commonly used tags). This means there is hope that you can master this language fully and quickly.
+The good thing about HTML is that the language has only a limited number of tags, and the number is not very big (especially the number of commonly used tags). This means there is hope that you can master this language fully and quickly.
 
-Most HTML tags appear in pairs, with an opening tag and an closing tag, e.g., `<p></p>`. You write the content between the opening and closing tag, e.g., `<p>This is a paragraph.</p>`. There are a few exceptions, such as the `<img>` tag, which can be closed by a slash `/` in the opening tag, e.g., `<img src="foo.png" />`. You can specify attributes of an element in the opening tag using the syntax `name=value` (a few attributes do not require `value`).
+Most HTML tags appear in pairs, with an opening tag and a closing tag, e.g., `<p></p>`. You write the content between the opening and closing tags, e.g., `<p>This is a paragraph.</p>`. There are a few exceptions, such as the `<img>` tag, which can be closed by a slash `/` in the opening tag, e.g., `<img src="foo.png" />`. You can specify attributes of an element in the opening tag using the syntax `name=value` (a few attributes do not require `value`).
 
 HTML documents often have the filename extension `.html` (or `.htm`). Below is an overall structure of an HTML document:
 
@@ -77,9 +77,9 @@ There are much better tutorials on HTML than this section, such as those offered
 
 - You may validate your HTML code via this service: https://validator.w3.org. This validator will point out potential problems of your HTML code. It actually works for XML and SVG documents, too.
 
-- Among all HTML attributes, file paths (the `src` attribute of some tags like `<img>`) and links (the `href` attribute of the `<a>` tag) may be the most confusing to beginners. Paths and links can be relative or absolute, and may come with or without the protocol and domain. You have to understand what a link or path exactly points to. A full link is of the form `http://www.example.com/foo/bar.ext`, where `http` specifies the protocol (it can be other protocols like `https` or `ftp`), `www.example.com` is the domain, `foo/bar.ext` is the file under the root directory of the website.
+- Among all HTML attributes, file paths (the `src` attribute of some tags like `<img>`) and links (the `href` attribute of the `<a>` tag) may be the most confusing to beginners. Paths and links can be relative or absolute, and may come with or without the protocol and domain. You have to understand what a link or path exactly points to. A full link is of the form `http://www.example.com/foo/bar.ext`, where `http` specifies the protocol (it can be other protocols like `https` or `ftp`), `www.example.com` is the domain, and `foo/bar.ext` is the file under the root directory of the website.
 
-    - If you refer to resources on the same website (the same protocal and domain), we recommend you to omit the protocol and domain names, so that the links will continue to work even if you change the protocol or domain. For example, a link `<a href="/hi/there.html">` on a page `http://example.com/foo/` refers to `http://example.com/hi/there.html`. It does not matter if you change `http` to `https`, or `example.com` to `another-domain.com`.
+    - If you refer to resources on the same website (the same protocal and domain), we recommend that you omit the protocol and domain names, so that the links will continue to work even if you change the protocol or domain. For example, a link `<a href="/hi/there.html">` on a page `http://example.com/foo/` refers to `http://example.com/hi/there.html`. It does not matter if you change `http` to `https`, or `example.com` to `another-domain.com`.
     
     - Within the same website, a link or path can be relative or absolute. The meaning of an absolute path does not change no matter where the current HTML file is placed, but the meaning of a relative path depends on the location of the current HTML file. Suppose you are currently viewing the page `example.com/hi/there.html`:
 
@@ -91,7 +91,7 @@ There are much better tutorials on HTML than this section, such as those offered
         
         - If the above concepts sound too complicated, a better way is to either think ahead carefully about the structure of your website and avoid moving files, or use rules of redirects if supported (such as 301 or 302 redirects).
     
-    - If you link to a different website or web page, you have to include the domain in the link, but it may not be necessary to include the protocol, e.g., `//test.example.com/foo.css` is a valid path. The actual protocol of this path matches the protocol of the current page, e.g., if the current page is `https://example.com/`, this link means `https://test.example.com/foo.css`. It may be benefitial to omit the protocol because HTTP resources cannot be embedded on pages served through HTTPS (for security reasons), e.g., an image at `http://example.com/foo.png` cannot be embedded on a page `https://example.com/hi.html` via `<img src="http://example.com/foo.png" />`, but `<img src="//example.com/foo.png" />` will work if the image can be accessed via HTTPS, i.e., `https://example.com/foo.png`. The main drawback of not including the protocol is that such links and paths do not work if you open the HTML file locally without using a web server, e.g., only double-click the HTML file in your file browser and show it in the browser.^[That is because without a web server, an HTML file is viewed via the protocol `file`. For example, you may see a URL of the form `file://path/to/the/file.html` in the address bar of your browser. The path `//example.com/foo.png` will be interpreted as `file://example.com/foo.png`, which is unlikely to exist as a local file on your computer.]
+    - If you link to a different website or web page, you have to include the domain in the link, but it may not be necessary to include the protocol, e.g., `//test.example.com/foo.css` is a valid path. The actual protocol of this path matches the protocol of the current page, e.g., if the current page is `https://example.com/`, this link means `https://test.example.com/foo.css`. It may be beneficial to omit the protocol because HTTP resources cannot be embedded on pages served through HTTPS (for security reasons), e.g., an image at `http://example.com/foo.png` cannot be embedded on a page `https://example.com/hi.html` via `<img src="http://example.com/foo.png" />`, but `<img src="//example.com/foo.png" />` will work if the image can be accessed via HTTPS, i.e., `https://example.com/foo.png`. The main drawback of not including the protocol is that such links and paths do not work if you open the HTML file locally without using a web server, e.g., only double-click the HTML file in your file browser and show it in the browser.^[That is because without a web server, an HTML file is viewed via the protocol `file`. For example, you may see a URL of the form `file://path/to/the/file.html` in the address bar of your browser. The path `//example.com/foo.png` will be interpreted as `file://example.com/foo.png`, which is unlikely to exist as a local file on your computer.]
     
     - A very common mistake that people make is a link without the leading double slashes before the domain. You may think `www.example.com` is a valid link. It is not! At least it does not link to the website that you intend to link to. It works when you type it in the address bar of your browser because your browser will normally autocomplete it to `http://www.example.com`. However, if you write a link `<a href="www.example.com">See this link</a>`, you will be in trouble. The browser will interpret this as a relative link, and it is relative to the URL of the current web page, e.g., if you are currently viewing `http://yihui.name/cn/`, the link `www.example.com` actually means `http://yihui.name/cn/www.example.com`! Now you should know the Markdown text `[Link](www.example.com)` is typically a mistake, unless you really mean to link to a subdirectory of the current page or a file with literally the name `www.example.com`.
 
@@ -99,28 +99,28 @@ There are much better tutorials on HTML than this section, such as those offered
 
 The Cascading Stylesheets\index{CSS} (CSS) language is used to describe the look and formatting of documents written in HTML. CSS is responsible for the visual style of your site. CSS is a lot of fun to play with, but it can also easily steal your time.
 
-In the Hugo framework (https://gohugo.io/tutorials/creating-a-new-theme/), CSS is one of the major "non-content" files that shapes the look and feel of your site (the others are images, JavaScript, and Hugo templates). What does the ["look and feel"](https://en.wikipedia.org/wiki/Look_and_feel) of a site mean? "Look" generally refers to static style components including, but not limited to:
+In the Hugo framework (https://gohugo.io/tutorials/creating-a-new-theme/), CSS is one of the major "non-content" files that shapes the look and feel of your site (the others are images, JavaScript, and Hugo templates). What does the ["look and feel"](https://en.wikipedia.org/wiki/Look_and_feel) of a site mean? "Look" generally refers to static style components including, but not limited to
 
-* Color palettes
-* Images
-* Layouts/margins
-* Fonts
+* color palettes,
+* images,
+* layouts/margins, and
+* fonts.
 
-Whereas "feel" relates to dynamic components that the user interacts with like:
+whereas "feel" relates to dynamic components that the user interacts with like
 
-* Dropdown menus
-* Buttons
-* Forms
+* dropdown menus,
+* buttons, and
+* forms.
 
-There are 3 ways to define styles. The first is inline with HTML. For example, this code:
-
+There are 3 ways to define styles. The first is in line with HTML. For example, this code
 
 ```html
 <p>Marco! <em>Polo!</em></p> 
 ```
-Would produce text that looks like this: Marco! _Polo!_
 
-However, this method is generally not preferred for [numerous reasons](https://stackoverflow.com/q/12013532/559676). 
+would produce text that looks like this: Marco! _Polo!_
+
+However, this method is generally not preferred for [numerous reasons.](https://stackoverflow.com/q/12013532/559676)
 
 A second way is to internally define the CSS by placing a style section in your HTML:
 
@@ -143,7 +143,7 @@ A second way is to internally define the CSS by placing a style section in your 
 
 In this example, only the last tea listed, _Chai_, is italicized. 
 
-The third method is the most popular because it is more flexible and the least repetitive, which is to define the CSS in an external file that is then referenced as a link in your HTML:
+The third method is the most popular because it is more flexible and the least repetitive. In this method, you define the CSS in an external file that is then referenced as a link in your HTML:
 
 ```html
 <html>
@@ -161,9 +161,7 @@ selectorlist {
 }
 ```
 
-
-
-[Selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#Selectors) can be based on HTML element types or attributes, such as `id` or `class` (and combinations of these): 
+[Selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference#Selectors) can be based on HTML element types or attributes, such as `id` or `class` (and combinations of these attributes):
 
 ```css
 /* by element type */
@@ -215,7 +213,7 @@ We can use this class attribute as a selector in our CSS. Let's say we want our 
 }
 ```
 
-Now, suppose you want every list item to be italicized with a white background, you can set up another rule:
+Now, if you want every list item to be italicized with a white background, you can set up another rule:
 
 ```css
 li { 
@@ -232,11 +230,11 @@ ul#tea-list li.favorite {
 }
 ```
 
-This example just scratches the surface on [cascade and inheritance](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Cascade_and_inheritance).
+This example just scratches the surface of [cascade and inheritance.](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Cascade_and_inheritance)
 
-For any Hugo theme that you install, you can find the CSS file in the `themes/` folder. For example, the default lithium theme is located in: `themes/hugo-lithium-theme/static/css/main.css`. Once you are familiar with CSS, you can understand how each set of rules work to shape the visual style of your website, and how to alter the rules. For some themes (i.e., the [hugo-academic theme](https://github.com/gcushen/hugo-academic)), you have the option of linking to a [custom CSS](https://gist.github.com/gcushen/d5525a4506b9ccf83f2bce592a895495), which you can use to further customize the visual style of your site.
+For any Hugo theme that you install, you can find the CSS file in the `themes/` folder. For example, the default lithium theme is located in: `themes/hugo-lithium-theme/static/css/main.css`. Once you are familiar with CSS, you can understand how each set of rules work to shape the visual style of your website, and how to alter the rules. For some themes (i.e., the [hugo-academic theme](https://github.com/gcushen/hugo-academic)), you have the option of linking to a [custom CSS,](https://gist.github.com/gcushen/d5525a4506b9ccf83f2bce592a895495) which you can use to further customize the visual style of your site.
 
-A few one-liner examples illustrate how simple CSS rules can be used to make dramatic changes:
+A few one-line examples illustrate how simple CSS rules can be used to make dramatic changes:
 
 - To make circular or rounded images, you may assign a class `img-circle` to images (e.g., `<img class="img-circle" src="foo.png" />`) and define the CSS:
 
@@ -268,7 +266,7 @@ document.body.style.background = 'orange';
 
 It should change the background color of the page to orange, unless the page has already defined background colors for certain elements.
 
-To effectively use JavaScript, you have to learn both the basic syntax of JavaScript and how to select elements on a page before you can manipulate them. You may partially learn the former from a short JavaScript snippet below:
+To effectively use JavaScript, you have to learn both the basic syntax of JavaScript and how to select elements on a page before you can manipulate them. You may partially learn the former from the short JavaScript snippet below:
 
 ```js
 var x = 1;  // assignments
@@ -296,10 +294,10 @@ y = y.replace(" ", ", ");  // string manipulation
 
 You may feel the syntax is similar to R to some degree. JavaScript is an object-oriented language, and usually there are several methods that you can apply to an object. The string manipulation above is a typical example of the `Object.method()` syntax. To know the possible methods on an object, you can type the object name in your JavaScript console followed by a dot, and you should see all candidates.
 
-For R users, you have to be extremely cautious that JavaScript objects are often mutable, meaning that an object could be modified anywhere. Below is a quick example:
+R users have to be extremely cautious because JavaScript objects are often mutable, meaning that an object could be modified anywhere. Below is a quick example:
 
 ```js
-var x = {a: 1, b: 2};  // like a list in R
+var x = {"a": 1, "b": 2};  // like a list in R
 var f = function(z) {
   z.a = 100;
 };
@@ -307,7 +305,7 @@ f(x);
 x;  // modified! x.a is 100 now
 ```
 
-There are many mature JavaScript libraries that can help you select and manipulate elements on a page, and the most popular one may be\index{jQuery} [jQuery](https://jquery.com). However, you should know that sometimes you can probably do well enough without these third-party libraries. There are some basic methods to select elements, such as `document.getElementById()`, `document.getElementsByClassName()`, `document.querySelector()`, and so on. For example, you can select all paragraphs using `document.querySelectorAll('p')`.
+There are many mature JavaScript libraries that can help you select and manipulate elements on a page, and the most popular one may be\index{jQuery} [jQuery.](https://jquery.com) However, you should know that sometimes you can probably do well enough without these third-party libraries. There are some basic methods to select elements, such as `document.getElementById()` and `document.getElementsByClassName()`. For example, you can select all paragraphs using `document.querySelectorAll('p')`.
 
 Next we show a slightly advanced application, in which you will see anonymous functions, selection of elements by HTML tag names, regular expressions, and manipulation of HTML elements.
 
@@ -317,7 +315,7 @@ In Section \@ref(how-to), we mentioned how to enable MathJax\index{MathJax} on a
 
 1. By default, MathJax does not recognize a pair of single dollar signs as the syntax for inline math expressions, but most users are perhaps more comfortable with the syntax `$x$` than `\(x\)`.
 
-The easiest solution to the first problem may be adding backticks around math expressions, e.g., `` `$x_i$` ``, but the consequence is that the math expression will be rendered to in `<code></code>`, and MathJax ignores `<code>` tags when looking for math expressions on the page. We can force MathJax to search for math expressions in `<code>`, but this will still be problematic. For example, someone may want to display inline R code `` `list$x$y` ``, and `$x$` may be recognized as a math expression. MathJax ignores `<code>` for good reasons. Even if you do not have such expressions in `<code>`, you may have some special CSS styles attached to `<code>`, and these styles will be applied to your math expressions, which can be undesired (e.g., a lightgray background).
+The easiest solution to the first problem may be adding backticks around math expressions, e.g., `` `$x_i$` ``, but the consequence is that the math expression will be rendered in `<code></code>`, and MathJax ignores `<code>` tags when looking for math expressions on the page. We can force MathJax to search for math expressions in `<code>`, but this will still be problematic. For example, someone may want to display inline R code `` `list$x$y` ``, and `$x$` may be recognized as a math expression. MathJax ignores `<code>` for good reasons. Even if you do not have such expressions in `<code>`, you may have some special CSS styles attached to `<code>`, and these styles will be applied to your math expressions, which can be undesired (e.g., a light gray background).
 
 To solve these problems, I have provided a solution in the JavaScript code at https://yihui.name/js/math-code.js:
 
@@ -346,13 +344,13 @@ To solve these problems, I have provided a solution in the JavaScript code at ht
 })();
 ```
 
-It is not a perfect solution, but it should be very rare that you run into problems. What it does is to identify possible math expressions in `<code>`, and strip the `<code>` tag, e.g., replace `<code>$x$</code>` with `\(x\)`. After this script is executed, we load the MathJax script. This way, we do not need to force MathJax to search for math expressions in `<code>` tags, and your math expressions will not inherit any styles from `<code>`. The JavaScript code above is not too long, and should be self-explanatory. The trickiest part is `i++`. I will leave it readers to figure out why the `for` loop is not the usual form `for (i = 0; i < codes.length; i++)`. It took me quite a few minutes to realize my mistake when I wrote the loop in the usual form.
+It is not a perfect solution, but it should be very rare that you run into problems. This solution identifies possible math expressions in `<code>`, and strips the `<code>` tag, e.g., replaces `<code>$x$</code>` with `\(x\)`. After this script is executed, we load the MathJax script. This way, we do not need to force MathJax to search for math expressions in `<code>` tags, and your math expressions will not inherit any styles from `<code>`. The JavaScript code above is not too long, and should be self-explanatory. The trickiest part is `i++`. I will leave it to readers to figure out why the `for` loop is not the usual form `for (i = 0; i < codes.length; i++)`. It took me quite a few minutes to realize my mistake when I wrote the loop in the usual form.
 
 ## Useful resources
 
 ### File optimization
 
-Although\index{Optimization} static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier", and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
+Although\index{Optimization} static websites are fast in general, you can certainly further optimize them. You may search for "CSS and JavaScript minifier," and these tools can compress your CSS and JavaScript files, so that they can be loaded faster. Since there are a lot of tools, I will not recommend any here.
 
 You can also optimize images on your website. I frequently use a command-line tool named [`optipng`](http://optipng.sourceforge.net) to optimize PNG images. It is a lossless optimizer, meaning that it reduces the file size of a PNG image without loss of quality. From my experience, it works very well on PNG images generated from R, and can reduce the file size by at least 30% (sometimes even more than 50%). Personally I also use online tools like http://optimizilla.com to optimize PNG and JPEG images. For GIF images, I often use https://ezgif.com/optimize to reduce the file sizes if they are too big.
 
@@ -360,7 +358,7 @@ Note that Netlify has provided the optimization features on the server side for 
 
 ### Helping people find your site
 
-Once your site is up and running, you probably want people to find it. SEO -- Search Engine Optimization -- is the art of making a website easy for search engines like Google to understand. And, hopefully, if the search engine knows what you are writing about, it will present links to your site high in results when someone searches for topics you cover.
+Once your site is up and running, you probably want people to find it. SEO --- Search Engine Optimization --- is the art of making a website easy for search engines like Google to understand. And, hopefully, if the search engine knows what you are writing about, it will present links to your site high in results when someone searches for topics you cover.
 
 Entire books have been written about SEO, not to mention the many companies that are in the business of offering (paid) technical and strategic advice to help get sites atop search-engine rankings. If you are interested in finding out more, a good place to start is the Google Search Engine Optimization Starter Guide (http://bit.ly/google-seo-starter). Below are a few key points:
 
@@ -368,4 +366,4 @@ Entire books have been written about SEO, not to mention the many companies that
 
 1. Description tags are also critical to explain what a page is about. In HTML documents, [description tags](https://www.w3schools.com/tags/tag_meta.asp) are one way to provide metadata about the page. Using **blogdown**, the description may end up as text under the page title in a search-engine result. If your page's YAML does not include a description, you can add one like `description: "A brief description of this page."`; the HTML source of the rendered page would have a `<meta>` tag in `<head>` like `<meta name="description" content="A brief description of this page.">`. Not all themes support adding the description to your HTML page (although they should!)
 
-1. URL structure also matters. You want your post's slug to have informative keywords, which gives another signal what the page is about. Have a post with interesting things to do in San Francisco? `san-francisco-events-calendar` might be a better slug than `my-guide-to-fun-things-to-do`.
+1. URL structure also matters. You want your post's slug to have informative keywords, which gives another signal of what the page is about. Have a post with interesting things to do in San Francisco? `san-francisco-events-calendar` might be a better slug than `my-guide-to-fun-things-to-do`.

@@ -1,6 +1,6 @@
 # Advanced Topics
 
-In this chapter, we talk about a few advanced topics that may be of interest to developers and advanced users.
+In this appendix, we talk about a few advanced topics that may be of interest to developers and advanced users.
 
 ## More global options
 
@@ -8,10 +8,10 @@ There are a few more advanced global options\index{Global Options} in addition t
 
 ```{r global-options2, echo=FALSE}
 knitr::kable(matrix(c(
-  'blogdown.hugo.dir', '', 'the directory of the Hugo executable',
-  'blogdown.method', 'html', 'the building method for R Markdown',
-  'blogdown.publishDir', '', 'the publish dir for local preview',
-  'blogdown.widgetsID', TRUE, "incremental ID's for HTML widgets?",
+  'blogdown.hugo.dir', '', 'The directory of the Hugo executable',
+  'blogdown.method', 'html', 'The building method for R Markdown',
+  'blogdown.publishDir', '', 'The publish dir for local preview',
+  'blogdown.widgetsID', TRUE, "Incremental IDs for HTML widgets?",
   NULL
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'A few more advanced global options.')
 ```
@@ -20,13 +20,13 @@ If you want to install Hugo to a custom path, you can set the global option `blo
 
 The option `blogdown.method` is explained in Section \@ref(methods).
 
-When your website project is under version control in the RStudio IDE, it may be slow to preview the site continuously if it contains hundreds of files or more, because the default publish directory is `public/` under the project root directory, and whenever you make a change in the source that triggers a rebuild, RStudio will be busy with tracking file changes in the `public/` directory. The delay before you see the website in the RStudio Viewer can be more than 10 seconds or even longer. That is why we provide the option `blogdown.publishDir`. You may set a temporary publish directory to generate the website, and this directory should not be under the same RStudio project, e.g., `options(blogdown.publishDir = '../public_site')`, which means the website will be generated to the directory `public_site/` under the parent directory of the current project.
+When your website project is under version control in the RStudio IDE, continuously previewing the site can be slow, if it contains hundreds of files or more. The default publish directory is `public/` under the project root directory, and whenever you make a change in the source that triggers a rebuild, RStudio will be busy tracking file changes in the `public/` directory. The delay before you see the website in the RStudio Viewer can be 10 seconds or even longer. That is why we provide the option `blogdown.publishDir`. You may set a temporary publish directory to generate the website, and this directory should not be under the same RStudio project, e.g., `options(blogdown.publishDir = '../public_site')`, which means the website will be generated to the directory `public_site/` under the parent directory of the current project.
 
-The option `blogdown.widgetsID` is only relevant if your website source is under version control and you have HTML widgets on the website. If this option is `TRUE` (default), the random ID's of HTML widgets will be changed to incremental ID's in the HTML output, so that these ID's are unlikely to change every time you recompile your website, otherwise every time you will get different random ID's.
+The option `blogdown.widgetsID` is only relevant if your website source is under version control and you have HTML widgets on the website. If this option is `TRUE` (default), the random IDs of HTML widgets will be changed to incremental IDs in the HTML output, so these IDs are unlikely to change every time you recompile your website; otherwise, every time you will get different random IDs.
 
 ## LiveReload
 
-As we briefly mentioned\index{LiveReload} in Section \@ref(a-quick-example), you can use `blogdown::serve_site()` to preview a website, and the web page will be automatically rebuilt and reloaded in your web browser when the source file is modified and saved. This is called "LiveReload".
+As we briefly mentioned\index{LiveReload} in Section \@ref(a-quick-example), you can use `blogdown::serve_site()` to preview a website, and the web page will be automatically rebuilt and reloaded in your web browser when the source file is modified and saved. This is called "LiveReload."
 
 We have provided two approaches to LiveReload. The default approach is through `servr::httw()`, which will continuously watch the website directory for file changes, and rebuild the site when changes are detected. This approach has a few drawbacks:
 
@@ -44,7 +44,7 @@ The web server is established via the command `hugo server` (see [its documentat
 options(blogdown.hugo.server = c('-D', '-F', '--navigateToChanged'))
 ```
 
-Then when you edit a source file under `content/`, Hugo will automatically show you the corresponding output page in the web browser.
+Then, when you edit a source file under `content/`, Hugo will automatically show you the corresponding output page in the web browser.
 
 Note that Hugo renders and serves the website from memory by default, so no files will be generated to `public/`. If you need to publish the `public/` folder manually, you will have to manually build the website via `blogdown::hugo_build()` or `blogdown::build_site()`.
 
@@ -52,15 +52,15 @@ Note that Hugo renders and serves the website from memory by default, so no file
 
 The function\index{blogdown::build\_site()} `blogdown::build_site()` has an argument `local` that defaults to `FALSE`, which means building the website for publishing instead of local previewing. The mode `local = TRUE` is primarily for `blogdown::serve_site()` to serve the website locally. There are three major differences between `local = FALSE` and `TRUE`. When `local = TRUE`:
 
-- The `baseurl` option in `config.toml` is temporarily overridden by `"/"` even if you have set it to a full URL like `"http://www.example.com/"`.^[If your `baseurl` contains a subdirectory, it will be overridden by the subdirectory name. For example, for `baseurl = "http://www.example.com/project/"`, `build_site(local = TRUE)` will temporarily remove the domain name and only use the value `/project/`.] This is because when a website is to be previewed locally, links should refer to local files. For example, `/about/index.html` should be used instead of the full link `http://www.example.com/about/index.html`; `serve_site()` knows that `/about/index.html` means the file under the `public/` directory, and can fetch it and display the content to you, otherwise your browser will take you to the website `http://www.example.com` instead of displaying a local file.
+- The `baseurl` option in `config.toml` is temporarily overridden by `"/"` even if you have set it to a full URL like `"http://www.example.com/"`.^[If your `baseurl` contains a subdirectory, it will be overridden by the subdirectory name. For example, for `baseurl = "http://www.example.com/project/"`, `build_site(local = TRUE)` will temporarily remove the domain name and only use the value `/project/`.] This is because when a website is to be previewed locally, links should refer to local files. For example, `/about/index.html` should be used instead of the full link `http://www.example.com/about/index.html`; the function `serve_site()` knows that `/about/index.html` means the file under the `public/` directory, and can fetch it and display the content to you, otherwise your browser will take you to the website `http://www.example.com` instead of displaying a local file.
 
-- Draft and future posts are always rendered when `local = TRUE`, but not when `local = FALSE`. This is for you to preview draft and future posts locally. If you know the [Hugo command line](https://gohugo.io/commands/hugo/), it means the `hugo` command is called with the flags `-D -F`, or equivalently, `--buildDrafts --buildFuture`.
+- Draft and future posts are always rendered when `local = TRUE`, but not when `local = FALSE`. This is for you to preview draft and future posts locally. If you know the [Hugo command line,](https://gohugo.io/commands/hugo/) it means the `hugo` command is called with the flags `-D -F`, or equivalently, `--buildDrafts --buildFuture`.
 
 - There is a caching mechanism to speed up building your website: an Rmd file will not be recompiled when its `*.html` output file is newer (in terms of file modification time). If you want to force `build_site(local = TRUE)` to recompile the Rmd file even if it is older than the HTML output, you need to delete the HTML output, or edit the Rmd file so that its modification time will be newer. This caching mechanism does not apply to `local = FALSE`, i.e., `build_site(local = FALSE)` will always recompile all Rmd files, because when you want to publish a site, you may need to recompile everything to make sure the site is fully regenerated. If you have time-consuming code chunks in any Rmd files, you have to use either of these methods to save time:
 
     - Turn on **knitr**'s caching for time-consuming code chunks, i.e., the chunk option `cache = TRUE`.
 
-    - Do not call `build_site()` but `blogdown::hugo_build()` instead\index{blogdown::hugo\_build()}. The latter does not compile any Rmd files, but simply runs the `hugo` command to build the site. Please use this method only if you are sure that your Rmd files do not need to be recompiled.
+    - Do not call `build_site()`, but `blogdown::hugo_build()` instead\index{blogdown::hugo\_build()}. The latter does not compile any Rmd files, but simply runs the `hugo` command to build the site. Please use this method only if you are sure that your Rmd files do not need to be recompiled.
 
 You do not need to worry about these details if your website is automatically generated from source via a service like Netlify, which will make use of `baseurl` and not use `-D -F` by default. If you manually publish the `public/` folder, you need to be more careful:
 
@@ -80,7 +80,7 @@ You may take a look at the source code (https://github.com/rstudio/blogdown) if 
 
 ### Exported functions
 
-Installation: you can install Hugo with `install_hugo()`, update Hugo with `update_hugo()`, and install a Hugo theme with `install_theme()`.
+Installation: You can install Hugo with `install_hugo()`, update Hugo with `update_hugo()`, and install a Hugo theme with `install_theme()`.
 
 Wrappers of Hugo commands: `hugo_cmd()` is a general wrapper of `system2('hugo', ...)`, and all later functions execute specific Hugo commands based on this general wrapper function; `hugo_version()` executes the command `hugo version` (i.e., `system2('hugo', 'version')` in R); `hugo_build()` executes `hugo` with optional parameters; `new_site()` executes `hugo new site`; `new_content()` executes `hugo new` to create a new content file, and `new_post()` is a wrapper based on `new_content()` to create a new blog post with appropriate YAML metadata and filename; `hugo_convert()` executes `hugo convert`; `hugo_server()` executes `hugo server`.
 
@@ -104,15 +104,15 @@ Some functions are not exported in this package because average users are unlike
 
 - In Section \@ref(local-preview), we mentioned a caching mechanism based on the file modification time. It is implemented in `blogdown:::require_rebuild()`, which takes two arguments of filenames. The first file is the output file, and the second is the source file. When the source file is older than the output file, or the output file does not exist or is empty, this function returns `TRUE`.
 
-- The function `blogdown:::Rscript()` is a wrapper function to execute the command `Rscript`, which basically means to execute an R script in a new R session. We have mentioned this function in Chapter \@ref(other-generators).
+- The function `blogdown:::Rscript()` is a wrapper function to execute the command `Rscript`, which basically means to execute an R script in a new R session. We mentioned this function in Chapter \@ref(other-generators).
 
 ## Paths of figures and other dependencies {#dep-path}
 
 One of the most challenging tasks in developing the **blogdown** package is to properly handle dependency files\index{Dependency Files} of web pages. If all pages of a website were plain text without dependencies like images or JavaScript libraries, it would be much easier for me to develop the **blogdown** package.
 
-After **blogdown** compiles each Rmd document to HTML, it will try to detect the dependencies (if there are any) from the HTML source and copy them to the `static/` folder, so that Hugo will copy them to `public/` later. The detection depends on the paths of dependencies. By default, all dependencies like R plots and libraries for HTML widgets are generated to the `foo_files/` directory if the Rmd is named `foo.Rmd`. Specifically, R plots are generated to `foo_files/figure-html/` and the rest of files under `foo_files/` are typically from HTML widgets.
+After **blogdown** compiles each Rmd document to HTML, it will try to detect the dependencies (if there are any) from the HTML source and copy them to the `static/` folder, so that Hugo will copy them to `public/` later. The detection depends on the paths of dependencies. By default, all dependencies, like R plots and libraries for HTML widgets, are generated to the `foo_files/` directory if the Rmd is named `foo.Rmd`. Specifically, R plots are generated to `foo_files/figure-html/` and the rest of files under `foo_files/` are typically from HTML widgets.
 
-R plots under `content/*/foo_files/figure-html/` are copied to `static/*/foo_files/figure-html/`, and the paths in HTML tags like `<img src="foo_files/figure-html/bar.png" />` are substituted by `/*/foo_files/figure-html/bar.png`. Note the leading slash indicates the root directory of the published website, and the substitution works because Hugo will copy `*/foo_files/figure-html/` from `static/` to `public/`.
+R plots under `content/*/foo_files/figure-html/` are copied to `static/*/foo_files/figure-html/`, and the paths in HTML tags like `<img src="foo_files/figure-html/bar.png" />` are substituted with `/*/foo_files/figure-html/bar.png`. Note the leading slash indicates the root directory of the published website, and the substitution works because Hugo will copy `*/foo_files/figure-html/` from `static/` to `public/`.
 
 Any other files under `foo_files/` are treated as dependency files of HTML widgets, and will be copied to `static/rmarkdown-libs/`. The original paths in HTML will also be substituted accordingly, e.g., from `<script src="foo_files/jquery/jquery.min.js">` to `<script src="/rmarkdown-libs/jquery/jquery.min.js">`. It does not matter whether these files are generated by HTML widgets or not. The links on the published website will be correct and typically hidden from the readers of the pages.^[For example, a reader will not see the `<script>` tag on a page, so it does not really matter what its `src` attribute looks like as long as it is a path that actually exists.]
 
@@ -124,11 +124,11 @@ In the rare cases when **blogdown** fails to detect and copy some of your depend
 
 - If you choose to ignore `_files$` or have customized the `permalinks` option, you need to make sure **blogdown** can recognize the dependencies. One approach is to use the path returned by the helper function `blogdown::dep_path()` to write out additional dependency files. Basically this function returns the current `fig.path` option in **knitr**, which defaults to `*_files/figure-html/`. For example, you can generate a plot manually under `dep_path()`, and **blogdown** will process it automatically (copy the file and substitute the image path accordingly).
 
-If you do not understand all these technical details, we recommend you to use the first choice, and you will have to sacrifice custom permanent links and clean URLs (e.g., `/about.html` instead of `/about/`). With this choice, you can also customize the `fig.path` option for code chunks if you want.
+If you do not understand all these technical details, we recommend that you use the first choice, and you will have to sacrifice custom permanent links and clean URLs (e.g., `/about.html` instead of `/about/`). With this choice, you can also customize the `fig.path` option for code chunks if you want.
 
 ## HTML widgets
 
-We do not recommend you to use different HTML widgets\index{HTML Widgets} from many R packages on the same page, because it is likely to cause conflicts in JavaScript. For example, if you theme uses the jQuery library, it may conflict with the jQuery library used by a certain HTML widget. In this case, you can conditionally load the theme's jQuery\index{jQuery} library by setting a parameter in the YAML metadata of your post and revising the Hugo template that loads jQuery. Below is the example code to load jQuery conditionally in a Hugo template:
+We do not recommend that you use different HTML widgets\index{HTML Widgets} from many R packages on the same page, because it is likely to cause conflicts in JavaScript. For example, if your theme uses the jQuery library, it may conflict with the jQuery library used by a certain HTML widget. In this case, you can conditionally load the theme's jQuery\index{jQuery} library by setting a parameter in the YAML metadata of your post and revising the Hugo template that loads jQuery. Below is the example code to load jQuery conditionally in a Hugo template:
 
 ```html
 {{ if not .Params.exclude_jquery}}
@@ -144,7 +144,7 @@ A widget is typically not of full width on the page. To set its width to 100%, y
 
 ## Version control
 
-If your website source files are under version control\index{Version Control}, we recommend you to add at least these two folder names to your `.gitignore` file:
+If your website source files are under version control\index{Version Control}, we recommend that you add at least these two folder names to your `.gitignore` file:
 
 ```bash
 blogdown
@@ -159,7 +159,7 @@ As we mentioned in Section \@ref(dep-path), R plots will be copied to `static/`,
 
 Although it is not relevant to **blogdown**, macOS users should remember to ignore `.DS_Store` and Windows users should ignore `Thumbs.db`.
 
-If you are relatively familiar with GIT\index{GIT Submodules}, there is a special technique that may be useful for you to manage Hugo themes, which is called "GIT submodules". A submodule in GIT allows you to manage a particular folder of the main repository using a different remote repository. For example, if you used the default `hugo-lithium-theme` from my GitHub repository, and want to sync it with my repository occasionally, because I may update it from time to time. You can add the GIT submodule via command line: 
+If you are relatively familiar with GIT\index{GIT Submodules}, there is a special technique that may be useful for you to manage Hugo themes, which is called "GIT submodules." A submodule in GIT allows you to manage a particular folder of the main repository using a different remote repository. For example, if you used the default `hugo-lithium-theme` from my GitHub repository, you might want to sync it with my repository occasionally, because I may update it from time to time. You can add the GIT submodule via the command line: 
 
 ```bash
 git submodule add \
@@ -167,7 +167,7 @@ git submodule add \
   themes/hugo-lithium-theme
 ```
 
-If the folder `themes/hugo-lithium-theme` exists, you need to delete it before adding the submodule. Then you can see a SHA string associated with the "folder" `themes/hugo-lithium-theme` in the GIT status of your main repository indicating the version of the submodule. Note you will only see the SHA string instead of the full content of the folder. Next time when you want to sync with my repository, you may run the command:
+If the folder `themes/hugo-lithium-theme` exists, you need to delete it before adding the submodule. Then you can see a SHA string associated with the "folder" `themes/hugo-lithium-theme` in the GIT status of your main repository indicating the version of the submodule. Note that you will only see the SHA string instead of the full content of the folder. Next time when you want to sync with my repository, you may run the command:
 
 ```bash
 git submodule update --recursive --remote
@@ -230,7 +230,7 @@ output:
 ---
 ```
 
-There is also a pair of HTML comments in the template: `<!-- BLOGDOWN-HEAD -->` and `<!-- /BLOGDOWN-HEAD -->`. This is mainly for `method = 'html_encoded'` in `blogdown::build_site()` (see Section \@ref(methods)). This pair of comments are used to mark the HTML code fragment that should be moved to the `<head>` tag of the final HTML page. Typically this code fragment contains links to CSS and JavaScript files, e.g., those requested by the user via the `css` argument of `html_page()`, or automatically generated when HTML widgets are used in an Rmd document. For `method = 'html'`, this code fragment is not moved, which is why the final HTML page may not conform to W3C standards. If you want to customize the template, you are recommended to use this pair of comments to mark the HTML code fragment that belongs to the `<head>` tag.
+There is also a pair of HTML comments in the template: `<!-- BLOGDOWN-HEAD -->` and `<!-- /BLOGDOWN-HEAD -->`. This is mainly for `method = 'html_encoded'` in `blogdown::build_site()` (see Section \@ref(methods)). This pair of comments is used to mark the HTML code fragment that should be moved to the `<head>` tag of the final HTML page. Typically this code fragment contains links to CSS and JavaScript files, e.g., those requested by the user via the `css` argument of `html_page()`, or automatically generated when HTML widgets are used in an Rmd document. For `method = 'html'`, this code fragment is not moved, which is why the final HTML page may not conform to W3C standards. If you want to customize the template, you are recommended to use this pair of comments to mark the HTML code fragment that belongs to the `<head>` tag.
 
 ## Different building methods {#methods}
 
@@ -245,6 +245,6 @@ For `method = 'html'`, `build_site()` renders `*.Rmd` to `*.html`, and `*.Rmarkd
 
 An Rmd file may generate two directories for figures (`*_files/`) and cache (`*_cache/`), respectively, if you have plot output or HTML widgets [@R-htmlwidgets] in your R code chunks, or enabled the chunk option `cache = TRUE` for caching. In the figure directory, there will be a subdirectory `figure-html/` that contains your plot output files, and possibly other subdirectories containing HTML dependencies from HTML widgets (e.g., `jquery/`). The figure directory is moved to `/static/`, and the cache directory is moved to `/blogdown/`.
 
-After you run `build_site()`, your website is ready to be compiled by Hugo. This gives you the freedom to use deploying services like Netlify (Chapter \@ref(deployment)), where neither R nor **blogdown** is not available, but Hugo is.
+After you run `build_site()`, your website is ready to be compiled by Hugo. This gives you the freedom to use deploying services like Netlify (Chapter \@ref(deployment)), where neither R nor **blogdown** is available, but Hugo is.
 
 For `method = 'custom'`, `build_site()` will not process any R Markdown files, nor will it call Hugo to build the site. No matter which method you choose to use, `build_site()` will always look for an R script `/R/build.R` and execute it if it exists. This gives you the complete freedom to do anything you want for the website. For example, you can call `knitr::knit()` to compile Rmd to Markdown (`*.md`) in this R script instead of using `rmarkdown::render()`. This feature is designed for advanced users who are really familiar with the **knitr** package^[Honestly, it was originally designed for Yihui himself to build his own website, but he realized this feature could actually free users from Hugo. For example, it is possible to use Jekyll (another popular static site generator) with **blogdown**, too.] and Hugo or other static website generators (see Chapter \@ref(other-generators)).
