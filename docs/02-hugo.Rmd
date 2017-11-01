@@ -1,6 +1,6 @@
 # Hugo
 
-In this chapter, we will briefly introduce\index{Hugo} [Hugo,](https://gohugo.io) the static site generator on which **blogdown** is based. This chapter is not meant to replace the official Hugo documentation, but provide a guide to those who are just getting started with Hugo. When in doubt, please consult the official Hugo documentation.
+In this chapter, we will briefly introduce\index{Hugo} Hugo (https://gohugo.io), the static site generator on which **blogdown** is based. This chapter is not meant to replace the official Hugo documentation, but provide a guide to those who are just getting started with Hugo. When in doubt, please consult the official Hugo documentation.
 
 ## Static sites and Hugo {#static-sites}
 
