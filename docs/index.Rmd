@@ -33,6 +33,10 @@ lapply(c(), function(pkg) {
 
 # Preface {-}
 
+```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://github.com/rstudio/blogdown', out.width='50%'}
+knitr::include_graphics('images/cover.png', dpi = NA)
+```
+
 In the summer of 2012, I did my internship at AT&T Labs Research,^[In this book, "I" and "my" refer to Yihui unless otherwise noted.] where I attended a talk given by Carlos Scheidegger (https://cscheid.net), and Carlos said something along the lines of "if you don't have a website nowadays, you don't exist." Later I paraphrased it as:
 
 > "I web, therefore I am ~~a spiderman~~."
@@ -48,10 +52,6 @@ We introduce an R package, **blogdown**, in this short book, to teach you how to
 Please do not be misled by the word "blog" in the package name: **blogdown** is for general-purpose websites, and not only for blogs. For example, all authors of this book have their personal websites, where you can find information about their projects, blogs, package documentations, and so on.^[Yihui's homepage is at https://yihui.name. He writes blog posts in both Chinese (https://yihui.name/cn/) and English (https://yihui.name/en/), and documents his software packages such as **knitr** (https://yihui.name/knitr/) and **animation** (https://yihui.name/animation/). Occasionally he also writes articles like https://yihui.name/rlp/ when he finds interesting topics but does not bother with a formal journal submission. Amber's homepage is at https://amber.rbind.io, where you can find her blog and project pages. Alison's website is at https://alison.rbind.io, which uses an academic theme at the moment.] All their pages are built from **blogdown** and Hugo.
 
 If you do not prefer using Hugo, there are other options, too. Chapter \@ref(other-generators) presents possibilities of using other site generators, such as Jekyll and **rmarkdown**'s default site generator.
-
-```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://github.com/rstudio/blogdown', out.width='50%'}
-knitr::include_graphics('images/cover.png', dpi = NA)
-```
 
 The online version of this book is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
