@@ -304,7 +304,7 @@ To start a new website:
 
 1. Carefully pick a theme at http://themes.gohugo.io, and find the link to its GitHub repository, which is of the form `https://github.com/user/repo`.
 
-1. Create a new project in RStudio, and type `blogdown::new_site(theme = 'user/repo')` in the R console, where `user/repo` is from the link in Step 1.
+1. Create a new project in RStudio, and type the code `blogdown::new_site(theme = 'user/repo')` in the R console, where `user/repo` is from the link in Step 1.
 
 1. Play with the new site for a while and if you do not like it, you can repeat the above steps, otherwise edit the options in `config.toml`. If you do not understand certain options, go to the documentation of the theme, which is often the README page of the GitHub repository. Not all options have to be changed.
 
