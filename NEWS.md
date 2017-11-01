@@ -1,4 +1,4 @@
-# CHANGES IN blogdown VERSION 0.2 (unreleased)
+# CHANGES IN blogdown VERSION 0.2
 
 ## BUG FIXES
 
