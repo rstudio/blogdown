@@ -43,6 +43,10 @@ In the summer of 2012, I did my internship at AT&T Labs Research,^[In this book,
 
 Carlos's words resonated very well with me, although they were a little exaggerated. A well-designed and maintained website can be extremely helpful for other people to know you, and you do not need to wait for suitable chances at conferences or other occasions to introduce yourself in person to other people. On the other hand, a website is also highly useful for yourself to keep track of what you have done and thought. Sometimes you may go back to a certain old post of yours to relearn the tricks or methods you once mastered in the past but have forgotten.
 
+```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://github.com/rstudio/blogdown'}
+knitr::include_graphics('images/logo.png', dpi = NA)
+```
+
 We introduce an R package, **blogdown**, in this short book, to teach you how to create websites using R Markdown and Hugo. If you have experience with creating websites, you may naturally ask what the benefits of using R Markdown are, and how **blogdown** is different from existing popular website platforms, such as WordPress. There are two major highlights of **blogdown**:
 
 1. It produces a static website, meaning the website only consists of static files such as HTML, CSS, JavaScript, and images, etc. You can host the website on any web server (see Chapter \@ref(deployment) for details). The website does not require server-side scripts such as PHP or databases like WordPress does. It is just one folder of static files. We will explain more benefits of static websites in Chapter \@ref(hugo), when we introduce the static website generator Hugo.
