@@ -181,30 +181,16 @@ You can also deploy your website to Amazon S3\index{Amazon S3}, and the setup on
 
 ## GitLab Pages
 
-[GitLab](http://gitlab.com/) is a very popular way to host the source code of your project.
-GitLab has a [built in Continuous Integration & Deployment service](https://about.gitlab.com/features/gitlab-ci-cd/)
-that can be used to host static websites, named [GitLab Pages](https://about.gitlab.com/features/pages/).
-The major advantage of using GitLab Pages is that
-GitLab Continuous Integration & Deployment service will compile all your Rmd posts
-instead of your local computer
-**and any generated content, such as HTML files, will be copied to the web server**
-instead of stored in the Git repository.
+GitLab (http://gitlab.com) is a very popular way to host the source code of your project. GitLab has a [built in Continuous Integration & Deployment (CI/CD) service](https://about.gitlab.com/features/gitlab-ci-cd/) that can be used to host static websites, named [GitLab Pages](https://about.gitlab.com/features/pages/). The major advantage of using GitLab Pages is that you will be able to compile all your Rmd posts through its CI/CD service instead of your local computer and any generated content, such as HTML files, will be automatically copied to the web server. Please note that this approach has similar issues as the Travis + GitHub approach in Section \@ref(travis-github).
 
-This approach has similar issues as we mentioned in Section \@ref(travis-github),
-such as,
-somewhat unpredictable the output
-and
-timeouts on GitLab server.
-
-GitLab Continuous Integration & Deployment service uses the instructions stored on the file `.gitlab-ci.yml` at the root of the repository.
-Here is the configuration file, `.gitlab-ci.yml`, for https://rgaiacs.gitlab.io/blogdown-example:
+GitLab's CI/CD service uses the instructions stored in the file `.gitlab-ci.yml` in the repository. Here is a sample configuration file `.gitlab-ci.yml` from the repository https://rgaiacs.gitlab.io/blogdown-gitlab:
 
 ```
 image: debian:buster-slim
 
 before_script:
   - apt-get update
-  - apt-get -y install curl libcurl4-openssl-dev openssl libssl-dev git pandoc r-base-core
+  - apt-get -y install pandoc r-base-core
   - R -e "install.packages('blogdown', repos='http://cran.rstudio.com/')"
   - R -e "blogdown::install_hugo()"
 
