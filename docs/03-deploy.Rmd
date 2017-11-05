@@ -183,14 +183,14 @@ You can also deploy your website to Amazon S3\index{Amazon S3}, and the setup on
 
 GitLab (http://gitlab.com) is a very popular way to host the source code of your project. GitLab has a [built in Continuous Integration & Deployment (CI/CD) service](https://about.gitlab.com/features/gitlab-ci-cd/) that can be used to host static websites, named [GitLab Pages](https://about.gitlab.com/features/pages/). The major advantage of using GitLab Pages is that you will be able to compile all your Rmd posts through its CI/CD service instead of your local computer and any generated content, such as HTML files, will be automatically copied to the web server. Please note that this approach has similar issues as the Travis + GitHub approach in Section \@ref(travis-github).
 
-GitLab's CI/CD service uses the instructions stored in the file `.gitlab-ci.yml` in the repository. Here is a sample configuration file `.gitlab-ci.yml` from the repository https://rgaiacs.gitlab.io/blogdown-gitlab:
+GitLab's CI/CD service uses the instructions stored in the file `.gitlab-ci.yml` in the repository. Here is a sample configuration file `.gitlab-ci.yml` from the example repository https://gitlab.com/rgaiacs/blogdown-gitlab:
 
 ```
 image: debian:buster-slim
 
 before_script:
   - apt-get update
-  - apt-get -y install pandoc r-base-core
+  - apt-get -y install pandoc r-base
   - R -e "install.packages('blogdown', repos='http://cran.rstudio.com/')"
   - R -e "blogdown::install_hugo()"
 
@@ -204,13 +204,4 @@ pages:
   - master
 ```
 
-The key is that we install Hugo via `blogdown::install_hugo()` and build the site via `blogdown::build_site()`.
-There are a few more things to explain and emphasize in `.gitlab-ci.yml`:
-
-- The `image` option specifies what [Docker](https://www.docker.com/) image will be use as a start point. We are using a Debian image but any image from [Docker Hub](https://hub.docker.com/) can be used.
-- The `before_script` option specifies how to install blogdown on the image specify before. If you change `image` to a non-Debian image you need to replace the `apt-get` lines with similar ones for the package manager provided by the image you specify.
-- The `only` option specifies that only changes in the master branch will trigger building on Travis.
-
-[GitLab Continuous Integration documentation](https://docs.gitlab.com/ee/ci/README.html) provides more information about `.gitlab-ci.yml`.
-[GitLab Pages documentation](https://docs.gitlab.com/ee/user/project/pages/) provides information for set up a custom domains and other things.
-[GitLab Pages blogdown-example](https://gitlab.com/rgaiacs/blogdown-example) provides a reference set up.
+The `image` option specifies what [Docker](https://www.docker.com) image will be use as a start point. We are using a Debian image but any image from [Docker Hub](https://hub.docker.com/) can be used. Other settings and options are similar to `.travis.yml` in Section \@ref(travis-github). The above example generates the website at https://rgaiacs.gitlab.io/blogdown-gitlab.
