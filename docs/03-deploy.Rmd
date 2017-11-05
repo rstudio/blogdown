@@ -196,12 +196,12 @@ before_script:
 
 pages:
   script:
-  - R -e "blogdown::build_site()"
+    - R -e "blogdown::build_site()"
   artifacts:
     paths:
     - public
   only:
-  - master
+    - master
 ```
 
 The `image` option specifies what [Docker](https://www.docker.com) image will be use as a start point. We are using a Debian image but any image from [Docker Hub](https://hub.docker.com/) can be used. Other settings and options are similar to `.travis.yml` in Section \@ref(travis-github). The above example generates the website at https://rgaiacs.gitlab.io/blogdown-gitlab.
