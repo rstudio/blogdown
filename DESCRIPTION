@@ -24,7 +24,7 @@ Imports:
     htmltools,
     yaml (>= 2.1.14),
     httpuv,
-    servr (>= 0.7)
+    servr (>= 0.8)
 Suggests:
   testit,
   shiny,
