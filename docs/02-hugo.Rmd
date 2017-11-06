@@ -24,7 +24,7 @@ Hugo uses a special file and folder structure to create your website (Figure \@r
 
 (ref:folders) Possible files and folders created when you create a new site using **blogdown**.
 
-```{r folders, fig.cap='(ref:folders)', echo=FALSE, fig.align='center', out.width='90%'}
+```{r folders, fig.cap='(ref:folders)', echo=FALSE, fig.align='center', out.width='100%'}
 knitr::include_graphics('images/folder-structure.png')
 ```
 
