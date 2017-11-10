@@ -33,7 +33,7 @@ lapply(c(), function(pkg) {
 
 # Preface {-}
 
-```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://github.com/rstudio/blogdown', out.width='50%'}
+```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://www.crcpress.com/p/book/9780815363729', out.width='50%'}
 knitr::include_graphics('images/cover.png', dpi = NA)
 ```
 
@@ -57,7 +57,7 @@ Please do not be misled by the word "blog" in the package name: **blogdown** is 
 
 If you do not prefer using Hugo, there are other options, too. Chapter \@ref(other-generators) presents possibilities of using other site generators, such as Jekyll and **rmarkdown**'s default site generator.
 
-The online version of this book is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
+This book is to be published by [Chapman & Hall/CRC](https://www.crcpress.com/p/book/9780815363729) in December 2017. The online version of this book is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 ## Structure of the book {-}
 
