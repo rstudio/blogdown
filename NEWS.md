@@ -1,4 +1,4 @@
-# CHANGES IN blogdown VERSION 0.3 (unreleased)
+# CHANGES IN blogdown VERSION 0.3
 
 ## MAJOR CHANGES
 
