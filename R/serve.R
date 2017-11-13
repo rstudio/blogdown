@@ -53,6 +53,11 @@ serve_it = function(
     owd = setwd(site_root(config)); on.exit(setwd(owd), add = TRUE)
 
     if (!getOption('blogdown.generator.server', FALSE)) {
+      if (is_windows() && getOption('servr.daemon', FALSE)) {
+        if (!knitr:::loadable('later')) stop(
+          "Please install the 'later' package: install.packages('later')", call. = FALSE
+        )
+      }
       build_site(TRUE)
       n = nchar(pdir)
       return(servr::httw(site.dir = pdir, baseurl = baseurl, handler = function(...) {
