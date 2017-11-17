@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/rstudio/blogdown.svg)](https://travis-ci.org/rstudio/blogdown)
 [![Downloads from the RStudio CRAN mirror](http://cranlogs.r-pkg.org/badges/blogdown)](https://cran.rstudio.org/package=blogdown)
 
+<img src="https://bookdown.org/yihui/blogdown/images/logo.png" alt="blogdown logo" align="right" />
+
 An open-source (GPL-3) R package to generate static websites based on [R Markdown](http://rmarkdown.rstudio.com) and [Hugo](https://gohugo.io). You can install the package via CRAN or GitHub:
 
 ```{r eval=FALSE}
