@@ -1,3 +1,9 @@
+# CHANGES IN blogdown VERSION 0.4 (unreleased)
+
+## BUG FIXES
+
+- `install_theme()` may signal the error "The theme already exists" by mistake (thanks, @YizhouZheng, #230).
+
 # CHANGES IN blogdown VERSION 0.3
 
 ## MAJOR CHANGES

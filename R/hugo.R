@@ -151,7 +151,8 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE, for
       sprintf('https://github.com/%s/archive/%s.zip', theme, branch), zipfile, mode = 'wb'
     )
     files = utils::unzip(zipfile)
-    zipdir = dirname(files[1])
+    zipdir = dirname(files)
+    zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
     if (dir_exists(expdir)) if (theme_example) {
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
