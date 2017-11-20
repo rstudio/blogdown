@@ -185,14 +185,19 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE, for
 #' @param kind The content type to create.
 #' @param open Whether to open the new file after creating it. By default, it is
 #'   opened in an interactive R session.
+#' @param post_process A function to post-process the new file.
 #' @export
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
-new_content = function(path, kind = 'default', open = interactive()) {
+new_content = function(path, kind = 'default', open = interactive(), post_process = NULL) {
   if (missing(kind)) kind = default_kind(path)
-  hugo_cmd(c('new', shQuote(path), c('-k', kind)))
-  file = content_file(path)
-  hugo_toYAML(file)
+  # use a temporary .txt extension because `hugo server --navigateToChanged`
+  # returns 404 if we create a .md and immediately modifies it (may be a bug)
+  path2 = with_ext(path, '.txt')
+  hugo_cmd(c('new', shQuote(path2), c('-k', kind)))
+  file = content_file(path); file2 = content_file(path2)
+  hugo_toYAML(file2); if (is.function(post_process)) post_process(file2)
+  file.rename(file2, file)
   if (open) open_file(file)
   file
 }
@@ -259,15 +264,16 @@ new_post = function(
   if (missing(kind)) kind = default_kind(file)
   if (is.null(slug)) slug = post_slug(file)
   slug = trim_ws(slug)
-  if (generator() == 'hugo') file = new_content(file, kind, FALSE) else {
-    writeLines(c('---', '', '---'), file)
-  }
-
-  do.call(modify_yaml, c(list(
+  update_yaml = function(file) do.call(modify_yaml, c(list(
     file, title = title, author = author, date = format(date), slug = slug,
     categories = as.list(categories), tags = as.list(tags)
   ), if (!file.exists('archetypes/default.md')) list(draft = NULL)
   ))
+  if (generator() == 'hugo') file = new_content(file, kind, FALSE, update_yaml) else {
+    writeLines(c('---', '', '---'), file)
+    update_yaml(file)
+  }
+
   if (open) open_file(file)
   file
 }
