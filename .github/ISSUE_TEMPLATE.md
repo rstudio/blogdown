@@ -1,6 +1,24 @@
+## Consider StackOverflow first
+
 For general questions, please ask them on StackOverflow first, using at least the tags `r` and `blogdown`: http://stackoverflow.com/questions/ask Please come back here only if nobody answers your question there in at least 24 hours, and let us know the URL of your StackOverflow post. If you are not sure whether you should use StackOverflow or Github issues, use Stackoverflow first. We do watch StackOverflow questions as actively as Github issues.
 
+## Bug reports
+
 For bug reports, please provide a minimal, self-contained, and reproducible example by reducing your example as much as possible right before the problem goes away. By doing this, you may be able to figure out what the problem really is before reporting to us. You can attach your example as a zip file here along with `devtools::session_info('blogdown')`, and screenshots are often very helpful to illustrate your issues.
+
+It will be helpful if you make sure [all your packages are up-to-date](https://yihui.name/en/2017/05/when-in-doubt-upgrade/) before reporting issues. You should at least run:
+
+```r
+update.packages(ask = FALSE, checkBuilt = TRUE)
+```
+
+Even better if you could test the development version:
+
+```r
+devtools::install_github('rstudio/blogdown')
+```
+
+## Format your issue correctly
 
 To include a verbatim chunk of arbitrary text, wrap it in a pair of three backticks. When any line of your text contains N backticks (N >= 3), use N + 1 backticks to wrap the text, e.g. use four backticks to wrap three:
 
