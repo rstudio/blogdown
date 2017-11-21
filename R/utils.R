@@ -56,7 +56,11 @@ dir_rename = function(from, to, clean = FALSE) {
   if (!dir_exists(from)) return()
   if (clean) unlink(to, recursive = TRUE)
   dir_create(dirname(to))
-  file.rename(from, to)
+  # I don't know why file.rename() might fail, but if it fails, fall back to
+  # file.copy(): https://github.com/rstudio/blogdown/issues/232
+  suppressWarnings(file.rename(from, to)) || {
+    file.copy(from, dirname(to), recursive = TRUE) && unlink(from, recursive = TRUE)
+  }
 }
 
 dirs_rename = function(from, to, ...) {
