@@ -141,12 +141,19 @@ find_exec = function(cmd, dir, info = '') {
     path = file.path(d, exec)
     if (utils::file_test("-x", path)) break else path = ''
   }
+  path2 = Sys.which(cmd)
   if (path == '') {
-    path = Sys.which(cmd)
-    if (path == '') stop(
+    if (path2 == '') stop(
       cmd, ' not found. ', info, call. = FALSE
     )
     return(cmd)  # do not use the full path of the command
+  } else {
+    if (path2 != '') {
+      warning(
+        'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
+        "If you don't need the former, you may delete it."
+      )
+    }
   }
   normalizePath(path)
 }
@@ -161,7 +168,7 @@ find_hugo = local({
       ver = hugo_version()
       if (is.numeric_version(ver) && ver < '0.18') stop(
         'Found Hugo at ', path, ' but the version is too low (', ver, '). ',
-        'You may try blogdown::install_hugo(force = TRUE).'
+        'You may try blogdown::update_hugo().'
       )
     }
     path
