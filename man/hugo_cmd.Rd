@@ -21,8 +21,7 @@ new_site(dir = ".", install_hugo = TRUE, format = "toml",
     sample = TRUE, theme = "yihui/hugo-lithium-theme", theme_example = TRUE, 
     serve = interactive())
 
-new_content(path, kind = "default", open = interactive(), 
-    post_process = NULL)
+new_content(path, kind = "default", open = interactive())
 
 new_post(title, kind = "default", open = interactive(), 
     author = getOption("blogdown.author"), categories = NULL, 
@@ -74,8 +73,6 @@ directory if it exists in the theme. Not all themes provide example sites.}
 
 \item{open}{Whether to open the new file after creating it. By default, it is
 opened in an interactive R session.}
-
-\item{post_process}{A function to post-process the new file.}
 
 \item{title}{The title of the post.}
 
