@@ -586,7 +586,14 @@ clean_widget_html = function(x) {
 }
 
 decode_uri = function(...) httpuv::decodeURIComponent(...)
-encode_uri = function(...) httpuv::encodeURIComponent(...)
+encode_uri = function(...) {
+  # httpuv <= 1.3.5 is buggy: https://github.com/rstudio/httpuv/issues/86
+  if (packageVersion('httpuv') > '1.3.5') {
+    httpuv::encodeURIComponent(...)
+  } else {
+    URLencode(...)
+  }
+}
 
 # convert arguments to a single string of the form "arg1=value1 arg2=value2 ..."
 args_string = function(...) {

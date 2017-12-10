@@ -118,7 +118,7 @@ render_page = function(input, script = 'render_page.R') {
 encode_paths = function(x, deps, parent, base = '/') {
   if (!dir_exists(deps)) return(x)
   if (!grepl('/$', parent)) parent = paste0(parent, '/')
-  deps = basename(deps)
+  deps = encode_uri(basename(deps))
   # find the dependencies referenced in HTML
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
 
@@ -138,7 +138,7 @@ encode_paths = function(x, deps, parent, base = '/') {
   x2 = grep(r2, x, value = TRUE)
   if (length(x2) == 0) return(x)
   libs = unique(gsub(r2, '\\3\\4', unlist(regmatches(x2, gregexpr(r2, x2)))))
-  libs = file.path(parent, libs)
+  libs = file.path(parent, decode_uri(libs))
   x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
   to = file.path('static', 'rmarkdown-libs', basename(libs))
   dirs_rename(libs, to, clean = TRUE)
