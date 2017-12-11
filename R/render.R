@@ -90,7 +90,7 @@ build_rmds = function(files) {
     message('Rendering ', f)
     render_page(f)
     x = readUTF8(out)
-    x = encode_paths(x, by_products(f, '_files'), d, base)
+    x = encode_paths(x, by_products(f, '_files'), d, base, to_md)
     if (to_md) {
       writeUTF8(x, out)
     } else {
@@ -115,10 +115,11 @@ render_page = function(input, script = 'render_page.R') {
 
 # example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
 # parent = 'content/post';
-encode_paths = function(x, deps, parent, base = '/') {
+encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
   if (!dir_exists(deps)) return(x)
   if (!grepl('/$', parent)) parent = paste0(parent, '/')
-  deps = encode_uri(basename(deps))
+  deps = basename(deps)
+  if (!to_md) deps = encode_uri(deps)
   # find the dependencies referenced in HTML
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
 
@@ -138,7 +139,7 @@ encode_paths = function(x, deps, parent, base = '/') {
   x2 = grep(r2, x, value = TRUE)
   if (length(x2) == 0) return(x)
   libs = unique(gsub(r2, '\\3\\4', unlist(regmatches(x2, gregexpr(r2, x2)))))
-  libs = file.path(parent, decode_uri(libs))
+  libs = file.path(parent, if (to_md) libs else decode_uri(libs))
   x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
   to = file.path('static', 'rmarkdown-libs', basename(libs))
   dirs_rename(libs, to, clean = TRUE)
