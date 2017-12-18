@@ -1,0 +1,30 @@
+citHeader("To cite the 'blogdown' package in publications use:")
+
+year = sub('.*(2[[:digit:]]{3})-.*', '\\1', meta$Date, perl = TRUE)
+vers = paste('R package version', meta$Version)
+
+citEntry(
+  entry = 'manual',
+  title = paste('blogdown:', meta$Title),
+  author = Filter(function(p) 'aut' %in% p$role, as.person(meta$Author)),
+  year = year,
+  note = vers,
+  url = meta$URL,
+  textVersion = paste('Yihui Xie (', year, '). blogdown: ', meta$Title, '. ', vers, '.', sep = '')
+)
+
+citEntry(
+  entry = 'book',
+  title = 'blogdown: Creating Websites with {R} Markdown',
+  author = 'Yihui Xie, Alison Presmanes Hill, Amber Thomas',
+  publisher = 'Chapman and Hall/CRC',
+  address = 'Boca Raton, Florida',
+  year = '2017',
+  note = 'ISBN 978-0815363729',
+  url = meta$URL,
+  textVersion = paste(
+    'Yihui Xie, Alison Presmanes Hill, and Amber Thomas (2017).',
+    'blogdown: Creating Websites with R Markdown.',
+    'Chapman and Hall/CRC. ISBN 978-0815363729'
+  )
+)
