@@ -6,7 +6,7 @@
 #' problems with code from an earlier date that does not run anymore for whatever
 #' reason.
 #' @export
-build_site_modified = function(...) {
+build_site_modified = function() {
   blogdown::build_site(local = TRUE, run_hugo = FALSE)
   blogdown::hugo_build()
 }
