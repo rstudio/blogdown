@@ -825,7 +825,7 @@ The XMin is actually a highly functional theme, but we understand that it may be
     ```html
     {{ if .File.Path }}
     
-    {{ $Rmd := (print .File.BaseFileName ".Rmd")) }}
+    {{ $Rmd := (print .File.BaseFileName ".Rmd") }}
     
     {{ if (where (readDir (print "content/" .File.Dir)) "Name" $Rmd) }}
       {{ $.Scratch.Set "FilePath" (print .File.Dir $Rmd) }}
