@@ -1,3 +1,9 @@
+# CHANGES IN blogdown VERSION 0.5 (unreleased)
+
+## BUG FIXES
+
+- The bug #233 still exists on Windows (thanks, Sheng Luan).
+
 # CHANGES IN blogdown VERSION 0.4
 
 ## BUG FIXES

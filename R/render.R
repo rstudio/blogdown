@@ -119,7 +119,12 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
   if (!dir_exists(deps)) return(x)
   if (!grepl('/$', parent)) parent = paste0(parent, '/')
   deps = basename(deps)
-  if (!to_md) deps = encode_uri(deps)
+  need_encode = !to_md
+  if (need_encode) {
+    deps2 = encode_uri(deps)  # encode the path and see if it can be found in x
+    # on Unix, paths containing multibyte chars are always encoded by Pandoc
+    if (need_encode <- !is_windows() || any(grepl(deps2, x, fixed = TRUE))) deps = deps2
+  }
   # find the dependencies referenced in HTML
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
 
@@ -139,7 +144,7 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
   x2 = grep(r2, x, value = TRUE)
   if (length(x2) == 0) return(x)
   libs = unique(gsub(r2, '\\3\\4', unlist(regmatches(x2, gregexpr(r2, x2)))))
-  libs = file.path(parent, if (to_md) libs else decode_uri(libs))
+  libs = file.path(parent, if (need_encode) decode_uri(libs) else libs)
   x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
   to = file.path('static', 'rmarkdown-libs', basename(libs))
   dirs_rename(libs, to, clean = TRUE)
