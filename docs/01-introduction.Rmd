@@ -318,7 +318,7 @@ To edit a website:
 
 1. Use the "Update Metadata" addin to modify the YAML metadata if necessary.
 
-To publish a website:
+To publish a website if you are not familiar with GIT or GitHub:
 
 1. Restart the R session, and run `blogdown::hugo_build()`. You should get a `public/` directory under the root directory of your project.
 
@@ -326,4 +326,4 @@ To publish a website:
 
 1. Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.com` to you. You can (and should) change this random subdomain to a more meaningful one if it is still available.
 
-If you are familiar with GIT and GitHub, we recommend that you create a new site from your GitHub repository that contains the source files of your website, so that you can enjoy the benefits of continuous deployment instead of manually uploading the folder every time. See Chapter \@ref(deployment) for more information.
+It can be much easier to publish a website if you are familiar with GIT and GitHub. We recommend that you create a new site on Netlify from your GitHub repository that contains the source files of your website, so that you can enjoy the benefits of continuous deployment instead of manually uploading the `public/` folder every time. With this approach, you do not need to run `blogdown::hugo_build()` locally, because the website can be built on Netlify via Hugo. See Chapter \@ref(deployment) for more information.
