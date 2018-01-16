@@ -80,6 +80,8 @@ install_hugo = function(
   } else {
     download_zip('Linux', 'tar.gz')  # _might_ be Linux; good luck
   }
+  # from a certain version of Hugo, the executable is no longer named
+  # hugo_x.y.z, so exec could be NA here, but file.rename(NA_character) is fine
   exec = files[grep(sprintf('^hugo_%s.+', version), basename(files))][1]
   if (is_windows()) {
     file.rename(exec, 'hugo.exe')
@@ -90,6 +92,10 @@ install_hugo = function(
     Sys.chmod(exec, '0755')  # chmod +x
   }
 
+  install_hugo_bin(exec)
+}
+
+install_hugo_bin = function(exec) {
   success = FALSE
   dirs = bin_paths()
   for (destdir in dirs) {
@@ -97,7 +103,6 @@ install_hugo = function(
     success = file.copy(exec, destdir, overwrite = TRUE)
     if (success) break
   }
-  file.remove(exec)
   if (!success) stop(
     'Unable to install Hugo to any of these dirs: ',
     paste(dirs, collapse = ', ')
