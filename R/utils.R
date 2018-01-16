@@ -120,10 +120,9 @@ download2 = function(url, ...) {
   download = function(method = 'auto', extra = getOption('download.file.extra')) {
     download.file(url, ..., method = method, extra = extra)
   }
-  if (is_windows())
-    return(tryCatch(download(method = 'wininet'), error = function(e) {
-      download()  # try default method if wininet fails
-    }))
+  if (is_windows()) for (method in c('wininet', 'auto', 'libcurl')) {
+    if (!inherits(try(res <- download(method = method)), 'try-error') && res == 0) return(res)
+  }
 
   R340 = getRversion() >= '3.4.0'
   if (R340 && download() == 0) return(0L)
