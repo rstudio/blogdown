@@ -120,7 +120,7 @@ download2 = function(url, ...) {
   download = function(method = 'auto', extra = getOption('download.file.extra')) {
     download.file(url, ..., method = method, extra = extra)
   }
-  if (is_windows()) for (method in c('wininet', 'auto', 'libcurl')) {
+  if (is_windows()) for (method in c('libcurl', 'wininet', 'auto')) {
     if (!inherits(try(res <- download(method = method)), 'try-error') && res == 0) return(res)
   }
 
