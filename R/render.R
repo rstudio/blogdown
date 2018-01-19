@@ -95,7 +95,6 @@ build_rmds = function(files) {
       writeUTF8(x, out)
     } else {
       if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
-      x = split_html_tokens(x, FALSE)$body
       prepend_yaml(f, out, x)
     }
   }
@@ -149,18 +148,4 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
   to = file.path('static', 'rmarkdown-libs', basename(libs))
   dirs_rename(libs, to, clean = TRUE)
   x
-}
-
-
-split_html_tokens = function(x, extract_head = TRUE) {
-  i1 = grep('<!-- BLOGDOWN-HEAD -->', x)
-  i2 = grep('<!-- /BLOGDOWN-HEAD -->', x)
-  if (length(i1) * length(i2) != 1) return(list(body = x))
-  if (extract_head) {
-    i3 = (i1 + 1):(i2 - 1)
-    h = paste(x[i3], collapse = '\n')
-  } else {
-    i3 = h = NULL
-  }
-  list(body = x[-c(i1, i2, i3)], head = h)
 }

@@ -198,9 +198,6 @@ I found a package named **blogdown**.
 It is first converted to an HTML file `foo.html` through `html_page()`, and note that YAML metadata are ignored for now:
 
 ```html
-<!-- BLOGDOWN-HEAD -->
-<!-- /BLOGDOWN-HEAD -->
-
 I found a package named <strong>blogdown</strong>.
 ```
 
@@ -229,8 +226,6 @@ output:
     css: "/css/my-style.css"
 ---
 ```
-
-There is also a pair of HTML comments in the template: `<!-- BLOGDOWN-HEAD -->` and `<!-- /BLOGDOWN-HEAD -->`. This is mainly for `method = 'html_encoded'` in `blogdown::build_site()` (see Section \@ref(methods)). This pair of comments is used to mark the HTML code fragment that should be moved to the `<head>` tag of the final HTML page. Typically this code fragment contains links to CSS and JavaScript files, e.g., those requested by the user via the `css` argument of `html_page()`, or automatically generated when HTML widgets are used in an Rmd document. For `method = 'html'`, this code fragment is not moved, which is why the final HTML page may not conform to W3C standards. If you want to customize the template, you are recommended to use this pair of comments to mark the HTML code fragment that belongs to the `<head>` tag.
 
 ## Different building methods {#methods}
 
