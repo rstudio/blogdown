@@ -11,20 +11,17 @@
 #' @aliases blogdown-package
 #' @import utils
 #' @import stats
+#' @importFrom xfun attr in_dir read_utf8 write_utf8
 #' @examples if (interactive()) blogdown::new_site()
 NULL
 
-with_ext = bookdown:::with_ext
-readUTF8 = bookdown:::readUTF8
-writeUTF8 = bookdown:::writeUTF8
+with_ext = function(...) xfun::with_ext(...)
 dir_exists = bookdown:::dir_exists
 dir_create = bookdown:::dir_create
 existing_files = bookdown:::existing_files
-fetch_yaml = function(f) bookdown:::fetch_yaml(readUTF8(f))
+fetch_yaml = function(f) bookdown:::fetch_yaml(read_utf8(f))
 Rscript = bookdown:::Rscript
 
-attr = knitr:::attr
-in_dir = knitr:::in_dir
 `%n%` = knitr:::`%n%`
 
 blogdown_skeleton = function(path, ...) {

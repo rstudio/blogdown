@@ -3,9 +3,9 @@
 
 # a wrapper function to read a file as UTF-8, process the text, and write back
 process_file = function(f, FUN) {
-  x = readUTF8(f)
+  x = read_utf8(f)
   x = FUN(x)
-  writeUTF8(x, f)
+  write_utf8(x, f)
 }
 
 # replace three or more \n with two, i.e. two or more empty lines with one

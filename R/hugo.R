@@ -42,7 +42,7 @@ theme_flag = function(config = load_config()) {
 
 change_config = function(name, value) {
   f = find_config()
-  x = readUTF8(f)
+  x = read_utf8(f)
   if (f == 'config.toml') {
     r = sprintf('^%s\\s*=.+', name)
     v = if (!is.na(value)) paste(name, value, sep = ' = ')
@@ -58,7 +58,7 @@ change_config = function(name, value) {
   } else {
     x = c(v, x)  # append new config and write out
   }
-  writeUTF8(x, f)
+  write_utf8(x, f)
   invisible(list(text = x0, file = f))
 }
 

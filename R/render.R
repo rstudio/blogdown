@@ -89,10 +89,10 @@ build_rmds = function(files) {
     copy_output_yml(d)
     message('Rendering ', f)
     render_page(f)
-    x = readUTF8(out)
+    x = read_utf8(out)
     x = encode_paths(x, by_products(f, '_files'), d, base, to_md)
     if (to_md) {
-      writeUTF8(x, out)
+      write_utf8(x, out)
     } else {
       if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
       prepend_yaml(f, out, x)

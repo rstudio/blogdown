@@ -54,7 +54,7 @@ local({
       shiny::observeEvent(input$format, {
         f = input$file
         if (f != '') shiny::updateTextInput(
-          session, 'file', value = blogdown:::with_ext(f, input$format)
+          session, 'file', value = xfun::with_ext(f, input$format)
         )
       }, ignoreInit = TRUE)
       shiny::observeEvent(input$done, {

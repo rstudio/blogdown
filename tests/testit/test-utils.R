@@ -50,8 +50,8 @@ multi_list:
 
 assert('modify_yaml perserves original values properly', {
   write(test_rmd, test_rmd_file)
-  old_content = readUTF8(test_rmd_file)
+  old_content = readLines(test_rmd_file)
 
   modify_yaml(test_rmd_file)
-  readUTF8(test_rmd_file) %==% old_content
+  readLines(test_rmd_file) %==% old_content
 })

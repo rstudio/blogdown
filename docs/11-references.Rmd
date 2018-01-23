@@ -8,5 +8,5 @@ bib = knitr::write_bib(c(
 ), file = NULL)
 bib = unlist(bib)
 bib = gsub("'(Htmlwidgets|iframes)'", '\\1', bib)
-blogdown:::writeUTF8(bib, 'packages.bib')
+xfun::write_utf8(bib, 'packages.bib')
 ```
