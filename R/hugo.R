@@ -100,7 +100,7 @@ new_site = function(
   if (!force) warning("The directory '", dir, "' is not empty")
   if (install_hugo) tryCatch(find_hugo(), error = function(e) install_hugo())
   if (hugo_cmd(
-    c('new site', shQuote(path.expand(dir)), if (force) '--force', '-f', format),
+    c('new', 'site', shQuote(path.expand(dir)), if (force) '--force', '-f', format),
     stdout = FALSE
   ) != 0) return(invisible())
 
