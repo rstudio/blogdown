@@ -237,6 +237,10 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   generated from the filename by removing the date and filename extension,
 #'   e.g., if \code{file = 'post/2015-07-23-hi-there.md'}, \code{slug} will be
 #'   \code{hi-there}. Set \code{slug = ''} if you do not want it.
+#' @param title_case A function to convert the title to title case. If
+#'   \code{TRUE}, the function is \code{tools::\link[tools]{toTitleCase}()}).
+#'   This argument is not limited to title case conversion. You can provide an
+#'   arbitrary R function to convert the title.
 #' @param subdir If specified (not \code{NULL}), the post will be generated
 #'   under a subdirectory under \file{content/}. It can be a nested subdirectory
 #'   like \file{post/joe/}.
@@ -252,6 +256,7 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 new_post = function(
   title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
   categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = NULL,
+  title_case = getOption('blogdown.title_case'),
   subdir = getOption('blogdown.subdir', 'post'), ext = getOption('blogdown.ext', '.md')
 ) {
   if (is.null(file)) file = post_filename(title, subdir, ext, date)
@@ -262,6 +267,8 @@ new_post = function(
   if (generator() == 'hugo') file = new_content(file, kind, FALSE) else {
     writeLines(c('---', '', '---'), file)
   }
+  if (isTRUE(title_case)) title_case = tools::toTitleCase
+  if (is.function(title_case)) title = title_case(title)
 
   do.call(modify_yaml, c(list(
     file, title = title, author = author, date = format(date), slug = slug,

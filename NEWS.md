@@ -1,3 +1,9 @@
+# CHANGES IN blogdown VERSION 0.6 (unreleased)
+
+## NEW FEATURES
+
+- Added a `title_case` argument to the `new_post()` function; if \code{TRUE}, the post title will be converted to title case. See `?blogdown::new_post` for details.
+
 # CHANGES IN blogdown VERSION 0.5
 
 ## BUG FIXES
