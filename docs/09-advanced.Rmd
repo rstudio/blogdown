@@ -32,7 +32,7 @@ We have provided two approaches to LiveReload. The default approach is through `
 
 1. It is relatively slow because the website is fully regenerated every time. This may not be a real problem for Hugo, because Hugo is often fast enough: it takes about a millisecond to generate one page, so a website with a thousand pages may only take about one second to be fully regenerated.
 
-1. The daemonized server (see Section \@ref(global-options)) may not work.
+1. The daemonized server requires an additional dependency, the **later** package (only on Windows).
 
 If you are not concerned about the above issues, we recommend that you use the default approach, otherwise you can set the global option `options(blogdown.generator.server = TRUE)` to use an alternative approach to LiveReload, which is based on the native support for LiveReload from the static site generator. At the moment, this has only been tested against Hugo-based websites. It does not work with Jekyll and we were not successful with Hexo, either.
 
