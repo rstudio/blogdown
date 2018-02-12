@@ -85,7 +85,7 @@ If you are satisfied with this default theme, you are basically ready to start w
 
 There are a few essential RStudio addins\index{RStudio addins} to make it easy to edit and preview your website, and you can find them in the menu "Addins" on the RStudio toolbar:
 
-- "Serve Site": This addin calls `blogdown::serve_site()` to continuously serve your website locally using the LiveReload technology, so you can live preview the website. You can continue to edit material for your site while you are previewing it, but this function will block your R console by default, meaning that you will not be able to use your R console once you start this local web server. To unblock your console, click on the red stop sign in the top right corner of the console window. If you would rather avoid this behavior altogether, set the option `options(servr.daemon = TRUE)` before you click this addin or call the function `serve_site()`, so that the server is daemonized and will not block your R console.^[We have heard of cases where the daemonized server crashed R on Windows. If you run into problems with the daemonized server, there are three workarounds, and you can try one of them: (1) install the **later** package via `install.packages("later")` and start the server again; (2) use Hugo's server (see Section \@ref(livereload)); (3) call `blogdown::serve_site()` in a separate R session, and you can preview your website in your web browser but can still edit the website in RStudio.]
+- "Serve Site": This addin calls `blogdown::serve_site()` to continuously serve your website locally using the LiveReload technology, so you can live preview the website. You can continue to edit material for your site while you are previewing it.
 
 - "New Post": This addin provides a dialog box for you to enter the metadata of your blog post, including the title, author, date, and so on. See Figure \@ref(fig:new-post) for an example. This addin actually calls the function `blogdown::new_post()` under the hood, but does a few things automatically:
 
@@ -135,7 +135,7 @@ Depending on your personal preferences, you can set a few global options before 
 
 ```{r global-options, echo=FALSE}
 knitr::kable(matrix(c(
-  'servr.daemon', 'FALSE', 'Whether to use a daemonized server',
+  'servr.daemon', 'interactive()', 'Use a daemonized server?',
   'blogdown.author', '', 'The default author of new posts',
   'blogdown.ext', '.md', 'Default extension of new posts',
   'blogdown.subdir', 'post', 'A subdirectory under content/',
@@ -310,9 +310,7 @@ To start a new website:
 
 To edit a website:
 
-1. Set `options(servr.daemon = TRUE)` unless you have already set it in `.Rprofile`. If this option does not work for you (e.g., it crashes your R session), see Section \@ref(global-options) for a workaround.
-
-1. Click the RStudio addin "Serve Site" to preview the site in RStudio Viewer. This only needs to be done once every time you open the RStudio project or restart your R session. Do not click the Knit button on the RStudio toolbar.
+1. Click the RStudio addin "Serve Site" to preview the site in RStudio Viewer. This only needs to be done once every time you open the RStudio project or restart your R session. Do not click the `Knit` button on the RStudio toolbar.
 
 1. Use the "New Post" addin to create a new post or page, then start writing the content.
 
