@@ -28,6 +28,10 @@
 #'   option \code{getOption('blogdown.method')} when it is set.
 #' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
 #'   compiled.
+#' @note This function recompiles all R Markdown files by default, even if the
+#'   output files are newer than the source files. If you want to build the site
+#'   without rebuilding all R Markdown files, you should use
+#'   \code{\link{hugo_build}()} instead.
 #' @export
 build_site = function(
   local = FALSE, method = c('html', 'custom'), run_hugo = TRUE

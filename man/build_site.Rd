@@ -41,3 +41,9 @@ separate R session. The value of the argument \code{local} is passed to the
 command line (you can retrieve the command-line arguments via
 \code{\link{commandArgs}(TRUE)}).
 }
+\note{
+This function recompiles all R Markdown files by default, even if the
+  output files are newer than the source files. If you want to build the site
+  without rebuilding all R Markdown files, you should use
+  \code{\link{hugo_build}()} instead.
+}
