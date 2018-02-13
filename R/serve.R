@@ -89,16 +89,23 @@ serve_it = function(
       if (proc_print(p1, c(FALSE, TRUE))) later::later(p1_print, intv)
     }
 
-    message('Waiting for the server to be initialized...')
+    message(
+      'Launching the server via the command:\n  ',
+      paste(c(cmd, cmd_args), collapse = ' ')
+    )
     i = 0
     repeat {
       Sys.sleep(1)
       if (server_ready(server$url)) break
       if (i >= getOption('blogdown.server.timeout', 30)) {
+        proc_print(p1)
+        cat('\n')
         p1$kill()
         stop(
           'It took more than ', i, ' seconds to launch the server. ',
           'There may be something wrong. The process has been killed.',
+          'If the site needs more time to be built and launched, set ',
+          'options(blogdown.server.timeout) to a larger value.',
           call. = FALSE
         )
       }
