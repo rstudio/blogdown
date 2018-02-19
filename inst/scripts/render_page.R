@@ -14,15 +14,15 @@ local({
   )
   if (to_md) {
     file.rename(out, out2 <- blogdown:::output_file(input, to_md))
-    unlink(knitr:::attr(out, 'intermediates'))
-    if (length(knitr:::attr(out, 'knit_meta'))) warning(
+    unlink(xfun::attr(out, 'intermediates'))
+    if (length(xfun::attr(out, 'knit_meta'))) warning(
       "Objects that have dependencies (e.g. HTML widgets) do not work when the ",
       "output format is Markdown instead of HTML."
     )
     # resolve bookdown references (figures, tables, sections, ...)
     bookdown:::process_markdown(out2, 'markdown', NULL, TRUE, to_md)
     # protect math expressions in backticks
-    if (knitr:::loadable('xaringan')) {
+    if (xfun::loadable('xaringan')) {
       blogdown:::process_file(out2, xaringan:::protect_math)
     } else {
       warning('The xaringan package is not installed. LaTeX math may not work well.')

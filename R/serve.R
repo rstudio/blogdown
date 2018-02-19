@@ -39,7 +39,7 @@ serve_site = function(...) {
 
 server_ready = function(url) {
   !inherits(
-    knitr:::try_silent(suppressWarnings(readLines(url))), 'try-error'
+    xfun::try_silent(suppressWarnings(readLines(url))), 'try-error'
   )
 }
 
@@ -54,7 +54,7 @@ serve_it = function(
 
     if (!getOption('blogdown.generator.server', FALSE)) {
       if (is_windows() && getOption('servr.daemon', FALSE)) {
-        if (!knitr:::loadable('later')) stop(
+        if (!xfun::loadable('later')) stop(
           "Please install the 'later' package: install.packages('later')", call. = FALSE
         )
       }
@@ -71,7 +71,7 @@ serve_it = function(
       }, dir = '.', ...))
     }
 
-    if (!knitr:::loadable('processx') || !knitr:::loadable('later')) stop(
+    if (!xfun::loadable('processx') || !xfun::loadable('later')) stop(
       "Please install the packages 'processx' and 'later'", call. = FALSE
     )
     server = servr::server_config(...)
