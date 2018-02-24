@@ -4,6 +4,12 @@
 
 - Added a `title_case` argument to the `new_post()` function; if \code{TRUE}, the post title will be converted to title case. See `?blogdown::new_post` for details.
 
+- The `new_post` addin now lets you choose an archetype. See https://gohugo.io/content-management/archetypes/ for more details (thanks, @lcolladotor, #173).
+
+## BUG FIXES
+
+- `default_kind()` now looks for the archetype matching the content. For `/content/post/2018-02-24-postslug.Rmd` it looks for `archetypes/post.md` (thanks, @lcolladotor, #173).
+
 # CHANGES IN blogdown VERSION 0.5
 
 ## BUG FIXES
