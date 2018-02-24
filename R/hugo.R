@@ -190,9 +190,26 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE, for
 #'   (e.g. a post or a page).
 new_content = function(path, kind = 'default', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
-  hugo_cmd(c('new', shQuote(path), c('-k', kind)))
-  file = content_file(path)
-  hugo_toYAML(file)
+  if(!grepl('\\.md$', path)) {
+    ## Hugo doesn't work well with non .md file terminations
+    ## So in this case we will temporarely change the file termination
+    ## to md, run hugo, then change back the file termination.
+    path_temp = gsub(paste0(tools::file_ext(path), '$'), 'md', path)
+    file.copy(path, path_temp)
+    on.exit(unlink(path_temp), add = TRUE)
+    hugo_cmd(c('new', shQuote(path_temp), c('-k', kind)))
+
+    cont_temp = content_file(path_temp)
+    on.exit(unlink(cont_temp), add = TRUE)
+    ## If we do this after fixing the file termination it doesn't work
+    hugo_toYAML(cont_temp)
+    file = gsub('md$', tools::file_ext(path), cont_temp)
+    file.copy(cont_temp, file)
+  } else {
+    hugo_cmd(c('new', shQuote(path), c('-k', kind)))
+    file = content_file(path)
+    hugo_toYAML(file)
+  }
   if (open) open_file(file)
   file
 }
