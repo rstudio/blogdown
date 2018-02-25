@@ -39,8 +39,8 @@ categories.
 }
 \examples{
 library(blogdown)
-find_tags(c("time-series", "support vector machine"))
-find_categories("Statistics")
+find_tags(c('time-series', 'support vector machine'))
+find_categories('Statistics')
 
 count_yaml(sort_by_count = FALSE)
 }

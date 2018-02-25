@@ -4,8 +4,8 @@
 \alias{install_theme}
 \title{Install a Hugo theme from Github}
 \usage{
-install_theme(theme, theme_example = FALSE, update_config = TRUE, force = FALSE, 
-    hostname = "github.com")
+install_theme(theme, theme_example = FALSE, update_config = TRUE,
+  force = FALSE, hostname = "github.com")
 }
 \arguments{
 \item{theme}{A Hugo theme on Github (a chararacter string of the form

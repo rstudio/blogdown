@@ -111,7 +111,7 @@ new_site = function(
   # remove Hugo's default archetype (I think draft: true is a confusing default)
   unlink(file.path('archetypes', 'default.md'))
   if (is.character(theme) && length(theme) == 1 && !is.na(theme))
-    install_theme(theme, theme_example)
+    install_theme(theme, theme_example, hostname = hostname)
 
   if (sample) {
     d = file.path('content', 'blog')
@@ -152,10 +152,9 @@ install_theme = function(
   theme = gsub(r, '\\1', theme)
   dir_create('themes')
   in_dir('themes', {
+    url = sprintf('https://%s/%s/archive/%s.zip', hostname, theme, branch)
     zipfile = sprintf('%s.zip', basename(theme))
-    download2(
-      sprintf('https://github.com/%s/archive/%s.zip', theme, branch), zipfile, mode = 'wb'
-    )
+    download2(url, zipfile, mode = 'wb')
     files = utils::unzip(zipfile)
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]
