@@ -5,7 +5,7 @@
 \title{Install a Hugo theme from Github}
 \usage{
 install_theme(theme, theme_example = FALSE, update_config = TRUE, force = FALSE, 
-    host = "github.com")
+    hostname = "github.com")
 }
 \arguments{
 \item{theme}{A Hugo theme on Github (a chararacter string of the form
@@ -25,7 +25,7 @@ have made changes to this existing theme, your changes will be lost when
 \code{force = TRUE}! Please consider backing up the theme by renaming it
 before you try \code{force = TRUE}.}
 
-\item{host}{Where to find the theme. Defaults to \code{github.com}; specify
+\item{hostname}{Where to find the theme. Defaults to \code{github.com}; specify
 if you wish to use an instance of GitHub Enterprise.}
 }
 \description{
