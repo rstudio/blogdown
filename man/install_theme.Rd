@@ -4,8 +4,8 @@
 \alias{install_theme}
 \title{Install a Hugo theme from Github}
 \usage{
-install_theme(theme, theme_example = FALSE, update_config = TRUE, force = FALSE, 
-    hostname = "github.com")
+install_theme(theme, hostname = "github.com", theme_example = FALSE, 
+    update_config = TRUE, force = FALSE)
 }
 \arguments{
 \item{theme}{A Hugo theme on Github (a chararacter string of the form
@@ -13,6 +13,9 @@ install_theme(theme, theme_example = FALSE, update_config = TRUE, force = FALSE,
 after \code{@}, i.e. \code{theme} can be of the form
 \code{user/repo@branch}). If \code{theme = NA}, no themes will be
 installed, and you have to manually install a theme.}
+
+\item{hostname}{Where to find the theme. Defaults to \code{github.com}; specify
+if you wish to use an instance of GitHub Enterprise.}
 
 \item{theme_example}{Whether to copy the example in the \file{exampleSite}
 directory if it exists in the theme. Not all themes provide example sites.}
@@ -24,9 +27,6 @@ configurations.}
 have made changes to this existing theme, your changes will be lost when
 \code{force = TRUE}! Please consider backing up the theme by renaming it
 before you try \code{force = TRUE}.}
-
-\item{hostname}{Where to find the theme. Defaults to \code{github.com}; specify
-if you wish to use an instance of GitHub Enterprise.}
 }
 \description{
 Download the specified theme from Github and install to the \file{themes}

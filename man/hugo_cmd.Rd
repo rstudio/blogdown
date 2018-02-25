@@ -18,8 +18,8 @@ hugo_version()
 hugo_build(local = FALSE)
 
 new_site(dir = ".", install_hugo = TRUE, format = "toml", 
-    sample = TRUE, theme = "yihui/hugo-lithium-theme", theme_example = TRUE, 
-    serve = interactive(), hostname = "github.com")
+    sample = TRUE, theme = "yihui/hugo-lithium-theme", hostname = "github.com", 
+    theme_example = TRUE, serve = interactive())
 
 new_content(path, kind = "default", open = interactive())
 
@@ -62,13 +62,13 @@ after \code{@}, i.e. \code{theme} can be of the form
 \code{user/repo@branch}). If \code{theme = NA}, no themes will be
 installed, and you have to manually install a theme.}
 
+\item{hostname}{Where to find the theme. Defaults to \code{github.com}; specify
+if you wish to use an instance of GitHub Enterprise.}
+
 \item{theme_example}{Whether to copy the example in the \file{exampleSite}
 directory if it exists in the theme. Not all themes provide example sites.}
 
 \item{serve}{Whether to start a local server to serve the site.}
-
-\item{hostname}{Where to find the theme. Defaults to \code{github.com}; specify
-if you wish to use an instance of GitHub Enterprise.}
 
 \item{path}{The path to the new file under the \file{content} directory.}
 
