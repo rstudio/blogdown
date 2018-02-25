@@ -83,6 +83,8 @@ change_config = function(name, value) {
 #' @param theme_example Whether to copy the example in the \file{exampleSite}
 #'   directory if it exists in the theme. Not all themes provide example sites.
 #' @param serve Whether to start a local server to serve the site.
+#' @param host Where to find the theme. Defaults to \code{github.com}; specify
+#'   if you wish to use an instance of GitHub Enterprise.
 #' @references The full list of Hugo commands: \url{https://gohugo.io/commands},
 #'   and themes: \url{http://themes.gohugo.io}.
 #' @export
@@ -92,7 +94,8 @@ change_config = function(name, value) {
 #' if (interactive()) new_site()
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
-  theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = interactive()
+  theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = interactive(),
+  host = 'github.com'
 ) {
   files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)
   files = setdiff(files, c('LICENSE', 'README', 'README.md'))
@@ -135,7 +138,10 @@ new_site = function(
 #' @param update_config Whether to update the \code{theme} option in the site
 #'   configurations.
 #' @export
-install_theme = function(theme, theme_example = FALSE, update_config = TRUE, force = FALSE) {
+install_theme = function(
+  theme, theme_example = FALSE, update_config = TRUE, force = FALSE,
+  host = 'github.com'
+) {
   r = '^([^/]+/[^/@]+)(@.+)?$'
   if (!is.character(theme) || length(theme) != 1 || !grepl(r, theme)) {
     warning("'theme' must be a character string of the form 'user/repo' or 'user/repo@branch'")
