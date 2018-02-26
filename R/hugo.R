@@ -80,6 +80,8 @@ change_config = function(name, value) {
 #'   after \code{@@}, i.e. \code{theme} can be of the form
 #'   \code{user/repo@@branch}). If \code{theme = NA}, no themes will be
 #'   installed, and you have to manually install a theme.
+#' @param hostname Where to find the theme. Defaults to \code{github.com}; specify
+#'   if you wish to use an instance of GitHub Enterprise.
 #' @param theme_example Whether to copy the example in the \file{exampleSite}
 #'   directory if it exists in the theme. Not all themes provide example sites.
 #' @param serve Whether to start a local server to serve the site.
@@ -92,7 +94,8 @@ change_config = function(name, value) {
 #' if (interactive()) new_site()
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
-  theme = 'yihui/hugo-lithium-theme', theme_example = TRUE, serve = interactive()
+  theme = 'yihui/hugo-lithium-theme', hostname = 'github.com', theme_example = TRUE,
+  serve = interactive()
 ) {
   files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)
   files = setdiff(files, c('LICENSE', 'README', 'README.md'))
@@ -108,7 +111,7 @@ new_site = function(
   # remove Hugo's default archetype (I think draft: true is a confusing default)
   unlink(file.path('archetypes', 'default.md'))
   if (is.character(theme) && length(theme) == 1 && !is.na(theme))
-    install_theme(theme, theme_example)
+    install_theme(theme, theme_example, hostname = hostname)
 
   if (sample) {
     d = file.path('content', 'blog')
@@ -135,7 +138,9 @@ new_site = function(
 #' @param update_config Whether to update the \code{theme} option in the site
 #'   configurations.
 #' @export
-install_theme = function(theme, theme_example = FALSE, update_config = TRUE, force = FALSE) {
+install_theme = function(
+  theme, hostname = 'github.com', theme_example = FALSE, update_config = TRUE, force = FALSE
+) {
   r = '^([^/]+/[^/@]+)(@.+)?$'
   if (!is.character(theme) || length(theme) != 1 || !grepl(r, theme)) {
     warning("'theme' must be a character string of the form 'user/repo' or 'user/repo@branch'")
@@ -146,10 +151,9 @@ install_theme = function(theme, theme_example = FALSE, update_config = TRUE, for
   theme = gsub(r, '\\1', theme)
   dir_create('themes')
   in_dir('themes', {
+    url = sprintf('https://%s/%s/archive/%s.zip', hostname, theme, branch)
     zipfile = sprintf('%s.zip', basename(theme))
-    download2(
-      sprintf('https://github.com/%s/archive/%s.zip', theme, branch), zipfile, mode = 'wb'
-    )
+    download2(url, zipfile, mode = 'wb')
     files = utils::unzip(zipfile)
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]

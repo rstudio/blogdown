@@ -2,7 +2,9 @@
 
 ## NEW FEATURES
 
-- Added a `title_case` argument to the `new_post()` function; if \code{TRUE}, the post title will be converted to title case. See `?blogdown::new_post` for details.
+- Added a `title_case` argument to the `new_post()` function; if `TRUE`, the post title will be converted to title case. See `?blogdown::new_post` for details.
+
+- Added a `hostname` argument to `install_theme()` and `new_site()`, as a complement to the `theme` argument. The default `hostname` is `'github.com'`; if you have access to GitHub Enterprise, you can use this to specify it instead (thanks, @ijlyttle, #264).
 
 # CHANGES IN blogdown VERSION 0.5
 

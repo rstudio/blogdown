@@ -7,6 +7,7 @@ Authors@R: c(
     person("Beilei", "Bian", role = "ctb"),
     person("Forest", "Fang", role = "ctb"),
     person("Hiroaki", "Yutani", role = "ctb"),
+    person("Ian", "Lyttle", role = "ctb"),
     person("JJ", "Allaire", role = "ctb"),
     person("Kevin", "Ushey", role = "ctb"),
     person(family = "RStudio Inc", role = "cph"),
