@@ -194,9 +194,12 @@ install_theme = function(
 #'   (e.g. a post or a page).
 new_content = function(path, kind = 'default', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
-  hugo_cmd(c('new', shQuote(path), c('-k', kind)))
-  file = content_file(path)
-  hugo_toYAML(file)
+  path2 = with_ext(path, '.md')
+  file  = content_file(path)
+  file2 = content_file(path2)
+  hugo_cmd(c('new', shQuote(path2), c('-k', kind)))
+  hugo_toYAML(file2)
+  file.rename(file2, file)
   if (open) open_file(file)
   file
 }

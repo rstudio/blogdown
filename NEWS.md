@@ -6,6 +6,12 @@
 
 - Added a `hostname` argument to `install_theme()` and `new_site()`, as a complement to the `theme` argument. The default `hostname` is `'github.com'`; if you have access to GitHub Enterprise, you can use this to specify it instead (thanks, @ijlyttle, #264).
 
+- The `new_post` addin now lets you choose an archetype. See https://gohugo.io/content-management/archetypes/ for more details (thanks, @lcolladotor, #173).
+
+## BUG FIXES
+
+- `new_content()` now works with files that end in .Rmd and .Rmarkdown. The archetype still has to end in .md for hugo to work with it (thanks, @lcolladotor, #261).
+
 # CHANGES IN blogdown VERSION 0.5
 
 ## BUG FIXES

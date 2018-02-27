@@ -20,6 +20,9 @@ local({
       shiny::fillRow(
         sel_input('cat', 'Categories', meta$categories),
         sel_input('tag', 'Tags', meta$tags),
+        shiny::selectInput(inputId = 'kind', label = 'Archetype',
+          choices = c('default', gsub('.md', '', dir('archetypes',
+          pattern = '\\.md$')))),
         height = '70px'
       ),
       shiny::fillRow(
@@ -66,7 +69,8 @@ local({
           input$title, author = input$author, ext = input$format,
           categories = input$cat, tags = input$tag,
           file = gsub('[-[:space:]]+', '-', input$file),
-          slug = input$slug, subdir = input$subdir, date = input$date
+          slug = input$slug, subdir = input$subdir, date = input$date,
+          kind = input$kind
         )
         shiny::stopApp()
       })
