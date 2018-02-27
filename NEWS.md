@@ -10,7 +10,7 @@
 
 ## BUG FIXES
 
-- `new_content()` now works with files that end in .Rmd and .Rmarkdown. The archetype still has to end in .md for hugo to work with it (thanks, @lcolladotor, #261).
+- The `kind` argument (i.e., the archetype) of `new_content()` now works with files that end in `.Rmd` and `.Rmarkdown`. The archetype still has to end in `.md` for Hugo to work with it (thanks, @lcolladotor, #261).
 
 # CHANGES IN blogdown VERSION 0.5
 

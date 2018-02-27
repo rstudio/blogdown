@@ -20,9 +20,10 @@ local({
       shiny::fillRow(
         sel_input('cat', 'Categories', meta$categories),
         sel_input('tag', 'Tags', meta$tags),
-        shiny::selectInput(inputId = 'kind', label = 'Archetype',
-          choices = c('default', gsub('.md', '', dir('archetypes',
-          pattern = '\\.md$')))),
+        shiny::selectInput(
+          'kind', 'Archetype', width = '98%',
+          choices = c('default', xfun::sans_ext(dir('archetypes', '\\.md$')))
+        ),
         height = '70px'
       ),
       shiny::fillRow(
