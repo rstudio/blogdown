@@ -217,10 +217,8 @@ new_content = function(path, kind = 'default', open = interactive()) {
 default_kind = function(path) {
   path = normalizePath(path, '/', mustWork = FALSE)
   if (!grepl('/', path)) return('default')
-  ## Assumes path is something like
-  ## /pathToBlogdownDir/content/post/2018-02-24-postslug.Rmd
+  ## Assumes path is something like post/2018-02-24-postslug.Rmd
   ## (file termination doesn't matter)
-  if(!grepl('/content/', path)) return('default')
   atype = gsub('.*/', '', dirname(path))
   if (!file.exists(file.path('archetypes', paste0(atype, '.md')))) return('default')
   atype
