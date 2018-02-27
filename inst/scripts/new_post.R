@@ -20,6 +20,9 @@ local({
       shiny::fillRow(
         sel_input('cat', 'Categories', meta$categories),
         sel_input('tag', 'Tags', meta$tags),
+        shiny::selectInput(inputId = 'kind', label = 'Archetype',
+          choices = c('default', gsub('.md', '', dir('archetypes',
+          pattern = '\\.md$')))),
         height = '70px'
       ),
       shiny::fillRow(
@@ -33,12 +36,6 @@ local({
           c('Markdown' = '.md', 'R Markdown (.Rmd)' = '.Rmd', 'R Markdown (.Rmarkdown)' = '.Rmarkdown'),
           selected = getOption('blogdown.ext', '.md')
         ),
-        height = '70px'
-      ),
-      shiny::fillRow(
-        shiny::selectInput(inputId = 'kind', label = 'Archetype',
-          choices = c('default', gsub('.md', '', dir('archetypes',
-            pattern = '\\.md$')))),
         height = '70px'
       ),
       miniUI::gadgetTitleBar(NULL)
@@ -81,6 +78,6 @@ local({
         shiny::stopApp()
       })
     },
-    stopOnCancel = FALSE, viewer = shiny::dialogViewer('New Post', height = 570)
+    stopOnCancel = FALSE, viewer = shiny::dialogViewer('New Post', height = 500)
   )
 })
