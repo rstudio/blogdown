@@ -151,7 +151,7 @@ install_theme = function(
     return(invisible())
   }
   branch = sub('^@', '', gsub(r, '\\2', theme))
-  if (branch == '') branch = 'master'
+  if (branch == '' | theme_is_url) branch = 'master'
   theme = gsub(r, '\\1', theme)
   dir_create('themes')
   in_dir('themes', {
@@ -179,6 +179,7 @@ install_theme = function(
       'because not all Hugo themes work with any config files.'
     )
     newdir = gsub(tmpdir, ".", zipdir)
+    newdir = gsub("-[a-f0-9]{12,40}$", "", newdir)
     newdir = gsub(sprintf('-%s$', branch), '', newdir)
     if (!force && dir_exists(newdir)) stop(
       'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
