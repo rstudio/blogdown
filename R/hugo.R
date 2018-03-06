@@ -151,7 +151,7 @@ install_theme = function(
     return(invisible())
   }
   branch = sub('^@', '', gsub(r, '\\2', theme))
-  if (branch == '' | theme_is_url) branch = 'master'
+  if (branch == '' || theme_is_url) branch = 'master'
   theme = gsub(r, '\\1', theme)
   dir_create('themes')
   in_dir('themes', {
