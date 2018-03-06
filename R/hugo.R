@@ -163,8 +163,11 @@ install_theme = function(
       zipfile = sprintf('%s.zip', basename(theme))
     }
     download2(url, zipfile, mode = 'wb')
-    files = utils::unzip(zipfile)
+    tmpdir = tempfile("", ".")
+    on.exit(in_dir('themes', unlink(tmpdir, recursive = TRUE)))
+    files = utils::unzip(zipfile, exdir = tmpdir)
     zipdir = dirname(files)
+    zipdir = gsub(tmpdir, ".", zipdir)
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
     if (dir_exists(expdir)) if (theme_example) {
@@ -176,18 +179,15 @@ install_theme = function(
       'and at least take a look at the config file config.toml of the example site, ',
       'because not all Hugo themes work with any config files.'
     )
-    if (!theme_is_url) {
-      newdir = gsub(sprintf('-%s$', branch), '', zipdir)
-      if (!force && dir_exists(newdir)) stop(
-        'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
-        'after you read the help page ?blogdown::install_theme.', call. = FALSE
-      )
-      unlink(newdir, recursive = TRUE)
-      file.rename(zipdir, newdir)
-    } else {
-      theme = zipdir
-    }
+    newdir = gsub(sprintf('-%s$', branch), '', zipdir)
+    if (!force && dir_exists(newdir)) stop(
+      'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
+      'after you read the help page ?blogdown::install_theme.', call. = FALSE
+    )
+    unlink(newdir, recursive = TRUE)
+    file.rename(file.path(tmpdir, zipdir), newdir)
     unlink(zipfile)
+    if (theme_is_url) theme = zipdir
   })
   if (update_config) {
     change_config('theme', sprintf('"%s"', basename(theme)))
