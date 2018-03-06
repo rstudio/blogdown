@@ -13,7 +13,7 @@ Description: Update the title, author, date, categories, and tags of the current
 Binding: update_meta_addin
 Interactive: true
 
-Name: Insert image
-Description: Insert an external image into a blogdown post
+Name: Insert Image
+Description: Insert an external image into a blogdown post.
 Binding: insert_image_addin
 Interactive: true
