@@ -8,6 +8,8 @@
 
 - The `new_post` addin now lets you choose an archetype. See https://gohugo.io/content-management/archetypes/ for more details (thanks, @lcolladotor, #173).
 
+- Added a new RStudio addin (`insert_image`) for inserting external images into blogdown posts (thanks @lcolladotor, #269).
+
 ## BUG FIXES
 
 - The `kind` argument (i.e., the archetype) of `new_content()` now works with files that end in `.Rmd` and `.Rmarkdown`. The archetype still has to end in `.md` for Hugo to work with it (thanks, @lcolladotor, #261).
