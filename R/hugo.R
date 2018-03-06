@@ -169,7 +169,6 @@ install_theme = function(
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
-    zipdir = gsub(tmpdir, ".", zipdir)
     if (dir_exists(expdir)) if (theme_example) {
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
       # remove the themesDir setting; it is unlikely that you need it
@@ -179,15 +178,16 @@ install_theme = function(
       'and at least take a look at the config file config.toml of the example site, ',
       'because not all Hugo themes work with any config files.'
     )
-    newdir = gsub(sprintf('-%s$', branch), '', zipdir)
+    newdir = gsub(tmpdir, ".", zipdir)
+    newdir = gsub(sprintf('-%s$', branch), '', newdir)
     if (!force && dir_exists(newdir)) stop(
       'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
       'after you read the help page ?blogdown::install_theme.', call. = FALSE
     )
     unlink(newdir, recursive = TRUE)
-    file.rename(file.path(tmpdir, zipdir), newdir)
+    file.rename(zipdir, newdir)
     unlink(zipfile)
-    if (theme_is_url) theme = zipdir
+    if (theme_is_url) theme = newdir
   })
   if (update_config) {
     change_config('theme', sprintf('"%s"', basename(theme)))
