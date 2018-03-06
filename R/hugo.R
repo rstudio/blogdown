@@ -167,9 +167,9 @@ install_theme = function(
     on.exit(in_dir('themes', unlink(tmpdir, recursive = TRUE)))
     files = utils::unzip(zipfile, exdir = tmpdir)
     zipdir = dirname(files)
-    zipdir = gsub(tmpdir, ".", zipdir)
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
+    zipdir = gsub(tmpdir, ".", zipdir)
     if (dir_exists(expdir)) if (theme_example) {
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
       # remove the themesDir setting; it is unlikely that you need it
