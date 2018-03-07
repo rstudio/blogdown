@@ -147,7 +147,7 @@ find_exec = function(cmd, dir, info = '') {
     if (utils::file_test("-x", path)) break else path = ''
   }
   path2 = Sys.which(cmd)
-  if (path == '') {
+  if (path == '' || xfun::same_path(path, path2)) {
     if (path2 == '') stop(
       cmd, ' not found. ', info, call. = FALSE
     )
