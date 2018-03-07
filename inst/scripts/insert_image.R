@@ -1,10 +1,10 @@
 local({
   txt_input = function(..., width = '100%') shiny::textInput(..., width = width)
 
-  blogfile = rstudioapi::getSourceEditorContext()
-  if (blogfile$path == '') stop('Please select the blog post source file before using this addin', call. = FALSE)
+  ctx = rstudioapi::getSourceEditorContext()
+  if (ctx$path == '') stop('Please select the blog post source file before using this addin', call. = FALSE)
 
-  blogpath = normalizePath(blogfile$path)
+  blogpath = normalizePath(ctx$path)
   imgdir = file.path(
     'static',
     dirname(gsub('.*content/', '', blogpath)),
@@ -76,7 +76,7 @@ local({
             height = ifelse(input$imgheight == '', NULL, input$imgheight))
         }
         
-        rstudioapi::insertText(as.character(image_text))
+        rstudioapi::insertText(as.character(image_text), id = ctx)
         shiny::stopApp()
       })
       shiny::observeEvent(input$cancel, {
