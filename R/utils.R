@@ -323,6 +323,10 @@ update_meta_addin = function() {
   sys.source(pkg_file('scripts', 'update_meta.R'))
 }
 
+insert_image_addin = function() {
+  sys.source(pkg_file('scripts', 'insert_image.R'))
+}
+
 rmd_pattern = '[.][Rr](md|markdown)$'
 md_pattern  = '[.][Rr]?(md|markdown)$'
 

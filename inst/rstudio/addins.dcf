@@ -12,3 +12,8 @@ Name: Update Metadata
 Description: Update the title, author, date, categories, and tags of the current blog post.
 Binding: update_meta_addin
 Interactive: true
+
+Name: Insert Image
+Description: Insert an external image into a blog post.
+Binding: insert_image_addin
+Interactive: true
