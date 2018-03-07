@@ -68,7 +68,7 @@ local({
         imgsrc = paste0("/", basename(dirname(imgfinaldir)), "/",
           basename(imgfinaldir), "/", basename(input$imgfinal))
                 
-        image_text = if(input$imgwidth == '' & input$imgheight == '') {
+        image_text = if(input$imgwidth == '' && input$imgheight == '') {
           paste0('![', input$imgalt, '](', imgsrc, ')')
         } else {
           shiny::img(src = imgsrc, alt = input$imgalt,
