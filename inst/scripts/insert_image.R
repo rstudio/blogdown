@@ -2,13 +2,14 @@ local({
   txt_input = function(..., width = '100%') shiny::textInput(..., width = width)
 
   ctx = rstudioapi::getSourceEditorContext()
-  if (ctx$path == '') stop('Please select the blog post source file before using this addin', call. = FALSE)
+  if (ctx$path == '') stop(
+    'Please select the blog post source file before using this addin', call. = FALSE
+  )
 
-  blogpath = normalizePath(ctx$path)
+  path = normalizePath(ctx$path)
   imgdir = file.path(
-    'static',
-    dirname(gsub('.*content/', '', blogpath)),
-    paste0(xfun::sans_ext(basename(blogpath)), '_files')
+    'static', dirname(gsub('.*content/', '', path)),
+    paste0(xfun::sans_ext(basename(path)), '_files')
   )
   shiny::runGadget(
     miniUI::miniPage(miniUI::miniContentPanel(
@@ -18,71 +19,69 @@ local({
         height = '90px'
       ),
       shiny::fillRow(
-        txt_input('imgwidth', 'Image width', '', '(optional) Example: 400 for 400px'),
-        txt_input('imgheight', 'Image height', '', '(optional) Example: 200 for 200px'),
-        height = '70px'),
-      shiny::fillRow(
-        txt_input('imgalt', 'Image alternative text', '', '(optional) Example: awesome screenshot'),
+        txt_input('w', 'Width', '', '(optional) e.g., 400px or 80%'),
+        txt_input('h', 'Height', '', '(optional) e.g., 200px'),
         height = '70px'
       ),
       shiny::fillRow(
-        txt_input('imgfinal', 'Target image file', '', '(optional) customize only if necessary. Autotomatically fills after choosing an image.'),
+        txt_input('alt', 'Alternative text', '', '(optional but recommended) e.g., awesome screenshot'),
+        height = '70px'
+      ),
+      shiny::fillRow(
+        txt_input('target', 'Target file path', '', '(optional) customize if necessary'),
         height = '70px'
       ),
       miniUI::gadgetTitleBar(NULL)
     )),
     server = function(input, output, session) {
       shiny::observeEvent(input$newimg, {
-        shiny::updateTextInput(session, 'imgfinal', value = file.path(imgdir,
-          input$newimg$name))
+        shiny::updateTextInput(session, 'target', value = file.path(imgdir, input$newimg$name))
       })
-      shiny::observeEvent(input$imgfinal, {
-        if(file.exists(input$imgfinal)) {
-          output$overbutton = shiny::renderUI({
-            shiny::radioButtons(
-              'imgoverwrite', 'Target image exists. Overwrite it?',
-              inline = TRUE, c('Yes' = TRUE, 'No' = FALSE), selected = FALSE)
-          })
-        } else {
-          ## Reset in case the user changes the target image name and
-          ## the new target image doesn't exist
-          output$overbutton = shiny::renderUI({})
-        }
+      shiny::observeEvent(input$target, {
+        output$overbutton = shiny::renderUI(if (file.exists(input$target))
+          shiny::radioButtons(
+            'overwrite', 'Target image exists. Overwrite it?',
+            inline = TRUE, c('Yes' = TRUE, 'No' = FALSE), selected = FALSE
+          )
+        )
       })
       shiny::observeEvent(input$done, {
         if (is.null(input$newimg)) return(
           warning('You have to choose an image!', call. = FALSE)
         )
-        if(file.exists(input$imgfinal)) {
-          if(!as.logical(input$imgoverwrite)) {
-            warning('The image already exists and you chose not to overwrite it! Linking to the previous version of the image.', call. = FALSE)
-          }
+        if (file.exists(input$target)) {
+          if (!as.logical(input$overwrite)) warning(
+            'The image already exists and you chose not to overwrite it! ',
+            'Linking to the previous version of the image.', call. = FALSE
+          )
         }
-        imgfinaldir = dirname(input$imgfinal)
-        dir.create(imgfinaldir, showWarnings = FALSE, recursive = TRUE)
-        copy_check = file.copy(input$newimg$datapath, input$imgfinal,
-          overwrite = ifelse(is.null(input$imgoverwrite), FALSE,
-          as.logical(input$imgoverwrite)))
-        if(copy_check) message(paste('successfully copied the image to', input$imgfinal))
-        
-        imgsrc = paste0("/", basename(dirname(imgfinaldir)), "/",
-          basename(imgfinaldir), "/", basename(input$imgfinal))
-                
-        image_text = if(input$imgwidth == '' && input$imgheight == '') {
-          paste0('![', input$imgalt, '](', imgsrc, ')')
-        } else {
-          shiny::img(src = imgsrc, alt = input$imgalt,
-            width = ifelse(input$imgwidth == '', NULL, input$imgwidth),
-            height = ifelse(input$imgheight == '', NULL, input$imgheight))
+        target_dir = dirname(input$target)
+        dir.create(target_dir, showWarnings = FALSE, recursive = TRUE)
+        copy_check = file.copy(
+          input$newimg$datapath, input$target,
+          overwrite = if (is.null(input$overwrite)) FALSE else as.logical(input$overwrite)
+        )
+        if (copy_check) message('Successfully copied the image to ', input$target)
+
+        image_code = function() {
+          s = paste0(
+            "/", basename(dirname(target_dir)), "/",
+            basename(target_dir), "/", basename(input$target)
+          )
+          w = input$w; h = input$h; alt = input$alt
+          if (w == '' && h == '') paste0('![', alt, '](', s, ')') else shiny::img(
+            src = s, alt = alt, width = if (w != '') w, height = if (h != '') h
+          )
         }
-        
-        rstudioapi::insertText(as.character(image_text), id = ctx)
+
+        rstudioapi::insertText(as.character(image_code()), id = ctx$id)
         shiny::stopApp()
       })
       shiny::observeEvent(input$cancel, {
         shiny::stopApp()
       })
     },
-    stopOnCancel = FALSE, viewer = shiny::dialogViewer('Add external image to a blogdown post', height = 380)
+    stopOnCancel = FALSE,
+    viewer = shiny::dialogViewer('Add external image to a blogdown post', height = 380)
   )
 })
