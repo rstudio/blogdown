@@ -14,6 +14,6 @@ Binding: update_meta_addin
 Interactive: true
 
 Name: Insert Image
-Description: Insert an external image into a blogdown post.
+Description: Insert an external image into a blog post.
 Binding: insert_image_addin
 Interactive: true
