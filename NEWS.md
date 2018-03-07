@@ -8,7 +8,9 @@
 
 - The `new_post` addin now lets you choose an archetype. See https://gohugo.io/content-management/archetypes/ for more details (thanks, @lcolladotor, #173).
 
-- Added a new RStudio addin (`insert_image`) for inserting external images into blogdown posts (thanks @lcolladotor, #269).
+- Added a new RStudio addin (`insert_image`) for inserting external images into blog posts (thanks, @lcolladotor, #269).
+
+- The `theme` argument of `install_theme()` and `new_site()` now accepts a full URL to a theme's repository zip file. This can be used to install themes from other web-based git hosts, like GitLab and Bitbucket (thanks, @gadenbuie, #271).
 
 ## BUG FIXES
 
