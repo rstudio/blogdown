@@ -163,7 +163,7 @@ install_theme = function(
       zipfile = sprintf('%s.zip', basename(theme))
     }
     download2(url, zipfile, mode = 'wb')
-    tmpdir = tempfile("", ".")
+    tmpdir = basename(tempfile('', '.'))
     on.exit(in_dir('themes', unlink(tmpdir, recursive = TRUE)))
     files = utils::unzip(zipfile, exdir = tmpdir)
     zipdir = dirname(files)
@@ -178,9 +178,8 @@ install_theme = function(
       'and at least take a look at the config file config.toml of the example site, ',
       'because not all Hugo themes work with any config files.'
     )
-    # tmpdir on Windows is ".\\dir" but is "./dir" in zipdir
-    newdir = gsub(gsub("\\\\", "/", tmpdir), ".", zipdir)
-    newdir = gsub("-[a-f0-9]{12,40}$", "", newdir)
+    newdir = sub(tmpdir, '.', zipdir, fixed = TRUE)
+    newdir = gsub('-[a-f0-9]{12,40}$', '', newdir)
     newdir = gsub(sprintf('-%s$', branch), '', newdir)
     if (!force && dir_exists(newdir)) stop(
       'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
