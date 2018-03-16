@@ -63,15 +63,26 @@ local({
         )
         if (copy_check) message('Successfully copied the image to ', input$target)
 
+        figure_code = function(src, alt = '', w = '', h = '') {
+          paste0(
+            '<div class="figure">\n',
+            '<img src="', src, '"',
+            ' alt="', alt, '"',
+            if (w != '') paste0(' width="', w, '"'),
+            if (h != '') paste0(' height="', h, '"'),
+            "/>\n",
+            if (alt != '') paste0('<p class="caption">', alt, "</p>\n"),
+            "</div>"
+          )
+        }
+
         image_code = function() {
           s = paste0(
             "/", basename(dirname(target_dir)), "/",
             basename(target_dir), "/", basename(input$target)
           )
           w = input$w; h = input$h; alt = input$alt
-          if (w == '' && h == '') paste0('![', alt, '](', s, ')') else shiny::img(
-            src = s, alt = alt, width = if (w != '') w, height = if (h != '') h
-          )
+          if (w == '' && h == '') paste0('![', alt, '](', s, ')') else figure_code(s, alt, w, h)
         }
 
         rstudioapi::insertText(as.character(image_code()), id = ctx$id)
