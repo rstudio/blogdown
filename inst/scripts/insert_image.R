@@ -83,6 +83,30 @@ local({
             paste0('![', alt, '](', s, ')')
           } else {
             if (ctx_ext == "rmd") {
+              check_pandoc_format = function(x) {
+                warn_text = c()
+                x = gsub(" ", "", x)
+                if (x != "" && !grepl("^\\d", x)){
+                  warn_text = c(warn_text,
+                    "attributes must start with a number, followed by unit without spaces")
+                }
+                units = gsub("^\\d+(.+)", "\\1", x)
+                if (units != "") {
+                  if (!units %in% c("px", "cm", "mm", "in", "inch", "%")) {
+                    warn_text = c(warn_text,
+                      "unit must be one of `px`, `cm`, `mm`, `in`, `inch`, or `%`")
+                  }
+                }
+                if (length(warn_text)) {
+                  warn_text = paste(warn_text, collapse = " and ")
+                  warn_text = paste0("Please review the attributes of the inserted image source.\nWidth/height ",
+                                     warn_text)
+                  warning(warn_text, call. = FALSE)
+                }
+                x
+              }
+              w = check_pandoc_format(w)
+              h = check_pandoc_format(h)
               paste0('![', alt, '](', s, '){',
                        if (w != '') paste0('width=', w),
                        if (h != '') paste0(' height=', h),
