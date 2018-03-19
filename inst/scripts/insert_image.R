@@ -5,6 +5,16 @@ local({
   if (ctx$path == '') stop(
     'Please select the blog post source file before using this addin', call. = FALSE
   )
+  ctx_ext = switch(
+    tolower(xfun::file_ext(ctx$path)),
+    "rmd" = "rmd",
+    "md" = "md",
+    "rmarkdown" = "md",
+    stop(
+      "Please select a blog post source file with extension `.Rmd`, `.md`, or `.Rmarkdown`.",
+      call. = FALSE
+    )
+  )
 
   path = normalizePath(ctx$path)
   imgdir = file.path(
@@ -63,26 +73,25 @@ local({
         )
         if (copy_check) message('Successfully copied the image to ', input$target)
 
-        figure_code = function(src, alt = '', w = '', h = '') {
-          paste0(
-            '<div class="figure">\n',
-            '<img src="', src, '"',
-            ' alt="', alt, '"',
-            if (w != '') paste0(' width="', w, '"'),
-            if (h != '') paste0(' height="', h, '"'),
-            "/>\n",
-            if (alt != '') paste0('<p class="caption">', alt, "</p>\n"),
-            "</div>"
-          )
-        }
-
         image_code = function() {
           s = paste0(
             "/", basename(dirname(target_dir)), "/",
             basename(target_dir), "/", basename(input$target)
           )
           w = input$w; h = input$h; alt = input$alt
-          if (w == '' && h == '') paste0('![', alt, '](', s, ')') else figure_code(s, alt, w, h)
+          if (w == '' && h == '') {
+            paste0('![', alt, '](', s, ')')
+          } else {
+            if (ctx_ext == "rmd") {
+              paste0('![', alt, '](', s, '){',
+                       if (w != '') paste0('width=', w),
+                       if (h != '') paste0(' height=', h),
+                     '}')
+            } else {
+              # ctx_ext == md or Rmarkdown
+              shiny::img(src = s, alt = alt, width = if (w != '') w, height = if (h != '') h)
+            }
+          }
         }
 
         rstudioapi::insertText(as.character(image_code()), id = ctx$id)
