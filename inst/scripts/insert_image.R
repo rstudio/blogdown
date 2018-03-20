@@ -5,6 +5,7 @@ local({
   if (ctx$path == '') stop(
     'Please select the blog post source file before using this addin', call. = FALSE
   )
+  ctx_ext = tolower(xfun::file_ext(ctx$path))
 
   path = normalizePath(ctx$path)
   imgdir = file.path(
@@ -69,9 +70,30 @@ local({
             basename(target_dir), "/", basename(input$target)
           )
           w = input$w; h = input$h; alt = input$alt
-          if (w == '' && h == '') paste0('![', alt, '](', s, ')') else shiny::img(
-            src = s, alt = alt, width = if (w != '') w, height = if (h != '') h
-          )
+          if (w == '' && h == '') {
+            paste0('![', alt, '](', s, ')')
+          } else {
+            safely_validateCssUnit = function(x) {
+              if (x == '') return(x)
+              tryCatch(
+                htmltools::validateCssUnit(x),
+                error = function(e) {
+                  warning(e$message, call. = FALSE)
+                  x
+                }
+              )
+            }
+            w = safely_validateCssUnit(w)
+            h = safely_validateCssUnit(h)
+            if (ctx_ext == "rmd") {
+              paste0('![', alt, '](', s, '){',
+                       if (w != '') paste0('width=', w),
+                       if (h != '') paste0(' height=', h),
+                     '}')
+            } else {
+              shiny::img(src = s, alt = alt, width = if (w != '') w, height = if (h != '') h)
+            }
+          }
         }
 
         rstudioapi::insertText(as.character(image_code()), id = ctx$id)
