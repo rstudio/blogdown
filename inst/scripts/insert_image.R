@@ -5,16 +5,7 @@ local({
   if (ctx$path == '') stop(
     'Please select the blog post source file before using this addin', call. = FALSE
   )
-  ctx_ext = switch(
-    tolower(xfun::file_ext(ctx$path)),
-    "rmd" = "rmd",
-    "md" = "md",
-    "rmarkdown" = "md",
-    stop(
-      "Please select a blog post source file with extension `.Rmd`, `.md`, or `.Rmarkdown`.",
-      call. = FALSE
-    )
-  )
+  ctx_ext = tolower(xfun::file_ext(ctx$path))
 
   path = normalizePath(ctx$path)
   imgdir = file.path(
@@ -100,7 +91,6 @@ local({
                        if (h != '') paste0(' height=', h),
                      '}')
             } else {
-              # ctx_ext == md or Rmarkdown
               shiny::img(src = s, alt = alt, width = if (w != '') w, height = if (h != '') h)
             }
           }
