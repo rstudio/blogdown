@@ -79,7 +79,7 @@ local({
                 htmltools::validateCssUnit(x),
                 error = function(e) {
                   warning(e$message, call. = FALSE)
-                  return(x)
+                  x
                 }
               )
             }
