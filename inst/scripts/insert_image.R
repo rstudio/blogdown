@@ -86,7 +86,10 @@ local({
               if (x == '') return(x)
               tryCatch(
                 htmltools::validateCssUnit(x),
-                error = function(e) warning(e$message, call. = FALSE)
+                error = function(e) {
+                  warning(e$message, call. = FALSE)
+                  return(x)
+                }
               )
             }
             w = safely_validateCssUnit(w)
