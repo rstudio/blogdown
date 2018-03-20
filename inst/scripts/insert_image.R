@@ -64,6 +64,13 @@ local({
         )
         if (copy_check) message('Successfully copied the image to ', input$target)
 
+        validate_css_unit = function(x) {
+          if (x == '') return(x)
+          tryCatch(htmltools::validateCssUnit(x), error = function(e) {
+            warning(e$message, call. = FALSE)
+            x
+          })
+        }
         image_code = function() {
           s = paste0(
             "/", basename(dirname(target_dir)), "/",
@@ -73,26 +80,15 @@ local({
           if (w == '' && h == '') {
             paste0('![', alt, '](', s, ')')
           } else {
-            safely_validateCssUnit = function(x) {
-              if (x == '') return(x)
-              tryCatch(
-                htmltools::validateCssUnit(x),
-                error = function(e) {
-                  warning(e$message, call. = FALSE)
-                  x
-                }
-              )
-            }
-            w = safely_validateCssUnit(w)
-            h = safely_validateCssUnit(h)
-            if (ctx_ext == "rmd") {
-              paste0('![', alt, '](', s, '){',
-                       if (w != '') paste0('width=', w),
-                       if (h != '') paste0(' height=', h),
-                     '}')
-            } else {
-              shiny::img(src = s, alt = alt, width = if (w != '') w, height = if (h != '') h)
-            }
+            w = validate_css_unit(w); h = validate_css_unit(h)
+            if (ctx_ext == 'rmd') paste0(
+              '![', alt, '](', s, '){',
+              if (w != '') paste0('width=', w),
+              if (h != '') paste0(' height=', h),
+              '}'
+            ) else shiny::img(
+              src = s, alt = alt, width = if (w != '') w, height = if (h != '') h
+            )
           }
         }
 
