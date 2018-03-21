@@ -140,6 +140,7 @@ knitr::kable(matrix(c(
   'blogdown.ext', '.md', 'Default extension of new posts',
   'blogdown.subdir', 'post', 'A subdirectory under content/',
   'blogdown.yaml.empty', TRUE, 'Preserve empty fields in YAML?',
+  'blogdown.insertimage.usebaseurl', FALSE, 'Use the base url when inserting images?',
   NULL
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
 ```
