@@ -20,13 +20,8 @@ local({
         height = '90px'
       ),
       shiny::fillRow(
-        txt_input('w', 'Width', '', '(optional) e.g., 400px'),
-        txt_input('h', 'Height', '', '(optional) e.g., 80%'),
-        shiny::column(width = 1, offset = 1, shiny::radioButtons(
-          'usebaseurl', 'Use base url in links?',
-          inline = TRUE, c('Yes' = TRUE, 'No' = FALSE),
-          selected = getOption('blogdown.insertimage.usebaseurl', FALSE)
-        )),
+        txt_input('w', 'Width', '', '(optional) e.g., 400px or 80%'),
+        txt_input('h', 'Height', '', '(optional) e.g., 200px'),
         height = '70px'
       ),
       shiny::fillRow(
@@ -78,7 +73,7 @@ local({
         }
         image_code = function() {
           s = paste0(
-            ifelse(as.logical(input$usebaseurl),
+            ifelse(getOption('blogdown.insertimage.usebaseurl', FALSE),
               blogdown:::load_config()$baseurl, "/"),
             basename(dirname(target_dir)), "/",
             basename(target_dir), "/", basename(input$target)
