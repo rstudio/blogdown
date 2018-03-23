@@ -176,7 +176,7 @@ install_theme = function(
     } else warning(
       "The theme has provided an example site. You should read the theme's documentation ",
       'and at least take a look at the config file config.toml of the example site, ',
-      'because not all Hugo themes work with any config files.'
+      'because not all Hugo themes work with any config files.', call. = FALSE
     )
     newdir = sub(tmpdir, '.', zipdir, fixed = TRUE)
     newdir = gsub('-[a-f0-9]{12,40}$', '', newdir)
