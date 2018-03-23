@@ -73,7 +73,9 @@ local({
         }
         image_code = function() {
           s = paste0(
-            "/", basename(dirname(target_dir)), "/",
+            ifelse(getOption('blogdown.insertimage.usebaseurl', FALSE),
+              blogdown:::load_config()$baseurl, "/"),
+            basename(dirname(target_dir)), "/",
             basename(target_dir), "/", basename(input$target)
           )
           w = input$w; h = input$h; alt = input$alt
