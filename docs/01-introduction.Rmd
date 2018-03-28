@@ -99,6 +99,8 @@ There are a few essential RStudio addins\index{RStudio addins} to make it easy t
 
 - "Update Metadata": This addin allows you to update the YAML metadata of the currently opened post. See Figure \@ref(fig:update-meta) for an example. The main advantage of this addin is that you can select categories and tags from dropdown menus instead of having to remember them.
 
+- "Insert Image": This addin allows you to easily insert any image in your computer to your currently opened post^[Check <http://lcolladotor.github.io/2018/03/07/blogdown-insert-image-addin> for a more in depth explanation and for how to insert an image without using this addin]. See Figure \@ref(fig:insert-image) to check how the addin looks. This addin copies the image to the final location for your post files and adds the markdown/HTML syntax for linking to the image. The addin lets you specify the width and height of the image (with any valid CSS syntax) as well as the alternative text. The addin shows the final figure location which you can edit if necessary. If the image already exists, it asks you whether you want to overwrite it as in Figure \@ref(fig:overwrite-image): when in doubt, change the name in the _target file path_ text input to avoid a conflict with previous images you have inserted.
+
 ```{r new-post, fig.cap='Create a new post using the RStudio addin.', fig.align='center', out.width='80%', echo=FALSE}
 knitr::include_graphics('images/new-post.png')
 ```
@@ -106,6 +108,15 @@ knitr::include_graphics('images/new-post.png')
 ```{r update-meta, fig.cap='Update the metadata of an existing post using the RStudio addin.', fig.align='center', out.width='70%', echo=FALSE}
 knitr::include_graphics('images/update-meta.png')
 ```
+
+```{r insert-image, fig.cap='Insert an image to an existing post using the RStudio addin.', fig.align='center', out.width='70%', echo=FALSE}
+knitr::include_graphics('images/insert-image.png')
+```
+
+```{r insert-image, fig.cap='Overwrite the image you are inserting in your blog post.', fig.align='center', out.width='70%', echo=FALSE}
+knitr::include_graphics('images/overwrite-image.png')
+```
+
 
 With these addins, you should rarely need to run any R commands manually after you have set up your website, since all your posts will be automatically compiled whenever you create a new post or modify an existing post due to the LiveReload feature.
 
