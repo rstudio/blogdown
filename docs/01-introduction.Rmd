@@ -113,7 +113,7 @@ knitr::include_graphics('images/update-meta.png')
 knitr::include_graphics('images/insert-image.png')
 ```
 
-```{r insert-image, fig.cap='Overwrite the image you are inserting in your blog post.', fig.align='center', out.width='70%', echo=FALSE}
+```{r overwrite-image, fig.cap='Overwrite the image you are inserting in your blog post.', fig.align='center', out.width='70%', echo=FALSE}
 knitr::include_graphics('images/overwrite-image.png')
 ```
 
