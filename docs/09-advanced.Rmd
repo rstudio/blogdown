@@ -70,7 +70,7 @@ You do not need to worry about these details if your website is automatically ge
 
 ## Functions in the blogdown package {#functions}
 
-There are about 20 exported functions\index{Functions} in the **blogdown** package, and many more non-exported functions. Exported functions are documented and you can use them after `library(blogdown)` (or via `blogdown::`). Non-exported functions are not documented, but you can access them via `blogdown:::` (the triple-colon syntax). This package is not very complicated, and consists of only about 1800 lines of R code (the number is given by the word-counting command `wc`):
+There are about 20 exported functions\index{Functions} in the **blogdown** package, and many more non-exported functions. Exported functions are documented and you can use them after `library(blogdown)` (or via `blogdown::`). Non-exported functions are not documented, but you can access them via `blogdown:::` (the triple-colon syntax). This package is not very complicated, and consists of only about 2000 lines of R code (the number is given by the word-counting command `wc`):
 
 ```{bash, comment=''}
 wc -l ../R/*.R ../inst/scripts/*.R
