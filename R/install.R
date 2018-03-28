@@ -16,6 +16,19 @@
 #' executable for your operating system, especially if you are not on Windows or
 #' Mac or a major Linux distribution. When in doubt, read the Hugo documentation
 #' and install it by yourself: \url{https://gohugo.io}.
+#' 
+#' @section Options:
+#' 
+#' If you want to install Hugo to a custom path, you can set the global option 
+#' \code{blogdown.hugo.dir} to a directory to store the Hugo executable before you 
+#' call \code{install_hugo()}, e.g., 
+#' \code{options(blogdown.hugo.dir = '~/Downloads/hugo_0.20.1/')}. 
+#' This may be useful for you to use a specific version of Hugo for a specific 
+#' website. You can set this option per project. See 
+#' \href{https://bookdown.org/yihui/blogdown/global-options.html#global-options}{Section 1.4 Global options} 
+#' for details, or store a copy of Hugo on a USB Flash drive along with your 
+#' website.
+#' 
 #' @param version The Hugo version number, e.g., \code{0.26}; the special value
 #'   \code{latest} means the latest version (fetched from Github releases).
 #' @param use_brew Whether to use Homebrew (\url{https://brew.sh}) on macOS to
