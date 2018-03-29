@@ -165,7 +165,7 @@ find_exec = function(cmd, dir, info = '') {
     if (path2 != '') {
       warning(
         'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
-        "If you don't need the former, you may delete it."
+        "If you don't need both copies, you may delete/uninstall one."
       )
     }
   }
