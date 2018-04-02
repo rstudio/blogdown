@@ -5,7 +5,8 @@
 \alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FALSE)
+install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FALSE, 
+    local_file = NULL)
 
 update_hugo()
 }
@@ -21,6 +22,9 @@ Homebrew will be automatically installed if it has not been installed when
 \item{force}{Whether to install Hugo even if it has already been installed.
 This may be useful when upgrading Hugo (if you use Homebrew, run the
 command \command{brew update && brew upgrade} instead).}
+
+\item{local_file}{Install Hugo from a local file. This is useful when you
+are not able to download the hugo binary file directly.}
 }
 \description{
 Download the appropriate Hugo executable for your platform from Github and

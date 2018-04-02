@@ -34,14 +34,22 @@
 #' @param force Whether to install Hugo even if it has already been installed.
 #'   This may be useful when upgrading Hugo (if you use Homebrew, run the
 #'   command \command{brew update && brew upgrade} instead).
+#' @param local_file Install Hugo from a local file. This is useful when you
+#'   are not able to download the hugo binary file directly.
 #' @export
 install_hugo = function(
-  version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE
+  version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE, local_file = NULL
 ) {
 
   if (Sys.which('hugo') != '' && !force) {
     message('It seems Hugo has been installed. Use force = TRUE to reinstall or upgrade.')
     return(invisible())
+  }
+
+  if (!is.null(local_file)) {
+    if (!(is.character(local_file) && length(local_file) == 1 && file.exists(local_file))) stop(
+      "local_file should be a string and existed.")
+    warning("version will be ignored since local_file has been provided.")
   }
 
   # in theory, should access the Github API using httr/jsonlite but this
@@ -63,8 +71,13 @@ install_hugo = function(
   unlink(sprintf('hugo_%s*', version), recursive = TRUE)
 
   download_zip = function(OS, type = 'zip') {
-    zipfile = sprintf('hugo_%s_%s-%s.%s', version, OS, bit, type)
-    download2(paste0(base, zipfile), zipfile, mode = 'wb')
+    if (is.null(local_file)) {
+      zipfile = sprintf('hugo_%s_%s-%s.%s', version, OS, bit, type)
+      download2(paste0(base, zipfile), zipfile, mode = 'wb')
+    } else {
+      zipfile = local_file
+      type = tools::file_ext(local_file)
+    }
     switch(type, zip = utils::unzip(zipfile), tar.gz = {
       files = utils::untar(zipfile, list = TRUE)
       utils::untar(zipfile)
