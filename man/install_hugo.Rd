@@ -5,14 +5,16 @@
 \alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FALSE, 
-    local_file = NULL)
+install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FALSE)
 
 update_hugo()
 }
 \arguments{
 \item{version}{The Hugo version number, e.g., \code{0.26}; the special value
-\code{latest} means the latest version (fetched from Github releases).}
+\code{latest} means the latest version (fetched from Github releases).
+Alternatively, this argument can take a file path of the zip archive or
+tarball of the Hugo installer that has already been downloaded from Github,
+in which case it will not be downloaded again.}
 
 \item{use_brew}{Whether to use Homebrew (\url{https://brew.sh}) on macOS to
 install Hugo (recommended if you have already installed Homebrew). Note
@@ -22,9 +24,6 @@ Homebrew will be automatically installed if it has not been installed when
 \item{force}{Whether to install Hugo even if it has already been installed.
 This may be useful when upgrading Hugo (if you use Homebrew, run the
 command \command{brew update && brew upgrade} instead).}
-
-\item{local_file}{Install Hugo from a local file. This is useful when you
-are not able to download the hugo binary file directly.}
 }
 \description{
 Download the appropriate Hugo executable for your platform from Github and
