@@ -46,11 +46,11 @@ shortcodes, and there is no need to call these R functions.
 \examples{
 library(blogdown)
 
-shortcode("tweet", "1234567")
-shortcode("figure", src = "/images/foo.png", alt = "A nice figure")
-shortcode("highlight", "bash", .content = "echo hello world;")
+shortcode('tweet', '1234567')
+shortcode('figure', src='/images/foo.png', alt='A nice figure')
+shortcode('highlight', 'bash', .content = 'echo hello world;')
 
-shortcode_html("myshortcode", .content = "My <strong>shortcode</strong>.")
+shortcode_html('myshortcode', .content='My <strong>shortcode</strong>.')
 }
 \references{
 \url{https://gohugo.io/extras/shortcodes/}
