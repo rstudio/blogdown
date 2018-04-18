@@ -159,15 +159,15 @@ As we mentioned in Section \@ref(dep-path), R plots will be copied to `static/`,
 
 Although it is not relevant to **blogdown**, macOS users should remember to ignore `.DS_Store` and Windows users should ignore `Thumbs.db`.
 
-If you are relatively familiar with GIT\index{GIT Submodules}, there is a special technique that may be useful for you to manage Hugo themes, which is called "GIT submodules." A submodule in GIT allows you to manage a particular folder of the main repository using a different remote repository. For example, if you used the default `hugo-lithium-theme` from my GitHub repository, you might want to sync it with my repository occasionally, because I may update it from time to time. You can add the GIT submodule via the command line: 
+If you are relatively familiar with GIT\index{GIT Submodules}, there is a special technique that may be useful for you to manage Hugo themes, which is called "GIT submodules." A submodule in GIT allows you to manage a particular folder of the main repository using a different remote repository. For example, if you used the default `hugo-lithium` from my GitHub repository, you might want to sync it with my repository occasionally, because I may update it from time to time. You can add the GIT submodule via the command line: 
 
 ```bash
 git submodule add \
-  https://github.com/yihui/hugo-lithium-theme.git \
-  themes/hugo-lithium-theme
+  https://github.com/yihui/hugo-lithium.git \
+  themes/hugo-lithium
 ```
 
-If the folder `themes/hugo-lithium-theme` exists, you need to delete it before adding the submodule. Then you can see a SHA string associated with the "folder" `themes/hugo-lithium-theme` in the GIT status of your main repository indicating the version of the submodule. Note that you will only see the SHA string instead of the full content of the folder. Next time when you want to sync with my repository, you may run the command:
+If the folder `themes/hugo-lithium` exists, you need to delete it before adding the submodule. Then you can see a SHA string associated with the "folder" `themes/hugo-lithium` in the GIT status of your main repository indicating the version of the submodule. Note that you will only see the SHA string instead of the full content of the folder. Next time when you want to sync with my repository, you may run the command:
 
 ```bash
 git submodule update --recursive --remote
