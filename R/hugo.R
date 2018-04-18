@@ -188,13 +188,12 @@ install_theme = function(
     unlink(newdir, recursive = TRUE)
     file.rename(zipdir, newdir)
     unlink(zipfile)
-    if (theme_is_url) theme = newdir
+    theme = gsub('^[.][\\/]+', '', newdir)
   })
   if (update_config) {
-    change_config('theme', sprintf('"%s"', basename(theme)))
+    change_config('theme', sprintf('"%s"', theme))
   } else message(
-    "Do not forget to change the 'theme' option in '",
-    find_config(), "' to \"", basename(theme), '"'
+    "Do not forget to change the 'theme' option in '", find_config(), "' to \"", theme, '"'
   )
 }
 
