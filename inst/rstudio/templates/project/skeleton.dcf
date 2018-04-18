@@ -18,7 +18,7 @@ Default: On
 Parameter: theme
 Widget: TextInput
 Label: Hugo theme
-Default: yihui/hugo-lithium-theme
+Default: yihui/hugo-lithium
 
 Parameter: theme_example
 Widget: CheckboxInput

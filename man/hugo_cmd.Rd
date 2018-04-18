@@ -18,7 +18,7 @@ hugo_version()
 hugo_build(local = FALSE)
 
 new_site(dir = ".", install_hugo = TRUE, format = "toml", 
-    sample = TRUE, theme = "yihui/hugo-lithium-theme", hostname = "github.com", 
+    sample = TRUE, theme = "yihui/hugo-lithium", hostname = "github.com", 
     theme_example = TRUE, serve = interactive())
 
 new_content(path, kind = "default", open = interactive())

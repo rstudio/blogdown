@@ -96,7 +96,7 @@ change_config = function(name, value) {
 #' if (interactive()) new_site()
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
-  theme = 'yihui/hugo-lithium-theme', hostname = 'github.com', theme_example = TRUE,
+  theme = 'yihui/hugo-lithium', hostname = 'github.com', theme_example = TRUE,
   serve = interactive()
 ) {
   files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)

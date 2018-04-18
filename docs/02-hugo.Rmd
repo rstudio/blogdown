@@ -222,18 +222,18 @@ In this section, we will explain how the default theme in **blogdown** works, wh
 
 ### The default theme
 
-The default theme in **blogdown**, hugo-lithium-theme\index{Hugo Lithium Theme}, is hosted on GitHub at https://github.com/yihui/hugo-lithium-theme. It was originally written by Jonathan Rutheiser, and I have made several changes to it. This theme is suitable for those who prefer minimal styles, and want to build a website with a few pages and some blog posts.
+The default theme in **blogdown**, hugo-lithium\index{Hugo Lithium Theme}, is hosted on GitHub at https://github.com/yihui/hugo-lithium. It was originally written by Jonathan Rutheiser, and I have made several changes to it. This theme is suitable for those who prefer minimal styles, and want to build a website with a few pages and some blog posts.
 
 Typically a theme repository on GitHub has a `README` file, which also serves as the documentation of the theme. After you read it, the next file to look for is `config.toml` under the `exampleSite` directory, which contains sample configurations for a website based on this theme. If a theme does not have a `README` file or `exampleSite` directory, you probably should not use it.
 
-The `config.toml` of the theme hugo-lithium-theme contains the following options:
+The `config.toml` of the theme `hugo-lithium` contains the following options:
 
 ```js
 baseurl = "/"
 relativeurls = false
 languageCode = "en-us"
 title = "A Hugo website"
-theme = "hugo-lithium-theme"
+theme = "hugo-lithium"
 googleAnalytics = ""
 disqusShortname = ""
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
