@@ -5,8 +5,7 @@
 \alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(version = "latest", use_brew = Sys.which("brew") != "",
-  force = FALSE)
+install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FALSE)
 
 update_hugo()
 }
