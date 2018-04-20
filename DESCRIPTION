@@ -26,7 +26,7 @@ Imports:
     knitr (>= 1.17),
     htmltools,
     yaml (>= 2.1.14),
-    httpuv,
+    httpuv (>= 1.4.0),
     xfun,
     servr (>= 0.8)
 Suggests:
