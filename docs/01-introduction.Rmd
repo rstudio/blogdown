@@ -161,10 +161,10 @@ file.edit('~/.Rprofile')
 # or file.edit('.Rprofile')
 ```
 
-Suppose you always prefer the daemonized server and want the author of new posts to be "John Doe" by default. You can set these options in the profile file:
+Suppose you always prefer writing Rmd posts (instead of the default `*.md`), and want the author of new posts to be "John Doe" by default. You can set these options in the profile file:
 
 ```{r eval=FALSE}
-options(servr.daemon = TRUE, blogdown.author = 'John Doe')
+options(blogdown.ext = '.Rmd', blogdown.author = 'John Doe')
 ```
 
 A nice consequence of setting these options is that when you use the RStudio addin "New Post," the fields "Author," "Subdirectory," and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
