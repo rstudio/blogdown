@@ -1,6 +1,8 @@
 # CHANGES IN blogdown VERSION 0.7 (unreleased)
 
+## BUG FIXES
 
+- Applied a workaround for the bug in the `Rscript` command: https://stat.ethz.ch/pipermail/r-devel/2018-April/075897.html (reported from https://stackoverflow.com/q/50077412).
 
 # CHANGES IN blogdown VERSION 0.6
 

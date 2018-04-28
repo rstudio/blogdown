@@ -105,7 +105,9 @@ build_rmds = function(files) {
 }
 
 render_page = function(input, script = 'render_page.R') {
-  args = c(pkg_file('scripts', script), input, getwd())
+  # needs --slave due to this bug in Rscript:
+  # https://stat.ethz.ch/pipermail/r-devel/2018-April/075897.html
+  args = c('--slave', pkg_file('scripts', script), input, getwd())
   if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
 }
 
