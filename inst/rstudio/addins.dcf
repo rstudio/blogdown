@@ -17,3 +17,8 @@ Name: Insert Image
 Description: Insert an external image into a blog post.
 Binding: insert_image_addin
 Interactive: true
+
+Name: Touch File
+Description: Change the timestamp of the current file in the editor.
+Binding: touch_file
+Interactive: false
