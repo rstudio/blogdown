@@ -187,7 +187,7 @@ If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \
 
 
     ````markdown
-    `r ''````{r cool-plot, fig.width='80%', fig.cap='A cool plot.'}
+    `r ''````{r cool-plot, fig.cap='A cool plot.'}
     plot(cars, pch = 20)  # not really cool
     ```
     ````
