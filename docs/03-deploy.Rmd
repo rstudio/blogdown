@@ -40,8 +40,6 @@ You can also use your custom domain name if you do not want the default Updog su
 
 GitHub Pages (https://pages.github.com) \index{GitHub Pages} is a very popular way to host static websites (especially those built with Jekyll), but its advantages are not obvious or appealing compared to Netlify. We recommend that you consider Netlify + Hugo due to these reasons:
 
-- Currently, GitHub Pages does not support HTTPS for custom domain names. HTTPS only works for `*.github.io` subdomains. This limitation does not exist on Netlify. You may read the article ["Why HTTPS for Everything?"](https://https.cio.gov/everything/) to understand why it is important, and you are encouraged to turn on HTTPS for your website whenever you can.
-
 - Redirecting URLs is awkward with GitHub Pages but much more straightforward with Netlify.^[GitHub Pages uses a Jekyll plugin to write an `HTTP-REFRESH` meta tag to redirect pages, and Netlify can do pattern-based 301 or 302 redirects, which can notify search engines that certain pages have been moved (permanently or temporarily).] This is important especially when you have an old website that you want to migrate to Hugo; some links may be broken, in which case you can easily redirect them with Netlify.
 
 - One of the best features of Netlify that is not available with GitHub Pages is that Netlify can generate a unique website for preview when a GitHub pull request is submitted to your GitHub repository. This is extremely useful when someone else (or even yourself) proposes changes to your website, since you have a chance to see what the website would look like before you merge the pull request.
