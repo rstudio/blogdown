@@ -22,3 +22,8 @@ Name: Touch File
 Description: Change the timestamp of the current file in the editor.
 Binding: touch_file
 Interactive: false
+
+Name: Quote Poem
+Description: Add > to the beginning of selected paragraphs and two trailing spaces to selected lines.
+Binding: quote_poem_addin
+Interactive: false

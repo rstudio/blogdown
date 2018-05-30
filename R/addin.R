@@ -32,3 +32,22 @@ touch_file = function() {
   rstudioapi::documentSave(id)
   check_mtime()
 }
+
+# add > to the beginning of every paragraph, and two trailing spaces to every line
+quote_poem = function(x) {
+  x = paste(x, collapse = '\n')
+  if (grepl('^\\s*$', x)) return(x)
+  x = gsub(' *\n', '  \n', x)
+  x = gsub('( *\n){2,}', '\n\n> ', x)
+  paste('>', gsub(' *(\n*) *$', '\\1', x))
+}
+
+quote_poem_addin = function() {
+  ctx = rstudioapi::getSourceEditorContext()
+  sel = ctx$selection[[1]]
+  if (sel$text == '') {
+    message('Please select some text in the editor first.')
+    return()
+  }
+  rstudioapi::modifyRange(sel$range, quote_poem(sel$text))
+}
