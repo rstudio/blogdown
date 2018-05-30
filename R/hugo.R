@@ -210,7 +210,7 @@ new_content = function(path, kind = 'default', open = interactive()) {
   path2 = with_ext(path, '.md')
   file  = content_file(path)
   file2 = content_file(path2)
-  hugo_cmd(c('new', shQuote(path2), c('-k', kind)))
+  hugo_cmd(c('new', shQuote(path2), if (kind != '') c('-k', kind)))
   hugo_toYAML(file2)
   file.rename(file2, file)
   if (open) open_file(file)

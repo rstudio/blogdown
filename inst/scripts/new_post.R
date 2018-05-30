@@ -22,7 +22,7 @@ local({
         sel_input('tag', 'Tags', meta$tags),
         shiny::selectInput(
           'kind', 'Archetype', width = '98%',
-          choices = c('default', xfun::sans_ext(dir('archetypes', '\\.md$')))
+          choices = unique(c('default', xfun::sans_ext(dir('archetypes', '\\.md$'))))
         ),
         height = '70px'
       ),
