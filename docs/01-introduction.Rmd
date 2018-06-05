@@ -179,6 +179,8 @@ if (file.exists('~/.Rprofile')) {
 # then set options(blogdown.author = 'Your Name') in ~/.Rprofile
 ```
 
+Note that [R will silently ignore the last line of your `.Rprofile`](https://yihui.name/en/2018/04/rprofile-trailing-newline/) if it does not have a trailing newline, so please make sure you add at least one newline to the end of your `.Rprofile`.
+
 ## R Markdown vs. Markdown {#output-format}
 
 If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \@ref(r-markdown) for a quick tutorial. When you create a new post, you have to decide whether you want to use R Markdown or plain Markdown\index{Markdown}, as you can see from Figure \@ref(fig:new-post). The main differences are:
