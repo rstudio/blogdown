@@ -8,6 +8,8 @@
 
 - Applied a workaround for the bug in the `Rscript` command: https://stat.ethz.ch/pipermail/r-devel/2018-April/075897.html (reported from https://stackoverflow.com/q/50077412).
 
+- The TOML metadata in new posts may fail to be converted to YAML (thanks, @apreshill, #301).
+
 # CHANGES IN blogdown VERSION 0.6
 
 ## NEW FEATURES

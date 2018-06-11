@@ -234,7 +234,7 @@ hugo_toYAML = function(file) {
   file2 = file.path('content', basename(file))
   in_dir(tmp, {
     dir.create('content'); file.copy(file, file2)
-    writeLines('baseurl = "/"', 'config.toml')
+    writeLines(c('baseurl = "/"', 'builddrafts = true'), 'config.toml')
     hugo_convert(unsafe = TRUE)
     file.copy(file2, file, overwrite = TRUE)
   })
