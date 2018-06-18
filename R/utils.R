@@ -221,8 +221,8 @@ parse_toml = function(
   f, x = read_utf8(f), strict = requireNamespace('RcppTOML', quietly = TRUE)
 ) {
   if (strict) {
-    if (no_file <- missing(f)) f = paste(x, collapse = '\n')
-    return(RcppTOML::parseTOML(f, fromFile = !no_file))
+    x = paste(x, collapse = '\n')
+    return(RcppTOML::parseTOML(x, fromFile = FALSE))
   }
   # remove comments
   x = gsub('\\s+#.+', '', x)
