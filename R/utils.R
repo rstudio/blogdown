@@ -113,37 +113,6 @@ output_file = function(file, md = is_rmarkdown(file)) {
   with_ext(file, ifelse(md, 'markdown', 'html'))
 }
 
-# adapted from webshot:::download_no_libcurl due to the fact that
-# download.file() cannot download Github release assets:
-# https://stat.ethz.ch/pipermail/r-devel/2016-June/072852.html
-download2 = function(url, ...) {
-  download = function(method = 'auto', extra = getOption('download.file.extra')) {
-    download.file(url, ..., method = method, extra = extra)
-  }
-  if (is_windows()) for (method in c('libcurl', 'wininet', 'auto')) {
-    if (!inherits(try(res <- download(method = method)), 'try-error') && res == 0) return(res)
-  }
-
-  R340 = getRversion() >= '3.4.0'
-  if (R340 && download() == 0) return(0L)
-  # if non-Windows, check for libcurl/curl/wget/lynx, call download.file with
-  # appropriate method
-  res = NA
-  if (Sys.which('curl') != '') {
-    # curl needs to add a -L option to follow redirects
-    if ((res <- download(method = 'curl', extra = '-L')) == 0) return(res)
-  }
-  if (Sys.which('wget') != '') {
-    if ((res <- download(method = 'wget')) == 0) return(res)
-  }
-  if (Sys.which('lynx') != '') {
-    if ((res <- download(method = 'lynx')) == 0) return(res)
-  }
-  if (is.na(res)) stop('no download method found (wget/curl/lynx)')
-
-  res
-}
-
 opts = knitr:::new_defaults()
 
 # read config file and cache the options (i.e. do not read again unless the config is newer)

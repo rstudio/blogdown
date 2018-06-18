@@ -162,7 +162,7 @@ install_theme = function(
       url = sprintf('https://%s/%s/archive/%s.zip', hostname, theme, branch)
       zipfile = sprintf('%s.zip', basename(theme))
     }
-    download2(url, zipfile, mode = 'wb')
+    xfun::download_file(url, zipfile, mode = 'wb')
     tmpdir = basename(tempfile('', '.'))
     on.exit(in_dir('themes', unlink(tmpdir, recursive = TRUE)))
     files = utils::unzip(zipfile, exdir = tmpdir)
