@@ -66,9 +66,6 @@ serve_it = function(
       }, dir = '.', ...))
     }
 
-    if (!xfun::loadable('processx') || !xfun::loadable('later')) stop(
-      "Please install the packages 'processx' and 'later'", call. = FALSE
-    )
     server = servr::server_config(...)
 
     # launch the hugo/jekyll/hexo server
