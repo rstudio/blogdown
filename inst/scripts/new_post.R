@@ -44,6 +44,11 @@ local({
     server = function(input, output, session) {
       empty_title = shiny::reactive(grepl('^\\s*$', input$title))
       shiny::observe({
+        # update subdir in according to the title
+        if (is.function(subdir_fun <- getOption('blogdown.subdir_fun'))) shiny::updateTextInput(
+          session, 'subdir', value = subdir_fun(input$title)
+        )
+        # calculate file path
         if (!empty_title()) shiny::updateTextInput(
           session, 'file', value = blogdown:::post_filename(
             input$title, input$subdir, shiny::isolate(input$format), input$date
