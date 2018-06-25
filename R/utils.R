@@ -481,8 +481,8 @@ modify_yaml = function(
 }
 
 # prepend YAML of one file to another file
-prepend_yaml = function(from, to, body = read_utf8(to)) {
-  x = c(fetch_yaml2(from), '', body)
+prepend_yaml = function(from, to, body = read_utf8(to), callback = identity) {
+  x = c(callback(fetch_yaml2(from)), '', body)
   write_utf8(x, to)
 }
 
