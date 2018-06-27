@@ -3,11 +3,14 @@
 \name{shortcode}
 \alias{shortcode}
 \alias{shortcode_html}
+\alias{shortcodes}
 \title{Helper functions to write Hugo shortcodes using the R syntax}
 \usage{
 shortcode(.name, ..., .content = NULL, .type = "markdown")
 
 shortcode_html(...)
+
+shortcodes(..., .sep = "\\n")
 }
 \arguments{
 \item{.name}{The name of the shortcode.}
@@ -19,6 +22,8 @@ The \code{...} argument of \code{shortcode_html()} is passed to
 \item{.content}{The inner content for the shortcode.}
 
 \item{.type}{The type of the shortcode: \code{markdown} or \code{html}.}
+
+\item{.sep}{The separator between two shortcodes (by default, a newline).}
 }
 \value{
 A character string wrapped in \code{htmltools::HTML()};
@@ -29,7 +34,8 @@ A character string wrapped in \code{htmltools::HTML()};
 These functions return Hugo shortcodes with the shortcode name and arguments
 you specify. The closing shortcode will be added only if the inner content is
 not empty. The function \code{shortcode_html()} is essentially
-\code{shortcode(.type = 'html')}.
+\code{shortcode(.type = 'html')}. The function \code{shortcodes()} is a
+vectorized version of \code{shortcode()}.
 }
 \details{
 These functions can be used in either \pkg{knitr} inline R expressions or
@@ -47,6 +53,7 @@ shortcodes, and there is no need to call these R functions.
 library(blogdown)
 
 shortcode("tweet", "1234567")
+shortcodes("tweet", as.character(1:5))  # multiple tweets
 shortcode("figure", src = "/images/foo.png", alt = "A nice figure")
 shortcode("highlight", "bash", .content = "echo hello world;")
 
