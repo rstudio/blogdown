@@ -4,6 +4,8 @@
 
 - Added a new RStudio addin "Touch File" to update the modification time of a file, which can be useful when you want to force rebuilding a certain Rmd post after running `serve_site()` (#294).
 
+- Added an RStudio addin "Quote Poem" to quote a poem using the Markdown syntax (https://yihui.name/en/2018/06/quote-poem-blogdown/).
+
 - Added a global option `blogdown.draft.output`. If `options(blogdown.draft.output = TRUE)` is set, a field `draft: yes` will be appended to the YAML metadata of the HTML output file from an Rmd post, unless the Rmd post has already set the `draft` option. This means the output files are always drafts unless you explicitly set `draft: no` in the YAML metadata of Rmd posts (thanks, @mwaldstein, #305).
 
 ## BUG FIXES
