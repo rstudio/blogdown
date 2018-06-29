@@ -4,13 +4,17 @@
 \alias{build_dir}
 \title{Build all Rmd files under a directory}
 \usage{
-build_dir(dir = ".", force = FALSE)
+build_dir(dir = ".", force = FALSE, ignore = "[.]Rproj$")
 }
 \arguments{
 \item{dir}{A directory path.}
 
 \item{force}{Whether to force building all Rmd files. By default, an Rmd file
 is built only if it is newer than its output file(s).}
+
+\item{ignore}{A regular expression to match output filenames that should be
+ignored when testing if the modification time of the Rmd source file is
+newer than its output files.}
 }
 \description{
 List all Rmd files recursively under a directory, and compile them using
