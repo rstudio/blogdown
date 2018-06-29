@@ -85,12 +85,16 @@ require_rebuild = function(html, rmd) {
 #' @param dir A directory path.
 #' @param force Whether to force building all Rmd files. By default, an Rmd file
 #'   is built only if it is newer than its output file(s).
+#' @param ignore A regular expression to match output filenames that should be
+#'   ignored when testing if the modification time of the Rmd source file is
+#'   newer than its output files.
 #' @export
-build_dir = function(dir = '.', force = FALSE) {
+build_dir = function(dir = '.', force = FALSE, ignore = '[.]Rproj$') {
   for (f in list_rmds(dir)) {
     render_it = function() render_page(f, 'render_rmarkdown.R')
     if (force) { render_it(); next }
     files = list.files(dirname(f), full.names = TRUE)
+    files = grep(ignore, files, value = TRUE, invert = TRUE)
     i = files == f  # should be only one in files matching f
     bases = with_ext(files, '')
     files = files[!i & bases == bases[i]]  # files with same basename as f (Rmd)
