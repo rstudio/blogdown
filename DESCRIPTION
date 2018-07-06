@@ -1,7 +1,7 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.6.15
+Version: 0.6.16
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
     person("Beilei", "Bian", role = "ctb"),
@@ -27,7 +27,7 @@ Imports:
     htmltools,
     yaml (>= 2.1.14),
     httpuv (>= 1.4.0),
-    xfun (>= 0.2.1),
+    xfun (>= 0.3),
     servr (>= 0.8)
 Suggests:
   testit,
@@ -45,4 +45,3 @@ URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<http://pandoc.org>)
 RoxygenNote: 6.0.1
-Remotes: yihui/xfun
