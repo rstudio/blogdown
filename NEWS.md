@@ -18,7 +18,7 @@
 
 - The TOML metadata in new posts may fail to be converted to YAML (thanks, @apreshill, #301).
 
-- When editing the `config.toml` file on Windows, `serve_site()` could fail with an error message "'---did you forget a '#'? at line 1>seImpl(path.expand(input), verbose, fromFile): Unidentified trailing character'" (thanks, @rhobis, #302).
+- When editing the `config.toml` file on Windows, `serve_site()` could fail with an error message `'---did you forget a '#'? at line 1>seImpl(path.expand(input), verbose, fromFile): Unidentified trailing character'` (thanks, @rhobis, #302).
 
 # CHANGES IN blogdown VERSION 0.6
 
