@@ -106,9 +106,9 @@ older_than = function(file1, file2) {
   !file_exists(file1) | file_test('-ot', file1, file2)
 }
 
-is_windows = function() .Platform$OS.type == 'windows'
-is_osx = function() Sys.info()[['sysname']] == 'Darwin'
-is_linux = function() Sys.info()[['sysname']] == 'Linux'
+is_windows = function() xfun::is_windows()
+is_osx = function() xfun::is_macos()
+is_linux = function() xfun::is_linux()
 
 is_rmarkdown = function(x) grepl('[.][Rr]markdown$', x)
 
