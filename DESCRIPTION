@@ -38,8 +38,7 @@ Suggests:
   rstudioapi,
   tools,
   processx,
-  later,
-  xaringan
+  later
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
