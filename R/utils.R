@@ -401,8 +401,7 @@ split_yaml_body = function(x) {
 # anotate seq type values because both single value and list values are
 # converted to vector by default
 yaml_load = function(x) yaml::yaml.load(
-  paste(x, collapse = '\n'),
-  handlers = list(
+  x, handlers = list(
     seq = function(x) {
       # continue coerce into vector because many places of code already assume this
       if (length(x) > 0) {
@@ -414,13 +413,7 @@ yaml_load = function(x) yaml::yaml.load(
   )
 )
 
-# remove the three dashes in the YAML file before parsing it (the yaml package
-# cannot handle three dashes)
-yaml_load_file = function(f) {
-  x = paste(read_utf8(f), collapse = '\n')
-  x = gsub('^\\s*---\\s*|\\s*---\\s*$', '', x)
-  yaml::yaml.load(x)
-}
+yaml_load_file = function(...) yaml::yaml.load_file(...)
 
 # if YAML contains inline code, evaluate it and return the YAML
 fetch_yaml2 = function(f) {

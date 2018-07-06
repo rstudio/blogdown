@@ -25,7 +25,7 @@ Imports:
     bookdown (>= 0.5),
     knitr (>= 1.17),
     htmltools,
-    yaml (>= 2.1.14),
+    yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
     xfun (>= 0.3),
     servr (>= 0.8)
