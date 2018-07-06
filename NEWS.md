@@ -1,4 +1,4 @@
-# CHANGES IN blogdown VERSION 0.7 (unreleased)
+# CHANGES IN blogdown VERSION 0.7
 
 ## NEW FEATURES
 
