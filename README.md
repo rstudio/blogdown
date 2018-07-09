@@ -1,7 +1,7 @@
 # blogdown
 
 [![Build Status](https://travis-ci.org/rstudio/blogdown.svg)](https://travis-ci.org/rstudio/blogdown)
-[![Downloads from the RStudio CRAN mirror](https://cranlogs.r-pkg.org/badges/grand-total/blogdown)](https://cran.rstudio.org/package=blogdown)
+[![Downloads from the RStudio CRAN mirror](https://cranlogs.r-pkg.org/badges/grand-total/blogdown)](https://cran.r-project.org/package=blogdown)
 
 <a href="https://bookdown.org/yihui/blogdown"><img src="https://bookdown.org/yihui/blogdown/images/logo.png" alt="blogdown logo" align="right" /></a>
 
