@@ -100,7 +100,7 @@ build_rmds = function(files) {
     } else {
       if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
       prepend_yaml(f, out, x, callback = function(s) {
-        if (getOption('blogdown.draft.output', FALSE)) return(s)
+        if (!getOption('blogdown.draft.output', FALSE)) return(s)
         if (length(s) < 2 || length(grep('^draft: ', s)) > 0) return(s)
         append(s, 'draft: yes', 1)
       })

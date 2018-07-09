@@ -1,3 +1,9 @@
+# CHANGES IN blogdown VERSION 0.8
+
+## BUG FIXES
+
+- A bug was introduced when implementing #305: should append `draft: yes` to YAML only when `options(blogdown.draft.output = TRUE)` is set (thanks, @ConorIA, #312).
+
 # CHANGES IN blogdown VERSION 0.7
 
 ## NEW FEATURES
