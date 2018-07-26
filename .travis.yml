@@ -17,11 +17,12 @@ repos:
 before_install:
   - "curl https://xran.yihui.name/.gitconfig -o ~/.gitconfig"
   - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
+  - Rscript -e 'xfun::pkg_load2(c("covr", "xml2"))'
 
 before_script:
   - R CMD INSTALL .
   - "[ -x \"$HOME/bin/hugo\" ] || Rscript -e \"blogdown::install_hugo()\""
 
 after_success:
-  - Rscript -e 'xfun::pkg_load2(c("covr", "xml2")); covr::codecov()'
+  - Rscript -e 'covr::codecov()'
   - "(curl https://xran.yihui.name/r-xran | bash)"
