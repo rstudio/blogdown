@@ -23,5 +23,5 @@ before_script:
   - "[ -x \"$HOME/bin/hugo\" ] || Rscript -e \"blogdown::install_hugo()\""
 
 after_success:
-  - Rscript -e 'if (!require("covr")) install.packages("covr"); covr::codecov()'
+  - Rscript -e 'xfun::pkg_load2(c("covr", "xml2")); covr::codecov()'
   - "(curl https://xran.yihui.name/r-xran | bash)"
