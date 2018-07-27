@@ -28,6 +28,9 @@ local({
         shiny::dateInput('date', 'Date', yml[['date']], width = '99%'),
         height = '80px'
       ),
+      shiny::checkboxInput(
+        'rename', 'Rename file if the date is changed', getOption('blogdown.rename_file', FALSE)
+      ),
       sel_input(
         'cat', 'Categories', blogdown:::sort2(unique(c(yml[['categories']], meta$categories))),
         selected = yml[['categories']]
@@ -56,6 +59,14 @@ local({
         rstudioapi::modifyRange(
           slct$range, blogdown:::as.yaml(yml, .trim_ws = FALSE)
         )
+        if (input$rename) {
+          rstudioapi::documentSave()
+          xfun::in_dir(dirname(p <- ctxt$path), {
+            b = basename(p)
+            if (file.rename(b, b2 <- blogdown:::date_filename(b, res$date, replace = TRUE)))
+              rstudioapi::navigateToFile(b2)
+          })
+        }
         shiny::stopApp()
       })
       shiny::observeEvent(input$cancel, {
@@ -63,7 +74,7 @@ local({
       })
     },
     stopOnCancel = FALSE,
-    viewer = shiny::dialogViewer('Update YAML metadata', 500, 400)
+    viewer = shiny::dialogViewer('Update YAML metadata', 500, 450)
   )
 
 })
