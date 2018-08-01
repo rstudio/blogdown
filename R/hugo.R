@@ -114,6 +114,11 @@ new_site = function(
   unlink(file.path('archetypes', 'default.md'))
   if (is.character(theme) && length(theme) == 1 && !is.na(theme))
     install_theme(theme, theme_example, hostname = hostname)
+  # remove the .gitignore that ignores everything under static/:
+  # https://github.com/rstudio/blogdown/issues/320
+  if (file.exists(gitignore <- file.path('static', '.gitignore'))) {
+    if (any(xfun::read_utf8(gitignore) == '*')) unlink(gitignore)
+  }
 
   if (sample) {
     d = file.path('content', 'blog')
