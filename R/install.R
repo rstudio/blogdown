@@ -143,7 +143,9 @@ install_hugo_bin = function(exec) {
 
 #' @export
 #' @rdname install_hugo
-update_hugo = function() install_hugo(force = TRUE)
+update_hugo = function() install_hugo(
+  force = TRUE, use_brew = Sys.which('brew') != '' && !any(dir_exists(bin_paths()))
+)
 
 brew_hugo = function() {
   install = function() system('brew update && brew reinstall hugo')
