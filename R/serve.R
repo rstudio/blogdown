@@ -20,8 +20,6 @@
 #'   hence you cannot customize these arguments).
 #' @export
 serve_site = function(...) {
-  op = options(servr.daemon = getOption('servr.daemon', interactive()))
-  on.exit(options(op), add = TRUE)
   serve = switch(
     generator(), hugo = serve_it(),
     jekyll = serve_it(
