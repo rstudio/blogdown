@@ -27,6 +27,8 @@ hugo_version = function() {
 #'   via \code{hugo_build()} to build the site.
 hugo_build = function(local = FALSE) {
   config = load_config()
+  # Hugo 0.48 generates an ugly empty resources/ dir in the root dir
+  on.exit(bookdown:::clean_empty_dir('resources'), add = TRUE)
   hugo_cmd(c(
     if (local) c('-b', site_base_dir(), '-D', '-F'),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
@@ -117,6 +119,8 @@ new_site = function(
   owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
   # remove Hugo's default archetype (I think draft: true is a confusing default)
   unlink(file.path('archetypes', 'default.md'))
+  # remove empty dirs
+  for (d in list.dirs(recursive = FALSE)) bookdown:::clean_empty_dir(d)
   if (is.character(theme) && length(theme) == 1 && !is.na(theme))
     install_theme(theme, theme_example, hostname = hostname)
   # remove the .gitignore that ignores everything under static/:
