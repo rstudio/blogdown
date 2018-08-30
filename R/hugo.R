@@ -192,7 +192,7 @@ install_theme = function(
     )
     unlink(newdir, recursive = TRUE)
     file.rename(zipdir, newdir)
-    unlink(zipfile)
+    unlink(c(zipfile, file.path(newdir, '*.Rproj')))
     theme = gsub('^[.][\\/]+', '', newdir)
   })
   if (update_config) {
