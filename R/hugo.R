@@ -81,7 +81,7 @@ change_config = function(name, value) {
 #'   of the new (R) Markdown file created by \code{new_content()} always uses
 #'   YAML instead of TOML.
 #' @param sample Whether to add sample content. Hugo creates an empty site by
-#'   default, but this function adds sample content by default).
+#'   default, but this function adds sample content by default.
 #' @param theme A Hugo theme on Github (a chararacter string of the form
 #'   \code{user/repo}, and you can optionally specify a GIT branch or tag name
 #'   after \code{@@}, i.e. \code{theme} can be of the form
