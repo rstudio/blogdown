@@ -54,7 +54,7 @@ of the new (R) Markdown file created by \code{new_content()} always uses
 YAML instead of TOML.}
 
 \item{sample}{Whether to add sample content. Hugo creates an empty site by
-default, but this function adds sample content by default).}
+default, but this function adds sample content by default.}
 
 \item{theme}{A Hugo theme on Github (a chararacter string of the form
 \code{user/repo}, and you can optionally specify a GIT branch or tag name
