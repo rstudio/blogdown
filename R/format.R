@@ -31,7 +31,7 @@
 #' @export
 html_page = function(
   ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
-  template = NULL, post_processor = NULL
+  template = NULL, post_processor = NULL, pre_knit = NULL
 ) {
   if (identical(template, 'default')) stop(
     'blogdown::html_page() does not support template = "default"'
@@ -41,10 +41,14 @@ html_page = function(
   )
   if (is.character(post_processor))
     post_processor <- eval(parse(text = post_processor))
+  if (is.character(pre_knit)){
+    pre_knit <- eval(parse(text = pre_knit))
+  }
   rmarkdown::output_format(
     knitr = NULL,
     pandoc = NULL,
     clean_supporting = self_contained,
+    pre_knit = pre_knit,
     post_processor = post_processor,
     base_format = bookdown::html_document2(
       ..., number_sections = number_sections, theme = NULL,
