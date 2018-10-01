@@ -45,7 +45,10 @@ build_site = function(
     files = files[mapply(require_rebuild, output_file(files), files)]
   }
   build_rmds(files)
-  if (run_hugo) on.exit(hugo_build(local), add = TRUE)
+  if (run_hugo){
+    on.exit(hugo_build(local), add = TRUE)
+    on.exit(run_script('R/after_build.R', as.character(local)), add = TRUE)
+  }
   invisible()
 }
 
