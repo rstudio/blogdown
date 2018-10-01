@@ -254,13 +254,13 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
 [params]
     description = "A website built through Hugo and blogdown."
 
-    highlightjsVersion = "9.11.0"
-    highlightjsCDN = "//cdn.bootcss.com"
+    highlightjsVersion = "9.12.0"
+    highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
     highlightjsLang = ["r", "yaml"]
     highlightjsTheme = "github"
 
-    MathJaxCDN = "//cdn.bootcss.com"
-    MathJaxVersion = "2.7.1"
+    MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
+    MathJaxVersion = "2.7.5"
 
 [params.logo]
     url = "logo.png"
@@ -735,7 +735,7 @@ The XMin is actually a highly functional theme, but we understand that it may be
     </script>
     ```
     
-    Remember to replace `YOUR-CDN-LINK` with the link to your preferred CDN host of highlight.js, e.g., `cdn.bootcss.com/highlight.js/9.12.0`. For more information about highlight.js, please see its homepage: https://highlightjs.org. If you need to use other CDN hosts, cdnjs.com is a good choice: https://cdnjs.com/libraries/highlight.js You can also see which languages and CSS themes are supported there.
+    Remember to replace `YOUR-CDN-LINK` with the link to your preferred CDN host of highlight.js, e.g., `cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0`. For more information about highlight.js, please see its homepage: https://highlightjs.org. If you need to use other CDN hosts, cdnjs.com is a good choice: https://cdnjs.com/libraries/highlight.js You can also see which languages and CSS themes are supported there.
     
     You may see https://github.com/yihui/hugo-xmin/pull/5 for an actual implementation, and a sample page with syntax highlighting at https://deploy-preview-5--hugo-xmin.netlify.com/post/2016/02/14/a-plain-markdown-post/.
 
@@ -744,13 +744,13 @@ The XMin is actually a highly functional theme, but we understand that it may be
     ```html
     <script src="//yihui.name/js/math-code.js"></script>
     <script async
-    src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+    src="//YOUR-CDN-LINK/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
     ```
     
     This requires substantial knowledge of JavaScript and familiarity with MathJax to fully understand the code above, and we will leave the explanation of the code to Section \@ref(javascript).
     
-    Note that bootcss.com is only one possible CDN host of MathJax, and you are free to use other hosts.
+    Remember to replace `YOUR-CDN-LINK` with the link to your preferred CDN host of MathJax, e.g., `cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5`.
 
 - **Show the table of contents (TOC).** To show a TOC\index{Table of Contents} for R Markdown posts, you only need to add the output format `blogdown::html_page` with the option `toc: true` to YAML:
 
