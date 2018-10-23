@@ -190,12 +190,11 @@ site_root = function(...) {
 }
 
 # a simple parser that only reads top-level options unless RcppTOML is available
-parse_toml = function(
-  f, x = read_utf8(f), strict = requireNamespace('RcppTOML', quietly = TRUE)
-) {
+parse_toml = function(f, x = read_utf8(f), strict = xfun::loadable('RcppTOML')) {
   if (strict) {
     x = paste(x, collapse = '\n')
-    return(RcppTOML::parseTOML(x, fromFile = FALSE))
+    parser = getFromNamespace('parseTOML', 'RcppTOML')
+    return(parser(x, fromFile = FALSE))
   }
   # remove comments
   x = gsub('\\s+#.+', '', x)

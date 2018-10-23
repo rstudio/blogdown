@@ -33,7 +33,6 @@ Suggests:
   testit,
   shiny,
   miniUI,
-  RcppTOML,
   stringr,
   rstudioapi,
   tools,
