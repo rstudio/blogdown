@@ -57,7 +57,7 @@ change_config = function(name, value) {
     r = sprintf('^%s\\s*:.+', name)
     v = if (!is.na(value)) paste(name, value, sep = ': ')
   }
-  i = grep(r, x)
+  i = grep(r, x, ignore.case = TRUE)
   if (length(i) > 1) stop("Duplicated configuration for '", name, "' in ", f)
   x0 = x
   if (length(i) == 1) {
