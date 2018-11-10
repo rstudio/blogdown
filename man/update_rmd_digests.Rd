@@ -26,6 +26,6 @@ and save the digests to a file "\code{digests.Rds}" in the root directory of the
 site.
 }
 \seealso{
-\code{\link{update_site_digests}()}.
+\code{\link{update_site_digests}()}, \code{\link{digests}}.
 }
 \keyword{internal}

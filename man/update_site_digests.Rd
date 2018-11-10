@@ -28,5 +28,6 @@ and save the digests to a file "\code{digests.Rds}" in the root directory of the
 site.
 }
 \seealso{
-\code{\link{prune_site_digests}()}, \code{\link{update_site}()}.
+\code{\link{prune_site_digests}()}, \code{\link{update_site}()},
+\code{\link{digests}}.
 }

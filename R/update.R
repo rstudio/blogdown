@@ -1,3 +1,29 @@
+#' Digests for detecting file modifications.
+#'
+#' When creating digests for detecting file modifications, there is
+#' a choice of algorithms
+#'
+#' File digests are created by applying a hashing algorithm to the text contents
+#' of a source file (\code{.Rmd} or  \code{.rmarkdown}).
+#' By default, \code{blogdown} uses crc32 because it is fast and is good enough
+#' for detecting changes in source files. This would not be good enough for
+#' uniquely identifying a given file revision or source file (e.g., for revision
+#' control), but that's not necessary for the purposes of updating sites in
+#' `blogdown`.
+#'
+#' The user can override the hashing algorithm by setting
+#' \code{options(blogdown.algorithm = <algorithm>)},
+#' where \code{<algorithm>} is one of the allowed digest algorithms
+#' in \code{\link[digest]{digest}()}: "\code{crc32}", "\code{md5}",
+#' "\code{sha1}", "\code{sha256}", "\code{sha512}",
+#' "\code{xxhash32}", "\code{xxhash64}", or "\code{murmur32}".
+#'
+#' @examples
+#' options(blogdown.algorithm = "sha256")
+#' @seealso \code{\link{update_site_digests}()}, \code{\link{update_site}()}.
+#' @name digests
+NULL
+
 #' Get the "content" directory of the site
 #'
 #' \code{find_blog_content} gets the "content" directory of the site.
@@ -49,6 +75,7 @@ get_digest_algorithm = function() {
 #'
 #' If a destination file is missing or if any of the digests don't match,
 #' then the file needs to be rebuilt.
+#' @seealso \code{\link{digests}}.
 #' @keywords internal
 needs_rebuild = function(current_digest, current_dest_digest,
                          old_digest, old_dest_digest) {
@@ -69,8 +96,7 @@ needs_rebuild = function(current_digest, current_dest_digest,
 #' If no option was set, use crc32.
 #' @return A string: if the file exists return the digest. Otherwise, return
 #' \code{NA}.
-#' @seealso \code{\link[digest:digest]{digest()}} for details about available
-#' algorithms.
+#' @seealso \code{\link{digest}} for details about available algorithms.
 #' @keywords internal
 digest_if_exists = function(file, alg = NA) {
   if (file.exists(file)) {
@@ -108,7 +134,7 @@ digest_if_exists = function(file, alg = NA) {
 #'
 #' Digests for missing files are set to \code{NA}.
 #' @seealso \code{\link{files_to_rebuild}()},
-#' \code{\link{digest_if_exists}()}.
+#' \code{\link{digest_if_exists}()}, \code{\link{digests}}.
 #' @keywords internal
 get_current_digests = function(files) {
   base = site_root()
@@ -218,7 +244,7 @@ get_current_digests = function(files) {
 #'
 #' @param files A character vector of paths to source files (e.g., \code{.Rmd}).
 #' @return A character vector of files that need to be rebuilt.
-#' @seealso \code{\link{get_current_digests}()}.
+#' @seealso \code{\link{get_current_digests}()}, \code{\link{digests}}.
 #' @keywords internal
 files_to_rebuild = function(files) {
   base = site_root()
@@ -247,7 +273,7 @@ files_to_rebuild = function(files) {
 #' files that aren't in \code{files}. Otherwise, get rid of the old file and only
 #' keep digests for source files in \code{files}.
 #' @return The path to the digest file.
-#' @seealso \code{\link{update_site_digests}()}.
+#' @seealso \code{\link{update_site_digests}()}, \code{\link{digests}}.
 #' @keywords internal
 #'
 update_rmd_digests = function(files, partial = FALSE) {
@@ -304,7 +330,8 @@ update_rmd_digests = function(files, partial = FALSE) {
 #' Otherwise, get rid of the old digest file and only keep digests for
 #' source files in the source directory and its descendants.
 #' @return The path to the digest file.
-#' @seealso \code{\link{prune_site_digests}()}, \code{\link{update_site}()}.
+#' @seealso \code{\link{prune_site_digests}()}, \code{\link{update_site}()},
+#' \code{\link{digests}}.
 #' @export
 #'
 update_site_digests = function(dir = NA, partial = FALSE) {
@@ -327,7 +354,8 @@ update_site_digests = function(dir = NA, partial = FALSE) {
 #' @param files A character vector of paths to the source files to be removed.
 #' @return The path to the digest file.
 #' @seealso \code{\link{prune_site_digests}()},
-#' \code{\link{update_site_digests}()}, \code{\link{update_rmd_digests}()}.
+#' \code{\link{update_site_digests}()}, \code{\link{update_rmd_digests}()},
+#' \code{\link{digests}}.
 #' @keywords internal
 #'
 prune_rmd_digests = function(files) {
@@ -357,7 +385,7 @@ prune_rmd_digests = function(files) {
 #'
 #' @param files A character vector of paths to the source files to be removed.
 #' @return The path to the digest file.
-#' @seealso \code{\link{update_site_digests}()}.
+#' @seealso \code{\link{update_site_digests}()}, \code{\link{digests}}.
 #' @export
 #'
 prune_site_digests = function(files) {
@@ -394,7 +422,8 @@ prune_site_digests = function(files) {
 #' function emits an informational message about how many files will
 #' be rebuit.
 #' @return This function does not return anything
-#' @seealso \code{\link{build_site}()}, \code{\link{build_dir}()}.
+#' @seealso \code{\link{build_site}()}, \code{\link{build_dir}()},
+#' \code{\link{digests}}.
 #' @export
 update_site = function(dir = NULL, quiet = FALSE) {
   if (is.null(dir)) {

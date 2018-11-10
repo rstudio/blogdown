@@ -37,5 +37,6 @@ After rendering any out-of-date files, regenerate the digest list
 and saves it to a file.
 }
 \seealso{
-\code{\link{build_site}()}, \code{\link{build_dir}()}.
+\code{\link{build_site}()}, \code{\link{build_dir}()},
+\code{\link{digests}}.
 }

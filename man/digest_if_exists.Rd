@@ -22,7 +22,6 @@ A string: if the file exists return the digest. Otherwise, return
 of the file, or \code{NA} if the file does not exist.
 }
 \seealso{
-\code{\link[digest:digest]{digest()}} for details about available
-algorithms.
+\code{\link{digest}} for details about available algorithms.
 }
 \keyword{internal}

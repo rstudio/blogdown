@@ -41,4 +41,7 @@ If the digests are not equal, then the file has changed. If a digest is
 missing, then the source file is new or the output file has been deleted
 and in either case, the source file needs to be rebuilt.
 }
+\seealso{
+\code{\link{digests}}.
+}
 \keyword{internal}

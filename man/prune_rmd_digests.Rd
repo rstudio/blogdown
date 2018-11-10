@@ -22,6 +22,7 @@ source files.
 }
 \seealso{
 \code{\link{prune_site_digests}()},
-\code{\link{update_site_digests}()}, \code{\link{update_rmd_digests}()}.
+\code{\link{update_site_digests}()}, \code{\link{update_rmd_digests}()},
+\code{\link{digests}}.
 }
 \keyword{internal}

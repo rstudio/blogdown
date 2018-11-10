@@ -34,6 +34,6 @@ stored digests and the digests of current source and output files.
 }
 \seealso{
 \code{\link{files_to_rebuild}()},
-\code{\link{digest_if_exists}()}.
+\code{\link{digest_if_exists}()}, \code{\link{digests}}.
 }
 \keyword{internal}
