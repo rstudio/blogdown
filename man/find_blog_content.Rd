@@ -11,6 +11,6 @@ A string containing the absolute path of the root directory for the
 site.
 }
 \description{
-`find_blog_content` gets the "content" directory of the site.
+\code{find_blog_content} gets the "content" directory of the site.
 }
 \keyword{internal}

@@ -10,7 +10,7 @@ update_site(dir = NULL, quiet = FALSE)
 \item{dir}{A string containing the root directory for checking.
 By default, the "content" directory of the project.}
 
-\item{quiet}{Suppress output. By default this is `FALSE` and the
+\item{quiet}{Suppress output. By default this is \code{FALSE} and the
 function emits an informational message about how many files will
 be rebuit.}
 }
@@ -18,13 +18,13 @@ be rebuit.}
 This function does not return anything
 }
 \description{
-`update_site` rebuilds all source files that are new or have changed since
+\code{update_site} rebuilds all source files that are new or have changed since
 the last time the site was built.
 }
 \details{
 Given a source directory (by default the "content" directory in the
-root directory of the project), find all source files (`.Rmd` and
-`.rmarkdown`) in the directory tree under the source directory,
+root directory of the project), find all source files (\code{.Rmd} and
+\code{.rmarkdown}) in the directory tree under the source directory,
 calculate hashed digests of the files, and compare them to a
 stored list of digests from the last time the site was built.
 
@@ -34,8 +34,8 @@ or if the output file does not exist,
 then render the source file.
 
 After rendering any out-of-date files, regenerate the digest list
-and save it to a file.
+and saves it to a file.
 }
 \seealso{
-[build_site()], [build_dir()].
+\code{\link{build_site}()}, \code{\link{build_dir}()}.
 }

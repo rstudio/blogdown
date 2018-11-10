@@ -9,20 +9,23 @@ update_rmd_digests(files, partial = FALSE)
 \arguments{
 \item{files}{A character vector of paths to the source files.}
 
-\item{partial}{Logical. If `TRUE`, keep rows from digest file for source
-files that aren't in `files`. Otherwise, get rid of the old file and only
-keep digests for source files in `files`.}
+\item{partial}{Logical. If \code{TRUE}, keep rows from digest file for source
+files that aren't in \code{files}. Otherwise, get rid of the old file and only
+keep digests for source files in \code{files}.}
 }
 \value{
 The path to the digest file.
 }
 \description{
-`update_rmd_digests` calculates hashed digests for a list of source files
+\code{update_rmd_digests} calculates hashed digests for a list of source files
 and their corresponding output files and stores them in a file.
 }
 \details{
 Generates new hashed digests for both source and destination (output) files
-and save the digests to a file "`digests.Rds`" in the root directory of the
+and save the digests to a file "\code{digests.Rds}" in the root directory of the
 site.
+}
+\seealso{
+\code{\link{update_site_digests}()}.
 }
 \keyword{internal}

@@ -8,7 +8,7 @@
 
 - Added an option in the "Update Metadata" addin to rename the post filename accordingly when the date is updated, e.g., when the date is changed from `2018-07-23` to `2018-07-28`, the post file `2018-07-23-hello-world.md` can be renamed to `2018-07-28-hello-world.md`.
 
-- Added a function `update_site()` to maintain a list of hashed digests of source and output files, and rebuild only changed source files.
+- Added functions `update_site()`, `update_site_digests()`, and `prune_site_digests()` to maintain a list of hashed digests of source and output files, and rebuild only changed source files.
   This will be more reliable than using file modification dates to determine which files should be updated.
 
 # CHANGES IN blogdown VERSION 0.8

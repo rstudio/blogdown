@@ -9,19 +9,19 @@ needs_rebuild(current_digest, current_dest_digest, old_digest,
 }
 \arguments{
 \item{current_digest}{A character vector containing digests of the
-current source files (`.Rmd` or `.rmarkdown``).}
+current source files (\code{.Rmd} or \code{.rmarkdown}`).}
 
 \item{current_dest_digest}{A character vector containing digests of the
-current destination (output) files (`.html``).
-`NA` for destination files that do not exist.}
+current destination (output) files (\code{.html}`).
+\code{NA} for destination files that do not exist.}
 
 \item{old_digest}{The stored digest for the source file from the last time
-the site was built. `NA` if the source file did not exist at the time of the
+the site was built. \code{NA} if the source file did not exist at the time of the
 last build.}
 
 \item{old_dest_digest}{A character vector containing stored digests for the
 destination files from the last time the site was built.
-`NA` for destination files that did not exist after the last build.}
+\code{NA} for destination files that did not exist after the last build.}
 }
 \value{
 A vector of logicals indicating whether the destination (output)
@@ -31,7 +31,7 @@ If a destination file is missing or if any of the digests don't match,
 then the file needs to be rebuilt.
 }
 \description{
-`needs_rebuild` returns a vector of logicals indicating which files
+\code{needs_rebuild} returns a vector of logicals indicating which files
 need to be rebuilt, based on whether the file has changed.
 }
 \details{

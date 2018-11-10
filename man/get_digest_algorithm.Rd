@@ -10,7 +10,7 @@ get_digest_algorithm()
 A string containing the name of the algorithm.
 }
 \description{
-`get_digest_algorithm` gets the digest algorithm that will be used.
+\code{get_digest_algorithm} gets the digest algorithm that will be used.
 }
 \details{
 Set the algorithm with `options(blogdown.algorithm = <algorithm>)`.

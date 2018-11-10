@@ -7,17 +7,20 @@
 files_to_rebuild(files)
 }
 \arguments{
-\item{files}{A character vector of paths to source files (e.g., `.Rmd`).}
+\item{files}{A character vector of paths to source files (e.g., \code{.Rmd}).}
 }
 \value{
 A character vector of files that need to be rebuilt.
 }
 \description{
-`files_to_rebuild` returns a vector of files that need to be rebuilt.
+\code{files_to_rebuild} returns a vector of files that need to be rebuilt.
 }
 \details{
 This function accepts a vector of source files and
 returns a vector of files that need to be rebuilt because the source file is
 new or has changed since the last time the site was built.
+}
+\seealso{
+\code{\link{get_current_digests}()}.
 }
 \keyword{internal}

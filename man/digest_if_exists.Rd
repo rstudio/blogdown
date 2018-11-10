@@ -4,7 +4,7 @@
 \alias{digest_if_exists}
 \title{Calculate the file digest if the file exists}
 \usage{
-digest_if_exists(file)
+digest_if_exists(file, alg = NA)
 }
 \arguments{
 \item{file}{A string containing the path to a file.}
@@ -15,13 +15,14 @@ If no option was set, use crc32.}
 }
 \value{
 A string: if the file exists return the digest. Otherwise, return
-`NA`.
+\code{NA}.
 }
 \description{
-`digest_if_file_exists` returns a character vector with the hashed digest
-of the file, or `NA` if the file does not exist.
+\code{digest_if_file_exists} returns a character vector with the hashed digest
+of the file, or \code{NA} if the file does not exist.
 }
 \seealso{
-\link[digest:digest]{digest()} for details about available algorithms.
+\code{\link[digest:digest]{digest()}} for details about available
+algorithms.
 }
 \keyword{internal}
