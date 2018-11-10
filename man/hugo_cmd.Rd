@@ -17,20 +17,21 @@ hugo_version()
 
 hugo_build(local = FALSE)
 
-new_site(dir = ".", install_hugo = TRUE, format = "toml", 
-    sample = TRUE, theme = "yihui/hugo-lithium", hostname = "github.com", 
-    theme_example = TRUE, serve = interactive())
+new_site(dir = ".", install_hugo = TRUE, format = "toml",
+  sample = TRUE, theme = "yihui/hugo-lithium",
+  hostname = "github.com", theme_example = TRUE,
+  serve = interactive())
 
 new_content(path, kind = "default", open = interactive())
 
-new_post(title, kind = "default", open = interactive(), 
-    author = getOption("blogdown.author"), categories = NULL, 
-    tags = NULL, date = Sys.Date(), file = NULL, slug = NULL, 
-    title_case = getOption("blogdown.title_case"), subdir = getOption("blogdown.subdir", 
-        "post"), ext = getOption("blogdown.ext", ".md"))
+new_post(title, kind = "default", open = interactive(),
+  author = getOption("blogdown.author"), categories = NULL,
+  tags = NULL, date = Sys.Date(), file = NULL, slug = NULL,
+  title_case = getOption("blogdown.title_case"),
+  subdir = getOption("blogdown.subdir", "post"),
+  ext = getOption("blogdown.ext", ".md"))
 
-hugo_convert(to = c("YAML", "TOML", "JSON"), unsafe = FALSE, 
-    ...)
+hugo_convert(to = c("YAML", "TOML", "JSON"), unsafe = FALSE, ...)
 
 hugo_server(host, port)
 }

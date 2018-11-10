@@ -42,9 +42,10 @@ build_site = function(
   if (method == 'custom') return()
   files = list_rmds('content', TRUE)
   if (local && length(files)) {
-    files = files[mapply(require_rebuild, output_file(files), files)]
+    files_to_build = files[mapply(require_rebuild, output_file(files), files)]
   }
-  build_rmds(files)
+  build_rmds(files_to_build)
+  update_rmd_digests(files)
   if (run_hugo) on.exit(hugo_build(local), add = TRUE)
   invisible()
 }

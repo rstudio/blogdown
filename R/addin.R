@@ -22,6 +22,10 @@ touch_file = function() {
     )
     u
   }
+
+  # Delete line in digests file corresponding to p
+  prune_rmd_digests(p)
+
   if (Sys.which('touch') != '') {
     if (system2('touch', shQuote(p)) == 0 && check_mtime()) return(TRUE)
   }

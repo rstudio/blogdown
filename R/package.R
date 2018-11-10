@@ -24,6 +24,10 @@ Rscript = bookdown:::Rscript
 
 `%n%` = knitr:::`%n%`
 
+## Suppress spurious R CMD check note about "dest", which appears in
+## within statements in update.R.
+if(getRversion() >= "2.15.1") utils::globalVariables(c("dest"))
+
 blogdown_skeleton = function(path, ...) {
   opts = options(blogdown.open_sample = FALSE); on.exit(options(opts), add = TRUE)
   new_site(dir = path, ..., serve = FALSE)

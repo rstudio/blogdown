@@ -99,6 +99,9 @@ build_dir = function(dir = '.', force = FALSE, ignore = '[.]Rproj$') {
     bases = with_ext(files, '')
     files = files[!i & bases == bases[i]]  # files with same basename as f (Rmd)
     if (length(files) == 0 || any(older_than(files, f))) render_it()
+    # Update digests for rebuilt files, but keep old digests for
+    # source files in other directories.
+    update_rmd_digests(files, partial = TRUE)
   }
 }
 

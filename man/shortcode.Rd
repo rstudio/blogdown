@@ -52,12 +52,12 @@ shortcodes, and there is no need to call these R functions.
 \examples{
 library(blogdown)
 
-shortcode("tweet", "1234567")
-shortcodes("tweet", as.character(1:5))  # multiple tweets
-shortcode("figure", src = "/images/foo.png", alt = "A nice figure")
-shortcode("highlight", "bash", .content = "echo hello world;")
+shortcode('tweet', '1234567')
+shortcodes('tweet', as.character(1:5))  # multiple tweets
+shortcode('figure', src='/images/foo.png', alt='A nice figure')
+shortcode('highlight', 'bash', .content = 'echo hello world;')
 
-shortcode_html("myshortcode", .content = "My <strong>shortcode</strong>.")
+shortcode_html('myshortcode', .content='My <strong>shortcode</strong>.')
 }
 \references{
 \url{https://gohugo.io/extras/shortcodes/}

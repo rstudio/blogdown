@@ -4,7 +4,8 @@
 \alias{build_site}
 \title{Build a website}
 \usage{
-build_site(local = FALSE, method = c("html", "custom"), run_hugo = TRUE)
+build_site(local = FALSE, method = c("html", "custom"),
+  run_hugo = TRUE)
 }
 \arguments{
 \item{local}{Whether to build the website locally to be served via
