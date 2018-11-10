@@ -43,6 +43,8 @@ build_site = function(
   files = list_rmds('content', TRUE)
   if (local && length(files)) {
     files_to_build = files[mapply(require_rebuild, output_file(files), files)]
+  } else {
+    files_to_build = files
   }
   build_rmds(files_to_build)
   update_rmd_digests(files)
