@@ -92,16 +92,22 @@ require_rebuild = function(html, rmd) {
 build_dir = function(dir = '.', force = FALSE, ignore = '[.]Rproj$') {
   for (f in list_rmds(dir)) {
     render_it = function() render_page(f, 'render_rmarkdown.R')
-    if (force) { render_it(); next }
+    if (force) {
+      render_it()
+      update_rmd_digests(f, partial = TRUE)
+      next
+      }
     files = list.files(dirname(f), full.names = TRUE)
     files = grep(ignore, files, value = TRUE, invert = TRUE)
     i = files == f  # should be only one in files matching f
     bases = with_ext(files, '')
     files = files[!i & bases == bases[i]]  # files with same basename as f (Rmd)
-    if (length(files) == 0 || any(older_than(files, f))) render_it()
-    # Update digests for rebuilt files, but keep old digests for
-    # source files in other directories.
-    update_rmd_digests(files, partial = TRUE)
+    if (length(files) == 0 || any(older_than(files, f))) {
+      render_it()
+      # Update digests for rebuilt files, but keep old digests for
+      # source files in other directories.
+      update_rmd_digests(f, partial = TRUE)
+    }
   }
 }
 
