@@ -12,14 +12,14 @@
 #' `blogdown`.
 #'
 #' The user can override the hashing algorithm by setting
-#' \code{options(blogdown.algorithm = <algorithm>)},
+#' \code{options(blogdown.hash.algorithm = <algorithm>)},
 #' where \code{<algorithm>} is one of the allowed digest algorithms
 #' in \code{\link[digest]{digest}()}: "\code{crc32}", "\code{md5}",
 #' "\code{sha1}", "\code{sha256}", "\code{sha512}",
 #' "\code{xxhash32}", "\code{xxhash64}", or "\code{murmur32}".
 #'
 #' @examples
-#' options(blogdown.algorithm = "sha256")
+#' options(blogdown.hash.algorithm = "sha256")
 #' @seealso \code{\link{update_site_digests}()}, \code{\link{update_site}()}.
 #' @name digests
 NULL
@@ -39,13 +39,14 @@ find_blog_content = function() {
 #'
 #' \code{get_digest_algorithm} gets the digest algorithm that will be used.
 #'
-#' Set the algorithm with `options(blogdown.algorithm = <algorithm>)`.
+#' Set the algorithm with `options(blogdown.hash.algorithm = <algorithm>)`.
 #' If the option is not set, then use crc32.
 #'
 #' @return A string containing the name of the algorithm.
+#' @seealso \code{\link{digests}}.
 #' @keywords internal
 get_digest_algorithm = function() {
-  getOption("blogdown.algorithm", default = "crc32")
+  getOption("blogdown.hash.algorithm", default = "crc32")
 }
 
 #' Check which files need to be rebuilt

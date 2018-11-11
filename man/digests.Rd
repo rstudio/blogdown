@@ -17,14 +17,14 @@ control), but that's not necessary for the purposes of updating sites in
 `blogdown`.
 
 The user can override the hashing algorithm by setting
-\code{options(blogdown.algorithm = <algorithm>)},
+\code{options(blogdown.hash.algorithm = <algorithm>)},
 where \code{<algorithm>} is one of the allowed digest algorithms
 in \code{\link[digest]{digest}()}: "\code{crc32}", "\code{md5}",
 "\code{sha1}", "\code{sha256}", "\code{sha512}",
 "\code{xxhash32}", "\code{xxhash64}", or "\code{murmur32}".
 }
 \examples{
-options(blogdown.algorithm = "sha256")
+options(blogdown.hash.algorithm = "sha256")
 }
 \seealso{
 \code{\link{update_site_digests}()}, \code{\link{update_site}()}.
