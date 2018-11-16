@@ -1,7 +1,7 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.9.2
+Version: 0.9.3
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
     person("Beilei", "Bian", role = "ctb"),
@@ -42,5 +42,5 @@ LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<https://pandoc.org>)
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Encoding: UTF-8

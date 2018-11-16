@@ -106,6 +106,25 @@ older_than = function(file1, file2) {
   !file_exists(file1) | file_test('-ot', file1, file2)
 }
 
+# filter files by checking if their MD5 checksums have changed
+md5sum_filter = function(files) {
+  opt = options(stringsAsFactors = FALSE); on.exit(options(opt), add = TRUE)
+  md5 = data.frame(file = files, checksum = tools::md5sum(files))  # new checksums
+  if (!file.exists(f <- 'blogdown/md5sum.txt')) {
+    dir_create('blogdown')
+    write.table(md5, f, row.names = FALSE)
+    return(files)
+  }
+  old = read.table(f, TRUE)  # old checksums (2 columns: file path and checksum)
+  one = merge(md5, old, 'file', all = TRUE, suffixes = c('', '.old'))
+  # exclude files if checksums are not changed
+  files = setdiff(files, one[one[, 2] == one[, 3], 'file'])
+  i = is.na(one[, 2])
+  one[i, 2] = one[i, 3]  # update checksums
+  write.table(one[, 1:2], f, row.names = FALSE)
+  files
+}
+
 is_windows = function() xfun::is_windows()
 is_osx = function() xfun::is_macos()
 is_linux = function() xfun::is_linux()

@@ -42,7 +42,7 @@ build_site = function(
   if (method == 'custom') return()
   files = list_rmds('content', TRUE)
   if (local && length(files)) {
-    files = files[mapply(require_rebuild, output_file(files), files)]
+    files = getOption('blogdown.files_filter', timestamp_filter)(files)
   }
   build_rmds(files)
   if (run_hugo) on.exit(hugo_build(local), add = TRUE)
@@ -58,6 +58,10 @@ list_rmds = function(dir, check = FALSE) {
   # predictable, e.g. foo_files/
   if (check) bookdown:::check_special_chars(files)
   files
+}
+
+timestamp_filter = function(files) {
+  files[mapply(require_rebuild, output_file(files), files)]
 }
 
 # raw indicates paths of dependencies are not encoded in the HTML output
