@@ -270,8 +270,12 @@ dash_filename = function(string, pattern = '[^[:alnum:]]+') {
 }
 
 # return a filename for a post based on title, date, etc
-post_filename = function(title, subdir, ext, date) {
-  file = paste0(dash_filename(title), ext)
+post_filename = function(title, subdir, ext, date, lang) {
+  if (!is.null(lang)) {
+    file = paste0(dash_filename(title), ".", lang, ext)
+  } else {
+    file = paste0(dash_filename(title), ext)
+  }
   d = dirname(file); f = basename(file)
   if (is.null(subdir) || subdir == '') subdir = '.'
   d = if (d == '.') subdir else file.path(subdir, d)
