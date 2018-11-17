@@ -27,6 +27,10 @@ local({
         height = '70px'
       ),
       shiny::fillRow(
+        txt_input('lang', 'Language', value = "", placeholder = "2-letter language code, e.g., 'en' (requires HUGO multilingual setup)"),
+        height = '70px'
+      ),
+      shiny::fillRow(
         txt_input('file', 'Filename', '', 'automatically generated (edit if you want)'),
         height = '70px'
       ),
@@ -51,7 +55,7 @@ local({
         # calculate file path
         if (!empty_title()) shiny::updateTextInput(
           session, 'file', value = blogdown:::post_filename(
-            input$title, input$subdir, shiny::isolate(input$format), input$date
+            input$title, input$subdir, shiny::isolate(input$format), input$date, input$lang
           )
         )
       })
