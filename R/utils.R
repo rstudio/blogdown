@@ -271,10 +271,10 @@ dash_filename = function(string, pattern = '[^[:alnum:]]+') {
 
 # return a filename for a post based on title, date, etc
 post_filename = function(title, subdir, ext, date, lang) {
-  if (!is.null(lang)) {
-    file = paste0(dash_filename(title), ".", lang, ext)
-  } else {
+  if (lang == '') {
     file = paste0(dash_filename(title), ext)
+  } else {
+    file = paste0(dash_filename(title), ".", lang, ext)
   }
   d = dirname(file); f = basename(file)
   if (is.null(subdir) || subdir == '') subdir = '.'
@@ -295,7 +295,7 @@ date_filename = function(path, date, replace = FALSE) {
 
 # give a filename, return a slug by removing the date and extension
 post_slug = function(x) {
-  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|[.][[:alnum:]]+$', '', basename(x)))
+  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|[.].+$', '', basename(x)))
 }
 
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)
