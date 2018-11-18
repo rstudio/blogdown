@@ -152,6 +152,7 @@ load_config = function() {
     check_config(config, f)
   }
 
+
   find_config()
 
   if (file_exists('config.toml'))
@@ -160,6 +161,18 @@ load_config = function() {
   if (file_exists('config.yaml'))
     return(read_config('config.yaml', yaml_load_file))
 }
+
+
+# check if the user has configured Multilingual Mode for Hugo in config.toml
+# (is it the same for config.yaml?)
+check_lang = function() {
+  config = load_config()
+  lang = config[['DefaultContentLanguage']]
+
+  return(lang)
+  #config
+}
+
 
 check_config = function(config, f) {
   base = config[['baseurl']]
@@ -179,6 +192,8 @@ check_config = function(config, f) {
   )
   config
 }
+
+
 
 is_example_url = function(url) {
   is.character(url) && grepl(
