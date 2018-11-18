@@ -27,14 +27,14 @@ local({
         height = '70px'
       ),
       shiny::fillRow(
-        txt_input('lang', 'Language', value = "", placeholder = "2-letter language code, e.g., 'en' (requires HUGO multilingual setup)"),
-        height = '70px'
-      ),
-      shiny::fillRow(
         txt_input('file', 'Filename', '', 'automatically generated (edit if you want)'),
         height = '70px'
       ),
-      shiny::fillRow(txt_input('slug', 'Slug', '', '(optional)'), height = '70px'),
+      shiny::fillRow(
+        txt_input('slug', 'Slug', '', '(optional)', width = '98%'),
+        txt_input('lang', 'Language', value = "", placeholder = "(optional 2-letter language code)", width = '98%'),
+        height = '70px'
+        ),
       shiny::fillRow(
         shiny::radioButtons(
           'format', 'Format', inline = TRUE,
