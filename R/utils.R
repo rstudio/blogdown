@@ -170,7 +170,6 @@ check_lang = function() {
   lang = config[['DefaultContentLanguage']]
 
   return(lang)
-  #config
 }
 
 
