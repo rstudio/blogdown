@@ -31,16 +31,13 @@ local({
         txt_input('file', 'Filename', '', 'automatically generated (edit if you want)'),
         height = '70px'
       ),
-      if (!is.null(lang)) {
-      shiny::fillRow(
-        txt_input('slug', 'Slug', '', '(optional)', width = '98%'),
-        txt_input('lang', 'Language', lang, width = '98%'),
-        height = '70px'
-        )
-      }
-      else {shiny::fillRow(
-        txt_input('slug', 'Slug', '', '(optional)'),
-        height = '70px'
+      if (is.null(lang)) {
+        shiny::fillRow(txt_input('slug', 'Slug', '', '(optional)'), height = '70px')
+      } else {
+        shiny::fillRow(
+          txt_input('slug', 'Slug', '', '(optional)', width = '98%'),
+          txt_input('lang', 'Language', lang, width = '98%'),
+          height = '70px'
         )
       },
       shiny::fillRow(

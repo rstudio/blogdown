@@ -152,7 +152,6 @@ load_config = function() {
     check_config(config, f)
   }
 
-
   find_config()
 
   if (file_exists('config.toml'))
@@ -162,16 +161,10 @@ load_config = function() {
     return(read_config('config.yaml', yaml_load_file))
 }
 
-
 # check if the user has configured Multilingual Mode for Hugo in config.toml
-# (is it the same for config.yaml?)
 check_lang = function() {
-  config = load_config()
-  lang = config[['DefaultContentLanguage']]
-
-  return(lang)
+  load_config()[['DefaultContentLanguage']]
 }
-
 
 check_config = function(config, f) {
   base = config[['baseurl']]
@@ -191,8 +184,6 @@ check_config = function(config, f) {
   )
   config
 }
-
-
 
 is_example_url = function(url) {
   is.character(url) && grepl(
@@ -284,12 +275,8 @@ dash_filename = function(string, pattern = '[^[:alnum:]]+') {
 }
 
 # return a filename for a post based on title, date, etc
-post_filename = function(title, subdir, ext, date, lang) {
-  if (lang == '') {
-    file = paste0(dash_filename(title), ext)
-  } else {
-    file = paste0(dash_filename(title), ".", lang, ext)
-  }
+post_filename = function(title, subdir, ext, date, lang = '') {
+  file = paste0(dash_filename(title), if (lang != '') '.', lang, ext)
   d = dirname(file); f = basename(file)
   if (is.null(subdir) || subdir == '') subdir = '.'
   d = if (d == '.') subdir else file.path(subdir, d)
