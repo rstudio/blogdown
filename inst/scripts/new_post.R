@@ -5,6 +5,7 @@ local({
     ..., width = '98%', multiple = TRUE, options = list(create = TRUE)
   )
   meta = blogdown:::collect_yaml()
+  lang = blogdown:::check_lang()
   shiny::runGadget(
     miniUI::miniPage(miniUI::miniContentPanel(
       txt_input('title', 'Title', placeholder = 'Post Title'),
@@ -30,7 +31,15 @@ local({
         txt_input('file', 'Filename', '', 'automatically generated (edit if you want)'),
         height = '70px'
       ),
-      shiny::fillRow(txt_input('slug', 'Slug', '', '(optional)'), height = '70px'),
+      if (is.null(lang)) {
+        shiny::fillRow(txt_input('slug', 'Slug', '', '(optional)'), height = '70px')
+      } else {
+        shiny::fillRow(
+          txt_input('slug', 'Slug', '', '(optional)', width = '98%'),
+          txt_input('lang', 'Language', lang, width = '98%'),
+          height = '70px'
+        )
+      },
       shiny::fillRow(
         shiny::radioButtons(
           'format', 'Format', inline = TRUE,
@@ -51,7 +60,7 @@ local({
         # calculate file path
         if (!empty_title()) shiny::updateTextInput(
           session, 'file', value = blogdown:::post_filename(
-            input$title, input$subdir, shiny::isolate(input$format), input$date
+            input$title, input$subdir, shiny::isolate(input$format), input$date, input$lang
           )
         )
       })

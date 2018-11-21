@@ -161,6 +161,11 @@ load_config = function() {
     return(read_config('config.yaml', yaml_load_file))
 }
 
+# check if the user has configured Multilingual Mode for Hugo in config.toml
+check_lang = function() {
+  load_config()[['DefaultContentLanguage']]
+}
+
 check_config = function(config, f) {
   base = config[['baseurl']]
   if (is_example_url(base)) {
@@ -270,8 +275,8 @@ dash_filename = function(string, pattern = '[^[:alnum:]]+') {
 }
 
 # return a filename for a post based on title, date, etc
-post_filename = function(title, subdir, ext, date) {
-  file = paste0(dash_filename(title), ext)
+post_filename = function(title, subdir, ext, date, lang = '') {
+  file = paste0(dash_filename(title), if (lang != '') '.', lang, ext)
   d = dirname(file); f = basename(file)
   if (is.null(subdir) || subdir == '') subdir = '.'
   d = if (d == '.') subdir else file.path(subdir, d)
@@ -291,7 +296,7 @@ date_filename = function(path, date, replace = FALSE) {
 
 # give a filename, return a slug by removing the date and extension
 post_slug = function(x) {
-  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|[.][[:alnum:]]+$', '', basename(x)))
+  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|[.].+$', '', basename(x)))
 }
 
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)
