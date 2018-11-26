@@ -276,6 +276,7 @@ dash_filename = function(string, pattern = '[^[:alnum:]]+') {
 
 # return a filename for a post based on title, date, etc
 post_filename = function(title, subdir, ext, date, lang = '') {
+  if (is.null(lang)) lang = ''
   file = paste0(dash_filename(title), if (lang != '') '.', lang, ext)
   d = dirname(file); f = basename(file)
   if (is.null(subdir) || subdir == '') subdir = '.'
