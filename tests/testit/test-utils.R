@@ -35,6 +35,13 @@ assert('arg_string() turns a series of arguments to a single string', {
   (args_string(a = 'hi', b = 1) %==% 'a="hi" b=1')
 })
 
+assert('post_slug() extracts a slug from a filename', {
+  (post_slug('foo-bar.md') %==% 'foo-bar')
+  (post_slug('2015-07-23-foo-bar.md') %==% 'foo-bar')
+  (post_slug('foo-bar.en.md') %==% 'foo-bar')
+  (post_slug('foo-bar.zz.cn.md') %==% 'foo-bar.zz')
+})
+
 test_rmd_file = tempfile()
 test_rmd = '---
 date: \'2017-05-01\'

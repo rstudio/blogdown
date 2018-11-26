@@ -297,7 +297,7 @@ date_filename = function(path, date, replace = FALSE) {
 
 # give a filename, return a slug by removing the date and extension
 post_slug = function(x) {
-  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|[.].+$', '', basename(x)))
+  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|([.][[:alnum:]]+){1,2}$', '', basename(x)))
 }
 
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)
