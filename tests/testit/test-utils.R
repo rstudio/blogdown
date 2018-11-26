@@ -15,17 +15,15 @@ raw_list = function(x) {
 
 x1 = c('a = "foo"', '# a comment', 'b = false', 'c3 = 10')
 x2 = list(a = 'foo', b = FALSE, c3 = 10L)
-assert(
-  'parse_toml() works',
-  raw_list(parse_toml(x = x1)) %==% x2,
-  parse_toml(x = x1, strict = FALSE) %==% x2
-)
+assert('parse_toml() works', {
+  (raw_list(parse_toml(x = x1)) %==% x2)
+  (parse_toml(x = x1, strict = FALSE) %==% x2)
+})
 
-assert(
-  'dash_filename() creates a filename by replacing non-alnum chars with -',
+assert('dash_filename() creates a filename by replacing non-alnum chars with -', {
   dash_filename(c('foo Bar', 'foo/bar  !@ hi', '() foo/hello WORLD')) %==%
     c('foo-bar', 'foo-bar-hi', 'foo-hello-world')
-)
+})
 
 assert('arg_string() turns a series of arguments to a single string', {
   (args_string('hi') %==% '"hi"')
