@@ -66,7 +66,7 @@ local({
       })
       shiny::observe({
         if (!grepl('^\\s*$', input$file)) shiny::updateTextInput(
-          session, 'slug', value = blogdown:::post_slug(input$file)
+          session, 'slug', placeholder = blogdown:::post_slug(input$file)
         )
       })
       shiny::observeEvent(input$format, {
@@ -84,8 +84,8 @@ local({
           input$title, author = input$author, ext = input$format,
           categories = input$cat, tags = input$tag,
           file = gsub('[-[:space:]]+', '-', input$file),
-          slug = input$slug, subdir = input$subdir, date = input$date,
-          kind = input$kind
+          slug = if (input$slug != '') input$slug, subdir = input$subdir,
+          date = input$date, kind = input$kind
         )
         shiny::stopApp()
       })
