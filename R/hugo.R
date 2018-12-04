@@ -219,7 +219,7 @@ install_theme = function(
 #' @export
 #' @describeIn hugo_cmd Create a new (R) Markdown file via \command{hugo new}
 #'   (e.g. a post or a page).
-new_content = function(path, kind = 'default', open = interactive()) {
+new_content = function(path, kind = '', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
   path2 = with_ext(path, '.md')
   file  = content_file(path)
@@ -233,9 +233,9 @@ new_content = function(path, kind = 'default', open = interactive()) {
 
 default_kind = function(path) {
   path = normalizePath(path, '/', mustWork = FALSE)
-  if (!grepl('/', path)) return('default')
+  if (!grepl('/', path)) return('')
   atype = gsub('/.*', '.md', path)
-  if (!file.exists(file.path('archetypes', atype))) return('default')
+  if (!file.exists(file.path('archetypes', atype))) return('')
   gsub('/.*', '', path)
 }
 
@@ -288,7 +288,7 @@ content_file = function(path) file.path(get_config('contentDir', 'content'), pat
 #'   Similarly, you can set \code{options(blogdown.author = 'Your Name')} so
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
-  title, kind = 'default', open = interactive(), author = getOption('blogdown.author'),
+  title, kind = '', open = interactive(), author = getOption('blogdown.author'),
   categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = NULL,
   title_case = getOption('blogdown.title_case'),
   subdir = getOption('blogdown.subdir', 'post'), ext = getOption('blogdown.ext', '.md')
