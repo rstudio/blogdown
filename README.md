@@ -13,7 +13,7 @@ An open-source (GPL-3) R package to generate static websites based on [R Markdow
 install.packages('blogdown')
 
 ## Or, install from GitHub
-devtools::install_github('rstudio/blogdown')
+remotes::install_github('rstudio/blogdown')
 ```
 
 You may create a new site via the function `blogdown::new_site()` under an _empty_ directory. It will create a skeleton site, download a Hugo theme from Github,  add some sample content, launch a web browser and you will see the new site. The sample blog post `hello-world.Rmd` should be opened automatically, and you can edit it. The website will be automatically rebuilt and the page will be refreshed after you save the file.
