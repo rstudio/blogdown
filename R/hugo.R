@@ -36,13 +36,11 @@ hugo_build = function(local = FALSE) {
 }
 
 theme_flag = function(config = load_config()) {
-  a = NULL
-  if (!is.null(d <- getOption('blogdown.themesDir'))) a = c('--themesDir', d) else {
-    d = get_config('themesDir', 'themes', config)
-  }
+  d = getOption('blogdown.themesDir', get_config('themesDir', 'themes', config))
   t = list.files(d)
   t = if (length(t) > 0) t[1]
   t = get_config('theme', t, config)
+  a = c('--themesDir', d)
   if (length(t) == 1) a = c(a, '-t', t)
   a
 }

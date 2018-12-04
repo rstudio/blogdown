@@ -6,6 +6,9 @@ local({
   )
   meta = blogdown:::collect_yaml()
   lang = blogdown:::check_lang()
+  adir = blogdown:::theme_flag()
+  adir = if (length(adir) == 4) file.path(adir[2], adir[4], 'archetypes')
+  adir = c('archetypes', adir)
   shiny::runGadget(
     miniUI::miniPage(miniUI::miniContentPanel(
       txt_input('title', 'Title', placeholder = 'Post Title'),
@@ -23,7 +26,7 @@ local({
         sel_input('tag', 'Tags', meta$tags),
         shiny::selectInput(
           'kind', 'Archetype', width = '98%',
-          choices = unique(c('default', xfun::sans_ext(dir('archetypes', '\\.md$'))))
+          choices = unique(c('', xfun::sans_ext(dir(adir, '\\.md$'))))
         ),
         height = '70px'
       ),
