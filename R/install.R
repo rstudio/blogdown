@@ -16,7 +16,7 @@
 #' executable for your operating system, especially if you are not on Windows or
 #' Mac or a major Linux distribution. When in doubt, read the Hugo documentation
 #' and install it by yourself: \url{https://gohugo.io}.
-#'
+#' 
 #' If you want to install Hugo to a custom path, you can set the global option
 #' \code{blogdown.hugo.dir} to a directory to store the Hugo executable before
 #' you call \code{install_hugo()}, e.g., \code{options(blogdown.hugo.dir =
