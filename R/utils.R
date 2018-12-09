@@ -269,10 +269,10 @@ open_file = function(x) {
   tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
 }
 
-# produce a dash-separated filename by replacing non-alnum chars with -
+# produce a dash-separated filename by replacing non-alnum chars with - and make it latin only
 dash_filename = function(string, pattern = '[^[:alnum:]]+') {
+  string = stringi::stri_trans_general(string, "any-latin; nfd; [:nonspacing mark:] remove; nfc")
   tolower(gsub('^-+|-+$', '', gsub(pattern, '-', string)))
-  stringi::stri_trans_general(string, "any-latin; nfd; [:nonspacing mark:] remove; nfc")
 }
 
 # return a filename for a post based on title, date, etc
@@ -298,8 +298,8 @@ date_filename = function(path, date, replace = FALSE) {
 
 # give a filename, return a slug by removing the date and extension
 post_slug = function(x) {
-  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|([.][[:alnum:]]+){1,2}$', '', basename(x)))
   x = stringi::stri_trans_general(x, "any-latin; nfd; [:nonspacing mark:] remove; nfc")
+  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|([.][[:alnum:]]+){1,2}$', '', basename(x)))
 }
 
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)
