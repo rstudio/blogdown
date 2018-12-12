@@ -28,7 +28,8 @@ Imports:
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
     xfun (>= 0.3),
-    servr (>= 0.8)
+    servr (>= 0.8),
+    stringi
 Suggests:
   testit,
   shiny,
