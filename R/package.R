@@ -12,6 +12,7 @@
 #' @import utils
 #' @import stats
 #' @importFrom xfun attr in_dir read_utf8 write_utf8
+#' @importFrom stringi stri_trans_general
 #' @examples if (interactive()) blogdown::new_site()
 NULL
 
