@@ -192,7 +192,9 @@ is_example_url = function(url) {
 }
 
 # only support TOML and YAML (no JSON)
-find_config = function(files = c('config.toml', 'config.yaml'), error = TRUE) {
+config_files = c('config.toml', 'config.yaml')
+
+find_config = function(files = config_files, error = TRUE) {
   f = existing_files(files, first = TRUE)
   if (length(f) == 0 && error) stop(
     'Cannot find the configuration file ', paste(files, collapse = ' | '), ' of the website'
@@ -201,12 +203,15 @@ find_config = function(files = c('config.toml', 'config.yaml'), error = TRUE) {
 }
 
 # figure out the possible root directory of the website
-site_root = function(...) {
+site_root = function(config = config_files) {
   owd = getwd(); on.exit(setwd(owd), add = TRUE)
-  while (length(find_config(error = FALSE, ...)) == 0) {
+  paths = NULL
+  while (length(find_config(config, error = FALSE)) == 0) {
     w1 = getwd(); w2 = dirname(w1)
+    paths = c(paths, w1)
     if (w1 == w2) stop(
-      'Cannot find a website under the current working directory or upper-level directories'
+      'Could not find ', paste(config, collapse = ' / '), ' under\n',
+      paste('  ', paths, collapse = '\n')
     )
     setwd('..')
   }
