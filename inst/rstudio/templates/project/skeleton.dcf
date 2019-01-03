@@ -29,3 +29,10 @@ Parameter: empty_dirs
 Widget: CheckboxInput
 Label: Keep empty directories
 Default: Off
+Position: right
+
+Parameter: to_yaml
+Widget: CheckboxInput
+Label: Convert all metadata to YAML
+Default: On
+Position: right
