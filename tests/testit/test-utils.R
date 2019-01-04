@@ -38,6 +38,9 @@ assert('post_slug() extracts a slug from a filename', {
   (post_slug('2015-07-23-foo-bar.md') %==% 'foo-bar')
   (post_slug('foo-bar.en.md') %==% 'foo-bar')
   (post_slug('foo-bar.zz.cn.md') %==% 'foo-bar.zz')
+  (post_slug('2015-07-23-foo-bar/index.md') %==% 'foo-bar')
+  (post_slug('2015-07-23-foo-bar/index.fr.md') %==% 'foo-bar')
+  (post_slug('path/to/2015-07-23-foo-bar/index.Rmd') %==% 'foo-bar')
 })
 
 test_rmd_file = tempfile()

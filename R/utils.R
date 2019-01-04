@@ -280,15 +280,18 @@ dash_filename = function(string, pattern = '[^[:alnum:]]+') {
 }
 
 # return a filename for a post based on title, date, etc
-post_filename = function(title, subdir, ext, date, lang = '') {
+post_filename = function(
+  title, subdir, ext, date, lang = '', bundle = getOption('blogdown.new_bundle', FALSE)
+) {
   if (is.null(lang)) lang = ''
-  file = paste0(dash_filename(title), if (lang != '') '.', lang, ext)
+  file = dash_filename(title)
   d = dirname(file); f = basename(file)
   if (is.null(subdir) || subdir == '') subdir = '.'
   d = if (d == '.') subdir else file.path(subdir, d)
   d = gsub('/+$', '', d)
   f = date_filename(f, date)
-  gsub('^([.]/)+', '', file.path(d, f))
+  f = gsub('^([.]/)+', '', file.path(d, f))
+  paste0(f, if (bundle) '/index', if (lang != '') '.', lang, ext)
 }
 
 date_filename = function(path, date, replace = FALSE) {
@@ -296,13 +299,17 @@ date_filename = function(path, date, replace = FALSE) {
   date = format(date)
   if (date == '') return(path)
   # FIXME: this \\d{4} will be problematic in about 8000 years
-  if (grepl(r <- '^\\d{4}-\\d{2}-\\d{2}-', path) != replace) return(path)
-  paste(date, gsub(r, '', path), sep = '-')
+  m = grepl(r <- '(^|[\\/])\\d{4}-\\d{2}-\\d{2}-', path)
+  if ( replace &&  m) path = gsub(r, paste0('\\1', date, '-'), path)
+  if (!replace && !m) path = paste(date, path, sep = '-')
+  path
 }
 
-# give a filename, return a slug by removing the date and extension
+# give a filename, return a slug by removing the date and extension (and posible index.md)
 post_slug = function(x) {
-  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|([.][[:alnum:]]+){1,2}$', '', basename(x)))
+  x = gsub('([.][[:alnum:]]+){1,2}$', '', x)
+  if (basename(x) == 'index') x = dirname(x)
+  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-', '', basename(x)))
 }
 
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)

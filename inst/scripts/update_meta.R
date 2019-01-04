@@ -61,11 +61,11 @@ local({
         )
         if (input$rename) {
           rstudioapi::documentSave()
-          xfun::in_dir(dirname(p <- ctxt$path), {
-            b = basename(p)
-            if (file.rename(b, b2 <- blogdown:::date_filename(b, res$date, replace = TRUE)))
-              rstudioapi::navigateToFile(b2)
-          })
+          p = ctxt$path; p2 = blogdown:::date_filename(p, res$date, replace = TRUE)
+          b = if (basename(p) == basename(p2)) {
+            file.rename(dirname(p), dirname(p2))
+          } else file.rename(p, p2)
+          if (b) rstudioapi::navigateToFile(p2)
         }
         shiny::stopApp()
       })
