@@ -1,4 +1,4 @@
-local({
+xfun::in_dir(blogdown:::site_root(), local({
   tags = htmltools::tags
   txt_input = function(..., width = '100%') shiny::textInput(..., width = width)
   sel_input = function(...) shiny::selectizeInput(
@@ -98,4 +98,4 @@ local({
     },
     stopOnCancel = FALSE, viewer = shiny::dialogViewer('New Post', height = 500)
   )
-})
+}))
