@@ -22,13 +22,13 @@ Description: Write blog posts and web pages in R Markdown. This package supports
 License: GPL-3
 Imports:
     rmarkdown,
-    bookdown (>= 0.5),
-    knitr (>= 1.17),
+    bookdown (>= 0.9),
+    knitr (>= 1.20),
     htmltools,
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
-    xfun (>= 0.3),
-    servr (>= 0.8)
+    xfun (>= 0.4),
+    servr (>= 0.11)
 Suggests:
   testit,
   shiny,
