@@ -43,10 +43,7 @@ server_ready = function(url) {
 
 generator = function() getOption('blogdown.generator', 'hugo')
 
-serve_it = function(
-  config = c('config.toml', 'config.yaml'), pdir = publish_dir(),
-  baseurl = site_base_dir()
-) {
+serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_base_dir()) {
   function(...) {
     owd = setwd(site_root(config)); on.exit(setwd(owd), add = TRUE)
 

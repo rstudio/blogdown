@@ -1,7 +1,7 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.9.8
+Version: 0.10.1
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
     person("Beilei", "Bian", role = "ctb"),
@@ -22,8 +22,8 @@ Description: Write blog posts and web pages in R Markdown. This package supports
 License: GPL-3
 Imports:
     rmarkdown,
-    bookdown (>= 0.5),
-    knitr (>= 1.17),
+    bookdown (>= 0.9),
+    knitr (>= 1.20),
     htmltools,
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),

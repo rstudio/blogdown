@@ -192,7 +192,9 @@ is_example_url = function(url) {
 }
 
 # only support TOML and YAML (no JSON)
-find_config = function(files = c('config.toml', 'config.yaml'), error = TRUE) {
+config_files = c('config.toml', 'config.yaml')
+
+find_config = function(files = config_files, error = TRUE) {
   f = existing_files(files, first = TRUE)
   if (length(f) == 0 && error) stop(
     'Cannot find the configuration file ', paste(files, collapse = ' | '), ' of the website'
@@ -201,12 +203,15 @@ find_config = function(files = c('config.toml', 'config.yaml'), error = TRUE) {
 }
 
 # figure out the possible root directory of the website
-site_root = function(...) {
+site_root = function(config = config_files) {
   owd = getwd(); on.exit(setwd(owd), add = TRUE)
-  while (length(find_config(error = FALSE, ...)) == 0) {
+  paths = NULL
+  while (length(find_config(config, error = FALSE)) == 0) {
     w1 = getwd(); w2 = dirname(w1)
+    paths = c(paths, w1)
     if (w1 == w2) stop(
-      'Cannot find a website under the current working directory or upper-level directories'
+      'Could not find ', paste(config, collapse = ' / '), ' under\n',
+      paste('  ', paths, collapse = '\n')
     )
     setwd('..')
   }
@@ -276,15 +281,18 @@ dash_filename = function(string, pattern = '[^[:alnum:]]+') {
 }
 
 # return a filename for a post based on title, date, etc
-post_filename = function(title, subdir, ext, date, lang = '') {
+post_filename = function(
+  title, subdir, ext, date, lang = '', bundle = getOption('blogdown.new_bundle', FALSE)
+) {
   if (is.null(lang)) lang = ''
-  file = paste0(dash_filename(title), if (lang != '') '.', lang, ext)
+  file = dash_filename(title)
   d = dirname(file); f = basename(file)
   if (is.null(subdir) || subdir == '') subdir = '.'
   d = if (d == '.') subdir else file.path(subdir, d)
   d = gsub('/+$', '', d)
   f = date_filename(f, date)
-  gsub('^([.]/)+', '', file.path(d, f))
+  f = gsub('^([.]/)+', '', file.path(d, f))
+  paste0(f, if (bundle) '/index', if (lang != '') '.', lang, ext)
 }
 
 date_filename = function(path, date, replace = FALSE) {
@@ -292,14 +300,18 @@ date_filename = function(path, date, replace = FALSE) {
   date = format(date)
   if (date == '') return(path)
   # FIXME: this \\d{4} will be problematic in about 8000 years
-  if (grepl(r <- '^\\d{4}-\\d{2}-\\d{2}-', path) != replace) return(path)
-  paste(date, gsub(r, '', path), sep = '-')
+  m = grepl(r <- '(^|[\\/])\\d{4}-\\d{2}-\\d{2}-', path)
+  if ( replace &&  m) path = gsub(r, paste0('\\1', date, '-'), path)
+  if (!replace && !m) path = paste(date, path, sep = '-')
+  path
 }
 
-# give a filename, return a slug by removing the date and extension
+# give a filename, return a slug by removing the date and extension (and posible index.md)
 post_slug = function(x) {
   x = stringi::stri_trans_general(x, "any-latin; nfd; [:nonspacing mark:] remove; nfc")
-  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-|([.][[:alnum:]]+){1,2}$', '', basename(x)))
+  x = gsub('([.][[:alnum:]]+){1,2}$', '', x)
+  if (basename(x) == 'index') x = dirname(x)
+  trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-', '', basename(x)))
 }
 
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)

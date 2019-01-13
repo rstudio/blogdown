@@ -11,6 +11,7 @@ knitr::kable(matrix(c(
   'blogdown.hugo.dir', '', 'The directory of the Hugo executable',
   'blogdown.method', 'html', 'The building method for R Markdown',
   'blogdown.publishDir', '', 'The publish dir for local preview',
+  'blogdown.new_bundle', FALSE, 'Create a new post in a bundle?',
   'blogdown.widgetsID', TRUE, "Incremental IDs for HTML widgets?",
   NULL
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'A few more advanced global options.')
@@ -21,6 +22,8 @@ If you want to install Hugo to a custom path, you can set the global option `blo
 The option `blogdown.method` is explained in Section \@ref(methods).
 
 When your website project is under version control in the RStudio IDE, continuously previewing the site can be slow, if it contains hundreds of files or more. The default publish directory is `public/` under the project root directory, and whenever you make a change in the source that triggers a rebuild, RStudio will be busy tracking file changes in the `public/` directory. The delay before you see the website in the RStudio Viewer can be 10 seconds or even longer. That is why we provide the option `blogdown.publishDir`. You may set a temporary publish directory to generate the website, and this directory should not be under the same RStudio project, e.g., `options(blogdown.publishDir = '../public_site')`, which means the website will be generated to the directory `public_site/` under the parent directory of the current project.
+
+To understand the option `blogdown.new_bundle`, you have to know the concept of [page bundles](https://gohugo.io/content-management/page-bundles/) in Hugo. When this option is set to `TRUE`, the function `blogdown::new_site()` (or the RStudio addin "New Post") will create a new post as the index file of a page bundle, e.g., `post/2015-07-23-bye-world/index.md` instead of `post/2015-07-23-bye-world.md`. One benefit of using a page bundle instead of a normal page file is that you can put resource files associated with the post (such as images) under the same directory of the post. This means you no longer have to put them under the `static/` directory, which is often confusing to Hugo beginners.
 
 The option `blogdown.widgetsID` is only relevant if your website source is under version control and you have HTML widgets on the website. If this option is `TRUE` (default), the random IDs of HTML widgets will be changed to incremental IDs in the HTML output, so these IDs are unlikely to change every time you recompile your website; otherwise, every time you will get different random IDs.
 
