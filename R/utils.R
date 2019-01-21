@@ -605,3 +605,14 @@ args_string = function(...) {
     paste(m, '=', v, sep = '', collapse = ' ')
   }
 }
+
+is_rstudio_server = local({
+  x = NULL
+  function() {
+    if (!is.null(x)) return(x)
+    x <<- tryCatch(
+      tolower(rstudioapi::versionInfo()$mode) == 'server',
+      error = function(e) FALSE
+    )
+  }
+})

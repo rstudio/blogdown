@@ -1,6 +1,8 @@
 # CHANGES IN blogdown VERSION 0.11
 
+## MAJOR CHANGES
 
+- When previewing a **blogdown** website with Hugo on the RStudio Server, the Hugo configuration `relativeURLs` will be set to `true` automatically (thanks, @nwstephens, #124).
 
 # CHANGES IN blogdown VERSION 0.10
 
