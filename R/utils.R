@@ -616,3 +616,12 @@ is_rstudio_server = local({
     )
   }
 })
+
+tweak_hugo_env = function() {
+  if (!is_rstudio_server()) return()
+  Sys.setenv(HUGO_RELATIVEURLS = 'true')
+  do.call(
+    on.exit, list(substitute(Sys.unsetenv('HUGO_RELATIVEURLS')), add = TRUE),
+    envir = parent.frame()
+  )
+}

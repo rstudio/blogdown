@@ -29,10 +29,7 @@ hugo_build = function(local = FALSE) {
   config = load_config()
   # Hugo 0.48 generates an ugly empty resources/ dir in the root dir
   on.exit(bookdown:::clean_empty_dir('resources'), add = TRUE)
-  if (local && is_rstudio_server()) {
-    Sys.setenv(HUGO_RELATIVEURLS = 'true')
-    on.exit(Sys.unsetenv('HUGO_RELATIVEURLS'), add = TRUE)
-  }
+  if (local) tweak_hugo_env()
   hugo_cmd(c(
     if (local) c('-b', site_base_dir(), '-D', '-F'),
     '-d', shQuote(publish_dir(config)), theme_flag(config)

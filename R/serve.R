@@ -72,6 +72,7 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
     )
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
+    tweak_hugo_env()
     p1 = proc_new(cmd, cmd_args)
     pid = p1$get_pid()
     opts$set(pids = c(opts$get('pids'), pid))
