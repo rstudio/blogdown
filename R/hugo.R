@@ -194,7 +194,7 @@ install_theme = function(
       # themes may use config/_default/config.toml, e.g. hugo-academic; we need
       # to move this config to the root dir, because blogdown assumes the config
       # file is under the root dir
-      if (file.exists(cfg <- file.path(expdir, 'config', '_default', 'config.toml'))) {
+      if (file.exists(cfg <- file.path('..', 'config', '_default', 'config.toml'))) {
         file.rename(cfg, '../config.toml')
       }
       # remove the themesDir setting; it is unlikely that you need it
