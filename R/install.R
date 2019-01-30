@@ -39,7 +39,7 @@
 #'   command \command{brew update && brew upgrade} instead).
 #' @export
 install_hugo = function(
-  version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE
+  version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE, extended = TRUE
 ) {
 
   if (Sys.which('hugo') != '' && !force) {
@@ -74,6 +74,7 @@ install_hugo = function(
   version = gsub('^[vV]', '', version)  # pure version number
   version2 = as.numeric_version(version)
   bit = if (grepl('64', Sys.info()[['machine']])) '64bit' else '32bit'
+  if (extended == TRUE && (bit == '32bit' || version2 < 0.43)) stop("Extended version of Hugo not available")
   base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
@@ -81,7 +82,11 @@ install_hugo = function(
 
   download_zip = function(OS, type = 'zip') {
     if (is.null(local_file)) {
-      zipfile = sprintf('hugo_%s_%s-%s.%s', version, OS, bit, type)
+      if (extended) {
+          zipfile = sprintf('hugo_extended_%s_%s-%s.%s', version, OS, bit, type)
+      } else {
+          zipfile = sprintf('hugo_%s_%s-%s.%s', version, OS, bit, type)
+      }
       xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb')
     } else {
       zipfile = local_file
