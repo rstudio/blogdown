@@ -5,7 +5,8 @@
 \alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FALSE)
+install_hugo(version = "latest", use_brew = Sys.which("brew") != "", force = FALSE, 
+    extended = TRUE)
 
 update_hugo()
 }
@@ -24,6 +25,9 @@ Homebrew will be automatically installed if it has not been installed when
 \item{force}{Whether to install Hugo even if it has already been installed.
 This may be useful when upgrading Hugo (if you use Homebrew, run the
 command \command{brew update && brew upgrade} instead).}
+
+\item{extended}{Whether to use extended version of Hugo that has SCSS/SASS support.
+You only need the extended version if you want to edit SCSS/SASS.}
 }
 \description{
 Download the appropriate Hugo executable for your platform from Github and

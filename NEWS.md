@@ -6,7 +6,7 @@
 
 ## MINOR CHANGES
 
-- Added support to install extended version of Hugo and enabled it as default. (thanks, @rgaiacs, #363).
+- Added support to install the extended version of Hugo and enabled it as default via `install_hugo(..., extended = TRUE)` (thanks, @rgaiacs, #363).
 
 # CHANGES IN blogdown VERSION 0.10
 
