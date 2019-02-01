@@ -75,7 +75,7 @@ install_hugo = function(
   version2 = as.numeric_version(version)
   bit = if (grepl('64', Sys.info()[['machine']])) '64bit' else '32bit'
   if (extended) {
-    if (bit == '32bit') stop('The extended version of Hugo is not available on 32-bit platforms')
+    if (bit != '64bit') stop('The extended version of Hugo is only available on 64-bit platforms')
     if (version2 < '0.43') {
       if (!missing(extended)) stop('Only Hugo >= v0.43 provides the extended version')
       extended = FALSE
