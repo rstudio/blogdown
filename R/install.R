@@ -88,11 +88,9 @@ install_hugo = function(
 
   download_zip = function(OS, type = 'zip') {
     if (is.null(local_file)) {
-      if (extended) {
-          zipfile = sprintf('hugo_extended_%s_%s-%s.%s', version, OS, bit, type)
-      } else {
-          zipfile = sprintf('hugo_%s_%s-%s.%s', version, OS, bit, type)
-      }
+        zipfile = sprintf(
+            'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''), version, OS, bit, type
+      )
       xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb')
     } else {
       zipfile = local_file
