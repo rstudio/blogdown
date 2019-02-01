@@ -37,6 +37,8 @@
 #' @param force Whether to install Hugo even if it has already been installed.
 #'   This may be useful when upgrading Hugo (if you use Homebrew, run the
 #'   command \command{brew update && brew upgrade} instead).
+#' @param extended Whether to use extended version of Hugo that has SCSS/SASS support.
+#'   You only need the extended version if you want to edit SCSS/SASS.
 #' @export
 install_hugo = function(
   version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE, extended = TRUE
