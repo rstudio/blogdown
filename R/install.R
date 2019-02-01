@@ -74,7 +74,13 @@ install_hugo = function(
   version = gsub('^[vV]', '', version)  # pure version number
   version2 = as.numeric_version(version)
   bit = if (grepl('64', Sys.info()[['machine']])) '64bit' else '32bit'
-  if (extended == TRUE && (bit == '32bit' || version2 < 0.43)) stop("Extended version of Hugo not available")
+  if (extended) {
+    if (bit == '32bit') stop('The extended version of Hugo is not available on 32-bit platforms')
+    if (version2 < '0.43') {
+      if (!missing(extended)) stop('Only Hugo >= v0.43 provides the extended version')
+      extended = FALSE
+    }
+  }
   base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
