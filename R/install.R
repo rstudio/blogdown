@@ -177,7 +177,7 @@ bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) 
     path = '~/Library/Application Support'
     path = if (dir_exists(path)) file.path(path, dir)
   } else {
-    path = '~/bin'
+    path = c('~/bin', '/snap/bin', '/var/lib/snapd/snap/bin')
   }
   path = c(extra_path, path, pkg_file(dir, mustWork = FALSE))
   path
