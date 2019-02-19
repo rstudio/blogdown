@@ -192,17 +192,13 @@ find_exec = function(cmd, dir, info = '') {
   }
   path2 = Sys.which(cmd)
   if (path == '' || xfun::same_path(path, path2)) {
-    if (path2 == '') stop(
-      cmd, ' not found. ', info, call. = FALSE
-    )
+    if (path2 == '') stop(cmd, ' not found. ', info, call. = FALSE)
     return(cmd)  # do not use the full path of the command
   } else {
-    if (path2 != '') {
-      warning(
-        'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
-        "If you don't need both copies, you may delete/uninstall one."
-      )
-    }
+    if (path2 != '') warning(
+      'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
+      "If you don't need both copies, you may delete/uninstall one."
+    )
   }
   normalizePath(path)
 }
