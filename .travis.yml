@@ -1,5 +1,5 @@
 language: r
-dist: trusty
+dist: xenial
 cache:
   packages: yes
   directories:
