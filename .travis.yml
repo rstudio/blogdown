@@ -17,8 +17,7 @@ before_script:
   - "curl https://xran.yihui.name/.gitconfig -o ~/.gitconfig"
   - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
   - Rscript -e 'xfun::pkg_load2(c("covr", "xml2"))'
-  - R CMD INSTALL .
-  - "Rscript -e \"Sys.which('hugo');blogdown::hugo_version()\""
+  - hugo version
 
 after_success:
   - Rscript -e 'covr::codecov()'
