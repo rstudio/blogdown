@@ -115,34 +115,16 @@ The second problem can be solved, but I do not want to explain how in this book 
 
 The Travis documentation shows how to deploy a site to GitHub Pages: https://docs.travis-ci.com/user/deployment/pages/, but does not show how to build a site. Here is the Travis configuration file, `.travis.yml`, for the `travis-blogdown` repository:
 
+```{r, include=FALSE}
+xfun::in_dir('../..', {
+  if (!dir.exists('travis-blogdown'))
+    system('git clone https://github.com/yihui/travis-blogdown')
+  system('cd travis-blogdown; git pull origin master')
+})
+```
+
 ```yaml
-language: r
-dist: trusty
-sudo: false
-
-branches:
-  only:
-    - master
-
-cache:
-  packages: yes
-  directories:
-    - $HOME/bin
-
-before_script:
-  - "Rscript -e 'blogdown::install_hugo()'"
-
-script:
-  - "Rscript -e 'blogdown::build_site()'"
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  on:
-    branch: master
-  local_dir: public
-  fqdn: travis-blogdown.yihui.name
+`r xfun::file_string('../../travis-blogdown/.travis.yml')`
 ```
 
 The key is that we install Hugo via `blogdown::install_hugo()` and build the site via `blogdown::build_site()`. To trick Travis into building this repository like an R package, you must have a `DESCRIPTION` file in the repository, otherwise your website will not be built.
