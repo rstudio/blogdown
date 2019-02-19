@@ -4,7 +4,6 @@ sudo: false
 cache:
   packages: yes
   directories:
-    - $HOME/bin
     - $TRAVIS_BUILD_DIR/docs
 
 env:
@@ -19,7 +18,7 @@ before_script:
   - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
   - Rscript -e 'xfun::pkg_load2(c("covr", "xml2"))'
   - R CMD INSTALL .
-  - "[ -x \"$HOME/bin/hugo\" ] || Rscript -e \"blogdown::install_hugo()\""
+  - "Rscript -e \"blogdown::install_hugo(force=T);blogdown::hugo_version()\""
 
 after_success:
   - Rscript -e 'covr::codecov()'
