@@ -204,6 +204,7 @@ find_config = function(files = config_files, error = TRUE) {
 
 # figure out the possible root directory of the website
 site_root = function(config = config_files) {
+  if (!is.null(root <- opts$get('site_root'))) return(root)
   owd = getwd(); on.exit(setwd(owd), add = TRUE)
   paths = NULL
   while (length(find_config(config, error = FALSE)) == 0) {
@@ -215,7 +216,8 @@ site_root = function(config = config_files) {
     )
     setwd('..')
   }
-  getwd()
+  root = getwd(); opts$set(site_root = root)
+  root
 }
 
 # a simple parser that only reads top-level options unless RcppTOML is available
