@@ -141,24 +141,15 @@ opts = knitr:::new_defaults()
 # read config file and cache the options (i.e. do not read again unless the config is newer)
 load_config = function() {
   config = opts$get('config')
-
+  owd = setwd(site_root()); on.exit(setwd(owd), add = TRUE)
+  f = find_config(); m = file.info(f)[, 'mtime']
   # read config only if it has been updated
-  read_config = function(f, parser) {
-    if (!is.null(time <- attr(config, 'config_time')) &&
-        time == file.info(f)[, 'mtime']) return(config)
-    config = parser(f)
-    attr(config, 'config_time') = file.info(f)[, 'mtime']
-    opts$set(config = config)
-    check_config(config, f)
-  }
-
-  find_config()
-
-  if (file_exists('config.toml'))
-    return(read_config('config.toml', parse_toml))
-
-  if (file_exists('config.yaml'))
-    return(read_config('config.yaml', yaml_load_file))
+  if (identical(attr(config, 'config_time'), m)) return(config)
+  parser = switch(f, 'config.toml' = parse_toml, 'config.yaml' = yaml_load_file)
+  config = parser(f)
+  attr(config, 'config_time') = m
+  opts$set(config = config)
+  check_config(config, f)
 }
 
 # check if the user has configured Multilingual Mode for Hugo in config.toml
