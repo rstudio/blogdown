@@ -148,6 +148,7 @@ load_config = function() {
   parser = switch(f, 'config.toml' = parse_toml, 'config.yaml' = yaml_load_file)
   config = parser(f)
   attr(config, 'config_time') = m
+  attr(config, 'config_content') = read_utf8(f)
   opts$set(config = config)
   check_config(config, f)
 }
@@ -303,6 +304,14 @@ post_slug = function(x) {
   x = gsub('([.][[:alnum:]]+){1,2}$', '', x)
   if (basename(x) == 'index') x = dirname(x)
   trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-', '', basename(x)))
+}
+
+auto_slug = function() {
+  if (!getOption('blogdown.new_bundle', FALSE)) return(TRUE)
+  cfg = load_config()
+  if (length(cfg[['permalinks']]) > 0) return(TRUE)
+  con = attr(cfg, 'config_content')
+  length(grep('permalinks', con)) > 0
 }
 
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)

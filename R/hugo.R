@@ -305,7 +305,7 @@ new_post = function(
   if (is.null(file)) file = post_filename(title, subdir, ext, date)
   file = trim_ws(file)  # trim (accidental) white spaces
   if (missing(kind)) kind = default_kind(file)
-  if (is.null(slug)) slug = post_slug(file)
+  if (is.null(slug) && auto_slug()) slug = post_slug(file)
   slug = trim_ws(slug)
   if (generator() == 'hugo') file = new_content(file, kind, FALSE) else {
     writeLines(c('---', '', '---'), file)
