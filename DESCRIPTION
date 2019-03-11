@@ -22,14 +22,14 @@ Description: Write blog posts and web pages in R Markdown. This package supports
     supports 'Jekyll' (<http://jekyllrb.com>) and 'Hexo' (<https://hexo.io>).
 License: GPL-3
 Imports:
-    rmarkdown,
+    rmarkdown (>= 1.11),
     bookdown (>= 0.9),
-    knitr (>= 1.20),
+    knitr (>= 1.21),
     htmltools,
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
-    xfun (>= 0.4),
-    servr (>= 0.11)
+    xfun (>= 0.5),
+    servr (>= 0.13)
 Suggests:
   testit,
   shiny,
