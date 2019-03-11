@@ -269,8 +269,11 @@ open_file = function(x) {
 }
 
 # produce a dash-separated filename by replacing non-alnum chars with -
-dash_filename = function(string, pattern = '[^[:alnum:]]+') {
-  tolower(gsub('^-+|-+$', '', gsub(pattern, '-', string)))
+dash_filename = function(
+  string, pattern = '[^[:alnum:]]+',
+  pre = getOption('blogdown.filename.pre_processor', identity)
+) {
+  tolower(gsub('^-+|-+$', '', gsub(pattern, '-', pre(string))))
 }
 
 # return a filename for a post based on title, date, etc

@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 0.11
 
+## NEW FEATURES
+
+- Added a global option `blogdown.filename.pre_processor`, which can be a function with a single argument (the post title) that returns a pre-processed string to be used to generate the post filename. For example, if you set `options(blogdown.filename.pre_processor = function(x) stringi::stri_trans_general(x, "any-latin; nfd; [:nonspacing mark:] remove; nfc")`, Cyrillic characters in a post title can be converted to ASCII, and the result string will be used for generating the post filename (thanks, @novica, #349).
+
 ## MAJOR CHANGES
 
 - When previewing a **blogdown** website with Hugo on the RStudio Server, the Hugo configuration `relativeURLs` will be set to `true` automatically (thanks, @nwstephens, #124).
