@@ -90,7 +90,7 @@
 
 ## MINOR CHANGES
 
-- The Github repo `yihui/hugo-lithium-theme` was renamed to `yihui/hugo-lithiutm`, and the default `theme` argument value was changed accordingly (thanks, @rorynolan, #291).
+- The Github repo `yihui/hugo-lithium-theme` was renamed to `yihui/hugo-lithium`, and the default `theme` argument value was changed accordingly (thanks, @rorynolan, #291).
 
 # CHANGES IN blogdown VERSION 0.5
 
