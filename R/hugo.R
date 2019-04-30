@@ -312,6 +312,13 @@ new_post = function(
   }
   if (isTRUE(title_case)) title_case = tools::toTitleCase
   if (is.function(title_case)) title = title_case(title)
+  if (getOption('blogdown.warn.future', TRUE)) {
+    if (tryCatch(date > Sys.Date(), error = function(e) FALSE)) warning(
+      'The date of the post is in the future: ', date, '. See ',
+      'https://github.com/rstudio/blogdown/issues/377 for consequences. ',
+      'To turn off this warning, set options(blogdown.warn.future = FALSE).'
+    )
+  }
 
   do.call(modify_yaml, c(list(
     file, title = title, author = author, date = format(date), slug = slug,

@@ -1,6 +1,8 @@
 # CHANGES IN blogdown VERSION 0.12
 
+## MINOR CHANGES
 
+- When creating a post with a date in the future, a warning will be issued by default. To turn off this warning (if you are aware of the consequences of future dates), set `options(blogdown.warn.future = FALSE)` (thanks, @Chucheria on Twitter, #377).
 
 # CHANGES IN blogdown VERSION 0.11
 
