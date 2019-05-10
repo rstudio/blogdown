@@ -1,6 +1,8 @@
 # CHANGES IN blogdown VERSION 0.13
 
+## NEW FEATURES
 
+- Added a global option `blogdown.hugo.args`, which should be a character vector with additional flags to be passed to the `hugo` system command via `hugo_build()`. For example, `options(blogdown.hugo.args = '--minify')` will use [minification](https://gohugo.io/news/0.47-relnotes/) on the final rendered output. More available flags in the [hugo documentation](https://gohugo.io/commands/hugo#options) (thanks, @jozefhajnala, #382).
 
 # CHANGES IN blogdown VERSION 0.12
 

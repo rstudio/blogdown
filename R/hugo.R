@@ -32,6 +32,7 @@ hugo_build = function(local = FALSE) {
   if (local) tweak_hugo_env()
   hugo_cmd(c(
     if (local) c('-b', site_base_dir(), '-D', '-F'),
+    getOption('blogdown.hugo.args'),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
   ))
 }
