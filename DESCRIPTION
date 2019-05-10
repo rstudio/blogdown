@@ -14,6 +14,7 @@ Authors@R: c(
     person("Leonardo", "Collado-Torres", role = "ctb"),
     person("Xianying", "Tan", role = "ctb"),
     person("Raniere", "Silva", role = "ctb"),
+    person("Jozef", "Hajnala", role = "ctb"),
     person(family = "RStudio Inc", role = "cph"),
     person()
     )
