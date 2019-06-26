@@ -223,19 +223,19 @@ parse_toml = function(f, x = read_utf8(f), strict = xfun::loadable('RcppTOML')) 
   x = gsub('\\s+#.+', '', x)
   z = list()
   # arbitrary values
-  r = '^([[:alnum:]]+?)\\s*=\\s*(.+)\\s*$'
+  r = '^([[:alnum:]_]+?)\\s*=\\s*(.+)\\s*$'
   y = grep(r, x, value = TRUE)
   z[gsub(r, '\\1', y)] = as.list(gsub(r, '\\2', y))
   # strings
-  r = '^([[:alnum:]]+?)\\s*=\\s*"([^"]*?)"\\s*$'
+  r = '^([[:alnum:]_]+?)\\s*=\\s*"([^"]*?)"\\s*$'
   y = grep(r, x, value = TRUE)
   z[gsub(r, '\\1', y)] = as.list(gsub(r, '\\2', y))
   # boolean
-  r = '^([[:alnum:]]+?)\\s*=\\s*(true|false)\\s*$'
+  r = '^([[:alnum:]_]+?)\\s*=\\s*(true|false)\\s*$'
   y = grep(r, x, value = TRUE)
   z[gsub(r, '\\1', y)] = as.list(as.logical(gsub(r, '\\2', y)))
   # numbers
-  r = '^([[:alnum:]]+?)\\s*=\\s*([0-9.]+)\\s*$'
+  r = '^([[:alnum:]_]+?)\\s*=\\s*([0-9.]+)\\s*$'
   y = grep(r, x, value = TRUE)
   z[gsub(r, '\\1', y)] = lapply(as.list(as.numeric(gsub(r, '\\2', y))), function(v) {
     v2 = as.integer(v)
