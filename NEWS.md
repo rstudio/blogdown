@@ -1,6 +1,8 @@
 # CHANGES IN blogdown VERSION 0.14
 
+## NEW FEATURES
 
+- `new_site()` and `install_theme()` will check the minimal Hugo version specified by the theme, and automatically update Hugo if the current installed version of Hugo is not sufficient (thanks, @apreshill, #391).
 
 # CHANGES IN blogdown VERSION 0.13
 

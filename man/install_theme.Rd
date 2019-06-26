@@ -5,7 +5,7 @@
 \title{Install a Hugo theme from Github}
 \usage{
 install_theme(theme, hostname = "github.com", theme_example = FALSE, 
-    update_config = TRUE, force = FALSE)
+    update_config = TRUE, force = FALSE, update_hugo = TRUE)
 }
 \arguments{
 \item{theme}{A Hugo theme on Github (a chararacter string of the form
@@ -29,6 +29,9 @@ configurations.}
 have made changes to this existing theme, your changes will be lost when
 \code{force = TRUE}! Please consider backing up the theme by renaming it
 before you try \code{force = TRUE}.}
+
+\item{update_hugo}{Whether to automatically update Hugo if the theme requires
+a higher version of Hugo than the existing version in your system.}
 }
 \description{
 Download the specified theme from Github and install to the \file{themes}

@@ -157,9 +157,12 @@ new_site = function(
 #'   before you try \code{force = TRUE}.
 #' @param update_config Whether to update the \code{theme} option in the site
 #'   configurations.
+#' @param update_hugo Whether to automatically update Hugo if the theme requires
+#'   a higher version of Hugo than the existing version in your system.
 #' @export
 install_theme = function(
-  theme, hostname = 'github.com', theme_example = FALSE, update_config = TRUE, force = FALSE
+  theme, hostname = 'github.com', theme_example = FALSE, update_config = TRUE,
+  force = FALSE, update_hugo = TRUE
 ) {
   r = '^([^/]+/[^/@]+)(@.+)?$'
   r_zip = "\\.zip$"
@@ -202,6 +205,12 @@ install_theme = function(
       'and at least take a look at the config file config.toml of the example site, ',
       'because not all Hugo themes work with any config files.', call. = FALSE
     )
+    # check the minimal version of Hugo required by the theme
+    if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {
+      if (!is.null(minver <- parse_toml(theme_cfg)[['min_version']])) {
+        if (hugo_version() < minver) update_hugo()
+      }
+    }
     newdir = sub(tmpdir, '.', zipdir, fixed = TRUE)
     newdir = gsub('-[a-f0-9]{12,40}$', '', newdir)
     newdir = gsub(sprintf('-%s$', branch), '', newdir)
