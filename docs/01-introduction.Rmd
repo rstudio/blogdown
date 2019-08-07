@@ -221,7 +221,7 @@ If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \
     
     - HTML widgets, and Shiny apps embedded via `<iframe>`.
 
-There are many differences in syntax between Blackfriday's Markdown and Pandoc's Markdown. For example, you can write a task list with Blackfriday but not with Pandoc:
+There are many differences in syntax between Blackfriday's Markdown and Pandoc's Markdown. For example, you can write a task list with Blackfriday but you could not with Pandoc until recently:^[Support for task lists was added to Pandoc with [version 2.6, released on January 2019](https://github.com/jgm/pandoc/releases/tag/2.6).]
 
 ```markdown
 - [x] Write an R package.
