@@ -7,7 +7,7 @@ local({
   )
   ctx_ext = tolower(xfun::file_ext(ctx$path))
 
-  path = normalizePath(ctx$path)
+  path = xfun::normalize_path(ctx$path)
   imgdir = file.path(
     'static', dirname(gsub('.*content/', '', path)),
     paste0(xfun::sans_ext(basename(path)), '_files')
