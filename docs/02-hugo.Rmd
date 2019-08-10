@@ -816,7 +816,7 @@ The XMin is actually a highly functional theme, but we understand that it may be
     
     ```html
     {{ with .File.Path }}
-    <a href="https://github.com/.../{{ . }}">Edit this page</a>
+    | <a href="https://github.com/.../{{ . }}">Edit this page</a>
     {{ end }}
     ```
 
@@ -834,7 +834,7 @@ The XMin is actually a highly functional theme, but we understand that it may be
     {{ end }}
     
     {{ with .Site.Params.GithubEdit}}
-    <a href='{{ . }}{{ $.Scratch.Get "FilePath" }}'>Edit this page</a>
+    | <a href='{{ . }}{{ $.Scratch.Get "FilePath" }}'>Edit this page</a>
     {{ end }}
     
     {{ end }}
