@@ -176,6 +176,7 @@ bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) 
   } else if (is_osx()) {
     path = '~/Library/Application Support'
     path = if (dir_exists(path)) file.path(path, dir)
+    path = c('/usr/local/bin', path)
   } else {
     path = c('~/bin', '/snap/bin', '/var/lib/snapd/snap/bin')
   }
