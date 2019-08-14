@@ -187,7 +187,7 @@ If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \
 
 The following table summarises the differences between the three options, followed by more detailed explanations below.
 
-|options      |.Rmd |.Rmarkdown |.md |
+|Features      |.Rmd |.Rmarkdown |.md |
 |:------------|:---|:---------|:--|
 |bibliography |yes |no        |no |
 |run r code         |yes  |yes        |no |
