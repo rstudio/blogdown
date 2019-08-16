@@ -185,20 +185,19 @@ Note that [R will silently ignore the last line of your `.Rprofile`](https://yih
 
 If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \@ref(r-markdown) for a quick tutorial. When you create a new post, you have to decide whether you want to use R Markdown or plain Markdown\index{Markdown}, as you can see from Figure \@ref(fig:new-post). 
 
-The following table summarises the differences between the three options, followed by more detailed explanations below.
+Table \@ref(tab:md-diff) summarizes the main differences between the three options, followed by detailed explanations below.
 
-|Features      |.Rmd |.Rmarkdown |.md |
-|:------------|:---|:---------|:--|
-|bibliography |yes |no        |no |
-|run r code         |yes  |yes        |no |
-|task list         |no  |yes        |yes |
-|mathjax         |yes  |no        |yes |
-|html widgets         |yes  |no        |no |
+Table: (\#tab:md-diff) Differences among the three document formats.
 
-
+|Feature      |.Rmd |.Rmarkdown |.md  |
+|:------------|:----|:----------|:----|
+|Run R code   |yes  |yes        |no   |
+|Bibliography |yes  |no         |no   |
+|Task list    |maybe|yes        |yes  |
+|MathJax      |yes  |maybe      |maybe|
+|HTML widgets |yes  |no         |no   |
 
 1. You cannot execute any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```` ```{r} ````). However, you can still embed R code in plain Markdown using the syntax for fenced code blocks ```` ```r ```` (note there are no curly braces `{}`). Such code blocks will not be executed and may be suitable for pure demonstration purposes. Below is an example of an R code chunk in R Markdown:
-
 
     ````markdown
     `r ''````{r cool-plot, fig.cap='A cool plot.'}
@@ -213,7 +212,6 @@ The following table summarises the differences between the three options, follow
     1 + 1  # not executed
     ```
     ````
-
 
 2. A plain Markdown post is rendered to HTML through [Blackfriday](https://gohugo.io/overview/configuration/) \index{Blackfriday}(a package written in the Go language and adopted by Hugo). An R Markdown document is compiled through the packages **rmarkdown**, **bookdown**, and Pandoc\index{Pandoc}, which means you can use most features of [Pandoc's Markdown](http://pandoc.org/MANUAL.html#pandocs-markdown) and [**bookdown**'s Markdown extensions](https://bookdown.org/yihui/bookdown/components.html) in **blogdown**. If you use R Markdown [@R-rmarkdown] with **blogdown**, we recommend that you read the documentation of Pandoc and **bookdown** at least once to know all the possible features. We will not repeat the details in this book, but list the features briefly below, which are also demonstrated on the example website https://blogdown-demo.rbind.io.
 
@@ -241,7 +239,6 @@ There are many differences in syntax between Blackfriday's Markdown and Pandoc's
 - [ ] ...
 - [ ] Profit!
 ```
-
 
 Similarly, Blackfriday does not support LaTeX math and Pandoc does. We have added the [MathJax](https://www.mathjax.org/#docs) \index{MathJax} support to the default theme ([hugo-lithium](https://github.com/yihui/hugo-lithium)) in **blogdown** to render LaTeX math on HTML pages, but there is a caveat for plain Markdown posts: you have to include inline math expressions in a pair of backticks `` `$math$` ``, e.g., `` `$S_n = \sum_{i=1}^n X_i$` ``. Similarly, math expressions of the display style have to be written in `` `$$math$$` ``. For R Markdown posts, you can use `$math$` for inline math expressions, and `$$math$$` for display-style expressions.^[The reason that we need the backticks for plain Markdown documents is that we have to prevent the LaTeX code from being interpreted as Markdown by Blackfriday. Backticks will make sure the inner content is not translated as Markdown to HTML, e.g., `` `$$x *y* z$$` `` will be converted to `<code>$$x *y* z$$</code>`. Without the backticks, it will be converted to `$$x <em>y</em> z$$`, which is not a valid LaTeX math expression for MathJax. Similar issues can arise when you have other special characters like underscores in your math expressions.]
 
