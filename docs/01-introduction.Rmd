@@ -198,7 +198,7 @@ Table: (\#tab:md-diff) Differences among the three document formats.
 |Bibliography |yes  |no         |no   |
 |Task list    |maybe|yes        |yes  |
 |MathJax      |yes  |maybe      |maybe|
-|Html widgets |yes  |no         |no   |
+|HTML widgets |yes  |no         |no   |
 
 
 
