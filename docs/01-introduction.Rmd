@@ -185,16 +185,19 @@ Note that [R will silently ignore the last line of your `.Rprofile`](https://yih
 
 If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \@ref(r-markdown) for a quick tutorial. When you create a new post, you have to decide whether you want to use R Markdown or plain Markdown\index{Markdown}, as you can see from Figure \@ref(fig:new-post). 
 
-The following table summarises the differences between the three options, followed by more detailed explanations below.
 
-|Features      |.Rmd |.Rmarkdown |.md |
-|:------------|:---|:---------|:--|
-|bibliography |yes |no        |no |
-|run r code         |yes  |yes        |no |
-|task list         |no  |yes        |yes |
-|mathjax         |yes  |no        |yes |
-|html widgets         |yes  |no        |no |
+Table \@ref(tab:md-diff) summarizes the main differences between the three options, followed by detailed explanations below.
 
+
+Table: (\#tab:md-diff) Differences among the three document formats.
+
+|Features     |.Rmd |.Rmarkdown |.md  |
+|:------------|:----|:----------|:----|
+|Run r code   |yes  |yes        |no   |
+|Bibliography |yes  |no         |no   |
+|Task list    |maybe|yes        |yes  |
+|Mathjax      |yes  |maybe      |maybe|
+|Html widgets |yes  |no         |no   |
 
 
 1. You cannot execute any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```` ```{r} ````). However, you can still embed R code in plain Markdown using the syntax for fenced code blocks ```` ```r ```` (note there are no curly braces `{}`). Such code blocks will not be executed and may be suitable for pure demonstration purposes. Below is an example of an R code chunk in R Markdown:
