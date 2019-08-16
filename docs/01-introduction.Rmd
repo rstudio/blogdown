@@ -192,7 +192,7 @@ Table \@ref(tab:md-diff) summarizes the main differences between the three optio
 
 Table: (\#tab:md-diff) Differences among the three document formats.
 
-|Features     |.Rmd |.Rmarkdown |.md  |
+|Feature     |.Rmd |.Rmarkdown |.md  |
 |:------------|:----|:----------|:----|
 |Run R code   |yes  |yes        |no   |
 |Bibliography |yes  |no         |no   |
