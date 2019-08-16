@@ -197,7 +197,7 @@ Table: (\#tab:md-diff) Differences among the three document formats.
 |Run R code   |yes  |yes        |no   |
 |Bibliography |yes  |no         |no   |
 |Task list    |maybe|yes        |yes  |
-|Mathjax      |yes  |maybe      |maybe|
+|MathJax      |yes  |maybe      |maybe|
 |Html widgets |yes  |no         |no   |
 
 
