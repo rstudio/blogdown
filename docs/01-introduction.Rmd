@@ -194,7 +194,7 @@ Table: (\#tab:md-diff) Differences among the three document formats.
 
 |Features     |.Rmd |.Rmarkdown |.md  |
 |:------------|:----|:----------|:----|
-|Run r code   |yes  |yes        |no   |
+|Run R code   |yes  |yes        |no   |
 |Bibliography |yes  |no         |no   |
 |Task list    |maybe|yes        |yes  |
 |Mathjax      |yes  |maybe      |maybe|
