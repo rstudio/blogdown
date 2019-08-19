@@ -1,5 +1,4 @@
-assert('quote_poem() add > to the beginning of every paragraph, and two trailing spaces to every line', {
-
+assert('quote_poem() adds > to the beginning of every paragraph, and two trailing spaces to every line', {
 
   (quote_poem("               ")  %==% "               ")
 
