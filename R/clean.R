@@ -9,27 +9,34 @@ process_file = function(f, FUN) {
 }
 
 # replace three or more \n with two, i.e. two or more empty lines with one
-remove_extra_empty_lines = function(f) process_file(f, function(x) {
+remove_inline_n = function(x) {
   x = paste(gsub('\\s+$', '', x), collapse = '\n')
   trim_ws(gsub('\n{3,}', '\n\n', x))
-})
+}
+
+remove_extra_empty_lines = function(f) process_file(f, remove_inline_n)
 
 # replace [url](url) with <url>
-process_bare_urls = function(f) process_file(f, function(x) {
+replace_inline_url = function(x) {
   gsub('\\[([^]]+)]\\(\\1/?\\)', '<\\1>', x)
-})
+}
 
-normalize_chars = function(f) process_file(f, function(x) {
+process_bare_urls = function(f) process_file(f, replace_inline_url)
+
+# replace charachters
+replace_chars_inline =function(x) {
   # curly single and double quotes to straight quotes
   x = gsub(paste0('[', intToUtf8(8216:8217), ']'), "'", x)
   x = gsub(paste0('[', intToUtf8(8220:8221), ']'), '"', x)
   x = gsub(intToUtf8(8230), '...', x)  # ellipses
   x = gsub(intToUtf8(160), ' ', x)  # zero-width space
   x
-})
+}
+
+normalize_chars = function(f) process_file(f, replace_chars_inline)
 
 # clean up code blocks that have been syntax highlighted by Pandoc
-remove_highlight_tags = function(f) process_file(f, function(x) {
+remove_tags_inline = function(x) {
   clean = function(x) {
     # remove the <code></code> tags
     x = gsub('^(\\s+)<code( class="[^"]*")?>(.*)', '\\1\\3', x)
@@ -42,9 +49,14 @@ remove_highlight_tags = function(f) process_file(f, function(x) {
   i = grep('^( {4,}.*)', x)
   x[i] = clean(x[i])
   x
-})
+}
+
+remove_highlight_tags = function(f) process_file(f, remove_tags_inline)
+
 
 # <img></img> to <img/>
-fix_img_tags = function(f) process_file(f, function(x) {
+replace_img_inline = function(x) {
   gsub('></img>', ' />', x)
-})
+}
+
+fix_img_tags = function(f) process_file(f, replace_img_inline)

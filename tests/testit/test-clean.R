@@ -1,43 +1,25 @@
-remove_extra_empty_lines = function(x) {
-  x = paste(gsub('\\s+$', '', x), collapse = '\n')
-  trim_ws(gsub('\n{3,}', '\n\n', x))
-}
-
 assert("# replace three or more \n with two, i.e. two or more empty lines with one", {
 
   x1 = "a line with some new lines.\n\n\n"
   x2 = "a line with some new lines.\n\n"
   x3 = "a line with some new lines.\n"
 
-  #these seem to remove all new lines?
-  (remove_extra_empty_lines(x1) %==%  "a line with some new lines.")
-  (remove_extra_empty_lines(x2) %==%  "a line with some new lines.")
-  (remove_extra_empty_lines(x3) %==%  "a line with some new lines.")
+  (remove_inline_n(x1) %==%  "a line with some new lines.\n\n\n")
+  (remove_inline_n(x2) %==%  "a line with some new lines.\n\n")
+  (remove_inline_n(x3) %==%  "a line with some new lines.\n")
 
 })
-
-
-process_bare_urls =  function(x) {
-  gsub('\\[([^]]+)]\\(\\1/?\\)', '<\\1>', x)
-}
 
 assert("# replace [url](url) with <url>", {
 
   x4 = "[url](url)"
   x5 = "some text before [url](url) and after"
-  process_bare_urls(x4) %==% "<url>"
-  process_bare_urls(x5) %==% "some text before <url> and after"
+
+  (replace_inline_url(x4) %==% "<url>")
+  (replace_inline_url(x5) %==% "some text before <url> and after")
+
 })
 
-
-normalize_chars = function(x) {
-  # curly single and double quotes to straight quotes
-  x = gsub(paste0('[', intToUtf8(8216:8217), ']'), "'", x)
-  x = gsub(paste0('[', intToUtf8(8220:8221), ']'), '"', x)
-  x = gsub(intToUtf8(8230), '...', x)  # ellipses
-  x = gsub(intToUtf8(160), ' ', x)  # zero-width space
-  x
-}
 
 assert("# curly single and double quotes to straight quotes", {
 
@@ -45,21 +27,14 @@ assert("# curly single and double quotes to straight quotes", {
   x7 = paste0('[', intToUtf8(8220:8221), ']')
   x8 = intToUtf8(8230)
   x9 = intToUtf8(160)
-  normalize_chars(x6) %==% "'"
-  normalize_chars(x7) %==% '"'
-  normalize_chars(x8) %==% '...'
-  normalize_chars(x9) %==% ' '
+
+  (replace_chars_inline(x6) %==% "'")
+  (replace_chars_inline(x7) %==% '"')
+  (replace_chars_inline(x8) %==% '...')
+  (replace_chars_inline(x9) %==% ' ')
+
 })
 
-
-clean = function(x) {
-  # remove the <code></code> tags
-  x = gsub('^(\\s+)<code( class="[^"]*")?>(.*)', '\\1\\3', x)
-  x = gsub('</code>\\s*$', '', x)
-  # remove <span></span>
-  x = gsub('</?span([^>])*>', '', x)
-  x
-}
 
 assert('clean up code blocks that have been syntax highlighted by Pandoc', {
 
@@ -68,20 +43,19 @@ assert('clean up code blocks that have been syntax highlighted by Pandoc', {
   x10 = "    <code>some code</code>"
   x11 = "<span>some span</span>"
 
-  (clean(x10) %==% "    some code")
-  (clean(x11) %==% "some span")
+  (remove_tags_inline(x10) %==% "    some code")
+  (remove_tags_inline(x11) %==% "some span")
+
 })
 
 
-fix_img_tags =  function(x) {
-  gsub('></img>', ' />', x)
-}
 
 assert('<img></img> to <img/>', {
 
   x12 = "<img></img>"
   x13 = "text before <img></img> and after"
-  (fix_img_tags(x12) %==% "<img />") #is there a typo in the function comment <img/>
-  (fix_img_tags(x13) %==% "text before <img /> and after")
+
+  (replace_img_inline(x12) %==% "<img />") #is there a typo in the function comment <img/>
+  (replace_img_inline(x13) %==% "text before <img /> and after")
 
 })
