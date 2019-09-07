@@ -1,12 +1,12 @@
 assert("# replace three or more \n with two, i.e. two or more empty lines with one", {
 
-  x1 = "a line with some new lines.\n\n\n"
-  x2 = "a line with some new lines.\n\n"
-  x3 = "a line with some new lines.\n"
+  x1 = "a line with some new lines.\n\n\n  and some text."
+  x2 = "a line with some new lines.\n\n and some text."
+  x3 = "a line with some new lines.\n and some text."
 
-  (remove_inline_n(x1) %==%  "a line with some new lines.\n\n\n")
-  (remove_inline_n(x2) %==%  "a line with some new lines.\n\n")
-  (remove_inline_n(x3) %==%  "a line with some new lines.\n")
+  (remove_inline_n(x1) %==%  "a line with some new lines.\n\n  and some text.")
+  (remove_inline_n(x2) %==%  "a line with some new lines.\n\n and some text.")
+  (remove_inline_n(x3) %==%  "a line with some new lines.\n and some text.")
 
 })
 
@@ -23,13 +23,13 @@ assert("# replace [url](url) with <url>", {
 
 assert("# curly single and double quotes to straight quotes", {
 
-  x6 = paste0('[', intToUtf8(8216:8217), ']')
-  x7 = paste0('[', intToUtf8(8220:8221), ']')
-  x8 = intToUtf8(8230)
-  x9 = intToUtf8(160)
+  x6 = "some text with a strange ‘ symbol"
+  x7 = "some text with another strange ” symbool"
+  x8 = "…"
+  x9 = " "
 
-  (replace_chars_inline(x6) %==% "'")
-  (replace_chars_inline(x7) %==% '"')
+  (replace_chars_inline(x6) %==% "some text with a strange ' symbol")
+  (replace_chars_inline(x7) %==% 'some text with another strange " symbool')
   (replace_chars_inline(x8) %==% '...')
   (replace_chars_inline(x9) %==% ' ')
 
@@ -41,10 +41,10 @@ assert('clean up code blocks that have been syntax highlighted by Pandoc', {
   #not sure if empty space is needed because of
   #only process lines that are indented by at least 4 spaces in clean.R
   x10 = "    <code>some code</code>"
-  x11 = "<span>some span</span>"
+  x11 = "    <span>some span</span>"
 
   (remove_tags_inline(x10) %==% "    some code")
-  (remove_tags_inline(x11) %==% "some span")
+  (remove_tags_inline(x11) %==% "    some span")
 
 })
 

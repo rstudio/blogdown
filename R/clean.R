@@ -24,7 +24,7 @@ replace_inline_url = function(x) {
 process_bare_urls = function(f) process_file(f, replace_inline_url)
 
 # replace charachters
-replace_chars_inline =function(x) {
+replace_chars_inline = function(x) {
   # curly single and double quotes to straight quotes
   x = gsub(paste0('[', intToUtf8(8216:8217), ']'), "'", x)
   x = gsub(paste0('[', intToUtf8(8220:8221), ']'), '"', x)
