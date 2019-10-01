@@ -60,6 +60,6 @@ assert('modify_yaml perserves original values properly', {
   write(test_rmd, test_rmd_file)
   old_content = readLines(test_rmd_file)
 
-  modify_yaml(test_rmd_file)
+  modify_yaml(test_rmd_file, .keep_empty = TRUE)
   readLines(test_rmd_file) %==% old_content
 })
