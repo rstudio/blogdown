@@ -1,61 +1,62 @@
-assert("# replace three or more \n with two, i.e. two or more empty lines with one", {
+library(testit)
 
-  x1 = "a line with some new lines.\n\n\n  and some text."
-  x2 = "a line with some new lines.\n\n and some text."
-  x3 = "a line with some new lines.\n and some text."
+assert('remove_extra_empty_lines() replaces two or more empty lines with one', {
 
-  (remove_inline_n(x1) %==%  "a line with some new lines.\n\n  and some text.")
-  (remove_inline_n(x2) %==%  "a line with some new lines.\n\n and some text.")
-  (remove_inline_n(x3) %==%  "a line with some new lines.\n and some text.")
+  x0 = 'a line with some new lines.\n\n  and some text.'
+  x1 = c('a line with some new lines.', '', '', '', '  and some text.')
+  x2 = x1[-2]
+  x3 = x1[-(2:3)]
 
-})
-
-assert("# replace [url](url) with <url>", {
-
-  x4 = "[url](url)"
-  x5 = "some text before [url](url) and after"
-
-  (replace_inline_url(x4) %==% "<url>")
-  (replace_inline_url(x5) %==% "some text before <url> and after")
+  (remove_extra_empty_lines(x = x1) %==%  x0)
+  (remove_extra_empty_lines(x = x2) %==%  x0)
+  (remove_extra_empty_lines(x = x3) %==%  x0)
 
 })
 
 
-assert("# curly single and double quotes to straight quotes", {
+assert('process_bare_urls() replaces [url](url) with <url>', {
 
-  x6 = "some text with a strange ‘ symbol"
-  x7 = "some text with another strange ” symbool"
-  x8 = "…"
-  x9 = " "
+  x4 = '[url](url)'
+  x5 = 'some text before [url](url) and after'
 
-  (replace_chars_inline(x6) %==% "some text with a strange ' symbol")
-  (replace_chars_inline(x7) %==% 'some text with another strange " symbool')
-  (replace_chars_inline(x8) %==% '...')
-  (replace_chars_inline(x9) %==% ' ')
+  (process_bare_urls(x = x4) %==% '<url>')
+  (process_bare_urls(x = x5) %==% 'some text before <url> and after')
 
 })
 
 
-assert('clean up code blocks that have been syntax highlighted by Pandoc', {
+assert('normalize_chars() converts curly quotes to straight quotes', {
 
-  #not sure if empty space is needed because of
-  #only process lines that are indented by at least 4 spaces in clean.R
-  x10 = "    <code>some code</code>"
-  x11 = "    <span>some span</span>"
+  x6 = intToUtf8(8216:8217)
+  x7 = intToUtf8(8220:8221)
+  x8 = intToUtf8(8230)
+  x9 = intToUtf8(160)
 
-  (remove_tags_inline(x10) %==% "    some code")
-  (remove_tags_inline(x11) %==% "    some span")
+  (normalize_chars(x = x6) %==% "''")
+  (normalize_chars(x = x7) %==% '""')
+  (normalize_chars(x = x8) %==% '...')
+  (normalize_chars(x = x9) %==% ' ')
 
 })
 
 
+assert('remove_highlight_tags() cleans up code blocks syntax highlighted by Pandoc', {
 
-assert('<img></img> to <img/>', {
+  x10 = '    <code>some code</code>'
+  x11 = '    <span>some span</span>'
 
-  x12 = "<img></img>"
-  x13 = "text before <img></img> and after"
+  (remove_highlight_tags(x = x10) %==% '    some code')
+  (remove_highlight_tags(x = x11) %==% '    some span')
 
-  (replace_img_inline(x12) %==% "<img />") #is there a typo in the function comment <img/>
-  (replace_img_inline(x13) %==% "text before <img /> and after")
+})
+
+
+assert('fix_img_tags() converts <img></img> to <img />', {
+
+  x12 = '<img></img>'
+  x13 = 'text before <img></img> and after'
+
+  (fix_img_tags(x = x12) %==% '<img />')
+  (fix_img_tags(x = x13) %==% 'text before <img /> and after')
 
 })

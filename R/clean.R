@@ -2,41 +2,33 @@
 # with the XML file exported from WordPress
 
 # a wrapper function to read a file as UTF-8, process the text, and write back
-process_file = function(f, FUN) {
-  x = read_utf8(f)
+process_file = function(f, FUN, x = read_utf8(f)) {
   x = FUN(x)
-  write_utf8(x, f)
+  if (missing(f)) x else write_utf8(x, f)
 }
 
 # replace three or more \n with two, i.e. two or more empty lines with one
-remove_inline_n = function(x) {
+remove_extra_empty_lines = function(...) process_file(..., FUN = function(x) {
   x = paste(gsub('\\s+$', '', x), collapse = '\n')
   trim_ws(gsub('\n{3,}', '\n\n', x))
-}
-
-remove_extra_empty_lines = function(f) process_file(f, remove_inline_n)
+})
 
 # replace [url](url) with <url>
-replace_inline_url = function(x) {
+process_bare_urls = function(...) process_file(..., FUN = function(x) {
   gsub('\\[([^]]+)]\\(\\1/?\\)', '<\\1>', x)
-}
+})
 
-process_bare_urls = function(f) process_file(f, replace_inline_url)
-
-# replace charachters
-replace_chars_inline = function(x) {
+normalize_chars = function(...) process_file(..., FUN = function(x) {
   # curly single and double quotes to straight quotes
   x = gsub(paste0('[', intToUtf8(8216:8217), ']'), "'", x)
   x = gsub(paste0('[', intToUtf8(8220:8221), ']'), '"', x)
   x = gsub(intToUtf8(8230), '...', x)  # ellipses
   x = gsub(intToUtf8(160), ' ', x)  # zero-width space
   x
-}
-
-normalize_chars = function(f) process_file(f, replace_chars_inline)
+})
 
 # clean up code blocks that have been syntax highlighted by Pandoc
-remove_tags_inline = function(x) {
+remove_highlight_tags = function(...) process_file(..., FUN = function(x) {
   clean = function(x) {
     # remove the <code></code> tags
     x = gsub('^(\\s+)<code( class="[^"]*")?>(.*)', '\\1\\3', x)
@@ -49,14 +41,9 @@ remove_tags_inline = function(x) {
   i = grep('^( {4,}.*)', x)
   x[i] = clean(x[i])
   x
-}
+})
 
-remove_highlight_tags = function(f) process_file(f, remove_tags_inline)
-
-
-# <img></img> to <img/>
-replace_img_inline = function(x) {
+# <img></img> to <img />
+fix_img_tags = function(...) process_file(..., FUN = function(x) {
   gsub('></img>', ' />', x)
-}
-
-fix_img_tags = function(f) process_file(f, replace_img_inline)
+})
