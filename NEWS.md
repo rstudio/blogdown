@@ -1,6 +1,8 @@
 # CHANGES IN blogdown VERSION 0.16
 
+## MINOR CHANGES
 
+- Added tests for some utility functions (thanks, @novica, #405).
 
 # CHANGES IN blogdown VERSION 0.15
 
