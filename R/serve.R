@@ -55,7 +55,7 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
         # exclude changes in the publish dir
         files = files[substr(files, 1, n) != pdir]
         # re-generate only if Rmd/md or config files or layouts were updated
-        if (length(grep('(_?layouts?|static)/|[.](toml|yaml)$', files)) ||
+        if (length(grep('(_?layouts?|static|data)/|[.](toml|yaml)$', files)) ||
             length(grep(md_pattern, files)))
           build_site(TRUE)
       }, dir = '.', ...))
