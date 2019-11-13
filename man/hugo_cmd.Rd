@@ -95,7 +95,9 @@ directory if it exists in the theme. Not all themes provide example sites.}
 
 \item{path}{The path to the new file under the \file{content} directory.}
 
-\item{kind}{The content type to create.}
+\item{kind}{The content type to create, i.e., the Hugo archetype. If the
+archetype is a page bundle archetype, it should end with a slash, e.g.,
+\code{post/}.}
 
 \item{open}{Whether to open the new file after creating it. By default, it is
 opened in an interactive R session.}
