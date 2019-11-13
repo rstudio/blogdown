@@ -1,3 +1,7 @@
+# CHANGES IN blogdown VERSION 0.18
+
+
+
 # CHANGES IN blogdown VERSION 0.17
 
 ## BUG FIXES
