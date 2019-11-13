@@ -4,8 +4,15 @@
 \alias{html_page}
 \title{An R Markdown output format for \pkg{blogdown} web pages}
 \usage{
-html_page(..., number_sections = FALSE, self_contained = FALSE, highlight = NULL, 
-    template = NULL, pre_knit = NULL, post_processor = NULL)
+html_page(
+  ...,
+  number_sections = FALSE,
+  self_contained = FALSE,
+  highlight = NULL,
+  template = NULL,
+  pre_knit = NULL,
+  post_processor = NULL
+)
 }
 \arguments{
 \item{..., number_sections, self_contained, highlight, template}{Arguments passed
