@@ -9,6 +9,7 @@ xfun::in_dir(blogdown:::site_root(), local({
   adir = blogdown:::theme_flag()
   adir = if (length(adir) == 4) file.path(adir[2], adir[4], 'archetypes')
   adir = c('archetypes', adir)
+  suff = ifelse(utils::file_test('-d', dir(adir, full.names = TRUE)), '/', '')
   shiny::runGadget(
     miniUI::miniPage(miniUI::miniContentPanel(
       txt_input('title', 'Title', placeholder = 'Post Title'),
@@ -26,7 +27,7 @@ xfun::in_dir(blogdown:::site_root(), local({
         sel_input('tag', 'Tags', meta$tags),
         shiny::selectInput(
           'kind', 'Archetype', width = '98%',
-          choices = unique(c('', xfun::sans_ext(dir(adir))))
+          choices = unique(c('', xfun::sans_ext(paste0(dir(adir), suff))))
         ),
         height = '70px'
       ),

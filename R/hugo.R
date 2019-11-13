@@ -232,7 +232,9 @@ install_theme = function(
 
 
 #' @param path The path to the new file under the \file{content} directory.
-#' @param kind The content type to create.
+#' @param kind The content type to create, i.e., the Hugo archetype. If the
+#'   archetype is a page bundle archetype, it should end with a slash, e.g.,
+#'   \code{post/}.
 #' @param open Whether to open the new file after creating it. By default, it is
 #'   opened in an interactive R session.
 #' @export
@@ -243,6 +245,11 @@ new_content = function(path, kind = '', open = interactive()) {
   path2 = with_ext(path, '.md')
   file  = content_file(path)
   file2 = content_file(path2)
+  if (grepl('/$', kind)) {
+    file2 = file.path(dirname(file2), 'index.md')
+    path2 = dirname(path2)
+    kind  = sub('/$', '', kind)
+  }
   hugo_cmd(c('new', shQuote(path2), if (kind != '') c('-k', kind)))
   hugo_toYAML(file2)
   file.rename(file2, file)
