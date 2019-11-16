@@ -11,14 +11,14 @@ env:
     - R_PKG="$(basename $TRAVIS_REPO_SLUG)" PATH=$HOME/bin:$PATH
 
 repos:
-  XRAN: https://xran.yihui.name
+  XRAN: https://xran.yihui.org
 
 before_script:
-  - "curl https://xran.yihui.name/.gitconfig -o ~/.gitconfig"
+  - "curl -L https://xran.yihui.org/.gitconfig -o ~/.gitconfig"
   - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
   - Rscript -e 'xfun::pkg_load2(c("covr", "xml2"))'
   - hugo version
 
 after_success:
   - Rscript -e 'covr::codecov()'
-  - "(curl https://xran.yihui.name/r-xran | bash)"
+  - "(curl -L https://xran.yihui.org/r-xran | bash)"
