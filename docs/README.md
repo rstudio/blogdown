@@ -1,6 +1,6 @@
 To compile this book, open `index.Rmd` in the RStudio IDE, install the **blogdown** package from Github, and click the RStudio Addin "Preview Book". You should be able to preview the HTML version of the book.
 
-It is trickier to compile it to PDF. You need to install LaTeX. I recommend [TinyTeX](https://yihui.name/tinytex/):
+It is trickier to compile it to PDF. You need to install LaTeX. I recommend [TinyTeX](https://yihui.org/tinytex/):
 
 ```r
 devtools::install_github(c('yihui/tinytex', 'rstudio/rmarkdown'))

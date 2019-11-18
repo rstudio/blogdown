@@ -88,7 +88,7 @@
 
 - Added a new RStudio addin "Touch File" to update the modification time of a file, which can be useful when you want to force rebuilding a certain Rmd post after running `serve_site()` (#294).
 
-- Added an RStudio addin "Quote Poem" to quote a poem using the Markdown syntax (https://yihui.name/en/2018/06/quote-poem-blogdown/).
+- Added an RStudio addin "Quote Poem" to quote a poem using the Markdown syntax (https://yihui.org/en/2018/06/quote-poem-blogdown/).
 
 - Added a new function `shortcodes()`, which is a vectorized version of `shortcode()`. For example, you can embed multiple tweets (thanks, @maelle, #307).
 
