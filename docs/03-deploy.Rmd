@@ -99,7 +99,7 @@ username.github.io/
 └── ...
 ```
 
-The source directory and the `username.github.io` directory are under the same parent directory. In this case, you need to set the option `publishDir: "../username.github.io"` in `source/config.toml`.
+The source directory and the `username.github.io` directory are under the same parent directory. In this case, you need to set the option `publishDir = "../username.github.io"` in `source/config.toml`.
 
 ## Travis + GitHub
 
