@@ -28,14 +28,6 @@ If you are not familiar with domain names or do not want to learn more about the
 
 Netlify is the only solution in this chapter that does not require you to prebuild your website. You only need to update the source files, push them to GitHub, and Netlify will build the website for you.^[This is called "continuous deployment."] The rest of the solutions in this chapter will require you to build your website locally and upload the `public/` folder explicitly or implicitly. That said, you can certainly prebuild your website using any tools, push it to GitHub, and Netlify is still able to deploy it for you. What you need to do is leave the build command empty, and tell Netlify your publish directory (e.g., Hugo's default `public/`, but if your prebuilt website is under the root directory, specify `.` as the publish directory instead). Then Netlify simply uploads all files under this directory to its servers without rebuilding your website.
 
-## Updog
-
-Updog (https://updog.co) provides\index{Updog} a simple service: it turns a specified Dropbox (or Google Drive) folder into a website. The idea is that you grant Updog the permission to read the folder, and it will act as a middleman to serve your files under this folder to your visitors. This folder has to be accessed via a domain name, and Updog offers a free subdomain `*.updog.co`. For example, if you have assigned the domain `example.updog.co` to your Dropbox folder, and a visitor wants to see the page `https://example.updog.co/foo/index.html`, Updog will read the file `foo/index.html` in your Dropbox folder and display it to the visitor.
-
-At the moment, Updog's free plan only allows one website per account and will insert a footer "Hosted on Updog" on your web pages. You may not like these limitations. The major benefit of using Updog is that publishing a website becomes implicit since Dropbox will continuously sync files. All you need to do is to make sure your website is generated to the correct Dropbox folder. This can be easily achieved by setting the option `publishDir` in `config.toml`. For example, suppose the folder that you assign to Updog is `~/Dropbox/Apps/updog/my-website/`, and your source folder is at `~/Dropbox/Apps/updog/my-source/`, then you can set `publishDir = "../my-website"` in `~/Dropbox/Apps/updog/my-source/config.toml`.
-
-You can also use your custom domain name if you do not want the default Updog subdomain, and you only need to point the CNAME record of your domain name to the Updog subdomain.^[See Appendix \@ref(domain-name) for more information.]
-
 ## GitHub Pages
 
 GitHub Pages (https://pages.github.com) \index{GitHub Pages} is a very popular way to host static websites (especially those built with Jekyll), but its advantages are not obvious or appealing compared to Netlify. We recommend that you consider Netlify + Hugo due to these reasons:
