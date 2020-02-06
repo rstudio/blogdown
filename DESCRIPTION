@@ -15,7 +15,7 @@ Authors@R: c(
     person("Xianying", "Tan", role = "ctb"),
     person("Raniere", "Silva", role = "ctb"),
     person("Jozef", "Hajnala", role = "ctb"),
-    person(family = "RStudio Inc", role = "cph"),
+    person(family = "RStudio, PBC", role = "cph"),
     person()
     )
 Description: Write blog posts and web pages in R Markdown. This package supports
