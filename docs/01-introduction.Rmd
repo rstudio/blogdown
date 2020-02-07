@@ -315,7 +315,7 @@ Another thing to keep in mind is that the more effort you make in a complicated 
 
 > If you choose to dig a rather deep hole, someday you will have no choice but keep on digging, even with tears.
 >
-> --- Liyun Chen^[Translated from her Chinese Weibo: http://weibo.com/1406511850/Dhrb4toHc (you cannot view this page unless you have logged in).]
+> --- Liyun Chen^[Translated from her Chinese Weibo.]
 
 ## A recommended workflow {#workflow}
 
