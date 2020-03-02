@@ -639,7 +639,9 @@ get_author <- function() {
   }
 
   if (requireNamespace("whoami")) {
-    whoami::fullname(fallback = "")
+    return(whoami::fullname(fallback = ""))
+  } else {
+    return("")
   }
 
 }
