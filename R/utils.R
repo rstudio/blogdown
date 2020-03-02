@@ -630,3 +630,34 @@ tweak_hugo_env = function() {
     envir = parent.frame()
   )
 }
+
+get_author <- function() {
+  option1 <- getOption('blogdown.author', '')
+
+  if (option1 != "") {
+    return(option1)
+  }
+
+  if (requireNamespace("whoami")) {
+    whoami::fullname(fallback = "")
+  }
+
+}
+
+get_dir <- function() {
+  option1 <- getOption('blogdown.subdir', '')
+
+  if (option1 != "") {
+    return(option1)
+  }
+
+  option2 <- list.dirs(file.path(site_root(), "content"),
+                       full.names = FALSE,
+                       recursive = FALSE)
+
+  if (length(option2) == 0) {
+    return(post)
+  } else {
+    return(option2)
+  }
+}

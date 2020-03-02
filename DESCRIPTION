@@ -32,17 +32,18 @@ Imports:
     xfun (>= 0.10),
     servr (>= 0.15)
 Suggests:
-  testit,
-  shiny,
-  miniUI,
-  stringr,
-  rstudioapi,
-  tools,
-  processx,
-  later
+    testit,
+    shiny,
+    miniUI,
+    stringr,
+    rstudioapi,
+    tools,
+    processx,
+    later,
+    whoami
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<https://pandoc.org>)
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.2
 Encoding: UTF-8
