@@ -646,20 +646,12 @@ get_author <- function() {
 
 }
 
-get_dir <- function() {
+get_subdirs <- function() {
   option1 <- getOption('blogdown.subdir', '')
-
-  if (option1 != "") {
-    return(option1)
-  }
 
   option2 <- list.dirs(file.path(site_root(), "content"),
                        full.names = FALSE,
                        recursive = FALSE)
 
-  if (length(option2) == 0) {
-    return(post)
-  } else {
-    return(option2)
-  }
+  sort(unique(c(option1, option2)))
 }
