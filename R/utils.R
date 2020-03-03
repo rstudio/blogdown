@@ -647,11 +647,39 @@ get_author <- function() {
 }
 
 get_subdirs <- function() {
-  option1 <- getOption('blogdown.subdir', '')
+  user_option <- getOption('blogdown.subdir', '')
 
-  option2 <- list.dirs(file.path(site_root(), "content"),
-                       full.names = FALSE,
-                       recursive = FALSE)
+  base_subdirs <- list.dirs(file.path(site_root(), "content"),
+                            full.names = FALSE, recursive = FALSE)
 
-  sort(unique(c('', option1, option2)))
+  if (!length(base_subdirs)) {
+    # No directories under content/
+    return(union(user_option, ""))
+  }
+
+  dirs <- list("", "content/" = sort(unique(base_subdirs)))
+
+  if (user_option != "" && !user_option %in% dirs[["content/"]]) {
+    dirs[["content/"]] <- c(user_option, dirs[["content/"]])
+  }
+
+  for (subdir in base_subdirs) {
+    subdir_path <- file.path(site_root(), "content", subdir)
+
+    # If there are post source files other than index in the directory,
+    # then don't recurse
+    blogdown_files <- list.files(subdir_path, "(R?md|R?markdown|html)$",
+                                 ignore.case = TRUE, include.dirs = TRUE)
+    blogdown_files <- blogdown_files[!grepl("index", blogdown_files)]
+    if (length(blogdown_files)) next
+
+    subdir_dirs <- list.dirs(subdir_path, full.names = FALSE, recursive = FALSE)
+    if (length(subdir_dirs)) {
+      subdir_dirs <- file.path(subdir, subdir_dirs)
+      names(subdir_dirs) <- basename(subdir_dirs)
+      dirs[[paste0("content/", subdir, "/")]] <- sort(subdir_dirs)
+    }
+  }
+
+  dirs
 }
