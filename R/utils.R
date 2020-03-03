@@ -653,5 +653,5 @@ get_subdirs <- function() {
                        full.names = FALSE,
                        recursive = FALSE)
 
-  sort(unique(c(option1, option2)))
+  sort(unique(c('', option1, option2)))
 }
