@@ -16,9 +16,9 @@ xfun::in_dir(blogdown:::site_root(), local({
       shiny::fillRow(
         txt_input('author', 'Author', blogdown:::get_author(), width = '98%'),
         shiny::dateInput('date', 'Date', Sys.Date(), width = '98%'),
-        shiny::selectInput(
+        shiny::selectizeInput(
           'subdir', 'Subdirectory', blogdown:::get_dir(),
-          width = '98%'
+          width = '98%', multiple = FALSE, options = list(create = TRUE)
         ),
         height = '70px'
       ),
