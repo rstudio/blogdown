@@ -649,8 +649,13 @@ get_author <- function() {
 get_subdirs <- function() {
   user_option <- getOption('blogdown.subdir', '')
 
+  exclude_rendered <- function(dirs) {
+    dirs[!grepl("_(files|cache)$", dirs)]
+  }
+
   base_subdirs <- list.dirs(file.path(site_root(), "content"),
                             full.names = FALSE, recursive = FALSE)
+  base_subdirs <- exclude_rendered(base_subdirs)
 
   if (!length(base_subdirs)) {
     # No directories under content/
@@ -673,7 +678,9 @@ get_subdirs <- function() {
     blogdown_files <- blogdown_files[!grepl("index", blogdown_files)]
     if (length(blogdown_files)) next
 
-    subdir_dirs <- list.dirs(subdir_path, full.names = FALSE, recursive = FALSE)
+    subdir_dirs <- exclude_rendered(
+      list.dirs(subdir_path, full.names = FALSE, recursive = FALSE)
+    )
     if (length(subdir_dirs)) {
       subdir_dirs <- file.path(subdir, subdir_dirs)
       names(subdir_dirs) <- basename(subdir_dirs)
