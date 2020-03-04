@@ -280,7 +280,7 @@ hugo_toYAML = function(file) {
   })
 }
 
-content_file = function(path) file.path(get_config('contentDir', 'content'), path)
+content_file = function(...) file.path(get_config('contentDir', 'content'), ...)
 
 #' @param title The title of the post.
 #' @param author The author of the post.
