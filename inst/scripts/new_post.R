@@ -60,8 +60,8 @@ xfun::in_dir(blogdown:::site_root(), local({
       empty_title = shiny::reactive(grepl('^\\s*$', input$title))
       shiny::observe({
         # update subdir in according to the title
-        if (is.function(subdir_fun <- getOption('blogdown.subdir_fun'))) shiny::updateTextInput(
-          session, 'subdir', value = subdir_fun(input$title)
+        if (is.function(subdir_fun <- getOption('blogdown.subdir_fun'))) shiny::updateSelectizeInput(
+          session, 'subdir', selected = subdir_fun(input$title)
         )
         # calculate file path
         if (!empty_title()) shiny::updateTextInput(
