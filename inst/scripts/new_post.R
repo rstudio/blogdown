@@ -18,7 +18,7 @@ xfun::in_dir(blogdown:::site_root(), local({
         shiny::dateInput('date', 'Date', Sys.Date(), width = '98%'),
         shiny::selectizeInput(
           'subdir', 'Subdirectory', blogdown:::get_subdirs(),
-          selected = getOption('blogdown.subdir', NULL),
+          selected = getOption('blogdown.subdir', 'post'),
           width = '98%', multiple = FALSE,
           options = list(create = TRUE, placeholder = '(optional)')
         ),
