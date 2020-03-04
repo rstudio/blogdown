@@ -637,9 +637,8 @@ get_author = function() {
 }
 
 get_subdirs = function() {
-  files = list.files(
-    content_file(), full.names = TRUE, recursive = TRUE, include.dirs = TRUE
-  )
+  owd = setwd(content_file()); on.exit(setwd(owd), add = TRUE)
+  files = list.files(full.names = TRUE, recursive = TRUE, include.dirs = TRUE)
   i = file_test('-d', files)
   dirs = files[i]
   dirs = dirs[!grepl('_(files|cache)/?$', dirs)]
