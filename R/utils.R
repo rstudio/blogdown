@@ -648,5 +648,5 @@ get_subdirs = function() {
     dirs = dirs[substr(dirs, 1, nchar(d)) != d]
   }
 
-  c(getOption('blogdown.subdir', ''), dirs)
+  dirs
 }
