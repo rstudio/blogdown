@@ -19,7 +19,8 @@ xfun::in_dir(blogdown:::site_root(), local({
         shiny::selectizeInput(
           'subdir', 'Subdirectory', blogdown:::get_subdirs(),
           selected = getOption('blogdown.subdir', NULL),
-          width = '98%', multiple = FALSE, options = list(create = TRUE)
+          width = '98%', multiple = FALSE,
+          options = list(create = TRUE, placeholder = '(optional)')
         ),
         height = '70px'
       ),
