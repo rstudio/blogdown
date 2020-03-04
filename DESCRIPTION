@@ -39,7 +39,8 @@ Suggests:
   rstudioapi,
   tools,
   processx,
-  later
+  later,
+  whoami
 LazyData: true
 URL: https://github.com/rstudio/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues

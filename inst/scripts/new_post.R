@@ -14,11 +14,13 @@ xfun::in_dir(blogdown:::site_root(), local({
     miniUI::miniPage(miniUI::miniContentPanel(
       txt_input('title', 'Title', placeholder = 'Post Title'),
       shiny::fillRow(
-        txt_input('author', 'Author', getOption('blogdown.author', ''), width = '98%'),
+        txt_input('author', 'Author', blogdown:::get_author(), width = '98%'),
         shiny::dateInput('date', 'Date', Sys.Date(), width = '98%'),
-        txt_input(
-          'subdir', 'Subdirectory', getOption('blogdown.subdir', 'post'),
-          '(optional)', width = '98%'
+        shiny::selectizeInput(
+          'subdir', 'Subdirectory', blogdown:::get_subdirs(),
+          selected = getOption('blogdown.subdir', 'post'),
+          width = '98%', multiple = FALSE,
+          options = list(create = TRUE, placeholder = '(optional)')
         ),
         height = '70px'
       ),

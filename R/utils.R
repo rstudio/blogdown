@@ -630,3 +630,23 @@ tweak_hugo_env = function() {
     envir = parent.frame()
   )
 }
+
+get_author = function() {
+  if (!is.null(a <- getOption('blogdown.author'))) return(a)
+  if (xfun::loadable('whoami')) whoami::fullname('') else ''
+}
+
+get_subdirs = function() {
+  files = list.files(content_file(), full.names = TRUE, recursive = TRUE)
+  i = file_test('-d', files)
+  dirs = files[i]
+  dirs = dirs[!grepl('_(files|cache)/?$', dirs)]
+
+  # exclude dirs that contain index.??? files
+  files = files[!i]
+  for (d in dirname(files[xfun::sans_ext(basename(files)) == 'index'])) {
+    dirs = dirs[substr(dirs, 1, nchar(d)) != d]
+  }
+
+  union(dirs, getOption('blogdown.subdir', 'post'))
+}

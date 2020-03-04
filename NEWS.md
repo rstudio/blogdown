@@ -1,6 +1,8 @@
 # CHANGES IN blogdown VERSION 0.18
 
+## NEW FEATURES
 
+- The "New Post" addin in RStudio uses the **whoami** package (if installed) to figure out the author name, in addition to using the global option `getOption('blogdown.author')`. The "Subdirectory" field is now a select input instead of a text input, so you can choose one item from a full list of subdirectories instead of manually typing the directory path (thanks, @maelle @gadenbuie, #432).
 
 # CHANGES IN blogdown VERSION 0.17
 
