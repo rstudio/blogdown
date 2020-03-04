@@ -631,62 +631,22 @@ tweak_hugo_env = function() {
   )
 }
 
-get_author <- function() {
-  option1 <- getOption('blogdown.author', '')
-
-  if (option1 != "") {
-    return(option1)
-  }
-
-  if (requireNamespace("whoami")) {
-    return(whoami::fullname(fallback = ""))
-  } else {
-    return("")
-  }
-
+get_author = function() {
+  if (!is.null(a <- getOption('blogdown.author'))) return(a)
+  if (xfun::loadable('whoami')) whoami::fullname('') else ''
 }
 
-get_subdirs <- function() {
-  user_option <- getOption('blogdown.subdir', '')
+get_subdirs = function() {
+  files = list.files(content_file(), full.names = TRUE, recursive = TRUE)
+  i = file_test('-d', files)
+  dirs = files[i]
+  dirs = dirs[!grepl('_(files|cache)/?$', dirs)]
 
-  exclude_rendered <- function(dirs) {
-    dirs[!grepl("_(files|cache)$", dirs)]
+  # exclude dirs that contain index.??? files
+  files = files[!i]
+  for (d in dirname(files[xfun::sans_ext(basename(files)) == 'index'])) {
+    dirs = dirs[substr(dirs, 1, nchar(d)) != d]
   }
 
-  base_subdirs <- list.dirs(file.path(site_root(), "content"),
-                            full.names = FALSE, recursive = FALSE)
-  base_subdirs <- exclude_rendered(base_subdirs)
-
-  if (!length(base_subdirs)) {
-    # No directories under content/
-    return(union(user_option, ""))
-  }
-
-  dirs <- list("", "content/" = sort(unique(base_subdirs)))
-
-  if (user_option != "" && !user_option %in% dirs[["content/"]]) {
-    dirs[["content/"]] <- c(user_option, dirs[["content/"]])
-  }
-
-  for (subdir in base_subdirs) {
-    subdir_path <- file.path(site_root(), "content", subdir)
-
-    # If there are post source files other than index in the directory,
-    # then don't recurse
-    blogdown_files <- list.files(subdir_path, "(R?md|R?markdown|html)$",
-                                 ignore.case = TRUE, include.dirs = TRUE)
-    blogdown_files <- blogdown_files[!grepl("index", blogdown_files)]
-    if (length(blogdown_files)) next
-
-    subdir_dirs <- exclude_rendered(
-      list.dirs(subdir_path, full.names = FALSE, recursive = FALSE)
-    )
-    if (length(subdir_dirs)) {
-      subdir_dirs <- file.path(subdir, subdir_dirs)
-      names(subdir_dirs) <- basename(subdir_dirs)
-      dirs[[paste0("content/", subdir, "/")]] <- sort(subdir_dirs)
-    }
-  }
-
-  dirs
+  c(getOption('blogdown.subdir', ''), dirs)
 }
