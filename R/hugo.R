@@ -337,11 +337,18 @@ new_post = function(
     )
   }
 
-  do.call(modify_yaml, c(list(
-    file, title = title, author = author, date = format(date), slug = slug,
+  arguments <- c(list(
+    file, title = title, date = format(date), slug = slug,
     categories = as.list(categories), tags = as.list(tags)
   ), if (!file.exists('archetypes/default.md')) list(draft = NULL)
-  ))
+  )
+
+    if (getOption("blogdown.plural_authors", FALSE)) {
+      arguments$authors <- as.list(author)
+    } else {
+      arguments$author <- author
+    }
+  do.call(modify_yaml, arguments)
   if (open) open_file(file)
   file
 }
