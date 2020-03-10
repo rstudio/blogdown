@@ -20,7 +20,7 @@ Interactive: true
 
 Name: Touch File
 Description: Change the timestamp of the current file in the editor.
-Binding: touch_file
+Binding: touch_file_rstudio
 Interactive: false
 
 Name: Quote Poem
