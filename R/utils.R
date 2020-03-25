@@ -154,8 +154,8 @@ load_config = function() {
 }
 
 # check if the user has configured Multilingual Mode for Hugo in config.toml
-check_lang = function() {
-  load_config()[['DefaultContentLanguage']]
+check_lang = function(config = load_config()) {
+  get_config('DefaultContentLanguage', NULL, config)
 }
 
 check_config = function(config, f) {
