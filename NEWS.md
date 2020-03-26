@@ -1,5 +1,8 @@
 # CHANGES IN blogdown VERSION 0.19
 
+## BUG FIXES
+
+- The "Language" field in the "New Post" addin in RStudio now shows up regardless of the capitalization of the `defaultContentLanguage` parameter in `config.toml` (thanks @mpaulacaldas, #442).
 
 # CHANGES IN blogdown VERSION 0.18
 
