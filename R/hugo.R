@@ -410,7 +410,7 @@ hugo_server_args = function(host, port) {
 #' shortcode('highlight', 'bash', .content = 'echo hello world;')
 #'
 #' shortcode_html('myshortcode', .content='My <strong>shortcode</strong>.')
-shortcode = function(.name, ..., .content = NULL, .type = 'markdown') {
+shortcode = function(.name, ..., .content = NULL, .type = 'markdown', .content_as_html=F) {
   is_html = match.arg(.type, c('markdown', 'html')) == 'html'
   m = .name; x = paste(.content, collapse = '\n'); a = args_string(...)
   if (a != '') a = paste('', a)
@@ -421,8 +421,8 @@ shortcode = function(.name, ..., .content = NULL, .type = 'markdown') {
     s1 = sprintf('{{%% %s%s %%}}', m, a)
     s2 = sprintf('{{%% /%s %%}}', m)
   }
-  res = if (x == '') s1 else paste(s1, x, s2, sep = '\n')
-  htmltools::HTML(res)
+  res = if (x == '') htmltools::HTML(s1) else paste(htmltools::HTML(s1), x, htmltools::HTML(s2), sep = '\n')
+  res
 }
 
 #' @export
