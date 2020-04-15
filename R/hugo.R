@@ -380,6 +380,9 @@ hugo_server_args = function(host, port) {
 #' not empty. The function \code{shortcode_html()} is essentially
 #' \code{shortcode(.type = 'html')}. The function \code{shortcodes()} is a
 #' vectorized version of \code{shortcode()}.
+#' The paired functions \code{shortcode_o()} and \code{shortcode_c()} provide 
+#' an alternative method to open and close shortcodes, which allows 
+#' inner content be processed safely by pandoc, e.g. citekeys.
 #'
 #' These functions can be used in either \pkg{knitr} inline R expressions or
 #' code chunks. The returned character string is wrapped in
@@ -410,6 +413,10 @@ hugo_server_args = function(host, port) {
 #' shortcode('highlight', 'bash', .content = 'echo hello world;')
 #'
 #' shortcode_html('myshortcode', .content='My <strong>shortcode</strong>.')
+#'
+#' shortcode_o('figure', src='/images/foo.png')
+#' print('This inner text will be *processed* by pandoc, @Smith2006')
+#' shortcode_c('figure')
 shortcode = function(.name, ..., .content = NULL, .type = 'markdown') {
   is_html = match.arg(.type, c('markdown', 'html')) == 'html'
   m = .name; x = paste(.content, collapse = '\n'); a = args_string(...)
@@ -425,6 +432,41 @@ shortcode = function(.name, ..., .content = NULL, .type = 'markdown') {
   res
 }
 
+#' @export
+#' @rdname shortcode
+shortcode_o <- function (.name, ..., .type = "markdown") 
+{
+  is_html = match.arg(.type, c("markdown", "html")) == "html"
+  m = .name
+  a = args_string(...)
+  if (a != "") 
+    a = paste("", a)
+  if (is_html) {
+    s1 = sprintf("{{< %s%s >}}", m, a)
+  }
+  else {
+    s1 = sprintf("{{%% %s%s %%}}", m, a)
+  }
+  res = htmltools::HTML(s1)
+  res
+} 
+
+#' @export
+#' @rdname shortcode
+shortcode_c <- function (.name, .type = "markdown") 
+{
+  is_html = match.arg(.type, c("markdown", "html")) == "html"
+  m = .name
+  if (is_html) {
+    s2 = sprintf("{{< /%s >}}", m)
+  }
+  else {
+    s2 = sprintf("{{%% /%s %%}}", m)
+  }
+  res = htmltools::HTML(s2)
+  res
+}              
+             
 #' @export
 #' @rdname shortcode
 shortcode_html = function(...) {
