@@ -2,6 +2,8 @@
 
 ## BUG FIXES
 
+- **blogdown** no longer renders `.Rmd` documents within a packrat / renv library folder, for blog posts whose associated R libraries are managed by these packages (thanks, @kevinushey, #451).
+
 - The "Language" field in the "New Post" addin in RStudio now shows up regardless of the capitalization of the `defaultContentLanguage` parameter in `config.toml` (thanks @mpaulacaldas, #442).
 
 # CHANGES IN blogdown VERSION 0.18
