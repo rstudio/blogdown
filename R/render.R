@@ -67,22 +67,23 @@ timestamp_filter = function(files) {
 }
 
 # raw indicates paths of dependencies are not encoded in the HTML output
-build_rmds = function(files) {
+build_rmds = function(files, dir_blog = '.', dir_src = 'content') {
   if (length(files) == 0) return()
 
   # copy by-products {/content/.../foo_(files|cache) dirs and foo.html} from
   # /blogdown/ or /static/ to /content/
   lib1 = by_products(files, c('_files', '_cache'))
-  lib2 = gsub('^content', 'blogdown', lib1)  # /blogdown/.../foo_(files|cache)
+  lib2 = gsub(paste0('^', dir_src), 'blogdown', lib1)  # /blogdown/.../foo_(files|cache)
   i = grep('_files$', lib2)
   lib2[i] = gsub('^blogdown', 'static', lib2[i])  # _files are copied to /static
+  if (dir_blog != '.') lib2 = file.path(dir_blog, lib2)
   # move by-products of a previous run to content/
   dirs_rename(lib2, lib1)
   # move (new) by-products from content/ to blogdown/ or static/ to make the
   # source directory clean
   on.exit(dirs_rename(lib1, lib2), add = TRUE)
 
-  root = getwd()
+  root = ifelse(dir_blog == '.', getwd(), file.path(getwd(), 'dir_blog'))
   base = site_base_dir()
   shared_yml = file.path(root, '_output.yml')
   copied_yaml = character(); on.exit(unlink(copied_yaml), add = TRUE)
@@ -96,11 +97,14 @@ build_rmds = function(files) {
   for (f in files) {
     d = dirname(f)
     out = output_file(f, to_md <- is_rmarkdown(f))
+    out2 = gsub(paste0('^', dir_src), 'content', out)
+    if (dir_blog != '.') out2 = file.path(dir_blog, out2)
+    on.exit(file_rename(out, out2), add = TRUE)
     copy_output_yml(d)
     message('Rendering ', f)
     render_page(f)
     x = read_utf8(out)
-    x = encode_paths(x, by_products(f, '_files'), d, base, to_md)
+    x = encode_paths(x, by_products(f, '_files'), d, base, to_md, dir_src)
     if (to_md) {
       write_utf8(x, out)
     } else {
@@ -130,7 +134,7 @@ render_page = function(input, script = 'render_page.R') {
 
 # example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
 # parent = 'content/post';
-encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
+encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, dir_src = 'content') {
   if (!dir_exists(deps)) return(x)
   if (!grepl('/$', parent)) parent = paste0(parent, '/')
   deps = basename(deps)
@@ -153,7 +157,7 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
     x = gsub(r1, paste0('\\1\\2', gsub('^content/', base, parent), '/\\3\\4'), x)
   }
   r1 = sprintf('("\'?)(%s/figure-html/)', deps)
-  x = gsub(r1, paste0('\\1', gsub('^content/', base, parent), '\\2'), x, perl = TRUE)
+  x = gsub(r1, paste0('\\1', gsub(paste0('^', dir_src, '/'), base, parent), '\\2'), x, perl = TRUE)
   # move other HTML dependencies to /static/rmarkdown-libs/
   r2 = paste0(r, '([^/]+)/')
   x2 = grep(r2, x, value = TRUE)
