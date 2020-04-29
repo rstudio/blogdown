@@ -84,7 +84,7 @@ build_rmds = function(files, dir_blog = '.', dir_src = 'content') {
   on.exit(dirs_rename(lib1, lib2), add = TRUE)
 
   root = ifelse(dir_blog == '.', getwd(), file.path(getwd(), 'dir_blog'))
-  base = site_base_dir()
+  owd = getwd(); setwd(dir_blog); base = site_base_dir(); setwd(owd)
   shared_yml = file.path(root, '_output.yml')
   copied_yaml = character(); on.exit(unlink(copied_yaml), add = TRUE)
 
