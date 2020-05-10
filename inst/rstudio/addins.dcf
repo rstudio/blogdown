@@ -32,4 +32,3 @@ Name: Insert Image from Clipboard
 Description: Insert Image from Clipboard, for Rmd and blogdown post
 Binding: insert_image_from_clipboard_addin
 Interactive: false
-
