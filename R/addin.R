@@ -52,7 +52,7 @@ grab_clipboard = function(filepath) {
         set theFile to (open for access POSIX file \"",
       filepath, "\" with write permission)
         try
-          write (the clipboard as «class PNGf») to theFile
+          write (the clipboard as \u00abclass PNGf\u00bb) to theFile
         end try
         close access theFile'"
     )
