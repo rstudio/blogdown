@@ -115,7 +115,7 @@ generate_filepath = function() {
   ## filepath: absolute path, where paste image in
   ## filepath_insert: path in rmd, like ![](filepath_insert),
   ## for a blogdown post, filepath_insert is different from filepath
-  ## https://lcolladotor.github.io/2018/03/07/blogdown-insert-image-addin/#.XrZ9dxMzbjA
+  ## lcolladotor.github.io/2018/03/07/blogdown-insert-image-addin/#.XrZ9dxMzbjA
 
   filename = format(Sys.time(), "rmd-img-paste-%Y%m%d%H%M%s.png")
   currpath = rstudioapi::getSourceEditorContext()$path
