@@ -125,6 +125,7 @@ generate_filepath = function() {
 
   filename = format(Sys.time(), "rmd-img-paste-%Y%m%d%H%M%s.png")
   currpath = rstudioapi::getSourceEditorContext()$path
+  if(!nchar(currpath)) stop("Please save the file before pasting an image.")
   currpath = xfun::normalize_path(currpath)
 
   if (is_blogdown_post()) {
@@ -147,7 +148,7 @@ generate_filepath = function() {
     dir = file.path(dirname(currpath), ".asserts")
     dir_insert = ".asserts"
   }
-  if (!file.exists(dir)) dir.create(dir)
+  if (!file.exists(dir)) dir.create(dir, recursive = TRUE)
 
   list(
     filepath = file.path(dir, filename),
