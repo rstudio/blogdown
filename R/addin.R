@@ -129,18 +129,20 @@ generate_filepath = function() {
 
   if (is_blogdown_post()) {
     proj_root = rstudioapi::getActiveProject()
-    dir = file.path(
-      proj_root, "static", dirname(gsub(".*content/", "", currpath)),
-      paste0(xfun::sans_ext(basename(currpath)), "_files")
+    
+    post_files <- file.path(
+      dirname(gsub(".*content/", "", currpath)),
+      paste0(tools::file_path_sans_ext(basename(currpath)), "_files")
     )
-
+    dir = file.path(proj_root, "static", post_files)
+    
     # path like /post/..., insert to md
-    dir_insert = strsplit(dir, file.path("static", ""))[[1]][2]
-    dir_insert = file.path(
-      ifelse(getOption("blogdown.insertimage.usebaseurl", FALSE),
-        blogdown:::load_config()$baseurl, ""
-      ), dir_insert
+    baseurl <- ifelse(
+      getOption("blogdown.insertimage.usebaseurl", FALSE),
+      blogdown:::load_config()$baseurl, ""
     )
+    dir_insert <- file.path(baseurl, post_files)
+    
   } else {
     dir = file.path(dirname(currpath), ".asserts")
     dir_insert = ".asserts"
