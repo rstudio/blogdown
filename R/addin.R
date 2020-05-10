@@ -43,3 +43,121 @@ quote_poem_addin = function() {
   }
   rstudioapi::modifyRange(sel$range, quote_poem(sel$text))
 }
+
+grab_clipboard = function(filepath) {
+  # platform = Sys.info()[1]
+  if (is_osx()) {
+    script = paste0(
+      "osascript -e \'
+        set theFile to (open for access POSIX file \"",
+      filepath, "\" with write permission)
+        try
+          write (the clipboard as «class PNGf») to theFile
+        end try
+        close access theFile'"
+    )
+    system(script)
+  } else if (is_windows()) {
+    script = paste0(
+      "powershell -sta \"\n",
+      "Add-Type -AssemblyName System.Windows.Forms;\n",
+      "if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {\n",
+      "  [System.Drawing.Bitmap][System.Windows.Forms.Clipboard]::GetDataObject(
+           ).getimage().Save('",
+      paste0(filepath, "', [System.Drawing.Imaging.ImageFormat]::Png) \n"),
+      "  }\""
+    )
+    system(script)
+  } else if (is_linux()) {
+    # Executing on Linux! -> use xclip
+    tryCatch(
+      targets = tolower(
+        system("xclip -selection clipboard -t TARGETS -o", intern = T)
+      ),
+      error = function(e) {
+        stop("Please install the required system dependency xclip")
+      }
+    ) # Validate xclip is installed and get targets from clipboard
+    if (any(grepl(".*png$", targets))) {
+      system(paste0("xclip -selection clipboard -t image/png -o > ", filepath))
+    }
+  }
+
+  # in mac os, if no image in clipboard, exec script will create a empty image
+  # in window, no image be create
+  if (!file.exists(filepath) || file.size(filepath) == 0) {
+    stop("Clipboard data is not an image.")
+  }
+}
+
+is_blogdown_post = function() {
+  ## current rmd is a blogdown post?
+  ## Criteria:
+  ## - is a project and .Rproj have attr like BuildType: Website
+  ## - filepath like **/post/***
+
+  proj_root = rstudioapi::getActiveProject()
+  if (is.null(proj_root)) {
+    return(FALSE)
+  }
+
+  proj_settings = list.files(proj_root, pattern = ".Rproj", full.names = TRUE)
+  currpath = rstudioapi::getSourceEditorContext()$path
+  if (any(grep("BuildType: Website", readLines(proj_settings)) > 0) &&
+    basename(dirname(currpath)) == "post") {
+    return(TRUE)
+  }
+
+  FALSE
+}
+
+generate_filepath = function() {
+  ## filepath: absolute path, where paste image in
+  ## filepath_insert: path in rmd, like ![](filepath_insert),
+  ## for a blogdown post, filepath_insert is different from filepath
+  ## https://lcolladotor.github.io/2018/03/07/blogdown-insert-image-addin/#.XrZ9dxMzbjA
+
+  filename = format(Sys.time(), "rmd-img-paste-%Y%m%d%H%M%s.png")
+  currpath = rstudioapi::getSourceEditorContext()$path
+  currpath = xfun::normalize_path(currpath)
+
+  if (is_blogdown_post()) {
+    proj_root = rstudioapi::getActiveProject()
+    dir = file.path(
+      proj_root, "static", dirname(gsub(".*content/", "", currpath)),
+      paste0(xfun::sans_ext(basename(currpath)), "_files")
+    )
+
+    # path like /post/..., insert to md
+    dir_insert = strsplit(dir, file.path("static", ""))[[1]][2]
+    dir_insert = file.path(
+      ifelse(getOption("blogdown.insertimage.usebaseurl", FALSE),
+        blogdown:::load_config()$baseurl, ""
+      ), dir_insert
+    )
+  } else {
+    dir = file.path(dirname(currpath), ".asserts")
+    dir_insert = ".asserts"
+  }
+  if (!file.exists(dir)) dir.create(dir)
+
+  list(
+    filepath = file.path(dir, filename),
+    filepath_insert = file.path(dir_insert, filename)
+  )
+}
+
+insert_image_code_addin = function() {
+  doc_id = rstudioapi::getSourceEditorContext()$id
+  if (doc_id %in% c("#console", "#terminal")) {
+    stop("You can`t insert an image in the console nor in the terminal.
+         Please select a line in the source editor.")
+  }
+  res = generate_filepath()
+  grab_clipboard(res$filepath)
+  position = rstudioapi::getSourceEditorContext()$selection[[1]]$range$start
+  func = function(filepath) paste0("![](", filepath, ")")
+  rstudioapi::insertText(position, func(res$filepath_insert), id = doc_id)
+}
+
+
