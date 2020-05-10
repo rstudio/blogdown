@@ -91,10 +91,10 @@ grab_clipboard = function(filepath) {
 }
 
 is_blogdown_post = function() {
-  ## current rmd is a blogdown post?
-  ## Criteria:
-  ## - is a project and .Rproj have attr like BuildType: Website
-  ## - filepath like **/post/***
+  # current rmd is a blogdown post?
+  # Criteria:
+  # - is a project and .Rproj have attr like BuildType: Website
+  # - filepath like **/post/***
 
   proj_root = rstudioapi::getActiveProject()
   if (is.null(proj_root)) {
