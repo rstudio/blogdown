@@ -112,10 +112,16 @@ is_blogdown_post = function() {
 }
 
 generate_filepath = function() {
-  ## filepath: absolute path, where paste image in
-  ## filepath_insert: path in rmd, like ![](filepath_insert),
-  ## for a blogdown post, filepath_insert is different from filepath
-  ## lcolladotor.github.io/2018/03/07/blogdown-insert-image-addin/#.XrZ9dxMzbjA
+  #' @return
+  # list of filepath and filepath_insert
+  #   filepath: absolute path, to save image in clipboard
+  #   filepath_insert: path in rmd code, ![](filepath_insert)
+  # 
+  # for a blogdown post, filepath_insert is different from filepath
+  # lcolladotor.github.io/2018/03/07/blogdown-insert-image-addin/#.XrZ9dxMzbjA
+  # 
+  # for a generic rmd, filepath_insert is same with filepath, while filepath_insert is relative path
+  
 
   filename = format(Sys.time(), "rmd-img-paste-%Y%m%d%H%M%s.png")
   currpath = rstudioapi::getSourceEditorContext()$path
