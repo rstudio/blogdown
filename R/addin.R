@@ -156,7 +156,7 @@ generate_filepath = function() {
   )
 }
 
-insert_image_code_addin = function() {
+insert_image_from_clipboard_addin = function() {
   doc_id = rstudioapi::getSourceEditorContext()$id
   if (doc_id %in% c("#console", "#terminal")) {
     stop("You can`t insert an image in the console nor in the terminal.
@@ -168,5 +168,3 @@ insert_image_code_addin = function() {
   func = function(filepath) paste0("![](", filepath, ")")
   rstudioapi::insertText(position, func(res$filepath_insert), id = doc_id)
 }
-
-
