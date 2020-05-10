@@ -114,7 +114,7 @@ is_blogdown_post = function() {
 generate_filepath = function() {
   #' @return
   # list of filepath and filepath_insert
-  #   filepath: absolute path, to save image in clipboard
+  #   filepath: absolute path, to save clipboard's image
   #   filepath_insert: path in rmd code, ![](filepath_insert)
   # 
   # for a blogdown post, filepath_insert is different from filepath
@@ -122,7 +122,6 @@ generate_filepath = function() {
   # 
   # for a generic rmd, filepath_insert is same with filepath, while filepath_insert is relative path
   
-
   filename = format(Sys.time(), "rmd-img-paste-%Y%m%d%H%M%s.png")
   currpath = rstudioapi::getSourceEditorContext()$path
   if(!nchar(currpath)) stop("Please save the file before pasting an image.")
@@ -145,8 +144,8 @@ generate_filepath = function() {
     dir_insert = file.path(baseurl, post_files)
     
   } else {
-    dir = file.path(dirname(currpath), ".asserts")
-    dir_insert = ".asserts"
+    dir = file.path(dirname(currpath), ".assets")
+    dir_insert = ".assets"
   }
   if (!file.exists(dir)) dir.create(dir, recursive = TRUE)
 
