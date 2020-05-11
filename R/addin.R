@@ -45,7 +45,8 @@ quote_poem_addin = function() {
 }
 
 grab_clipboard = function(filepath) {
-  # platform = Sys.info()[1]
+  # save image in clipboard to local filepath
+  
   if (is_osx()) {
     script = paste0(
       "osascript -e \'
