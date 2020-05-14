@@ -46,6 +46,7 @@ build_site = function(
   }
   build_rmds(files)
   if (run_hugo) on.exit(hugo_build(local), add = TRUE)
+  on.exit(run_script('R/postprocessing.R', as.character(local)), add = TRUE)
   invisible()
 }
 
