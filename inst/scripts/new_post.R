@@ -69,20 +69,12 @@ xfun::in_dir(blogdown:::site_root(), local({
           session, 'subdir', selected = subdir_fun(input$title)
         )
         # calculate file path
-        empty_slug = shiny::reactive(grepl('^\\s*$', input$slug))
-
-        if (!empty_title()) {
-          if (empty_slug()) {
-            slug <- blogdown:::dash_filename(input$title)
-          } else{
-            slug <- input$slug
-          }
-          shiny::updateTextInput(
-            session, 'file', value = blogdown:::post_filename(
-              slug, input$subdir, shiny::isolate(input$format), input$date, input$lang
-            )
+        if (grepl('^\\s*$', slug <- input$slug)) slug = blogdown:::dash_filename(input$title)
+        shiny::updateTextInput(
+          session, 'file', value = blogdown:::post_filename(
+            slug, input$subdir, shiny::isolate(input$format), input$date, input$lang
           )
-          }
+        )
       })
       shiny::observeEvent(input$format, {
         f = input$file
