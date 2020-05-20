@@ -129,6 +129,11 @@ is_windows = function() xfun::is_windows()
 is_osx = function() xfun::is_macos()
 is_linux = function() xfun::is_linux()
 
+# guess if the OS is 64bit
+is_64bit = function() {
+  length(grep('64', unlist(Sys.info()[c('machine', 'release')]))) > 0
+}
+
 is_rmarkdown = function(x) grepl('[.][Rr]markdown$', x)
 
 # build .Rmarkdown to .markdown, and .Rmd to .html

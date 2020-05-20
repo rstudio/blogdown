@@ -10,6 +10,8 @@
 
 - The "Language" field in the "New Post" addin in RStudio now shows up regardless of the capitalization of the `defaultContentLanguage` parameter in `config.toml` (thanks @mpaulacaldas, #442).
 
+- Correctly identifies "Windows X.Y x64" as a 64bit operating system, so the extended version of Hugo can be installed (thanks, @anna-doizy, #461).
+
 # CHANGES IN blogdown VERSION 0.18
 
 ## NEW FEATURES
