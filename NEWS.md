@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 0.19
 
+## NEW FEATURES
+
+- The "Filename" field in the "New Post" addin in RStudio will use the "Slug" value (if provided) to create the base filename (thanks, @maelle, #448).
+
 ## BUG FIXES
 
 - **blogdown** no longer renders `.Rmd` documents within a packrat / renv library folder, for blog posts whose associated R libraries are managed by these packages (thanks, @kevinushey, #451).
