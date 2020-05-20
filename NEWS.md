@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 0.19
 
+## NEW FEATURES
+
+- The "Filename" field in the "New Post" addin in RStudio will use the "Slug" value (if provided) to create the base filename (thanks, @maelle, #448).
+
 ## BUG FIXES
 
 - The "Language" field in the "New Post" addin in RStudio now shows up regardless of the capitalization of the `defaultContentLanguage` parameter in `config.toml` (thanks @mpaulacaldas, #442).
