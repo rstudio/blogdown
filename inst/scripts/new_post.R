@@ -59,8 +59,9 @@ xfun::in_dir(blogdown:::site_root(), local({
     server = function(input, output, session) {
       empty_title = shiny::reactive(grepl('^\\s*$', input$title))
       shiny::observe({
-        if (!empty_title()) shiny::updateTextInput(
-          session, 'slug', placeholder = blogdown:::dash_filename(input$title)
+        shiny::updateTextInput(
+          session, 'slug',
+          placeholder = if (empty_title()) '(optional)' else blogdown:::dash_filename(input$title)
         )
       })
       shiny::observe({
