@@ -307,7 +307,7 @@ date_filename = function(path, date, replace = FALSE) {
   path
 }
 
-# give a filename, return a slug by removing the date and extension (and posible index.md)
+# give a filename, return a slug by removing the date and extension (and possible index.md)
 post_slug = function(x) {
   x = gsub('([.][[:alnum:]]+){1,2}$', '', x)
   if (basename(x) == 'index') x = dirname(x)
