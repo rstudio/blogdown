@@ -403,6 +403,10 @@ hugo_server_args = function(host, port) {
 #' @return A character string wrapped in \code{htmltools::HTML()};
 #'   \code{shortcode()} returns a string of the form \code{{{\% name args \%}}},
 #'   and \code{shortcode_html()} returns \code{{{< name args >}}}.
+#' @note Since Hugo v0.60, Hugo has switched its default Markdown rendering
+#'   engine to Goldmark. One consequence is that shortcodes may fail to render.
+#'   You may enable the \code{unsafe} option in the configuration file:
+#'   \url{https://gohugo.io/getting-started/configuration-markup/#goldmark}.
 #' @references \url{https://gohugo.io/extras/shortcodes/}
 #' @export
 #' @examples library(blogdown)

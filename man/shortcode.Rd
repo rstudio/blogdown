@@ -58,6 +58,12 @@ shortcodes (e.g. \code{<} will be converted to \code{&lt;}).
 If your document is pure Markdown, you can use the Hugo syntax to write
 shortcodes, and there is no need to call these R functions.
 }
+\note{
+Since Hugo v0.60, Hugo has switched its default Markdown rendering
+  engine to Goldmark. One consequence is that shortcodes may fail to render.
+  You may enable the \code{unsafe} option in the configuration file:
+  \url{https://gohugo.io/getting-started/configuration-markup/#goldmark}.
+}
 \examples{
 library(blogdown)
 
