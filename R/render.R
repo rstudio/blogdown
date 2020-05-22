@@ -20,7 +20,9 @@
 #' command line \command{Rscript "R/build.R"}, which means it is executed in a
 #' separate R session. The value of the argument \code{local} is passed to the
 #' command line (you can retrieve the command-line arguments via
-#' \code{\link{commandArgs}(TRUE)}).
+#' \code{\link{commandArgs}(TRUE)}). For \code{method = "html"}, the R script
+#' \file{R/build2.R} (if exists) will be executed after Hugo has built the site.
+#' This can be useful if you want to post-process the site.
 #' @param local Whether to build the website locally to be served via
 #'   \code{\link{serve_site}()}.
 #' @param method Different methods to build a website (each with pros and cons).
@@ -46,7 +48,7 @@ build_site = function(
   }
   build_rmds(files)
   if (run_hugo) on.exit(hugo_build(local), add = TRUE)
-  on.exit(run_script('R/postprocessing.R', as.character(local)), add = TRUE)
+  on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
   invisible()
 }
 
