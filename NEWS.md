@@ -6,6 +6,8 @@
 
 - For `blogdown::build_site(method = 'html', run_hugo =TRUE)`, if the R script `R/build2.R` exists, it will be executed after Hugo has built the site. This can be useful if you want to post-process the site (thanks, @chrisjake, #458).
 
+- Added functions `shortcode_open()` and `shortcode_close()` so users can write the opening and closing shortcodes separately from the inner content, and the inner content can be processed by Pandoc (thanks, @tcwilkinson, #449).
+
 ## BUG FIXES
 
 - **blogdown** no longer renders `.Rmd` documents within a packrat / renv library folder, for blog posts whose associated R libraries are managed by these packages (thanks, @kevinushey, #451).
