@@ -39,7 +39,9 @@ to this R script how a website is rendered. The script is executed via
 command line \command{Rscript "R/build.R"}, which means it is executed in a
 separate R session. The value of the argument \code{local} is passed to the
 command line (you can retrieve the command-line arguments via
-\code{\link{commandArgs}(TRUE)}).
+\code{\link{commandArgs}(TRUE)}). For \code{method = "html"}, the R script
+\file{R/build2.R} (if exists) will be executed after Hugo has built the site.
+This can be useful if you want to post-process the site.
 }
 \note{
 This function recompiles all R Markdown files by default, even if the
