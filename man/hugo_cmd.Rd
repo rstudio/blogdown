@@ -73,7 +73,7 @@ YAML instead of TOML.}
 \item{sample}{Whether to add sample content. Hugo creates an empty site by
 default, but this function adds sample content by default.}
 
-\item{theme}{A Hugo theme on Github (a chararacter string of the form
+\item{theme}{A Hugo theme on Github (a character string of the form
 \code{user/repo}, and you can optionally specify a GIT branch or tag name
 after \code{@}, i.e. \code{theme} can be of the form
 \code{user/repo@branch}). You can also specify a full URL to the zip file of
