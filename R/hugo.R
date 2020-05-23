@@ -180,13 +180,14 @@ install_theme = function(
       url = theme
       zipfile = gsub(".+/(.+\\.zip)", "\\1", theme)
     } else {
-      url = sprintf('https://%s/%s/archive/%s.zip', hostname, theme, branch)
-      zipfile = sprintf('%s.zip', basename(theme))
+      url = sprintf('https://%s/%s/archive/%s.tar.gz', hostname, theme, branch)
+      zipfile = sprintf('%s.tar.gz', basename(theme))
     }
     xfun::download_file(url, zipfile, mode = 'wb')
     tmpdir = basename(tempfile('', '.'))
     on.exit(in_dir('themes', unlink(tmpdir, recursive = TRUE)))
-    files = utils::unzip(zipfile, exdir = tmpdir)
+    utils::untar(zipfile, exdir = tmpdir)
+    files = list.files(tmpdir, all.files = TRUE, recursive = TRUE, full.names = TRUE)
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
