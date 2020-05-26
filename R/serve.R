@@ -47,7 +47,21 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
   function(...) {
     okay = FALSE  # whether the server is successfully started
     root = site_root(config)
-    check_server(root)
+    if (root %in% opts$get('served_dirs')) {
+      servr::browse_last()
+      return(message(
+        'The site has been served under the directory "', root, '". I have tried ',
+        'to reopen it for you with servr::browse_last(). If you do want to ',
+        'starting a new server, you may stop existing servers with ',
+        'blogdown::stop_server(), or restart R. Normally you should not need to ',
+        'serve the same site multiple times in the same R session',
+        if (servr:::is_rstudio()) c(
+          ', otherwise you may run into issues like ',
+          'https://github.com/rstudio/blogdown/issues/404'
+        ), '.'
+      ))
+    }
+
     on.exit(if (okay) opts$append(served_dirs = root), add = TRUE)
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
@@ -130,21 +144,6 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
 
     return(invisible())
   }
-}
-
-check_server = function(dir) {
-  if (!dir %in% opts$get('served_dirs')) return()
-  servr::browse_last()
-  stop(
-    'The site has been served under the directory "', dir, '". I have tried to ',
-    'reopen it for you with servr::browse_last(). If you do want to starting a ',
-    'new server, you may stop existing servers with blogdown::stop_server(), or ',
-    'restart R. Normally you should not need to serve the same site multiple ',
-    'times in the same R session', if (servr:::is_rstudio()) c(
-      ', otherwise you may run into issues like ',
-      'https://github.com/rstudio/blogdown/issues/404'
-    ), '.', call. = FALSE
-  )
 }
 
 jekyll_server_args = function(host, port) {
