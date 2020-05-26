@@ -1,5 +1,8 @@
 # CHANGES IN blogdown VERSION 0.20
 
+## BUG FIXES
+
+- Now `blogdown::install_theme()` downloads Hugo themes (from Github by default) as tarballs instead of zip archives, because `unzip()` is unable to extract files for certain themes (thanks, @jimvine, #433).
 
 # CHANGES IN blogdown VERSION 0.19
 
