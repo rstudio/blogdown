@@ -45,12 +45,16 @@ generator = function() getOption('blogdown.generator', 'hugo')
 
 serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_base_dir()) {
   function(...) {
-    owd = setwd(site_root(config)); on.exit(setwd(owd), add = TRUE)
+    okay = FALSE  # whether the server is successfully started
+    root = site_root(config)
+    check_server(root)
+    on.exit(if (okay) opts$append(served_dirs = root), add = TRUE)
+    owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
     if (!getOption('blogdown.generator.server', FALSE)) {
       build_site(TRUE)
       n = nchar(pdir)
-      return(servr::httw(site.dir = pdir, baseurl = baseurl, handler = function(...) {
+      s = servr::httw(site.dir = pdir, baseurl = baseurl, handler = function(...) {
         files = c(...)
         # exclude changes in the publish dir
         files = files[substr(files, 1, n) != pdir]
@@ -58,7 +62,9 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
         if (length(grep('(_?layouts?|static|data)/|[.](toml|yaml)$', files)) ||
             length(grep(md_pattern, files)))
           build_site(TRUE)
-      }, dir = '.', ...))
+      }, dir = '.', ...)
+      okay = TRUE
+      return(invisible(s))
     }
 
     server = servr::server_config(...)
@@ -103,6 +109,7 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
       i = i + 1
     }
     server$browse()
+    okay = TRUE
     message(
       'Launched the ', g, ' server in the background (process ID: ', pid, '). ',
       'To stop it, call blogdown::stop_server() or restart the R session.'
@@ -123,6 +130,21 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
 
     return(invisible())
   }
+}
+
+check_server = function(dir) {
+  if (!dir %in% opts$get('served_dirs')) return()
+  servr::browse_last()
+  stop(
+    'The site has been served under the directory "', dir, '". I have tried to ',
+    'reopen it for you with servr::browse_last(). If you do want to starting a ',
+    'new server, you may stop existing servers with blogdown::stop_server(), or ',
+    'restart R. Normally you should not need to serve the same site multiple ',
+    'times in the same R session', if (servr:::is_rstudio()) c(
+      ', otherwise you may run into issues like ',
+      'https://github.com/rstudio/blogdown/issues/404'
+    ), '.', call. = FALSE
+  )
 }
 
 jekyll_server_args = function(host, port) {
@@ -165,6 +187,7 @@ stop_server = function() {
   if (getOption('blogdown.generator.server', FALSE)) {
     for (i in opts$get('pids')) proc_kill(i)
   } else servr::daemon_stop()
+  opts$set(served_dirs = NULL)
 }
 
 get_config2 = function(key, default) {

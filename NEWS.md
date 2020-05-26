@@ -4,6 +4,8 @@
 
 - Now `blogdown::install_theme()` downloads Hugo themes (from Github by default) as tarballs instead of zip archives, because `unzip()` is unable to extract files for certain themes (thanks, @jimvine, #433).
 
+- Disallow running `blogdown::serve_site()` multiple times in the same R session due to an RStudio IDE issue (thanks, @jennybc @daczarne @denizCvrl @lopierra, #404).
+
 # CHANGES IN blogdown VERSION 0.19
 
 ## NEW FEATURES
