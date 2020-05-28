@@ -52,7 +52,7 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
       return(message(
         'The site has been served under the directory "', root, '". I have tried ',
         'to reopen it for you with servr::browse_last(). If you do want to ',
-        'starting a new server, you may stop existing servers with ',
+        'start a new server, you may stop existing servers with ',
         'blogdown::stop_server(), or restart R. Normally you should not need to ',
         'serve the same site multiple times in the same R session',
         if (servr:::is_rstudio()) c(
