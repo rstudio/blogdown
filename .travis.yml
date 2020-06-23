@@ -16,9 +16,15 @@ repos:
 before_script:
   - "curl -L https://xran.yihui.org/.gitconfig -o ~/.gitconfig"
   - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
-  - Rscript -e 'xfun::pkg_load2(c("covr", "xml2"))'
   - hugo version
 
-after_success:
-  - Rscript -e 'covr::codecov()'
-  - "(curl -L https://xran.yihui.org/r-xran | bash)"
+jobs:
+  include:
+    - r: oldrel
+    - r: release
+      after_success:
+        - Rscript -e 'xfun::pkg_load2(c("covr", "xml2"))'
+        - Rscript -e 'covr::codecov()'
+        - "(curl -L https://xran.yihui.org/r-xran | bash)"
+    - r: devel
+
