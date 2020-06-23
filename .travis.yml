@@ -22,8 +22,9 @@ jobs:
   include:
     - r: oldrel
     - r: release
+      before_cache:
+        - Rscript -e 'xfun::pkg_load2("covr")'
       after_success:
-        - Rscript -e 'xfun::pkg_load2(c("covr", "xml2"))'
         - Rscript -e 'covr::codecov()'
         - "(curl -L https://xran.yihui.org/r-xran | bash)"
     - r: devel
