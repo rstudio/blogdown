@@ -28,4 +28,3 @@ jobs:
         - Rscript -e 'covr::codecov()'
         - "(curl -L https://xran.yihui.org/r-xran | bash)"
     - r: devel
-
