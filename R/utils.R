@@ -68,6 +68,15 @@ dir_rename = function(from, to, clean = FALSE) {
   }
 }
 
+file_rename = function(from, to, clean = FALSE) {
+  if (!file_exists(from)) return()
+  if (clean) unlink(to, recursive = TRUE)
+  dir_create(dirname(to))
+  suppressWarnings(file.rename(from, to)) || {
+    file.copy(from, dirname(to), recursive = TRUE) && unlink(from, recursive = TRUE)
+  }
+}
+
 dirs_rename = function(from, to, ...) {
   n = length(from); if (n == 0) return()
   if (length(to) != n) stop(
