@@ -30,13 +30,15 @@
 #'   option \code{getOption('blogdown.method')} when it is set.
 #' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
 #'   compiled.
+#' @param build_fun Function used to build the Rmd files.
 #' @note This function recompiles all R Markdown files by default, even if the
 #'   output files are newer than the source files. If you want to build the site
 #'   without rebuilding all R Markdown files, you should use
 #'   \code{\link{hugo_build}()} instead.
 #' @export
 build_site = function(
-  local = FALSE, method = c('html', 'custom'), run_hugo = TRUE
+  local = FALSE, method = c('html', 'custom'), run_hugo = TRUE,
+  build_fun = getOption('blogdown.build_rmds', build_rmds)
 ) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
@@ -46,7 +48,7 @@ build_site = function(
   if (local && length(files)) {
     files = getOption('blogdown.files_filter', timestamp_filter)(files)
   }
-  build_rmds(files)
+  build_fun(files)
   if (run_hugo) on.exit(hugo_build(local), add = TRUE)
   on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
   invisible()
@@ -167,4 +169,19 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
   to = file.path('static', 'rmarkdown-libs', basename(libs))
   dirs_rename(libs, to, clean = TRUE)
   x
+}
+
+build_rmds_parallel = function(files) {
+  on.exit(if (exists("cl")) parallel::stopCluster(cl), add = TRUE)
+  no_cores = getOption('blogdown.parallelcores', parallel::detectCores())
+  # revert to legacy where parallelization irrelevant
+  valid_parallel = isTRUE(as.integer(no_cores) > 1L) && length(files) > 1L
+  if (!valid_parallel) build_rmds(files)
+  cl = parallel::makeCluster(no_cores)
+  # propagate blogdown-relevant options to the nodes
+  opts = options()
+  blogdown_opts = opts[grepl('^blogdown\\.', names(opts))]
+  if (length(blogdown_opts) > 0L) parallel::clusterCall(cl, options, blogdown_opts)
+  files = parallel::clusterSplit(cl = cl, seq = files)
+  parallel::parLapply(cl = cl, X = files, fun = build_rmds)
 }
