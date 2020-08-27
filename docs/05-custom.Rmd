@@ -145,7 +145,7 @@ This repository is also automatically built and deployed through Netlify\index{N
 
 Before **blogdown** was invented\index{R Markdown Site Generator}, there was actually a relatively simple way to render websites using **rmarkdown**. The structure of the website has to be a flat directory of Rmd files (no subdirectories for Rmd files) and a configuration file in which you can specify a navigation bar for all your pages and output format options.
 
-You can find more information about this site generator in its documentation at http://rmarkdown.rstudio.com/rmarkdown_websites.html, and we are not going to repeat the documentation here, but just want to highlight the major differences between the default site generator in **rmarkdown** and other specialized site generators like Hugo:
+You can find more information about this site generator in its documentation at https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html, and we are not going to repeat the documentation here, but just want to highlight the major differences between the default site generator in **rmarkdown** and other specialized site generators like Hugo:
 
 - The **rmarkdown** site generator requires all Rmd files to be under the root directory. Hugo has no constraints on the site structure, and you can create arbitrary directories and files under `/content/`.
 
