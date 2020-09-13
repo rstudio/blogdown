@@ -298,7 +298,7 @@ After you have found a satisfactory theme, you need to figure out its GitHub use
 
 ```{r eval=FALSE}
 # for example, create a new site with the academic theme
-blogdown::new_site(theme = 'gcushen/hugo-academic')
+blogdown::new_site(theme = 'wowchemy/starter-academic')
 ```
 
 To save you some time, we list a few themes below that match our taste:
