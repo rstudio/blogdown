@@ -1,6 +1,8 @@
 # CHANGES IN blogdown VERSION 0.21
 
+## NEW FEATURES
 
+- The `Knit` button in RStudio works with **blogdown** now.
 
 # CHANGES IN blogdown VERSION 0.20
 

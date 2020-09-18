@@ -2,19 +2,15 @@ blogdown_site = function(input, ...) {
 
   output_dir = publish_dir()
   render = function(input_file, output_format, envir, quiet, encoding, ...) {
-    # we should disable knitting single posts in blogdown:
-    # https://twitter.com/andrewheiss/status/1085316894180093952, but
-    # unfortunately for blogdown sites, RStudio IDE doesn't run the site
-    # generator, so this function won't be called when the Knit button is
-    # clicked for a single post
-    if (!is.null(input_file) && !getOption('blogdown.allow_knit', FALSE)) stop(
-      'You probably should not knit the document in a blogdown project. Just call ',
-      'blogdown::serve_site() once per R session. See https://bookdown.org/yihui/blogdown/workflow.html. ',
-      'If you are sure you want to knit it and know what it means, set options(blogdown.allow_knit = TRUE).'
-    )
-    build_site()
-    if (!quiet)
-      message("\nOutput created: ", paste0(output_dir, '/index.html'))
+    # input_file is NULL when render the whole site, and is a file path when
+    # rendering a single file (by clicking the Knit button)
+    if (!is.null(input_file)) xfun::in_dir(site_root(), {
+      input_file = rmarkdown::relative_to(getwd(), input_file)
+      build_rmds(input_file)
+    }) else {
+      build_site()
+      if (!quiet) message("\nOutput created: ", paste0(output_dir, '/index.html'))
+    }
   }
 
   # return site generator
@@ -22,6 +18,7 @@ blogdown_site = function(input, ...) {
     name = basename(getwd()),
     output_dir = output_dir,
     render = render,
+    subdirs = TRUE,
     clean = function() {
       c('blogdown', output_dir, clean_targets())
     }
