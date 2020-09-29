@@ -303,9 +303,11 @@ blogdown::new_site(theme = 'lxndrblz/anatole')
 
 To save you some time, we list a few themes below that match our taste:
 
-- Simple/minimal themes: [XMin,](https://github.com/yihui/hugo-xmin) [Tanka,](https://github.com/road2stat/hugo-tanka) [simple-a,](https://github.com/AlexFinn/simple-a) and [ghostwriter.](https://github.com/jbub/ghostwriter)
+- Simple/minimal themes: [XMin,](https://github.com/yihui/hugo-xmin),
+[Cupper,](https://github.com/zwbetz-gh/cupper-hugo-theme),
+[Tanka,](https://github.com/road2stat/hugo-tanka) [simple-a,](https://github.com/AlexFinn/simple-a) and [ghostwriter.](https://github.com/jbub/ghostwriter)
 
-- Sophisticated themes: [hugo-academic](https://github.com/gcushen/hugo-academic) (strongly recommended for users in academia), [hugo-tranquilpeak-theme,](https://github.com/kakawait/hugo-tranquilpeak-theme) [hugo-creative-portfolio-theme,](https://github.com/kishaningithub/hugo-creative-portfolio-theme) and [hugo-universal-theme.](https://github.com/devcows/hugo-universal-theme)
+- Sophisticated themes: [Even](https://github.com/olOwOlo/hugo-theme-even), [hugo-tranquilpeak-theme,](https://github.com/kakawait/hugo-tranquilpeak-theme) [hugo-creative-portfolio-theme,](https://github.com/kishaningithub/hugo-creative-portfolio-theme) and [hugo-universal-theme.](https://github.com/devcows/hugo-universal-theme)
 
 - Multimedia content themes: If you are interested in adding multimedia content to your site (such as audio files of a podcast), the [castanet](https://github.com/mattstratton/castanet) theme provides an excellent framework tailored for this application.  An example of a site using **blogdown** with the castanet theme is the [R-Podcast.](https://www.r-podcast.org)
 
