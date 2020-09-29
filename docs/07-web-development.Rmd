@@ -232,7 +232,7 @@ ul#tea-list li.favorite {
 
 This example just scratches the surface of [cascade and inheritance.](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Cascade_and_inheritance)
 
-For any Hugo theme that you install, you can find the CSS file in the `themes/` folder. For example, the default lithium theme is located in: `themes/hugo-lithium/static/css/main.css`. Once you are familiar with CSS, you can understand how each set of rules work to shape the visual style of your website, and how to alter the rules. For some themes (i.e., the [hugo-academic theme](https://github.com/gcushen/hugo-academic)), you have the option of linking to a [custom CSS,](https://gist.github.com/gcushen/d5525a4506b9ccf83f2bce592a895495) which you can use to further customize the visual style of your site.
+For any Hugo theme that you install, you can find the CSS file in the `themes/` folder. For example, the default lithium theme is located in: `themes/hugo-lithium/static/css/main.css`. Once you are familiar with CSS, you can understand how each set of rules work to shape the visual style of your website, and how to alter the rules. For some themes (i.e., the [hugo-anatole theme](https://themes.gohugo.io/anatole/)), you have the option of linking to a [custom CSS,](https://themes.gohugo.io/anatole/#custom-css) which you can use to further customize the visual style of your site.
 
 A few one-line examples illustrate how simple CSS rules can be used to make dramatic changes:
 
