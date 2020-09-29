@@ -297,8 +297,8 @@ In Hugo, themes\index{Themes} control the entire appearance and functionality of
 After you have found a satisfactory theme, you need to figure out its GitHub username and repository name,^[For most themes, you can find this by navigating to the theme of your choice from http://themes.gohugo.io and then clicking on `Homepage`.] then either install the theme via\index{blogdown::install\_theme()} `blogdown::install_theme()`, or just create a new site under another new directory and pass the GitHub repository name to the `theme` argument of `new_site()`. We recommend that you use the second approach, because Hugo themes could be very complicated and the usage of each theme can be very different and highly dependent on `config.toml`. If you install a theme using `install_theme()` instead of `new_site()` you’ll need to manually create the `config.toml` file in the root directory of your website to match the newly installed theme.^[In a workaround, if you used `install_theme()` and set the `theme_example` argument to TRUE, then you can access an example `config.toml` file. In the `themes/` directory, navigate to the file for your newly downloaded theme and find `exampleSite/config.toml`. This file can be copied to your root directory (to replace the `config.toml` file from your original theme) or used as a template to correctly write a new `config.toml` file for your new theme.]
 
 ```{r eval=FALSE}
-# for example, create a new site with the academic theme
-blogdown::new_site(theme = 'gcushen/hugo-academic')
+# for example, create a new site with the anatole theme
+blogdown::new_site(theme = 'lxndrblz/anatole')
 ```
 
 To save you some time, we list a few themes below that match our taste:
