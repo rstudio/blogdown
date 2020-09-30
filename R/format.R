@@ -17,7 +17,7 @@
 #'   to \code{bookdown::html_document2()} (note the option \code{theme} is not
 #'   supported and set to \code{NULL} internally, and when \code{template =
 #'   NULL}, a default template in \pkg{blogdown} will be used).
-#' @param pre_knit,post_processor Passed to
+#' @param keep_md,pre_knit,post_processor Passed to
 #'   \code{rmarkdown::\link{output_format}}.
 #'
 #' @note Do not use a custom template unless you understand how the default
@@ -32,7 +32,7 @@
 #' @export
 html_page = function(
   ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
-  template = NULL, pre_knit = NULL, post_processor = NULL
+  template = NULL, keep_md = FALSE, pre_knit = NULL, post_processor = NULL
 ) {
   if (identical(template, 'default')) stop(
     'blogdown::html_page() does not support template = "default"'
@@ -48,6 +48,7 @@ html_page = function(
     knitr = NULL,
     pandoc = NULL,
     clean_supporting = self_contained,
+    keep_md = keep_md,
     pre_knit = pre_knit,
     post_processor = post_processor,
     base_format = bookdown::html_document2(

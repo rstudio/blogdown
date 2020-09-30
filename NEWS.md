@@ -4,6 +4,8 @@
 
 - The `Knit` button in RStudio works with **blogdown** now.
 
+- Added the `keep_md` argument to `blogdown::html_page()` (thanks, @lazappi, #445).
+
 # CHANGES IN blogdown VERSION 0.20
 
 ## BUG FIXES
