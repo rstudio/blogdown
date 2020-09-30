@@ -100,7 +100,7 @@ build_rmds = function(files) {
     d = dirname(f)
     out = output_file(f, to_md <- is_rmarkdown(f))
     copy_output_yml(d)
-    message('Rendering ', f)
+    message('Rendering ', f, '... ', appendLF = FALSE)
     render_page(f)
     x = read_utf8(out)
     x = encode_paths(x, by_products(f, '_files'), d, base, to_md)
@@ -114,6 +114,7 @@ build_rmds = function(files) {
         append(s, 'draft: yes', 1)
       })
     }
+    message('Done.')
   }
 }
 
