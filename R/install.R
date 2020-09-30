@@ -55,9 +55,7 @@ install_hugo = function(
   # in theory, should access the Github API using httr/jsonlite but this
   # poor-man's version may work as well
   if (version == 'latest') {
-    h = readLines('https://github.com/gohugoio/hugo/releases/latest', warn = FALSE)
-    r = '^.*?releases/tag/v([0-9.]+)".*'
-    version = gsub(r, '\\1', grep(r, h, value = TRUE)[1])
+    version = xfun::github_releases('gohugoio/hugo', version)[1]
     message('The latest Hugo version is ', version)
   } else if (use_brew) {
     if (is.null(local_file)) warning(

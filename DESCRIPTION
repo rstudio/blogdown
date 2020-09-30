@@ -29,7 +29,7 @@ Imports:
     htmltools,
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
-    xfun (>= 0.10),
+    xfun (>= 0.18),
     servr (>= 0.15)
 Suggests:
   testit,
