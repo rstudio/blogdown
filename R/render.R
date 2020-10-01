@@ -48,7 +48,8 @@
 #' determining if an Rmd file has been modified (hence needs to be rebuilt). See
 #' its help page for more information. You may set
 #' \code{options(blogdown.files_filter = blogdown::md5sum_filter)} to enable
-#' this filter.
+#' this filter. If you want to rebuild all Rmd files, you may set this option to
+#' the \code{\link{identity}} function.
 #' @param local Whether to build the website locally. This argument is passed to
 #'   \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
 #'   the site locally via \code{\link{serve_site}()}.
