@@ -76,11 +76,10 @@ dirs_rename = function(from, to, ...) {
   for (i in seq_len(n)) dir_rename(from[i], to[i], ...)
 }
 
-# when html output file does not exist, or html is older than Rmd, or the first
-# line of the HTML is not --- (meaning it is not produced from build_rmds() but
-# possibly from clicking the Knit button)
-require_rebuild = function(html, rmd) {
-  older_than(html, rmd) || length(x <- readLines(html, n = 1)) == 0 || x != '---'
+# does html output file not exist, or is it older than Rmd for at least N seconds?
+require_rebuild = function(html, rmd, N = getOption('blogdown.time_diff', 5)) {
+  m1 = file.mtime(html); m2 = file.mtime(rmd)
+  !file_exists(html) | difftime(m2, m1, units = 'secs') > N
 }
 
 #' Build all Rmd files under a directory
@@ -103,12 +102,8 @@ build_dir = function(dir = '.', force = FALSE, ignore = '[.]Rproj$') {
     i = files == f  # should be only one in files matching f
     bases = with_ext(files, '')
     files = files[!i & bases == bases[i]]  # files with same basename as f (Rmd)
-    if (length(files) == 0 || any(older_than(files, f))) render_it()
+    if (length(files) == 0 || any(require_rebuild(files, f))) render_it()
   }
-}
-
-older_than = function(file1, file2) {
-  !file_exists(file1) | file_test('-ot', file1, file2)
 }
 
 #' Filter files by checking if their MD5 checksums have changed

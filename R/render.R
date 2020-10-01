@@ -30,7 +30,25 @@
 #'
 #' When \code{build_rmd = TRUE}, the Rmd files to be (re)built are determined by
 #' their modification times by default: an Rmd file is built if it is newer than
-#' its output file (or the output file does not exist).
+#' its output file by \code{N} seconds (or the output file does not exist),
+#' where \code{N} is obtained from the R global option
+#' \code{blogdown.time_diff}. By default, \code{N = 5}. You may change it via
+#' \code{options()}, e.g., \code{options(blogdown.time_diff = 0)} means an Rmd
+#' file will be compiled when its modification time is greater or equal to its
+#' output file's modification time.
+#'
+#' You can set the global option \code{blogdown.files_filter} to a function to
+#' determine which Rmd files to build when \code{build_rmd = TRUE}. This
+#' function takes a vector of Rmd file paths, and should return a subset of
+#' these paths to be built. By default, this function is
+#' \code{blogdown:::timestamp_filter}, which filters the files by comparing
+#' their time stamps (modification time) with the time stamps of their output
+#' files. An alternative filter function in this package is
+#' \code{blogdown::\link{md5sum_filter}}, which is much more robust in
+#' determining if an Rmd file has been modified (hence needs to be rebuilt). See
+#' its help page for more information. You may set
+#' \code{options(blogdown.files_filter = blogdown::md5sum_filter)} to enable
+#' this filter.
 #' @param local Whether to build the website locally. This argument is passed to
 #'   \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
 #'   the site locally via \code{\link{serve_site}()}.
@@ -75,7 +93,7 @@ list_rmds = function(dir, check = FALSE) {
 }
 
 timestamp_filter = function(files) {
-  files[mapply(require_rebuild, output_file(files), files)]
+  files[require_rebuild(output_file(files), files)]
 }
 
 # raw indicates paths of dependencies are not encoded in the HTML output
