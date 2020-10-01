@@ -111,22 +111,35 @@ older_than = function(file1, file2) {
   !file_exists(file1) | file_test('-ot', file1, file2)
 }
 
-# filter files by checking if their MD5 checksums have changed
-md5sum_filter = function(files) {
+#' Filter files by checking if their MD5 checksums have changed
+#'
+#' Read the MD5 checksums of files from a database (a tab-separated text file),
+#' and return the files of which the checksums have changed. If the database
+#' does not exist, write the checksums of files to it, otherwise update the
+#' checksums after the changed files have been identified.
+#'
+#' When a file is modified, its MD5 checksum is very likely to change. This
+#' function can be used to determine which Rmd files to be rebuilt in a
+#' \pkg{blogdown} website. See \code{\link{build_site}()} for more information.
+#' @param files A vector of file paths.
+#' @param db Path to the database file.
+#' @return Paths of files of which the checksums have changed.
+#' @export
+md5sum_filter = function(files, db = 'blogdown/md5sum.txt') {
   opt = options(stringsAsFactors = FALSE); on.exit(options(opt), add = TRUE)
   md5 = data.frame(file = files, checksum = tools::md5sum(files))  # new checksums
-  if (!file.exists(f <- 'blogdown/md5sum.txt')) {
-    dir_create('blogdown')
-    write.table(md5, f, row.names = FALSE)
+  if (!file.exists(db)) {
+    dir_create(dirname(db))
+    write.table(md5, db, row.names = FALSE)
     return(files)
   }
-  old = read.table(f, TRUE)  # old checksums (2 columns: file path and checksum)
+  old = read.table(db, TRUE)  # old checksums (2 columns: file path and checksum)
   one = merge(md5, old, 'file', all = TRUE, suffixes = c('', '.old'))
   # exclude files if checksums are not changed
   files = setdiff(files, one[one[, 2] == one[, 3], 'file'])
   i = is.na(one[, 2])
   one[i, 2] = one[i, 3]  # update checksums
-  write.table(one[, 1:2], f, row.names = FALSE)
+  write.table(one[, 1:2], db, row.names = FALSE)
   files
 }
 
