@@ -75,7 +75,7 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
         # re-generate only if Rmd/md or config files or layouts were updated
         if (length(grep('(_?layouts?|static|data)/|[.](toml|yaml)$', files)) ||
             length(grep(md_pattern, files)))
-          build_site(TRUE)
+          build_site(TRUE, build_rmd = TRUE)
       }, dir = '.', ...)
       okay = TRUE
       return(invisible(s))
@@ -135,7 +135,7 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
     watch_build = function() {
       if (watch()) {
         if (unix) tools::pskill(pid, tools::SIGSTOP)
-        try(build_site(TRUE, run_hugo = FALSE))
+        try(build_site(TRUE, run_hugo = FALSE, build_rmd = TRUE))
         if (unix) tools::pskill(pid, tools::SIGCONT)
       }
       later::later(watch_build, intv)

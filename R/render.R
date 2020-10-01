@@ -1,14 +1,18 @@
 #' Build a website
 #'
-#' Compile all Rmd files and build the site through Hugo.
+#' Build the site through Hugo, and optionally (re)build R Markdown files.
 #'
 #' You can use \code{\link{serve_site}()} to preview your website locally, and
-#' \code{build_site()} to build the site for publishing.
+#' \code{build_site()} to build the site for publishing. However, if you use a
+#' web publishing service like Netlify, you do not need to build the site
+#' locally, but can build it on the cloud. See Section 1.7 of the \pkg{blogdown}
+#' book for more information:
+#' \url{https://bookdown.org/yihui/blogdown/workflow.html}.
 #'
-#' For the \code{method} argument: \code{method = "html"} means to render all
-#' Rmd files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which
-#' means Markdown is processed through Pandoc), and process the paths of
-#' external dependencies generated from R code chunks, including images and HTML
+#' For the \code{method} argument: \code{method = "html"} means to render Rmd
+#' files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which means
+#' Markdown is processed through Pandoc), and process the paths of external
+#' dependencies generated from R code chunks, including images and HTML
 #' dependencies.
 #'
 #' For all rendering methods, a custom R script \file{R/build.R} will be
@@ -23,30 +27,35 @@
 #' \code{\link{commandArgs}(TRUE)}). For \code{method = "html"}, the R script
 #' \file{R/build2.R} (if exists) will be executed after Hugo has built the site.
 #' This can be useful if you want to post-process the site.
-#' @param local Whether to build the website locally to be served via
-#'   \code{\link{serve_site}()}.
+#'
+#' When \code{build_rmd = TRUE}, the Rmd files to be (re)built are determined by
+#' their modification times by default: an Rmd file is built if it is newer than
+#' its output file (or the output file does not exist).
+#' @param local Whether to build the website locally. This argument is passed to
+#'   \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
+#'   the site locally via \code{\link{serve_site}()}.
 #' @param method Different methods to build a website (each with pros and cons).
-#'   See Details. The value of this argument will be obtained from the global
-#'   option \code{getOption('blogdown.method')} when it is set.
+#'   See \sQuote{Details}. The value of this argument will be obtained from the
+#'   global option \code{getOption('blogdown.method')} when it is set.
 #' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
 #'   compiled.
-#' @note This function recompiles all R Markdown files by default, even if the
-#'   output files are newer than the source files. If you want to build the site
-#'   without rebuilding all R Markdown files, you should use
-#'   \code{\link{hugo_build}()} instead.
+#' @param build_rmd Whether to (re)build R Markdown files. By default, they are
+#'   not rebuilt. See \sQuote{Details} for how \code{build_rmd = TRUE} works.
 #' @export
 build_site = function(
-  local = FALSE, method = c('html', 'custom'), run_hugo = TRUE
+  local = FALSE, method = c('html', 'custom'), run_hugo = TRUE, build_rmd = FALSE
 ) {
   if (missing(method)) method = getOption('blogdown.method', method)
   method = match.arg(method)
   on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (method == 'custom') return()
-  files = list_rmds('content', TRUE)
-  if (local && length(files)) {
-    files = getOption('blogdown.files_filter', timestamp_filter)(files)
+  if (build_rmd) {
+    files = list_rmds('content', TRUE)
+    if (length(files)) {
+      files = getOption('blogdown.files_filter', timestamp_filter)(files)
+    }
+    build_rmds(files)
   }
-  build_rmds(files)
   if (run_hugo) on.exit(hugo_build(local), add = TRUE)
   on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
   invisible()
