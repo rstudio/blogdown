@@ -4,30 +4,43 @@
 \alias{build_site}
 \title{Build a website}
 \usage{
-build_site(local = FALSE, method = c("html", "custom"), run_hugo = TRUE)
+build_site(
+  local = FALSE,
+  method = c("html", "custom"),
+  run_hugo = TRUE,
+  build_rmd = FALSE
+)
 }
 \arguments{
-\item{local}{Whether to build the website locally to be served via
-\code{\link{serve_site}()}.}
+\item{local}{Whether to build the website locally. This argument is passed to
+\code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
+the site locally via \code{\link{serve_site}()}.}
 
 \item{method}{Different methods to build a website (each with pros and cons).
-See Details. The value of this argument will be obtained from the global
-option \code{getOption('blogdown.method')} when it is set.}
+See \sQuote{Details}. The value of this argument will be obtained from the
+global option \code{getOption('blogdown.method')} when it is set.}
 
 \item{run_hugo}{Whether to run \code{hugo_build()} after R Markdown files are
 compiled.}
+
+\item{build_rmd}{Whether to (re)build R Markdown files. By default, they are
+not rebuilt. See \sQuote{Details} for how \code{build_rmd = TRUE} works.}
 }
 \description{
-Compile all Rmd files and build the site through Hugo.
+Build the site through Hugo, and optionally (re)build R Markdown files.
 }
 \details{
 You can use \code{\link{serve_site}()} to preview your website locally, and
-\code{build_site()} to build the site for publishing.
+\code{build_site()} to build the site for publishing. However, if you use a
+web publishing service like Netlify, you do not need to build the site
+locally, but can build it on the cloud. See Section 1.7 of the \pkg{blogdown}
+book for more information:
+\url{https://bookdown.org/yihui/blogdown/workflow.html}.
 
-For the \code{method} argument: \code{method = "html"} means to render all
-Rmd files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which
-means Markdown is processed through Pandoc), and process the paths of
-external dependencies generated from R code chunks, including images and HTML
+For the \code{method} argument: \code{method = "html"} means to render Rmd
+files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which means
+Markdown is processed through Pandoc), and process the paths of external
+dependencies generated from R code chunks, including images and HTML
 dependencies.
 
 For all rendering methods, a custom R script \file{R/build.R} will be
@@ -42,10 +55,26 @@ command line (you can retrieve the command-line arguments via
 \code{\link{commandArgs}(TRUE)}). For \code{method = "html"}, the R script
 \file{R/build2.R} (if exists) will be executed after Hugo has built the site.
 This can be useful if you want to post-process the site.
-}
-\note{
-This function recompiles all R Markdown files by default, even if the
-  output files are newer than the source files. If you want to build the site
-  without rebuilding all R Markdown files, you should use
-  \code{\link{hugo_build}()} instead.
+
+When \code{build_rmd = TRUE}, the Rmd files to be (re)built are determined by
+their modification times by default: an Rmd file is built if it is newer than
+its output file by \code{N} seconds (or the output file does not exist),
+where \code{N} is obtained from the R global option
+\code{blogdown.time_diff}. By default, \code{N = 5}. You may change it via
+\code{options()}, e.g., \code{options(blogdown.time_diff = 0)} means an Rmd
+file will be compiled when its modification time is greater or equal to its
+output file's modification time.
+
+You can set the global option \code{blogdown.files_filter} to a function to
+determine which Rmd files to build when \code{build_rmd = TRUE}. This
+function takes a vector of Rmd file paths, and should return a subset of
+these paths to be built. By default, this function is
+\code{blogdown:::timestamp_filter}, which filters the files by comparing
+their time stamps (modification time) with the time stamps of their output
+files. An alternative filter function in this package is
+\code{blogdown::\link{md5sum_filter}}, which is much more robust in
+determining if an Rmd file has been modified (hence needs to be rebuilt). See
+its help page for more information. You may set
+\code{options(blogdown.files_filter = blogdown::md5sum_filter)} to enable
+this filter.
 }

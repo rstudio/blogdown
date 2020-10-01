@@ -6,7 +6,7 @@
 
 - `blogdown::build_site()` no longer recompiles R Markdown files by default, because it may be expensive and often undesirable to compile Rmd files that have been compiled before. If you do want to recompile Rmd files, you may use `blogdown::build_site(build_rmd = TRUE)`. See the help page `?blogdown::build_site` for more information.
 
-- Exported the (previously internal) function `blogdown::md5sum_filter` function (#341).
+- Exported the (previously internal) function `blogdown::md5sum_filter` function (#341). See its potential application on the help page `?blogdown::build_site`.
 
 - Added the `keep_md` argument to `blogdown::html_page()` (thanks, @lazappi, #445).
 
