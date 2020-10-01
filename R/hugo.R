@@ -210,6 +210,12 @@ install_theme = function(
       'and at least take a look at the config file config.toml of the example site, ',
       'because not all Hugo themes work with any config files.', call. = FALSE
     )
+    # delete the images dir that contains thumbnail and screenshot of the theme
+    # (because they are only useful to themes.gohugo.io and not to users)
+    if (dir_exists(thndir <- file.path(zipdir, 'images'))) {
+      unlink(file.path(thndir, c('tn.png', 'screenshot.png')))
+      # TODO: xfun::del_empty_dir(thndir)
+    }
     # check the minimal version of Hugo required by the theme
     if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {
       if (!is.null(minver <- parse_toml(theme_cfg)[['min_version']])) {
