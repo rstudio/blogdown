@@ -201,10 +201,19 @@ is_example_url = function(url) {
   )
 }
 
-# only support TOML and YAML (no JSON)
-config_files = c('config.toml', 'config.yaml')
+generator = function() getOption('blogdown.generator', 'hugo')
 
-find_config = function(files = config_files, error = TRUE) {
+# config files for different site generators
+config_files = function(which = generator()) {
+  all = list(
+    hugo = c('config.toml', 'config.yaml'),  # only support TOML and YAML (no JSON)
+    jekyll = '_config.yml',
+    hexo = '_config.yml'
+  )
+  if (is.null(which)) all else all[[which]]
+}
+
+find_config = function(files = config_files(), error = TRUE) {
   f = existing_files(files, first = TRUE)
   if (length(f) == 0 && error) stop(
     'Cannot find the configuration file ', paste(files, collapse = ' | '), ' of the website'
@@ -213,7 +222,7 @@ find_config = function(files = config_files, error = TRUE) {
 }
 
 # figure out the possible root directory of the website
-site_root = function(config = config_files) {
+site_root = function(config = config_files()) {
   if (!is.null(root <- opts$get('site_root'))) return(root)
   owd = getwd(); on.exit(setwd(owd), add = TRUE)
   paths = NULL

@@ -23,11 +23,11 @@ serve_site = function(...) {
   serve = switch(
     generator(), hugo = serve_it(),
     jekyll = serve_it(
-      '_config.yml', baseurl = get_config2('baseurl', ''),
+      baseurl = get_config2('baseurl', ''),
       pdir = get_config2('destination', '_site')
     ),
     hexo = serve_it(
-      '_config.yml', baseurl = get_config2('root', ''),
+      baseurl = get_config2('root', ''),
       pdir = get_config2('public_dir', 'public')
     ),
     stop("Cannot recognize the site (only Hugo, Jekyll, and Hexo are supported)")
@@ -41,9 +41,9 @@ server_ready = function(url) {
   )
 }
 
-generator = function() getOption('blogdown.generator', 'hugo')
 
-serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_base_dir()) {
+serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
+  g = generator(); config = config_files(g)
   function(...) {
     okay = FALSE  # whether the server is successfully started
     root = site_root(config)
@@ -84,7 +84,6 @@ serve_it = function(config = config_files, pdir = publish_dir(), baseurl = site_
     server = servr::server_config(...)
 
     # launch the hugo/jekyll/hexo server
-    g = generator()
     cmd = if (g == 'hugo') find_hugo() else g
     host = server$host; port = server$port; intv = server$interval
     if (!servr:::port_available(port, host)) stop(
