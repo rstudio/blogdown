@@ -8,6 +8,8 @@
 
 - Exported the (previously internal) function `blogdown::md5sum_filter` function (#341). See its potential application on the help page `?blogdown::build_site`.
 
+- If a theme contains Hugo modules (e.g., the former hugo-academic theme), the modules will be resolved at the time when a theme is installed, which means users will not need to install Go or GIT to work with themes that contain Hugo modules.
+
 - Added the `keep_md` argument to `blogdown::html_page()` (thanks, @lazappi, #445).
 
 ## MAJOR CHANGES

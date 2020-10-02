@@ -198,6 +198,9 @@ install_theme = function(
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
     if (dir_exists(expdir)) if (theme_example) {
+      # post-process go.mod so that users don't need to install Go (it sounds
+      # unbelievable that a user needs to install Go just to use a Hugo theme)
+      download_modules(file.path(expdir, 'go.mod'))
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
       # themes may use config/_default/config.toml, e.g. hugo-academic; we need
       # to move this config to the root dir, because blogdown assumes the config
@@ -243,6 +246,39 @@ install_theme = function(
   )
 }
 
+# download Hugo modules with R, instead of Go/GIT, so users won't need to
+# install Go or GIT
+download_modules = function(mod) {
+  if (!file.exists(mod)) return()
+  x = read_utf8(mod)
+  r = '.*?\\b(github.com/([^/]+/[^/]+))/?([^[:space:]]*)\\s+(v[^-]+)-?([^[:space:]]*?-([[:xdigit:]]{12,}))?\\s*.*'
+  gzs = NULL; tmps = NULL  # gz files and temp dirs
+  on.exit(unlink(c(gzs, tmps), recursive = TRUE), add = TRUE)
+  # x is of the form: github.com/user/repo/folder v0.0.0-2020-e58ee0ffc576;
+  # elements matched by the regex above: 1. whole; 2. github.com/user/repo; 3.
+  # user/repo; 4. subfolder; 5. version (tag/branch); 6. date+sha; 7. sha
+  lapply(regmatches(x, regexec(r, x)), function(v) {
+    if (length(v) < 7) return()
+    url = sprintf('https://%s/archive/%s.tar.gz', v[2], if (v[7] == '') v[5] else v[7])
+    gz = paste0(gsub('/', '-', v[3]), '-', basename(url))
+    if (!file.exists(gz)) {
+      gzs <<- c(gzs, gz)
+      xfun::download_file(url, gz, mode = 'wb')
+    }
+    files = utils::untar(gz, list = TRUE)
+    if (length(files) == 0) return()
+    tmps <<- c(tmps, tmp <- wd_tempfile())
+    utils::untar(gz, exdir = tmp)
+    root = file.path(tmp, files[1])
+    if (v[4] != '') {
+      root = file.path(root, v[4])
+      v[2] = file.path(v[2], v[4])
+    }
+    dir_create(v[2])
+    file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
+  })
+  unlink(xfun::with_ext(mod, c('.mod', '.sum')))
+}
 
 #' @param path The path to the new file under the \file{content} directory.
 #' @param kind The content type to create, i.e., the Hugo archetype. If the
