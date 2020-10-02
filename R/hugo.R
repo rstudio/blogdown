@@ -187,7 +187,7 @@ install_theme = function(
     zipfile = wd_tempfile(basename(url))
     xfun::download_file(url, zipfile, mode = 'wb')
     tmpdir = wd_tempfile()
-    on.exit(in_dir('themes', unlink(tmpdir, recursive = TRUE)))
+    on.exit(in_dir('themes', unlink(tmpdir, recursive = TRUE)), add = TRUE)
     if (grepl('[.]zip$', zipfile)) {
       files = utils::unzip(zipfile, exdir = tmpdir)
     } else {
