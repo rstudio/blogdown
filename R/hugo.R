@@ -177,6 +177,8 @@ install_theme = function(
   branch = sub('^@', '', gsub(r, '\\2', theme))
   if (branch == '' || theme_is_url) branch = 'master'
   theme = gsub(r, '\\1', theme)
+  # the hugo-academic theme has moved
+  if (theme == 'gcushen/hugo-academic') theme = 'wowchemy/starter-academic'
   dir_create('themes')
   in_dir('themes', {
     url = if (theme_is_url) theme else {

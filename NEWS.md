@@ -10,6 +10,10 @@
 
 - Added the `keep_md` argument to `blogdown::html_page()` (thanks, @lazappi, #445).
 
+## MAJOR CHANGES
+
+- When creating a new site with `blogdown::new_site()`, the theme `gcushen/hugo-academic` is automatically redirected to `wowchemy/starter-academic`, because the original Github repo has moved and became a repo of Hugo modules.
+
 ## MINOR CHANGES
 
 - Images `tn.png` and `screenshot.png` under the `images/` directory of a theme will be deleted in `blogdown::install_theme()` because these are screnshots of a theme and don't affect the theme's function.
