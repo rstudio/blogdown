@@ -41,6 +41,14 @@ server_ready = function(url) {
   )
 }
 
+# this function is primarily for users who click the Knit button in RStudio (the
+# main purpose is to suppres a message that is not useful to Knit button users);
+# normally you wouldn't need to call it by yourself
+preview_site = function(...) {
+  opts$set(server_message = FALSE)
+  on.exit(opts$set(server_message = NULL), add = TRUE)
+  invisible(serve_site(...))
+}
 
 serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
   g = generator(); config = config_files(g)
@@ -48,6 +56,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     okay = FALSE  # whether the server is successfully started
     root = site_root(config)
     if (root %in% opts$get('served_dirs')) {
+      if (isFALSE(opts$get('server_message'))) return()
       servr::browse_last()
       return(message(
         'The site has been served under the directory "', root, '". I have tried ',

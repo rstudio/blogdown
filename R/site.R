@@ -9,6 +9,10 @@ blogdown_site = function(input, ...) {
     if (!is.null(input_file)) xfun::in_dir(site_root(), {
       input_file = rmarkdown::relative_to(getwd(), input_file)
       build_rmds(input_file)
+      # run serve_site() to preview the site if the server has not been started
+      if (interactive()) preview_site() else tryCatch(
+        rstudioapi::sendToConsole('blogdown:::preview_site()', echo = FALSE)
+      )
     }) else {
       build_site()
       if (!quiet) message("\nOutput created: ", paste0(output_dir, '/index.html'))
