@@ -100,6 +100,12 @@ timestamp_filter = function(files) {
 # raw indicates paths of dependencies are not encoded in the HTML output
 build_rmds = function(files) {
   if (length(files) == 0) return()
+  # ignore files that are locked (being rendered by another process)
+  i = !file.exists(locks <- paste0(files, '.lock'))
+  if (!any(i)) return()  # all files are currently being rendered
+  files = files[i]
+  # remove locks on exit
+  file.create(locks <- locks[i]); on.exit(file.remove(locks), add = TRUE)
 
   # copy by-products {/content/.../foo_(files|cache) dirs and foo.html} from
   # /blogdown/ or /static/ to /content/
