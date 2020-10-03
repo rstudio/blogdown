@@ -16,6 +16,8 @@
 
 - When creating a new site with `blogdown::new_site()`, the theme `gcushen/hugo-academic` is automatically redirected to `wowchemy/starter-academic`, because the original Github repo has moved and became a repo of Hugo modules.
 
+- When opening a **blogdown** project in RStudio, `blogdown::serve_site()` will be automatically called, so you will get the preview of the site immediately. If you do not like this behavior, you may set `options(blogdown.serve_site.startup = FALSE)` in your `.Rprofile`.
+
 ## MINOR CHANGES
 
 - Images `tn.png` and `screenshot.png` under the `images/` directory of a theme will be deleted in `blogdown::install_theme()` because these are screnshots of a theme and don't affect the theme's function.
