@@ -10,7 +10,7 @@ local({
   if (to_md) options(bookdown.output.markdown = TRUE, knitr.table.format = 'markdown')
   out = rmarkdown::render(
     input, 'blogdown::html_page', envir = globalenv(), quiet = TRUE,
-    encoding = 'UTF-8', run_pandoc = !to_md, clean = !to_md
+    run_pandoc = !to_md, clean = !to_md
   )
   if (to_md) {
     file.rename(out, out2 <- blogdown:::output_file(input, to_md))
