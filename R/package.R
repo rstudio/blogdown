@@ -28,3 +28,10 @@ blogdown_skeleton = function(path, ...) {
   opts = options(blogdown.open_sample = FALSE); on.exit(options(opts), add = TRUE)
   new_site(dir = path, ..., serve = FALSE)
 }
+
+# stop all servers when the package is unloaded or R session is ended
+.onLoad = function(libname, pkgname) {
+  reg.finalizer(asNamespace(pkgname), function(e) {
+    stop_server()
+  }, onexit = TRUE)
+}

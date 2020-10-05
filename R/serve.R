@@ -101,12 +101,8 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
     tweak_hugo_env()
-    p1 = proc_new(cmd, cmd_args)
-    pid = p1$get_pid()
+    pid = bg_process(cmd, cmd_args)
     opts$set(pids = c(opts$get('pids'), pid))
-    p1_print = function() {
-      if (proc_print(p1, c(FALSE, TRUE))) later::later(p1_print, intv)
-    }
 
     message(
       'Launching the server via the command:\n  ',
@@ -117,12 +113,10 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       Sys.sleep(1)
       if (server_ready(server$url)) break
       if (i >= getOption('blogdown.server.timeout', 30)) {
-        proc_print(p1)
-        cat('\n')
-        p1$kill()
+        proc_kill(pid)
         stop(
           'It took more than ', i, ' seconds to launch the server. ',
-          'There may be something wrong. The process has been killed.',
+          'There may be something wrong. The process has been killed. ',
           'If the site needs more time to be built and launched, set ',
           'options(blogdown.server.timeout) to a larger value.',
           call. = FALSE
@@ -136,7 +130,6 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       'Launched the ', g, ' server in the background (process ID: ', pid, '). ',
       'To stop it, call blogdown::stop_server() or restart the R session.'
     )
-    p1_print()
 
     watch = servr:::watch_dir('.', rmd_pattern)
     unix = .Platform$OS.type == 'unix'
@@ -162,37 +155,14 @@ hexo_server_args = function(host, port) {
   c('server', '-p', port, '-i', host)
 }
 
-proc_new = function(..., stderr = '|') {
-  processx::process$new(..., stderr = stderr)
-}
-
-# control = c(show_out, show_error)
-proc_print = function(p, control = c(TRUE, TRUE)) {
-  if (!p$is_alive()) return(FALSE)
-  if (control[1]) {
-    out = p$read_output_lines()
-    if (length(out)) cat(out, file = stdout(), sep = '\n')
-  }
-  if (control[2]) {
-    err = p$read_error_lines()
-    if (length(err)) cat(err, file = stderr(), sep = '\n')
-  }
-  TRUE
-}
-
-proc_kill = function(pid) {
-  if (is_windows()) {
-    system2('taskkill', c('/f', '/pid', pid))
-  } else {
-    system2('kill', pid)
-  }
-}
+proc_kill = function(...) tools::pskill(...)
 
 #' @export
 #' @rdname serve_site
 stop_server = function() {
   if (getOption('blogdown.generator.server', FALSE)) {
     for (i in opts$get('pids')) proc_kill(i)
+    opts$set(pids = NULL)
   } else servr::daemon_stop()
   opts$set(served_dirs = NULL)
 }
@@ -200,4 +170,48 @@ stop_server = function() {
 get_config2 = function(key, default) {
   res = yaml_load_file('_config.yml')
   res[[key]] %n% default
+}
+
+# start a background process, and return its process ID
+bg_process = function(command, args = character(), timeout = 30) {
+  id = NULL
+
+  if (is_windows()) {
+    # format of task list: hugo.exe    4592 Console      1     35,188 K
+    tasklist = function() system2('tasklist', stdout = TRUE)
+    pid1 = tasklist()
+    system2(command, args, wait = FALSE)
+
+    get_pid = function() {
+      pid2 = setdiff(tasklist(), pid1)
+      cmd = basename(command)
+      # the process's info should start with the command name
+      pid2 = pid2[substr(pid2, 1, nchar(cmd)) == cmd]
+      if (length(pid2) == 0) return()
+      m = regexec('\\s+([0-9]+)\\s+', pid2)
+      for (v in regmatches(pid2, m)) if (length(v) >= 2) return(v[2])
+    }
+  } else {
+    pid = tempfile(); on.exit(unlink(pid), add = TRUE)
+    code = paste(
+      c(shQuote(c(command, args)), ' > /dev/null & echo $! >', shQuote(pid)), collapse = ' '
+    )
+    system2('sh', c('-c', shQuote(code)))
+    get_pid = function() {
+      if (file.exists(pid)) readLines(pid)
+    }
+  }
+
+  t0 = Sys.time()
+  while (difftime(Sys.time(), t0, units = 'secs') < timeout) {
+    if (length(id <- get_pid()) == 1) break
+  }
+
+  if (length(id) == 1) return(id)
+
+  system2(command, args, timeout = timeout)  # see what the error is
+  stop(
+    'Failed to run the command in ', timeout, ' seconds (timeout): ',
+    paste(shQuote(c(command, args)), collapse = ' ')
+  )
 }
