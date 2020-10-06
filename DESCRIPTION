@@ -31,7 +31,7 @@ Imports:
     httpuv (>= 1.4.0),
     later,
     xfun (>= 0.18),
-    servr (>= 0.15)
+    servr (>= 0.19)
 Suggests:
   testit,
   shiny,

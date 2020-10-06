@@ -134,7 +134,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     if (g == 'hugo') tweak_hugo_env()
     # if requested not to demonize the server, run it in the foreground process,
     # which will block the R session
-    if (xfun::isFALSE(server$daemon)) return(system2(cmd, cmd_args))
+    if (!server$daemon) return(system2(cmd, cmd_args))
 
     pid = bg_process(cmd, cmd_args)
     opts$set(pids = c(opts$get('pids'), pid))
