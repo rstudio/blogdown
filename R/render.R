@@ -101,7 +101,7 @@ timestamp_filter = function(files) {
 build_rmds = function(files) {
   if (length(files) == 0) return()
   # ignore files that are locked (being rendered by another process)
-  i = !file.exists(locks <- paste0(files, '.lock'))
+  i = !file.exists(locks <- paste0(files, '.lock~'))
   if (!any(i)) return()  # all files are currently being rendered
   files = files[i]
   # remove locks on exit
