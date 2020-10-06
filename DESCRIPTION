@@ -29,6 +29,7 @@ Imports:
     htmltools,
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
+    later,
     xfun (>= 0.18),
     servr (>= 0.15)
 Suggests:
@@ -38,7 +39,6 @@ Suggests:
   stringr,
   rstudioapi,
   tools,
-  later,
   whoami
 LazyData: true
 URL: https://github.com/rstudio/blogdown
