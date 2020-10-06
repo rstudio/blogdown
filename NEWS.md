@@ -20,6 +20,8 @@
 
 - When opening a **blogdown** project in RStudio, `blogdown::serve_site()` will be automatically called, so you will get the preview of the site immediately. If you do not like this behavior, you may set `options(blogdown.serve_site.startup = FALSE)` in your `.Rprofile`.
 
+- The global option `blogdown.generator.server` has been deprecated. Now `blogdown::serve_site()` always use the Hugo server (which corresponds to `options(blogdown.generator.server = TRUE)` in previous version of **blogdown**), instead of the server created via the **servr** package (which corresponds to the default `options(blogdown.generator.server = FALSE)` before). The Hugo server is much faster, and also supports navigating to the output web page of which you are currently editing the source document. Note that the option `blogdown.hugo.server` is still supported (for setting command-line arguments for `hugo server`), and its default value is `c('-D', '-F', '--quiet', '--navigateToChanged')`.
+
 ## MINOR CHANGES
 
 - The command-line argument `--navigateToChanged` is passed to `hugo server` by default now if the Hugo version is not older than 0.25. If you start a Hugo server to serve and watch the site, it will automatically navigate to the page corresponding to the changed file.

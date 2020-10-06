@@ -103,21 +103,6 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       }
       build_site(TRUE, ..., build_rmd = b)
     }
-    if (!getOption('blogdown.generator.server', FALSE)) {
-      build_site(TRUE)
-      n = nchar(pdir)
-      s = servr::httw(site.dir = pdir, baseurl = baseurl, handler = function(...) {
-        files = c(...)
-        # exclude changes in the publish dir
-        files = files[substr(files, 1, n) != pdir]
-        # re-generate only if Rmd/md or config files or layouts were updated
-        if (length(grep('(_?layouts?|static|data)/|[.](toml|yaml)$', files)) ||
-            length(grep(md_pattern, files)))
-          build_it()
-      }, dir = '.', ...)
-      okay = TRUE
-      return(invisible(s))
-    }
 
     server = servr::server_config(...)
 
@@ -129,7 +114,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     )
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
-    tweak_hugo_env()
+    if (g == 'hugo') tweak_hugo_env()
     pid = bg_process(cmd, cmd_args)
     opts$set(pids = c(opts$get('pids'), pid))
 
