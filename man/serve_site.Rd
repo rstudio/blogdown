@@ -10,25 +10,44 @@ serve_site(...)
 stop_server()
 }
 \arguments{
-\item{...}{Arguments passed to \code{servr::httw()} (arguments \code{dir},
-\code{site.dir}, \code{baseurl}, and \code{handler} have been provided,
-hence you cannot customize these arguments).}
+\item{...}{Arguments passed to \code{servr::\link{server_config}()} (only
+arguments \code{host}, \code{port}, \code{browser}, \code{daemon}, and
+\code{interval} are supported).}
 }
 \description{
-The function \code{serve_site()} calls \code{servr::\link{httw}()} to start a
-web server, watch for changes in the site, rebuild the site if necessary, and
-refresh the web page automatically by default; \code{stop_server()} stops the
-web server.
+The function \code{serve_site()} executes the server command of a static site
+generator (e.g., \command{hugo server} or \command{jekyll server}) to start a
+local web server, which watches for changes in the site, rebuilds the site if
+necessary, and refreshes the web page automatically; \code{stop_server()}
+stops the web server.
 }
 \details{
-Alternatively, you can set the global option
-\code{\link{options}(blogdown.generator.server = TRUE)}, and
-\code{serve_site()} will use the web server provided by the static site
-generator, such as \code{\link{hugo_server}()}. This requires additional
-packages \pkg{processx} and \pkg{later}. You may use this option when you
-primarily work on plain Markdown posts instead of R Markdown posts, because
-it can be faster to preview Markdown posts using the web server of the static
-site generator. The web server will always be stopped when the R session is
-ended, so you may consider restarting your R session if \code{stop_server}
-fails to stop the server for some reason.
+By default, the server also watches for changes in R Markdown files, and
+recompile them automatically if they are modified. This means they will be
+automatically recompiled once you save them. If you do not like this
+behavior, you may set \code{options(blogdown.knit.on_save = FALSE)} (ideally
+in your \file{.Rprofile}). When this feature is disabled, you will have to
+manually compile Rmd documents, e.g., by clicking the Knit button in RStudio.
+
+The site generator is defined by the global R option
+\code{blogdown.generator}, with the default being \code{'hugo'}. You may use
+other site generators including \code{jekyll} and \code{hexo}, e.g.,
+\code{options(blogdown.generator = 'jekyll')}. You can define command-line
+arguments to be passed to the server of the site generator via the global R
+option \code{blogdown.X.server}, where \code{X} is \code{hugo},
+\code{jekyll}, or \code{hexo}. The default for Hugo is
+\code{options(blogdown.hugo.server = c('-D', '-F', '--navigateToChanged'))}
+(see the documentation of Hugo server at
+\url{https://gohugo.io/commands/hugo_server/} for the meaning of these
+arguments).
+}
+\note{
+For the Hugo server, the argument \command{--navigateToChanged} is used
+  by default, which means when you edit and save a source file, Hugo will
+  automatically navigate the web browser to the page corresponding to this
+  source file (if the page exists). However, due to a Hugo bug
+  (\url{https://github.com/gohugoio/hugo/issues/3811}), this automatic
+  navigation may not always work for R Markdown posts, and you may have to
+  manually refresh your browser. It should work reliably for pure Markdown
+  posts, though.
 }
