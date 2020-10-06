@@ -42,12 +42,24 @@ server_ready = function(url) {
 }
 
 # this function is primarily for users who click the Knit button in RStudio (the
-# main purpose is to suppres a message that is not useful to Knit button users);
+# main purposes are to suppress a message that is not useful to Knit button
+# users, and avoid rebuilding Rmd files because Knit button has done the job);
 # normally you wouldn't need to call it by yourself
-preview_site = function(...) {
-  opts$set(server_message = FALSE)
-  on.exit(opts$set(server_message = NULL), add = TRUE)
+preview_site = function(..., startup = FALSE) {
+  # when startup = FALSE, set knitting = TRUE permanently for this R session, so
+  # that build_site() in serve_site() no longer automatically rebuilds Rmds on
+  # save by default, and an Rmd has to be manually knitted
+  if (startup) {
+    opts$set(preview = TRUE)
+    on.exit(opts$set(preview = NULL), add = TRUE)
+  } else {
+    opts$set(knitting = TRUE)
+  }
   invisible(serve_site(...))
+}
+
+preview_mode = function() {
+  isTRUE(opts$get('preview')) || isTRUE(opts$get('knitting'))
 }
 
 serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
@@ -56,7 +68,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     okay = FALSE  # whether the server is successfully started
     root = site_root(config)
     if (root %in% opts$get('served_dirs')) {
-      if (isFALSE(opts$get('server_message'))) return()
+      if (preview_mode()) return()
       servr::browse_last()
       return(message(
         'The site has been served under the directory "', root, '". I have tried ',
@@ -74,6 +86,23 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     on.exit(if (okay) opts$append(served_dirs = root), add = TRUE)
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
+    build_it = function(...) {
+      if (is.null(b <- getOption('blogdown.knit.on_save'))) {
+        b = !isTRUE(opts$get('knitting'))
+        if (!b) {
+          options(blogdown.knit.on_save = b)
+          message(
+            'It seems you have clicked the Knit button in RStudio. If you prefer ',
+            'knitting a document manually over letting blogdown automatically ',
+            'knit it on save, you may set options(blogdown.knit.on_save = FALSE) ',
+            'in your .Rprofile so blogdown will not knit documents automatically ',
+            'again (I have just set this option for you for this R session). If ',
+            'you prefer knitting on save, set this option to TRUE instead.'
+          )
+        }
+      }
+      build_site(TRUE, ..., build_rmd = b)
+    }
     if (!getOption('blogdown.generator.server', FALSE)) {
       build_site(TRUE)
       n = nchar(pdir)
@@ -84,7 +113,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
         # re-generate only if Rmd/md or config files or layouts were updated
         if (length(grep('(_?layouts?|static|data)/|[.](toml|yaml)$', files)) ||
             length(grep(md_pattern, files)))
-          build_site(TRUE, build_rmd = TRUE)
+          build_it()
       }, dir = '.', ...)
       okay = TRUE
       return(invisible(s))
@@ -131,15 +160,18 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       'To stop it, call blogdown::stop_server() or restart the R session.'
     )
 
+    # whether to watch for changes in Rmd files?
+    if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
+
     watch = servr:::watch_dir('.', rmd_pattern)
     unix = .Platform$OS.type == 'unix'
     watch_build = function() {
       if (watch()) {
         if (unix) tools::pskill(pid, tools::SIGSTOP)
-        try(build_site(TRUE, run_hugo = FALSE, build_rmd = TRUE))
+        try(build_it(run_hugo = FALSE))
         if (unix) tools::pskill(pid, tools::SIGCONT)
       }
-      later::later(watch_build, intv)
+      if (getOption('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()
 

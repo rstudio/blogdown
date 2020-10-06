@@ -4,6 +4,8 @@
 
 - The `Knit` button in RStudio works with **blogdown** now.
 
+- Added a global R option `blogdown.knit.on_save` to control whether to knit R Markdown documents on save. By default, it is `TRUE`. If you do not want to knit a document as you save it, you may set `options(blogdown.knit.on_save = FALSE)` in your `.Rprofile`. If this option is not set initially, it will be set to `FALSE` when you click the `Knit` button in RStudio.
+
 - `blogdown::build_site()` no longer recompiles R Markdown files by default, because it may be expensive and often undesirable to compile Rmd files that have been compiled before. If you do want to recompile Rmd files, you may use `blogdown::build_site(build_rmd = TRUE)`. See the help page `?blogdown::build_site` for more information.
 
 - Exported the (previously internal) function `blogdown::md5sum_filter` function (#341). See its potential application on the help page `?blogdown::build_site`.
