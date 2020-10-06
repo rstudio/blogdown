@@ -418,7 +418,7 @@ hugo_server = function(host, port) {
 hugo_server_args = function(host, port) {
   c(
     'server', '--bind', host, '-p', port, theme_flag(), getOption('blogdown.hugo.server', c(
-      '-D', '-F', '--quiet', if (hugo_version() >= '0.25') '--navigateToChanged'
+      '-D', '-F', if (hugo_version() >= '0.25') '--navigateToChanged'
     ))
   )
 }

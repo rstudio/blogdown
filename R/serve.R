@@ -212,9 +212,11 @@ bg_process = function(command, args = character(), timeout = 30) {
     }
   } else {
     pid = tempfile(); on.exit(unlink(pid), add = TRUE)
-    code = paste(
-      c(shQuote(c(command, args)), ' > /dev/null & echo $! >', shQuote(pid)), collapse = ' '
-    )
+    code = paste(c(
+      shQuote(c(command, args)),
+      if (getOption('xfun.bg_process.verbose', FALSE)) '> /dev/null',
+      '& echo $! >', shQuote(pid)
+    ), collapse = ' ')
     system2('sh', c('-c', shQuote(code)))
     get_pid = function() {
       if (file.exists(pid)) readLines(pid)
