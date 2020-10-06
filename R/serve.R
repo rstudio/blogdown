@@ -220,8 +220,24 @@ bg_process = function(command, args = character(), timeout = 30) {
     system2(command, args, wait = FALSE)
 
     get_pid = function() {
-      pid2 = setdiff(tasklist(), pid1)
+      # make sure the command points to an actual executable (e.g., resolve 'R'
+      # to 'R.exe')
+      if (!file.exists(command)) {
+        if (Sys.which(command) != '') command = Sys.which(command)
+      }
       cmd = basename(command)
+
+      # first use wmic to get the process id because it is more reliable; if it
+      # fails, try tasklist
+      res = system2('wmic', c(
+        'process', 'where', sprintf('"name=\'%s\'"', cmd), 'get', 'commandline, processid'
+      ), stdout = TRUE)
+      cmd2 = paste(c(cmd, args), collapse = ' ')
+      res = grep(cmd2, res, fixed = TRUE, value = TRUE)
+      if (length(res)) res = xfun::grep_sub('.*?\\s+([0-9]+)\\s*$', '\\1', res)
+      if (length(res)) return(unique(res))
+
+      pid2 = setdiff(tasklist(), pid1)
       # the process's info should start with the command name
       pid2 = pid2[substr(pid2, 1, nchar(cmd)) == cmd]
       if (length(pid2) == 0) return()
