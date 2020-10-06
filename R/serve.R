@@ -179,11 +179,8 @@ proc_kill = function(...) tools::pskill(...)
 #' @export
 #' @rdname serve_site
 stop_server = function() {
-  if (getOption('blogdown.generator.server', FALSE)) {
-    for (i in opts$get('pids')) proc_kill(i)
-    opts$set(pids = NULL)
-  } else servr::daemon_stop()
-  opts$set(served_dirs = NULL)
+  for (i in opts$get('pids')) proc_kill(i)
+  opts$set(pids = NULL, served_dirs = NULL)
 }
 
 get_config2 = function(key, default) {
