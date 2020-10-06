@@ -214,7 +214,7 @@ bg_process = function(command, args = character(), timeout = 30) {
     pid = tempfile(); on.exit(unlink(pid), add = TRUE)
     code = paste(c(
       shQuote(c(command, args)),
-      if (getOption('xfun.bg_process.verbose', FALSE)) '> /dev/null',
+      if (!getOption('xfun.bg_process.verbose', FALSE)) '> /dev/null',
       '& echo $! >', shQuote(pid)
     ), collapse = ' ')
     system2('sh', c('-c', shQuote(code)))
