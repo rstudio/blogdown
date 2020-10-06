@@ -219,7 +219,7 @@ bg_process = function(command, args = character(), timeout = 30) {
     pid1 = tasklist()
     system2(command, args, wait = FALSE)
 
-    get_pid = function() {
+    get_pid = function(time) {
       # make sure the command points to an actual executable (e.g., resolve 'R'
       # to 'R.exe')
       if (!file.exists(command)) {
@@ -237,6 +237,8 @@ bg_process = function(command, args = character(), timeout = 30) {
       if (length(res)) res = xfun::grep_sub('.*?\\s+([0-9]+)\\s*$', '\\1', res)
       if (length(res)) return(unique(res))
 
+      # don't try this method until half of timeout has passed
+      if (time < timeout/5) return()
       pid2 = setdiff(tasklist(), pid1)
       # the process's info should start with the command name
       pid2 = pid2[substr(pid2, 1, nchar(cmd)) == cmd]
@@ -252,14 +254,14 @@ bg_process = function(command, args = character(), timeout = 30) {
       '& echo $! >', shQuote(pid)
     ), collapse = ' ')
     system2('sh', c('-c', shQuote(code)))
-    get_pid = function() {
+    get_pid = function(time) {
       if (file.exists(pid)) readLines(pid)
     }
   }
 
   t0 = Sys.time()
-  while (difftime(Sys.time(), t0, units = 'secs') < timeout) {
-    if (length(id <- get_pid()) == 1) break
+  while ((time <- difftime(Sys.time(), t0, units = 'secs')) < timeout) {
+    if (length(id <- get_pid(time)) == 1) break
   }
 
   if (length(id) == 1) return(id)
