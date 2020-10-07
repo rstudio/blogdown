@@ -201,7 +201,23 @@ hexo_server_args = function(host, port) {
   c('server', '-p', port, '-i', host)
 }
 
-proc_kill = function(...) tools::pskill(...)
+# kill a process and all its child processes
+proc_kill = function(pid, ...) {
+  if (is_windows()) {
+    system2('taskkill', c('/t', '/f', '/pid', pid))
+  } else {
+    # `kill -- -$PGID` kills all processes with the group id PGID, which is
+    # obtained from `ps $PID`
+    system2('kill', c('--', sprintf("-$(ps -o pgid= %s | grep -o '[0-9]*')", pid)))
+  }
+  # kill it one more time just in case (although it should be unnecessary)
+  tools::pskill(pid, ...)
+}
+
+powershell = function(command) {
+  if (Sys.which('powershell') == '') return()
+  system2('powershell', c('-Command', shQuote(command)), stdout = TRUE)
+}
 
 #' @export
 #' @rdname serve_site
