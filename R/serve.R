@@ -143,7 +143,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     } else {
       bg_process(cmd, cmd_args)
     }
-    opts$set(pids = c(opts$get('pids'), pid))
+    opts$append(pids = pid)
 
     message(
       'Launching the server via the command:\n  ',
