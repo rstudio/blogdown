@@ -200,8 +200,10 @@ proc_kill = function(...) tools::pskill(...)
 #' @export
 #' @rdname serve_site
 stop_server = function() {
-  for (i in opts$get('pids')) proc_kill(i)
-  opts$set(pids = NULL, served_dirs = NULL)
+  for (i in opts$get('pids')) if (proc_kill(i)) {
+    opts$set(pids = setdiff(opts$get('pids'), i))
+  } else warning('Failed to kill the process ', i, '. You may need to kill it manually.')
+  opts$set(served_dirs = NULL)
 }
 
 get_config2 = function(key, default) {
