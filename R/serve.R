@@ -202,12 +202,13 @@ hexo_server_args = function(host, port) {
 
 # kill a process and all its child processes
 proc_kill = function(pid, ...) {
+  run_cmd = function(...) base::system2(..., stdout = FALSE, stderr = TRUE)
   res = if (is_windows()) {
-    system2('taskkill', c('/t', '/f', '/pid', pid))
+    run_cmd('taskkill', c('/t', '/f', '/pid', pid))
   } else {
     # `kill -- -$PGID` kills all processes with the group id PGID, which is
     # obtained from `ps $PID`
-    system2('kill', c('--', sprintf("-$(ps -o pgid= %s | grep -o '[0-9]*')", pid)))
+    run_cmd('kill', c('--', sprintf("-$(ps -o pgid= %s | grep -o '[0-9]*')", pid)))
   }
   # kill it one more time just in case (although it should be unnecessary)
   res == 0 || tools::pskill(pid, ...)
