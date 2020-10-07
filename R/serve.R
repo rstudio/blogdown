@@ -136,7 +136,12 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     # which will block the R session
     if (!server$daemon) return(system2(cmd, cmd_args))
 
-    pid = bg_process(cmd, cmd_args)
+    pid = if (xfun::loadable('processx')) {
+      opts$set(processx = TRUE)
+      processx::process$new(cmd, cmd_args, stderr = '|')$get_pid()
+    } else {
+      bg_process(cmd, cmd_args)
+    }
     opts$set(pids = c(opts$get('pids'), pid))
 
     message(

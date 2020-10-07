@@ -39,6 +39,7 @@ Suggests:
   stringr,
   rstudioapi,
   tools,
+  processx,
   whoami
 LazyData: true
 URL: https://github.com/rstudio/blogdown
