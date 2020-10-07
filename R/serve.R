@@ -203,7 +203,7 @@ hexo_server_args = function(host, port) {
 
 # kill a process and all its child processes
 proc_kill = function(pid, ...) {
-  if (is_windows()) {
+  res = if (is_windows()) {
     system2('taskkill', c('/t', '/f', '/pid', pid))
   } else {
     # `kill -- -$PGID` kills all processes with the group id PGID, which is
@@ -211,7 +211,7 @@ proc_kill = function(pid, ...) {
     system2('kill', c('--', sprintf("-$(ps -o pgid= %s | grep -o '[0-9]*')", pid)))
   }
   # kill it one more time just in case (although it should be unnecessary)
-  tools::pskill(pid, ...)
+  res == 0 || tools::pskill(pid, ...)
 }
 
 powershell = function(command) {
