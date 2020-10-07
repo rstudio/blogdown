@@ -137,8 +137,9 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     if (!server$daemon) return(system2(cmd, cmd_args))
 
     pid = if (xfun::loadable('processx')) {
+      proc = processx::process$new(cmd, cmd_args, stderr = '|')
       opts$set(processx = TRUE)
-      processx::process$new(cmd, cmd_args, stderr = '|')$get_pid()
+      proc$get_pid()
     } else {
       bg_process(cmd, cmd_args)
     }
