@@ -138,7 +138,6 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     pid = if (getOption('blogdown.use.processx', xfun::loadable('processx'))) {
       proc = processx::process$new(cmd, cmd_args, stderr = '|')
-      opts$set(processx = TRUE)
       proc$get_pid()
     } else {
       bg_process(cmd, cmd_args)
