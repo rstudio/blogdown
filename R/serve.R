@@ -136,7 +136,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     # which will block the R session
     if (!server$daemon) return(system2(cmd, cmd_args))
 
-    pid = if (xfun::loadable('processx')) {
+    pid = if (getOption('blogdown.use.processx', xfun::loadable('processx'))) {
       proc = processx::process$new(cmd, cmd_args, stderr = '|')
       opts$set(processx = TRUE)
       proc$get_pid()
