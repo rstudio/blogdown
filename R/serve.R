@@ -176,8 +176,8 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     watch = servr:::watch_dir('.', rmd_pattern)
     unix = .Platform$OS.type == 'unix'
     watch_build = function() {
-      # Stop watching and delaying if server is stopped
-      if (is.null(opts$get("served_dirs")))  return(invisible())
+      # stop watching if stop_server() has cleared served_dirs
+      if (is.null(opts$get('served_dirs'))) return(invisible())
       if (watch()) {
         # temporarily suspend the process because of this Hugo bug (please, can
         # anyone fix it?): https://github.com/gohugoio/hugo/issues/3811
