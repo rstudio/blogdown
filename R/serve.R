@@ -202,7 +202,7 @@ hexo_server_args = function(host, port) {
 
 # kill a process and all its child processes
 proc_kill = function(pid, ...) {
-  run_cmd = function(...) base::system2(..., stdout = FALSE, stderr = TRUE)
+  run_cmd = function(...) base::system2(..., stdout = FALSE, stderr = FALSE)
   res = if (is_windows()) {
     run_cmd('taskkill', c('/t', '/f', '/pid', pid))
   } else {
