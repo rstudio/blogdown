@@ -202,17 +202,19 @@ hexo_server_args = function(host, port) {
 }
 
 # kill a process and all its child processes
-proc_kill = function(pid, ...) {
-  run_cmd = function(...) base::system2(..., stdout = FALSE, stderr = FALSE)
-  res = if (is_windows()) {
-    run_cmd('taskkill', c('/t', '/f', '/pid', pid))
+proc_kill = function(pid, recursive = TRUE, ...) {
+  run_cmd = base::system2
+  if (is_windows()) {
+    run_cmd('taskkill', c(if (recursive) '/t', '/f', '/pid', pid), ...)
   } else {
-    # `kill -- -$PGID` kills all processes with the group id PGID, which is
-    # obtained from `ps $PID`
-    run_cmd('kill', c('--', sprintf("-$(ps -o pgid= %s | grep -o '[0-9]*')", pid)))
+    run_cmd('kill', c(pid, if (recursive) child_pids(pid)), ...)
   }
-  # kill it one more time just in case (although it should be unnecessary)
-  res == 0 || tools::pskill(pid, ...)
+}
+
+# obtain pids of all child processes (recursively)
+child_pids = function(id) {
+  x = system2('sh', shQuote(c(pkg_file('scripts', 'child_pids.sh'), id)), stdout = TRUE)
+  grep('^[0-9]+$', x, value = TRUE)
 }
 
 powershell = function(command) {
@@ -226,7 +228,7 @@ stop_server = function() {
   for (i in opts$get('pids')) {
     # no need to kill a process started by processx when R is quitting
     if (isTRUE(opts$get('quitting')) && inherits(i, 'AsIs')) next
-    if (!proc_kill(i)) {
+    if (proc_kill(i, stdout = FALSE, stderr = FALSE) != 0) {
       warning('Failed to kill the process ', i, '. You may need to kill it manually.')
     }
   }
