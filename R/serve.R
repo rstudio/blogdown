@@ -82,7 +82,6 @@ preview_mode = function() {
 serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
   g = generator(); config = config_files(g)
   function(...) {
-    okay = FALSE  # whether the server is successfully started
     root = site_root(config)
     if (root %in% opts$get('served_dirs')) {
       if (preview_mode()) return()
@@ -100,7 +99,6 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       ))
     }
 
-    on.exit(if (okay) opts$append(served_dirs = root), add = TRUE)
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
     build_it = function(...) {
@@ -165,7 +163,8 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       i = i + 1
     }
     server$browse()
-    okay = TRUE
+    # server is correctly started so we record the directory served
+    opts$append(served_dirs = root)
     message(
       'Launched the ', g, ' server in the background (process ID: ', pid, '). ',
       'To stop it, call blogdown::stop_server() or restart the R session.'
@@ -177,6 +176,8 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     watch = servr:::watch_dir('.', rmd_pattern)
     unix = .Platform$OS.type == 'unix'
     watch_build = function() {
+      # Stop watching and delaying if server is stopped
+      if (is.null(opts$get("served_dirs")))  return(invisible())
       if (watch()) {
         # temporarily suspend the process because of this Hugo bug (please, can
         # anyone fix it?): https://github.com/gohugoio/hugo/issues/3811
