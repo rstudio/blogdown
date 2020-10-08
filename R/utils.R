@@ -189,7 +189,7 @@ check_config = function(config, f) {
   if (is.null(config[['ignoreFiles']])) warning(
     'You are recommended to ignore certain files in ', f, ': set the option ignoreFiles',
     if (grepl('[.]toml$', f)) ' = ' else ': ',
-    '["\\\\.Rmd$", "\\\\.Rmarkdown$", "_files$", "_cache$"]',
+    "['\\.Rmd$', '\\.Rmarkdown$', '_files$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$']",
     immediate. = TRUE, call. = FALSE
   )
   config
