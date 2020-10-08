@@ -23,7 +23,7 @@ Description: Write blog posts and web pages in R Markdown. This package supports
     supports 'Jekyll' (<http://jekyllrb.com>) and 'Hexo' (<https://hexo.io>).
 License: GPL-3
 Imports:
-    rmarkdown (>= 2.4),
+    rmarkdown (>= 2.4.2),
     bookdown (>= 0.14),
     knitr (>= 1.25),
     htmltools,
@@ -47,3 +47,4 @@ BugReports: https://github.com/rstudio/blogdown/issues
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<https://pandoc.org>)
 RoxygenNote: 7.1.1
 Encoding: UTF-8
+Remotes: rstudio/rmarkdown
