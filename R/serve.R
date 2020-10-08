@@ -138,11 +138,11 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     pid = if (getOption('blogdown.use.processx', xfun::loadable('processx'))) {
       proc = processx::process$new(cmd, cmd_args, stderr = '|', cleanup_tree = TRUE)
-      proc$get_pid()
+      I(proc$get_pid())
     } else {
       bg_process(cmd, cmd_args)
     }
-    opts$append(pids = pid)
+    opts$append(pids = list(pid))
 
     message(
       'Launching the server via the command:\n  ',
@@ -222,10 +222,14 @@ powershell = function(command) {
 #' @export
 #' @rdname serve_site
 stop_server = function() {
-  for (i in opts$get('pids')) if (proc_kill(i)) {
-    opts$set(pids = setdiff(opts$get('pids'), i))
-  } else warning('Failed to kill the process ', i, '. You may need to kill it manually.')
-  opts$set(served_dirs = NULL)
+  for (i in opts$get('pids')) {
+    # no need to kill a process started by processx when R is quitting
+    if (isTRUE(opts$get('quitting')) && inherits(i, 'AsIs')) next
+    if (!proc_kill(i)) {
+      warning('Failed to kill the process ', i, '. You may need to kill it manually.')
+    }
+  }
+  opts$set(pids = NULL, served_dirs = NULL)
 }
 
 get_config2 = function(key, default) {

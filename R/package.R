@@ -32,6 +32,7 @@ blogdown_skeleton = function(path, ...) {
 # stop all servers when the package is unloaded or R session is ended
 .onLoad = function(libname, pkgname) {
   reg.finalizer(asNamespace(pkgname), function(e) {
+    opts$set(quitting = TRUE); on.exit(opts$set(quitting = NULL), add = TRUE)
     stop_server()
   }, onexit = TRUE)
 }
