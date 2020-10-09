@@ -8,7 +8,7 @@ A static site\index{Static Site} often consists of HTML files (with optional ext
 
 For a static site, each URL you visit often has a corresponding HTML file stored on the server, so there is no need to compute anything before serving the file to visitors. This means static sites tend to be faster in response time than dynamic sites, and they are also much easier to deploy, since deployment simply means copying static files to a server. A dynamic site often relies on databases, and you will have to install more software packages to serve a dynamic site. For more advantages of static sites, please read the page "[Benefits of Static Site Generators](https://gohugo.io/about/benefits/)" on Hugo's website.
 
-There are many existing static site generators, including Hugo, [Jekyll,](http://jekyllrb.com) and [Hexo,](https://hexo.io) etc. Most of them can build general-purpose websites but are often used to build blogs.
+There are many existing static site generators, including Hugo, [Jekyll,](https://jekyllrb.com) and [Hexo,](https://hexo.io) etc. Most of them can build general-purpose websites but are often used to build blogs.
 
 We love Hugo for many reasons, but there are a few that stand out. Unlike other static site generators, the installation of Hugo is very simple because it provides a single executable without dependencies for most operating systems (see Section \@ref(installation)). It was also designed to render hundreds of pages of content faster than comparable static site generators and can reportedly render a single page in approximately 1 millisecond. Lastly, the community of Hugo users is very active both on the [Hugo discussion forum](https://discuss.gohugo.io) and on [GitHub issues.](https://github.com/gohugoio/hugo/issues)
 

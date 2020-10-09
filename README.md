@@ -28,4 +28,4 @@ You may not be satisfied with the default site created from `new_site()`. There 
 2. Add more content (pages or posts), or migrate your existing website.
 
 The full documentation is the **blogdown** book freely available at https://bookdown.org/yihui/blogdown/. You are expected to read at least the first chapter. 
-You are welcome to send us feedback using [Github issues](https://github.com/rstudio/blogdown/issues) or ask questions on [StackOverflow](http://stackoverflow.com/questions/tagged/blogdown) with the `blogdown` tag.
+You are welcome to send us feedback using [Github issues](https://github.com/rstudio/blogdown/issues) or ask questions on [StackOverflow](https://stackoverflow.com/questions/tagged/blogdown) with the `blogdown` tag.

@@ -20,7 +20,7 @@ Authors@R: c(
     )
 Description: Write blog posts and web pages in R Markdown. This package supports
     the static site generator 'Hugo' (<https://gohugo.io>) best, and it also
-    supports 'Jekyll' (<http://jekyllrb.com>) and 'Hexo' (<https://hexo.io>).
+    supports 'Jekyll' (<https://jekyllrb.com>) and 'Hexo' (<https://hexo.io>).
 License: GPL-3
 Imports:
     rmarkdown (>= 2.4),
