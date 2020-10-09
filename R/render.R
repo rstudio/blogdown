@@ -117,7 +117,11 @@ build_rmds = function(files) {
   dirs_rename(lib2, lib1)
   # move (new) by-products from content/ to blogdown/ or static/ to make the
   # source directory clean
-  on.exit(dirs_rename(lib1, lib2), add = TRUE)
+  on.exit({
+    # don't move by-products of leaf bundles
+    i = grep('^index_(files|cache)$', basename(lib1), invert = TRUE)
+    dirs_rename(lib1[i], lib2[i])
+  }, add = TRUE)
 
   root = getwd()
   base = site_base_dir()
@@ -169,7 +173,7 @@ render_page = function(input, script = 'render_page.R') {
 # example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
 # parent = 'content/post';
 encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
-  if (!dir_exists(deps)) return(x)
+  if (basename(deps) == 'index_files' || !dir_exists(deps)) return(x)
   if (!grepl('/$', parent)) parent = paste0(parent, '/')
   deps = basename(deps)
   need_encode = !to_md
