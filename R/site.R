@@ -13,7 +13,7 @@ blogdown_site = function(input, ...) {
     # rendering a single file (by clicking the Knit button)
     if (!is.null(input_file)) xfun::in_dir(site_root(), {
       input_file = rmarkdown::relative_to(getwd(), input_file)
-      build_rmds(input_file)
+      build_rmds(input_file, pause = TRUE)
       # run serve_site() to preview the site if the server has not been started
       if (interactive()) preview_site() else tryCatch(
         rstudioapi::sendToConsole('blogdown:::preview_site()', echo = FALSE)

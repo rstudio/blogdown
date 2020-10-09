@@ -97,8 +97,8 @@ timestamp_filter = function(files) {
   files[require_rebuild(output_file(files), files)]
 }
 
-# raw indicates paths of dependencies are not encoded in the HTML output
-build_rmds = function(files) {
+# build R Markdown posts
+build_rmds = function(files, pause = FALSE) {
   if (length(files) == 0) return()
   # ignore files that are locked (being rendered by another process)
   i = !file.exists(locks <- paste0(files, '.lock~'))
@@ -134,6 +134,7 @@ build_rmds = function(files) {
     if (file.copy(shared_yml, copy)) copied_yaml <<- c(copied_yaml, copy)
   }
 
+  out = NULL
   for (f in files) {
     d = dirname(f)
     out = output_file(f, to_md <- is_rmarkdown(f))
@@ -151,6 +152,12 @@ build_rmds = function(files) {
         if (length(s) < 2 || length(grep('^draft: ', s)) > 0) return(s)
         append(s, 'draft: yes', 1)
       })
+    }
+    # when serving the site, pause for a moment so Hugu server's auto navigation
+    # can navigate to the `out` page
+    if (pause || (!is.null(out) && length(opts$get('served_dirs')))) {
+      Sys.sleep(getOption('blogdown.build_rmds.wait', 2))
+      xfun::process_file(out)
     }
     message('Done.')
   }
