@@ -106,15 +106,28 @@ build_dir = function(dir = '.', force = FALSE, ignore = '[.]Rproj$') {
   }
 }
 
-#' Filter files by checking if their MD5 checksums have changed
+#' Look for files that have been possibly modified
 #'
-#' Read the MD5 checksums of files from a database (a tab-separated text file),
-#' and return the files of which the checksums have changed. If the database
-#' does not exist, write the checksums of files to it, otherwise update the
-#' checksums after the changed files have been identified.
+#' Filter files by checking if their modification times or MD5 checksums have
+#' changed.
 #'
-#' When a file is modified, its MD5 checksum is very likely to change. This
-#' function can be used to determine which Rmd files to be rebuilt in a
+#' The function \code{md5sum_filter()} reads the MD5 checksums of files from a
+#' database (a tab-separated text file), and returns the files of which the
+#' checksums have changed. If the database does not exist, write the checksums
+#' of files to it, otherwise update the checksums after the changed files have
+#' been identified. When a file is modified, its MD5 checksum is very likely to
+#' change.
+#'
+#' The function \code{timestamp_filer()} compares the modification time of an
+#' Rmd file with that of its output file, and returns a file if it's newer than
+#' its output file by \code{N} seconds (or if the output file does not exist),
+#' where \code{N} is obtained from the R global option
+#' \code{blogdown.time_diff}. By default, \code{N = 0}. You may change it via
+#' \code{options()}, e.g., \code{options(blogdown.time_diff = 5)} means an Rmd
+#' file will be returned when its modification time at least 5 seconds newer
+#' than its output file's modification time.
+#'
+#' These functions can be used to determine which Rmd files to be rebuilt in a
 #' \pkg{blogdown} website. See \code{\link{build_site}()} for more information.
 #' @param files A vector of file paths.
 #' @param db Path to the database file.
@@ -136,6 +149,12 @@ md5sum_filter = function(files, db = 'blogdown/md5sum.txt') {
   one[i, 2] = one[i, 3]  # update checksums
   write.table(one[, 1:2], db, row.names = FALSE)
   files
+}
+
+#' @rdname md5sum_filter
+#' @export
+timestamp_filter = function(files) {
+  files[require_rebuild(output_file(files), files)]
 }
 
 is_windows = function() xfun::is_windows()
