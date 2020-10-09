@@ -335,7 +335,7 @@ post_slug = function(x) {
 }
 
 use_bundle = function() {
-  getOption('blogdown.new_bundle', FALSE)
+  getOption('blogdown.new_bundle', generator() == 'hugo' && hugo_version() >= '0.32')
 }
 
 auto_slug = function() {
