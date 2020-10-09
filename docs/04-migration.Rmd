@@ -37,14 +37,14 @@ files = list.files(
   recursive = TRUE
 )
 for (f in files) {
-  blogdown:::process_file(f, function(x) {
+  xfun::process_file(f, function(x) {
     # process x here and return the modified x
     x
   })
 }
 ```
 
-The `process_file()` function is an internal helper function in **blogdown**. It takes a filename and a processor function to manipulate the content of the file, and writes the modified text back to the file.
+The `process_file()` function from the **xfun** package takes a filename and a processor function to manipulate the content of the file, and writes the modified text back to the file.
 
 To give you an idea of what a processor function may look like, I provided a few simple helper functions in **blogdown**, and below are two of them:
 

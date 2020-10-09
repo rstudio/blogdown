@@ -20,7 +20,7 @@ dir_exists = bookdown:::dir_exists
 dir_create = bookdown:::dir_create
 existing_files = bookdown:::existing_files
 fetch_yaml = function(f) bookdown:::fetch_yaml(read_utf8(f))
-Rscript = bookdown:::Rscript
+Rscript = xfun::Rscript
 
 `%n%` = knitr:::`%n%`
 

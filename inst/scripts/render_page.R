@@ -22,6 +22,6 @@ local({
     # resolve bookdown references (figures, tables, sections, ...)
     bookdown:::process_markdown(out2, 'markdown', NULL, TRUE, to_md)
     # protect math expressions in backticks
-    blogdown:::process_file(out2, xfun::protect_math)
+    xfun::process_file(out2, xfun::protect_math)
   }
 })
