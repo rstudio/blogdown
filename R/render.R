@@ -123,15 +123,21 @@ build_rmds = function(files) {
     if (file.copy(shared_yml, copy)) copied_yaml <<- c(copied_yaml, copy)
   }
 
-  out = NULL
-  for (f in files) {
-    d = dirname(f)
-    out = output_file(f, to_md <- is_rmarkdown(f))
+  for (i in seq_along(files)) {
+    f = files[i]; d = dirname(f); out = output_file(f, to_md <- is_rmarkdown(f))
     copy_output_yml(d)
     message('Rendering ', f, '... ', appendLF = FALSE)
     render_page(f)
     x = read_utf8(out)
-    x = encode_paths(x, by_products(f, '_files'), d, base, to_md)
+    x = encode_paths(x, lib1[2 * i - 1], d, base, to_md)
+    move_files(lib1[2 * i - 0:1], lib2[2 * i - 0:1])
+
+    # when serving the site, pause for a moment so Hugo server's auto navigation
+    # can navigate to the output page
+    if ((length(opts$get('served_dirs')) || isTRUE(opts$get('render_one')))) {
+      Sys.sleep(getOption('blogdown.build_rmds.wait', 2))
+    }
+
     if (to_md) {
       write_utf8(x, out)
     } else {
@@ -141,12 +147,6 @@ build_rmds = function(files) {
         if (length(s) < 2 || length(grep('^draft: ', s)) > 0) return(s)
         append(s, 'draft: yes', 1)
       })
-    }
-    # when serving the site, pause for a moment so Hugo server's auto navigation
-    # can navigate to the `out` page
-    if (!is.null(out) && (length(opts$get('served_dirs')) || isTRUE(opts$get('render_one')))) {
-      Sys.sleep(getOption('blogdown.build_rmds.wait', 2))
-      xfun::process_file(out)
     }
     message('Done.')
   }
