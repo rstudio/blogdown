@@ -174,7 +174,6 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
 
     watch = servr:::watch_dir('.', rmd_pattern)
-    unix = .Platform$OS.type == 'unix'
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
