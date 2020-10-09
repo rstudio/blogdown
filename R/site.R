@@ -12,6 +12,8 @@ blogdown_site = function(input, ...) {
     # input_file is NULL when render the whole site, and is a file path when
     # rendering a single file (by clicking the Knit button)
     if (!is.null(input_file)) xfun::in_dir(site_root(), {
+      # set a global option
+      opts$set(render_one = TRUE); on.exit(opts$set(render_one = NULL), add = TRUE)
       input_file = rmarkdown::relative_to(getwd(), input_file)
       build_site(TRUE, run_hugo = FALSE, build_rmd = input_file)
       # run serve_site() to preview the site if the server has not been started

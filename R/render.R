@@ -101,7 +101,7 @@ timestamp_filter = function(files) {
 }
 
 # build R Markdown posts
-build_rmds = function(files, pause = FALSE) {
+build_rmds = function(files) {
   if (length(files) == 0) return()
   # ignore files that are locked (being rendered by another process)
   i = !file.exists(locks <- paste0(files, '.lock~'))
@@ -156,9 +156,9 @@ build_rmds = function(files, pause = FALSE) {
         append(s, 'draft: yes', 1)
       })
     }
-    # when serving the site, pause for a moment so Hugu server's auto navigation
+    # when serving the site, pause for a moment so Hugo server's auto navigation
     # can navigate to the `out` page
-    if (pause || (!is.null(out) && length(opts$get('served_dirs')))) {
+    if (!is.null(out) && (length(opts$get('served_dirs')) || isTRUE(opts$get('render_one')))) {
       Sys.sleep(getOption('blogdown.build_rmds.wait', 2))
       xfun::process_file(out)
     }
