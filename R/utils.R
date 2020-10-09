@@ -338,6 +338,8 @@ use_bundle = function() {
   getOption('blogdown.new_bundle', generator() == 'hugo' && hugo_version() >= '0.32')
 }
 
+# don't add slugs to posts when creating new posts as bundles and permalinks is
+# not set in config: https://github.com/rstudio/blogdown/issues/370
 auto_slug = function() {
   if (!use_bundle()) return(TRUE)
   cfg = load_config()
