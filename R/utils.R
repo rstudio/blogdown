@@ -77,7 +77,7 @@ dirs_rename = function(from, to, ...) {
 }
 
 # does html output file not exist, or is it older than Rmd for at least N seconds?
-require_rebuild = function(html, rmd, N = getOption('blogdown.time_diff', 5)) {
+require_rebuild = function(html, rmd, N = getOption('blogdown.time_diff', 0)) {
   m1 = file.mtime(html); m2 = file.mtime(rmd)
   !file_exists(html) | difftime(m2, m1, units = 'secs') > N
 }
