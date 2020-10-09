@@ -304,9 +304,7 @@ dash_filename = function(
 }
 
 # return a filename for a post based on title, date, etc
-post_filename = function(
-  title, subdir, ext, date, lang = '', bundle = getOption('blogdown.new_bundle', FALSE)
-) {
+post_filename = function(title, subdir, ext, date, lang = '', bundle = use_bundle()) {
   if (is.null(lang)) lang = ''
   file = dash_filename(title)
   d = dirname(file); f = basename(file)
@@ -336,8 +334,12 @@ post_slug = function(x) {
   trim_ws(gsub('^\\d{4}-\\d{2}-\\d{2}-', '', basename(x)))
 }
 
+use_bundle = function() {
+  getOption('blogdown.new_bundle', FALSE)
+}
+
 auto_slug = function() {
-  if (!getOption('blogdown.new_bundle', FALSE)) return(TRUE)
+  if (!use_bundle()) return(TRUE)
   cfg = load_config()
   if (length(cfg[['permalinks']]) > 0) return(TRUE)
   con = attr(cfg, 'config_content')
