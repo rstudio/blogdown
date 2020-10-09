@@ -101,7 +101,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
-    build_it = function(...) {
+    build_it = function(files) {
       if (is.null(b <- getOption('blogdown.knit.on_save'))) {
         b = !isTRUE(opts$get('knitting'))
         if (!b) {
@@ -114,9 +114,10 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
             'again (I have just set this option for you for this R session). If ',
             'you prefer knitting on save, set this option to TRUE instead.'
           )
+          files = b  # just ignore changed Rmd files, i.e., don't build them
         }
       }
-      build_site(TRUE, ..., build_rmd = b)
+      build_site(TRUE, run_hugo = FALSE, build_rmd = files)
     }
 
     server = servr::server_config(...)
@@ -173,11 +174,14 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     # whether to watch for changes in Rmd files?
     if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
 
-    watch = servr:::watch_dir('.', rmd_pattern)
+    rmd_files = NULL
+    watch = servr:::watch_dir('.', rmd_pattern, handler = function(files) {
+      rmd_files <<- files
+    })
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
-      if (watch()) try(build_it(run_hugo = FALSE))
+      if (watch()) try(build_it(rmd_files))
       if (getOption('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()

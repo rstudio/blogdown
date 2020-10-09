@@ -24,7 +24,9 @@ global option \code{getOption('blogdown.method')} when it is set.}
 compiled.}
 
 \item{build_rmd}{Whether to (re)build R Markdown files. By default, they are
-not rebuilt. See \sQuote{Details} for how \code{build_rmd = TRUE} works.}
+not rebuilt. See \sQuote{Details} for how \code{build_rmd = TRUE} works.
+Alternatively, it can take a vector of file paths, which means these files
+are to be (re)built.}
 }
 \description{
 Build the site through Hugo, and optionally (re)build R Markdown files.

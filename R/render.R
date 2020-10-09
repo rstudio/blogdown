@@ -60,6 +60,8 @@
 #'   compiled.
 #' @param build_rmd Whether to (re)build R Markdown files. By default, they are
 #'   not rebuilt. See \sQuote{Details} for how \code{build_rmd = TRUE} works.
+#'   Alternatively, it can take a vector of file paths, which means these files
+#'   are to be (re)built.
 #' @export
 build_site = function(
   local = FALSE, method = c('html', 'custom'), run_hugo = TRUE, build_rmd = FALSE
@@ -68,8 +70,9 @@ build_site = function(
   method = match.arg(method)
   on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (method == 'custom') return()
-  if (build_rmd) {
-    files = list_rmds('content', TRUE)
+  files = build_rmd
+  if (!xfun::isFALSE(files)) {
+    if (isTRUE(files)) files = list_rmds('content', TRUE)
     if (length(files)) {
       files = getOption('blogdown.files_filter', timestamp_filter)(files)
     }
