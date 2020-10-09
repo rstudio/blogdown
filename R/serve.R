@@ -178,13 +178,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
-      if (watch()) {
-        # temporarily suspend the process because of this Hugo bug (please, can
-        # anyone fix it?): https://github.com/gohugoio/hugo/issues/3811
-        if (unix) tools::pskill(pid, tools::SIGSTOP)
-        try(build_it(run_hugo = FALSE))
-        if (unix) tools::pskill(pid, tools::SIGCONT)
-      }
+      if (watch()) try(build_it(run_hugo = FALSE))
       if (getOption('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()
