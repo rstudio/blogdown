@@ -222,13 +222,17 @@ powershell = function(command) {
 #' @export
 #' @rdname serve_site
 stop_server = function() {
+  ids = NULL  # collect pids that we failed to kill
+  quitting = isTRUE(opts$get('quitting'))
   for (i in opts$get('pids')) {
     # no need to kill a process started by processx when R is quitting
-    if (isTRUE(opts$get('quitting')) && inherits(i, 'AsIs')) next
-    if (proc_kill(i, stdout = FALSE, stderr = FALSE) != 0) {
-      warning('Failed to kill the process ', i, '. You may need to kill it manually.')
-    }
+    if (quitting && inherits(i, 'AsIs')) next
+    if (proc_kill(i, stdout = FALSE, stderr = FALSE) != 0) ids = c(ids, i)
   }
+  if (length(ids)) warning(
+    'Failed to kill the process(es): ', paste(i, collapse = ' '),
+    '. You may need to kill them manually.'
+  ) else if (!quitting) message('The web server has been stopped.')
   opts$set(pids = NULL, served_dirs = NULL)
 }
 
