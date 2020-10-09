@@ -102,13 +102,15 @@ build_rmds = function(files) {
   lib2[i] = gsub('^blogdown', 'static', lib2[i])  # _files are copied to /static
   # move by-products of a previous run to content/
   dirs_rename(lib2, lib1)
+
   # move (new) by-products from content/ to blogdown/ or static/ to make the
   # source directory clean
-  on.exit({
+  move_files = function(lib1, lib2) {
     # don't move by-products of leaf bundles
     i = grep('^index_(files|cache)$', basename(lib1), invert = TRUE)
     dirs_rename(lib1[i], lib2[i])
-  }, add = TRUE)
+  }
+  on.exit(move_files(lib1, lib2), add = TRUE)
 
   root = getwd()
   base = site_base_dir()
