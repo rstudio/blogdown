@@ -14,6 +14,8 @@
 
 - If a theme contains Hugo modules (e.g., the former hugo-academic theme), the modules will be resolved at the time when a theme is installed, which means users will not need to install Go or GIT to work with themes that contain Hugo modules.
 
+- Added a new function `hugo_available()` to check if Hugo with a minimal version is available.
+
 - Added the `keep_md` argument to `blogdown::html_page()` (thanks, @lazappi, #445).
 
 ## MAJOR CHANGES

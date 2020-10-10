@@ -3,6 +3,7 @@
 \name{hugo_cmd}
 \alias{hugo_cmd}
 \alias{hugo_version}
+\alias{hugo_available}
 \alias{hugo_build}
 \alias{new_site}
 \alias{new_content}
@@ -14,6 +15,8 @@
 hugo_cmd(...)
 
 hugo_version()
+
+hugo_available(version = "0.0.0")
 
 hugo_build(local = FALSE)
 
@@ -55,6 +58,8 @@ hugo_server(host, port)
 \item{...}{Arguments to be passed to \code{system2('hugo', ...)}, e.g.
 \code{new_content(path)} is basically \code{hugo_cmd(c('new', path))} (i.e.
 run the command \command{hugo new path}).}
+
+\item{version}{A version number.}
 
 \item{local}{Whether to build the site for local preview (if \code{TRUE}, all
 drafts and future posts will also be built, and the site configuration
@@ -157,6 +162,9 @@ Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 \item \code{hugo_version}: Return the version number of Hugo if possible, which is
 extracted from the output of \code{hugo_cmd('version')}.
 
+\item \code{hugo_available}: Check if Hugo with a certain version or above is
+available.
+
 \item \code{hugo_build}: Build a plain Hugo website. Note that the function
 \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
 via \code{hugo_build()} to build the site.
@@ -181,8 +189,8 @@ different formats via \command{hugo convert}.
 }}
 
 \examples{
-library(blogdown)
-if (interactive()) new_site()
+blogdown::hugo_available("1.2.3")
+if (interactive()) blogdown::new_site()
 }
 \references{
 The full list of Hugo commands: \url{https://gohugo.io/commands},

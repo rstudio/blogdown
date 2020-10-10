@@ -18,6 +18,15 @@ hugo_version = function() {
   cat(x, sep = '\n')
 }
 
+#' @param version A version number.
+#' @export
+#' @describeIn hugo_cmd Check if Hugo with a certain version or above is
+#'   available.
+#' @examples blogdown::hugo_available('1.2.3')
+hugo_available = function(version = '0.0.0') {
+  tryCatch(hugo_version() >= version, error = function(e) FALSE)
+}
+
 #' @param local Whether to build the site for local preview (if \code{TRUE}, all
 #'   drafts and future posts will also be built, and the site configuration
 #'   \code{baseurl} will be set to \code{/} temporarily).
@@ -102,8 +111,8 @@ change_config = function(name, value) {
 #' @export
 #' @describeIn hugo_cmd Create a new site (skeleton) via \command{hugo new
 #'   site}. The directory of the new site should be empty,
-#' @examples library(blogdown)
-#' if (interactive()) new_site()
+#' @examples
+#' if (interactive()) blogdown::new_site()
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
   theme = 'yihui/hugo-lithium', hostname = 'github.com', theme_example = TRUE,
