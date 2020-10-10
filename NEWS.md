@@ -2,9 +2,9 @@
 
 ## NEW FEATURES
 
-- The `Knit` button in RStudio works with **blogdown** now.
+- The `Knit` button in RStudio finally works with **blogdown** now. My apologies to those who have desperately clicked the `Knit` button or pressed `Ctrl + Shift + K` in vain over the years. I completely underestimated the power of your muscle memory.
 
-- Added a global R option `blogdown.knit.on_save` to control whether to knit R Markdown documents on save. By default, it is `TRUE`. If you do not want to knit a document as you save it, you may set `options(blogdown.knit.on_save = FALSE)` in your `.Rprofile`. If this option is not set initially, it will be set to `FALSE` when you click the `Knit` button in RStudio.
+- Added a global R option `blogdown.knit.on_save` to control whether to knit R Markdown documents on save. By default, it is `TRUE`. If you do not want to knit a document as you save it, you may set `options(blogdown.knit.on_save = FALSE)` in your `.Rprofile`. If this option is not set initially, it will be set to `FALSE` after you click the `Knit` button in RStudio.
 
 - `blogdown::build_site()` no longer recompiles R Markdown files by default, because it may be expensive and often undesirable to compile Rmd files that have been compiled before. If you do want to recompile Rmd files, you may use `blogdown::build_site(build_rmd = TRUE)`. See the help page `?blogdown::build_site` for more information.
 
@@ -18,7 +18,7 @@
 
 ## MAJOR CHANGES
 
-- When creating a new site with `blogdown::new_site()`, the theme `gcushen/hugo-academic` is automatically redirected to `wowchemy/starter-academic`, because the original Github repo has moved and became a repo of Hugo modules.
+- When creating a new site with `blogdown::new_site()`, the theme `gcushen/hugo-academic` is automatically redirected to `wowchemy/starter-academic`, because the original Github repo has moved and become a repo of Hugo modules.
 
 - The default value of the global option `blogdown.new_bundle` was changed from `FALSE` to `TRUE` if the site is built through Hugo >= v0.32. This means new posts will be created as leaf bundles, i.e., of the form `path/post-filename/index.md` instead of `path/post-filename.md` (the extension `.md` may also be `.Rmd` or `.Rmarkdown`). If you are not familiar with Hugo's page bundles, please see the documentation at: https://gohugo.io/content-management/page-bundles/. Using page bundles makes it much easier to manage resources like images. Without page bundles, these resources have to be placed under the `static/` directory, and cannot live together with posts under the `content/` directory. If you do not like this change, you may still set `options(blogdown.new_bundle = FALSE)` in your `.Rprofile`.
 
