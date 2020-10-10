@@ -354,7 +354,7 @@ post_slug = function(x) {
 }
 
 use_bundle = function() {
-  getOption('blogdown.new_bundle', generator() == 'hugo' && hugo_version() >= '0.32')
+  getOption('blogdown.new_bundle', generator() == 'hugo' && hugo_available('0.32'))
 }
 
 # don't add slugs to posts when creating new posts as bundles and permalinks is

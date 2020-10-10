@@ -233,7 +233,7 @@ install_theme = function(
     # check the minimal version of Hugo required by the theme
     if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {
       if (!is.null(minver <- parse_toml(theme_cfg)[['min_version']])) {
-        if (hugo_version() < minver) update_hugo()
+        if (!hugo_available(minver)) update_hugo()
       }
     }
     newdir = sub(tmpdir, '.', zipdir, fixed = TRUE)
@@ -427,7 +427,7 @@ hugo_server = function(host, port) {
 hugo_server_args = function(host, port) {
   c(
     'server', '--bind', host, '-p', port, theme_flag(), getOption('blogdown.hugo.server', c(
-      '-D', '-F', if (hugo_version() >= '0.25') '--navigateToChanged'
+      '-D', '-F', if (hugo_available('0.25')) '--navigateToChanged'
     ))
   )
 }
