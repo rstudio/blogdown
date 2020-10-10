@@ -285,7 +285,7 @@ parse_toml = function(f, x = read_utf8(f), strict = TRUE) {
     if (hugo_available()) {
       f2 = tempfile(fileext = '.md'); on.exit(unlink(f2), add = TRUE)
       write_utf8(c('+++', x, '+++'), f2)
-      hugo_toYAML(f2)
+      hugo_convert_one(f2)
       return(yaml_load_file(f2))
     }
     if (!missing(strict)) stop(

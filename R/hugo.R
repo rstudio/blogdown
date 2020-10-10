@@ -309,7 +309,7 @@ new_content = function(path, kind = '', open = interactive()) {
     kind  = sub('/$', '', kind)
   }
   hugo_cmd(c('new', shQuote(path2), if (kind != '') c('-k', kind)))
-  hugo_toYAML(file2)
+  hugo_convert_one(file2)
   file.rename(file2, file)
   if (open) open_file(file)
   file
@@ -324,8 +324,16 @@ default_kind = function(path) {
 }
 
 # Hugo cannot convert a single file: https://github.com/gohugoio/hugo/issues/3632
-hugo_toYAML = function(file) {
-  if (identical(trim_ws(readLines(file, 1)), '---')) return()
+hugo_convert_one = function(file, to = c('YAML', 'TOML', 'JSON')) {
+  if (length(x <- trim_ws(readLines(file, 1))) == 0 || all(x == '')) {
+    warning('The file ', file, ' seems to be empty')
+    return()
+  }
+  x = x[x != ''][1]
+  to = match.arg(to)
+  switch(
+    to, YAML = if (x == '---') return(), TOML = if (x == '+++') return, JSON = if (x == '{') return()
+  )
   file = normalizePath(file)
   tmp = tempfile(); on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
   dir.create(tmp)
@@ -333,7 +341,7 @@ hugo_toYAML = function(file) {
   in_dir(tmp, {
     dir.create('content'); file.copy(file, file2)
     writeLines(c('baseurl = "/"', 'builddrafts = true'), 'config.toml')
-    hugo_convert(unsafe = TRUE)
+    hugo_convert(to, unsafe = TRUE)
     file.copy(file2, file, overwrite = TRUE)
   })
 }
