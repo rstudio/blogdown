@@ -413,7 +413,7 @@ new_post = function(
 #'   different formats via \command{hugo convert}.
 hugo_convert = function(to = c('YAML', 'TOML', 'JSON'), unsafe = FALSE, ...) {
   to = match.arg(to)
-  hugo_cmd(c('convert', paste0('to', to), if (unsafe) '--unsafe', ...))
+  hugo_cmd(c('convert', paste0('to', to), if (unsafe) '--unsafe', ...), stdout = FALSE)
 }
 
 #' @param host,port The host IP address and port; see
