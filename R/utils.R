@@ -274,7 +274,36 @@ site_root = function(config = config_files()) {
   root
 }
 
-# a simple parser that only reads top-level options unless RcppTOML is available
+#' Read and write TOML data (Tom's Obvious Markup Language)
+#'
+#' The function \code{read_toml()} reads TOML data from a file or a character
+#' vector, and the function \code{write_toml()} converts an R object to TOML.
+#'
+#' For \code{read_toml()}, it first tries to use the R package \pkg{RcppTOML} to
+#' read the TOML data. If \pkg{RcppTOML} is not available, it uses Hugo to
+#' convert the TOML data to YAML, and reads the YAML data via the R package
+#' \pkg{yaml}. If Hugo is not available, it falls back to a naive parser, which
+#' is only able to parse top-level fields in the TOML data, and it only supports
+#' character, logical, and numeric (including integer) scalars.
+#'
+#' For \code{write_toml()}, it converts an R object to YAML via the R package
+#' \pkg{yaml}, and uses Hugo to convert the YAML data to TOML.
+#' @param file Path to a TOML file.
+#' @param x For \code{read_toml()}, the TOML data as a character vector (it is
+#'   read from \code{file} by default; if provided, \code{file} will be
+#'   ignored). For \code{write_toml()}, an R object to be converted to TOML.
+#' @param strict Whether to try \pkg{RcppTOML} and Hugo only (i.e., not to use
+#'   the naive parser). If \code{FALSE}, only the naive parser is used (this is
+#'   not recommended, unless you are sure your TOML data is really simple).
+#' @return For \code{read_toml()}, an R object. For \code{write_toml()}, a
+#'   character vector (marked by \code{xfun::\link{raw_string}()}) of the TOML
+#'   data if \code{output = NULL}, otherwise the TOML data is written to the
+#'   output file.
+#' @export
+#' @examples
+#' v = blogdown::read_toml(x = c('a = 1', 'b = true', 'c = "Hello"', 'd = [1, 2]'))
+#' v
+#' if (blogdown::hugo_available()) blogdown::write_toml(v)
 read_toml = function(file, x = read_utf8(file), strict = TRUE) {
   if (strict) {
     if (xfun::loadable('RcppTOML')) {
@@ -317,6 +346,10 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
   z
 }
 
+#' @param output Path to an output file. If \code{NULL}, the TOML data is
+#'   returned, otherwise the data is written to the specified file.
+#' @export
+#' @rdname read_toml
 write_toml = function(x, output = NULL) {
   if (!hugo_available()) stop('Hugo is required but not found.')
   f = tempfile(fileext = '.md'); on.exit(unlink(f), add = TRUE)
@@ -329,7 +362,7 @@ write_toml = function(x, output = NULL) {
   if (i[n] - i[1] <= 1) return('')
   x = x[(i[1] + 1):(i[n] - 1)]
   while((n <- length(x)) > 0 && x[n] == '') x = x[-n]  # remove empty lines at the end
-  if (is.null(output)) x else write_utf8(x, output)
+  if (is.null(output)) xfun::raw_string(x) else write_utf8(x, output)
 }
 
 # option names may be case insensitive
