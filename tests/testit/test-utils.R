@@ -15,9 +15,9 @@ raw_list = function(x) {
 
 x1 = c('a = "foo"', '# a comment', 'b = false', 'c3 = 10', 'd_e = "0.10"')
 x2 = list(a = 'foo', b = FALSE, c3 = 10L, d_e = '0.10')
-assert('parse_toml() works', {
-  (raw_list(parse_toml(x = x1)) %==% x2)
-  (parse_toml(x = x1, strict = FALSE) %==% x2)
+assert('read_toml() works', {
+  (raw_list(read_toml(x = x1)) %==% x2)
+  (read_toml(x = x1, strict = FALSE) %==% x2)
 })
 
 assert('dash_filename() creates a filename by replacing non-alnum chars with -', {
