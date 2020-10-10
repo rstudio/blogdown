@@ -195,6 +195,17 @@ check_lang = function(config = load_config()) {
   get_config('DefaultContentLanguage', NULL, config)
 }
 
+# a horizontal rule
+hrule = function(char = '-', width = getOption('width')) {
+  paste(rep('-', width), collapse = '')
+}
+
+message2 = function(...) {
+  message(hrule())
+  message(...)
+  message(hrule())
+}
+
 check_config = function(config, f) {
   base = config[['baseurl']]
   if (is_example_url(base)) {
@@ -205,11 +216,16 @@ check_config = function(config, f) {
       immediate. = TRUE, call. = FALSE
     )
   }
-  if (is.null(config[['ignoreFiles']])) warning(
-    'You are recommended to ignore certain files in ', f, ': set the option ignoreFiles',
-    if (grepl('[.]toml$', f)) ' = ' else ': ',
-    "['\\.Rmd$', '\\.Rmarkdown$', '_files$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$']",
-    immediate. = TRUE, call. = FALSE
+  ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
+  if (is.null(s <- config[['ignoreFiles']])) message2(
+    "You are recommended to set the 'ignoreFiles' field in ", f, ' to: ',
+    xfun::tojson(ignore)
+  ) else if (!all(ignore %in% s)) message2(
+    "You are recommended to ignore more items in the 'ignoreFiles' field in ", f, ": ",
+    gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
+  )
+  if ('_files$' %in% s) message2(
+    "You are recommended to remove the item '_files$' in the 'ignoreFiles' field in ", f, '.'
   )
   config
 }
