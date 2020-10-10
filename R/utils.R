@@ -259,11 +259,22 @@ site_root = function(config = config_files()) {
 }
 
 # a simple parser that only reads top-level options unless RcppTOML is available
-parse_toml = function(f, x = read_utf8(f), strict = xfun::loadable('RcppTOML')) {
+parse_toml = function(f, x = read_utf8(f), strict = TRUE) {
   if (strict) {
-    x = paste(x, collapse = '\n')
-    parser = getFromNamespace('parseTOML', 'RcppTOML')
-    return(parser(x, fromFile = FALSE))
+    if (xfun::loadable('RcppTOML')) {
+      x = paste(x, collapse = '\n')
+      parser = getFromNamespace('parseTOML', 'RcppTOML')
+      return(parser(x, fromFile = FALSE))
+    }
+    if (hugo_available()) {
+      f2 = tempfile(fileext = '.md'); on.exit(unlink(f2), add = TRUE)
+      write_utf8(c('+++', x, '+++'), f2)
+      hugo_toYAML(f2)
+      return(yaml_load_file(f2))
+    }
+    if (!missing(strict)) stop(
+      'Cannot parse TOML data because neither Hugo nor the R package RcppTOML is available.'
+    )
   }
   # remove comments
   x = gsub('\\s+#.+', '', x)
@@ -495,7 +506,7 @@ split_yaml_body = function(x) {
   res
 }
 
-# anotate seq type values because both single value and list values are
+# annotate seq type values because both single value and list values are
 # converted to vector by default
 yaml_load = function(x) yaml::yaml.load(
   x, handlers = list(
