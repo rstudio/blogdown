@@ -36,7 +36,7 @@
 
 - The command-line argument `--navigateToChanged` is passed to `hugo server` by default now if the Hugo version is not older than 0.25. If you start a Hugo server to serve and watch the site, it will automatically navigate to the page corresponding to the changed file.
 
-- Images `tn.png` and `screenshot.png` under the `images/` directory of a theme will be deleted in `blogdown::install_theme()` because these are screnshots of a theme and don't affect the theme's function.
+- Images `tn.png` and `screenshot.png` under the `images/` directory of a theme will be deleted in `blogdown::install_theme()` because these are screenshots of a theme and don't affect the theme's function.
 
 # CHANGES IN blogdown VERSION 0.20
 
