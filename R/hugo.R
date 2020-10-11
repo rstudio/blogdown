@@ -144,10 +144,12 @@ new_site = function(
   if (sample) {
     d = file.path('content', 'blog')
     if (!dir_exists(d)) d = file.path('content', 'post')
+    f1 = pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd')
+    if (use_bundle()) d = file.path(d, basename(xfun::sans_ext(f1)))
     dir_create(d)
-    file.copy(pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd'), d)
-    if (interactive() && getOption('blogdown.open_sample', TRUE))
-      open_file(file.path(d, '2015-07-23-r-rmarkdown.Rmd'))
+    f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
+    file.copy(f1, f2)
+    if (interactive() && getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
   if (!file.exists('index.Rmd'))
     writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
