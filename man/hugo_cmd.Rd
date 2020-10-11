@@ -25,7 +25,7 @@ new_site(
   install_hugo = TRUE,
   format = "toml",
   sample = TRUE,
-  theme = "yihui/hugo-lithium",
+  theme = "yihui/hugo-xmin",
   hostname = "github.com",
   theme_example = TRUE,
   empty_dirs = FALSE,

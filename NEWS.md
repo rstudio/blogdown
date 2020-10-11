@@ -6,6 +6,8 @@
 
 - `read_toml()` and `toml2yaml()` will try to preserve the original order of fields in the TOML data, instead of using the alphabetical order.
 
+- The default theme in `new_site()` was changed from `hugo-lithium` to `hugo-xmin`.
+
 # CHANGES IN blogdown VERSION 0.21
 
 ## NEW FEATURES
