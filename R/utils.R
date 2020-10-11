@@ -79,7 +79,7 @@ dirs_rename = function(from, to, ...) {
 # change the default of full.names and recursive in list.files() because these
 # values are used much more frequently than the original defaults
 list_files = function(..., full.names = TRUE, recursive = TRUE) {
-  list.files(..., full.names = full.names, recursive = recursive)
+  list.files(..., full.names = full.names, recursive = recursive, no.. = TRUE)
 }
 
 # does html output file not exist, or is it older than Rmd for at least N seconds?
