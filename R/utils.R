@@ -313,20 +313,22 @@ site_root = function(config = config_files()) {
 #' }
 read_toml = function(file, x = read_utf8(file), strict = TRUE) {
   if (strict) {
+    x2 = read_toml(x = x, strict = FALSE)  # obtain the names of top-level fields
     if (xfun::loadable('RcppTOML')) {
       x = paste(x, collapse = '\n')
       parser = getFromNamespace('parseTOML', 'RcppTOML')
-      return(parser(x, fromFile = FALSE))
-    }
-    if (hugo_available()) {
+      x = parser(x, fromFile = FALSE)
+    } else if (hugo_available()) {
       f2 = tempfile(fileext = '.md'); on.exit(unlink(f2), add = TRUE)
       write_utf8(c('+++', x, '+++'), f2)
       hugo_convert_one(f2)
-      return(yaml_load_file(f2))
-    }
-    if (!missing(strict)) stop(
+      x = yaml_load_file(f2)
+    } else if (missing(strict)) {
+      return(x2)
+    } else stop(
       'Cannot parse TOML data because neither Hugo nor the R package RcppTOML is available.'
     )
+    return(sort_by_names(x, names(x2)))
   }
 
   # extract the top-level key name, e.g., foo.bar.baz -> foo
@@ -401,6 +403,12 @@ yaml2toml = function(file, output = NULL) {
   write_toml(x, output)
 }
 
+# reorder x according to a given vector of names, e.g., c(b = 1, a = 2, c = 3)
+# -> c(c = 3, a = 2, b = 1) when the given names are c('c', 'a')
+sort_by_names = function(x, names) {
+  m = names(x)
+  x[c(intersect(names, m), setdiff(m, names))]
+}
 
 # option names may be case insensitive
 get_config = function(field, default, config = load_config()) {
