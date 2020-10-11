@@ -15,6 +15,9 @@ blogdown_site = function(input, ...) {
       # set a global option
       opts$set(render_one = TRUE); on.exit(opts$set(render_one = NULL), add = TRUE)
       input_file = rmarkdown::relative_to(getwd(), input_file)
+      if (!grepl(rmd_pattern, input_file)) return(message(
+        'The file "', input_file, '" does not need to be knitted.'
+      ))
       build_site(TRUE, run_hugo = FALSE, build_rmd = input_file)
       # run serve_site() to preview the site if the server has not been started
       if (interactive()) preview_site() else tryCatch(
