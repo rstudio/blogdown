@@ -307,9 +307,11 @@ site_root = function(config = config_files()) {
 #'   NULL}, otherwise the TOML/YAML data is written to the output file.
 #' @export
 #' @examples
+#' \dontrun{
 #' v = blogdown::read_toml(x = c('a = 1', 'b = true', 'c = "Hello"', 'd = [1, 2]'))
 #' v
-#' if (blogdown::hugo_available()) blogdown::write_toml(v)
+#' blogdown::write_toml(v)
+#' }
 read_toml = function(file, x = read_utf8(file), strict = TRUE) {
   if (strict) {
     if (xfun::loadable('RcppTOML')) {

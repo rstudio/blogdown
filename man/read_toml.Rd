@@ -51,7 +51,9 @@ For \code{write_toml()}, it converts an R object to YAML via the R package
 \pkg{yaml}, and uses Hugo to convert the YAML data to TOML.
 }
 \examples{
+\dontrun{
 v = blogdown::read_toml(x = c("a = 1", "b = true", "c = \"Hello\"", "d = [1, 2]"))
 v
-if (blogdown::hugo_available()) blogdown::write_toml(v)
+blogdown::write_toml(v)
+}
 }
