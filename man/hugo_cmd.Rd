@@ -194,5 +194,5 @@ if (interactive()) blogdown::new_site()
 }
 \references{
 The full list of Hugo commands: \url{https://gohugo.io/commands},
-  and themes: \url{http://themes.gohugo.io}.
+  and themes: \url{https://themes.gohugo.io}.
 }

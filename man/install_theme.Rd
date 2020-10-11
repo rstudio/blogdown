@@ -42,5 +42,5 @@ a higher version of Hugo than the existing version in your system.}
 }
 \description{
 Download the specified theme from Github and install to the \file{themes}
-directory. Available themes are listed at \url{http://themes.gohugo.io}.
+directory. Available themes are listed at \url{https://themes.gohugo.io}.
 }

@@ -107,7 +107,7 @@ change_config = function(name, value) {
 #' @param to_yaml Whether to convert the metadata of all posts to YAML.
 #' @param serve Whether to start a local server to serve the site.
 #' @references The full list of Hugo commands: \url{https://gohugo.io/commands},
-#'   and themes: \url{http://themes.gohugo.io}.
+#'   and themes: \url{https://themes.gohugo.io}.
 #' @export
 #' @describeIn hugo_cmd Create a new site (skeleton) via \command{hugo new
 #'   site}. The directory of the new site should be empty,
@@ -161,7 +161,7 @@ new_site = function(
 #' Install a Hugo theme from Github
 #'
 #' Download the specified theme from Github and install to the \file{themes}
-#' directory. Available themes are listed at \url{http://themes.gohugo.io}.
+#' directory. Available themes are listed at \url{https://themes.gohugo.io}.
 #' @inheritParams new_site
 #' @param force Whether to override the existing theme of the same name. If you
 #'   have made changes to this existing theme, your changes will be lost when
