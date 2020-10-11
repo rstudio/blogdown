@@ -332,9 +332,7 @@ hugo_convert_one = function(file, to = c('YAML', 'TOML', 'JSON')) {
   }
   x = x[x != ''][1]
   to = match.arg(to)
-  switch(
-    to, YAML = if (x == '---') return(), TOML = if (x == '+++') return, JSON = if (x == '{') return()
-  )
+  if (x == c(YAML = '---', TOML = '+++', JSON = '{')[to]) return()
   file = normalizePath(file)
   tmp = tempfile(); on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
   dir.create(tmp)
