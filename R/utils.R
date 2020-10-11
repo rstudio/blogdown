@@ -328,33 +328,43 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
       'Cannot parse TOML data because neither Hugo nor the R package RcppTOML is available.'
     )
   }
+
+  # extract the top-level key name, e.g., foo.bar.baz -> foo
+  keys = function(x) {
+    unlist(lapply(strsplit(x, '[.]'), `[[`, 1))
+  }
+  # generate list(name = x)
+  named_list = function(x, name) setNames(list(x), name)
+
   # remove comments
   x = gsub('\\s+#.+', '', x)
-  z = list()
-  # arbitrary values
-  r = '^([[:alnum:]_]+?)\\s*=\\s*(.+)\\s*$'
-  y = grep(r, x, value = TRUE)
-  z[gsub(r, '\\1', y)] = as.list(gsub(r, '\\2', y))
-  # strings
-  r = '^([[:alnum:]_]+?)\\s*=\\s*"([^"]*?)"\\s*$'
-  y = grep(r, x, value = TRUE)
-  z[gsub(r, '\\1', y)] = as.list(gsub(r, '\\2', y))
-  # boolean
-  r = '^([[:alnum:]_]+?)\\s*=\\s*(true|false)\\s*$'
-  y = grep(r, x, value = TRUE)
-  z[gsub(r, '\\1', y)] = as.list(as.logical(gsub(r, '\\2', y)))
-  # numbers
-  r = '^([[:alnum:]_]+?)\\s*=\\s*([0-9.]+)\\s*$'
-  y = grep(r, x, value = TRUE)
-  z[gsub(r, '\\1', y)] = lapply(as.list(as.numeric(gsub(r, '\\2', y))), function(v) {
-    v2 = as.integer(v)
-    if (isTRUE(v2 == v)) v2 else v
+
+  # arbitrary values of the form 'foo = bar' or '[foo]' or '[[foo.bar]]'
+  r = '^(([[:alnum:]_]+?)\\s*=\\s*(.+)\\s*|\\[{1,2}([^]]+)\\]{1,2}(\\s*))$'
+  m = regexec(r, x)
+  z = lapply(regmatches(x, m), function(v) {
+    if (length(v) < 6) return()
+    # when data is '[foo]' instead of 'foo = bar', just return 'OMITTED'
+    if (v[3] == '') return(named_list('OMITTED!', keys(v[5])))
+    y = v[4]
+    # strings
+    if (grepl(r <- '^"([^"]*?)"$', y)) y = gsub(r, '\\1', y) else {
+      # boolean
+      if (y %in% c('true', 'false')) y = as.logical(y) else {
+        # numbers
+        if (grepl('^[0-9.]+$', y)) {
+          y2 = as.numeric(y)
+          if (!is.na(y2)) {
+            y = y2
+            y2 = as.integer(y)
+            if (y2 == y) y = y2
+          }
+        }
+      }
+    }
+    named_list(y, v[3])
   })
-  # lists (cannot parse their content)
-  r = '^\\[{1,2}([^]]+)\\]{1,2}$'
-  y = grep(r, x, value = TRUE)
-  z[unlist(lapply(strsplit(gsub(r, '\\1', y), '[.]'), `[[`, 1))] = list(list())
-  z
+  do.call(c, z)
 }
 
 #' @param output Path to an output file. If \code{NULL}, the TOML data is
