@@ -232,6 +232,13 @@ check_config = function(config, f) {
   if ('_files$' %in% s) message2(
     "You are recommended to remove the item '_files$' in the 'ignoreFiles' field in ", f, '.'
   )
+  if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
+    h = config$markup$defaultMarkdownHandler
+    if (is.null(h) || h == 'goldmark') message2(
+      "'You are recommended to set the option 'unsafe' to true for goldmark in ", f, '. ',
+      'See https://github.com/rstudio/blogdown/issues/447 for more information.'
+    )
+  }
   config
 }
 
