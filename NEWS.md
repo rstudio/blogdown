@@ -1,5 +1,10 @@
 # CHANGES IN blogdown VERSION 0.22
 
+## MINOR CHANGES
+
+- For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.
+
+- `read_toml()` and `toml2yaml()` will try to preserve the original order of fields in the TOML data, instead of using the alphabetical order.
 
 # CHANGES IN blogdown VERSION 0.21
 

@@ -154,7 +154,12 @@ new_site = function(
   if (!file.exists('index.Rmd'))
     writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
 
-  if (to_yaml) hugo_convert('YAML', unsafe = TRUE)
+  if (to_yaml) {
+    hugo_convert('YAML', unsafe = TRUE)
+    if (file.exists(cfg <- 'config.toml')) {
+      toml2yaml(cfg, 'config.yaml'); unlink(cfg)
+    }
+  }
   if (serve) serve_site()
 }
 
