@@ -203,7 +203,7 @@ install_theme = function(
       files = utils::unzip(zipfile, exdir = tmpdir)
     } else {
       utils::untar(zipfile, exdir = tmpdir)
-      files = list.files(tmpdir, all.files = TRUE, recursive = TRUE, full.names = TRUE)
+      files = list_files(tmpdir, all.files = TRUE)
     }
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]

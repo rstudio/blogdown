@@ -45,7 +45,7 @@ clean_targets = function() {
   rmds = list_rmds('content')
   files = by_products(rmds, c('.html', '.markdown'))
   files = files[file.exists(files)]
-  c(files, 'static/rmarkdown-libs', list.files(
-    'static', '.+_files$', recursive = TRUE, include.dirs = TRUE, full.names = TRUE
+  c(files, 'static/rmarkdown-libs', list_files(
+    'static', '.+_files$', include.dirs = TRUE
   ))
 }

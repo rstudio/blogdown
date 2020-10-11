@@ -76,6 +76,12 @@ dirs_rename = function(from, to, ...) {
   for (i in seq_len(n)) dir_rename(from[i], to[i], ...)
 }
 
+# change the default of full.names and recursive in list.files() because these
+# values are used much more frequently than the original defaults
+list_files = function(..., full.names = TRUE, recursive = TRUE) {
+  list.files(..., full.names = full.names, recursive = recursive)
+}
+
 # does html output file not exist, or is it older than Rmd for at least N seconds?
 require_rebuild = function(html, rmd, N = getOption('blogdown.time_diff', 0)) {
   m1 = file.mtime(html); m2 = file.mtime(rmd)
@@ -484,7 +490,7 @@ scan_yaml = function(dir = 'content') {
   if (missing(dir)) dir = switch(generator(),
     hugo = 'content', jekyll = '.', hexo = 'source'
   )
-  files = list.files(dir, md_pattern, recursive = TRUE, full.names = TRUE)
+  files = list_files(dir, md_pattern)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
     yaml = fetch_yaml(f)
@@ -779,7 +785,7 @@ get_author = function() {
 
 get_subdirs = function() {
   owd = setwd(content_file()); on.exit(setwd(owd), add = TRUE)
-  files = list.files(full.names = TRUE, recursive = TRUE, include.dirs = TRUE)
+  files = list_files(include.dirs = TRUE)
   files = sub('^[.]/', '', files)
   i = file_test('-d', files)
   dirs = files[i]
