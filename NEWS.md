@@ -8,6 +8,8 @@
 
 - `blogdown::build_site()` no longer recompiles R Markdown files by default, because it may be expensive and often undesirable to compile Rmd files that have been compiled before. If you do want to recompile Rmd files, you may use `blogdown::build_site(build_rmd = TRUE)`. See the help page `?blogdown::build_site` for more information.
 
+- Added a helper function `blogdown::bundle_site()` to move post files into leaf bundles in a website, e.g., from `content/foo/bar/hello-world.Rmd` to `content/foo/bar/hello-world/index.Rmd`.
+
 - Exported the (previously internal) function `blogdown::md5sum_filter` function (#341). See its potential application on the help page `?blogdown::build_site`.
 
 - Similarly, the function `blogdown::timestamp_filter()` has been exported and documented.
@@ -24,7 +26,7 @@
 
 - When creating a new site with `blogdown::new_site()`, the theme `gcushen/hugo-academic` is automatically redirected to `wowchemy/starter-academic`, because the original Github repo has moved and become a repo of Hugo modules.
 
-- The default value of the global option `blogdown.new_bundle` was changed from `FALSE` to `TRUE` if the site is built through Hugo >= v0.32. This means new posts will be created as leaf bundles, i.e., of the form `path/post-filename/index.md` instead of `path/post-filename.md` (the extension `.md` may also be `.Rmd` or `.Rmarkdown`). If you are not familiar with Hugo's page bundles, please see the documentation at: https://gohugo.io/content-management/page-bundles/. Using page bundles makes it much easier to manage resources like images. Without page bundles, these resources have to be placed under the `static/` directory, and cannot live together with posts under the `content/` directory. If you do not like this change, you may still set `options(blogdown.new_bundle = FALSE)` in your `.Rprofile`.
+- The default value of the global option `blogdown.new_bundle` was changed from `FALSE` to `TRUE` if the site is built through Hugo >= v0.32. This means new posts will be created as leaf bundles, i.e., of the form `path/post-filename/index.md` instead of `path/post-filename.md` (the extension `.md` may also be `.Rmd` or `.Rmarkdown`). If you are not familiar with Hugo's page bundles, please see the documentation at: https://gohugo.io/content-management/page-bundles/. Using page bundles makes it much easier to manage resources like images. Without page bundles, these resources have to be placed under the `static/` directory, and cannot live together with posts under the `content/` directory. If you do not like this change, you may still set `options(blogdown.new_bundle = FALSE)` in your `.Rprofile`. If you do like page bundles and want to convert old posts into bundles, the function `blogdown::bundle_site()` may be helpful.
 
 - For page bundles, the `index_files/` and `index_cache/` folders are no longer moved to the `static/` directory (for other types of posts, these folders are still moved). Consequently, _you should not ignore `"_files$"` in the `ignoreFiles` field_ in your `config.toml` or `config.yaml` any more.
 

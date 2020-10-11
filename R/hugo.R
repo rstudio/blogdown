@@ -537,3 +537,62 @@ shortcode_open <- function(...) {
 shortcode_close <- function (...) {
   shortcode_tag(..., .index = 3)
 }
+
+#' Convert post files to leaf bundles
+#'
+#' For a post with the path \file{content/path/to/my-post.md}, it will be moved
+#' to \file{content/path/to/my-post/index.md}, so it becomes the index file of a
+#' leaf bundle of Hugo. This also applies to files with extensions \file{.Rmd}
+#' and \file{.Rmarkdown}.
+#' @param dir The root directory of the website project (should contain a
+#'   \file{content/} folder).
+#' @param output The output directory. If not provided, a suffix \file{-bundle}
+#'   is added to the website root directory name. For example, the default
+#'   output directory for the site under \file{~/Documents/test} is
+#'   \file{~/Documents/test-bundle}. You can specify the output directory to be
+#'   identical to the website root directory, so files will be moved within the
+#'   same directory, but please remember that you will not be able to undo
+#'   \code{bundle_site()}. You should modify the website in place \emph{only if
+#'   you have a backup for this directory or it is under version control}.
+#' @note This function only moves (R) Markdown source files. If these files use
+#'   resource files under the \file{static/} folder, these resources will not be
+#'   moved into the \file{content/} folder. You need to manually move them, and
+#'   adjust their paths in the (R) Markdown source files accordingly.
+#' @references Learn more about Hugo's leaf bundles at
+#'   \url{https://gohugo.io/content-management/page-bundles/}.
+#' @export
+#' @examples
+#' \dontrun{
+#' blogdown::bundle_site('.', '../new-site/')
+#' blogdown::bundle_site('.', '.')  # move files within the current working directory
+#' }
+bundle_site = function(dir = site_root(), output) {
+  if (!dir_exists(file.path(dir, 'content'))) stop(
+    "There must exist a 'content' directory under the website root directory."
+  )
+  dir = normalizePath(dir)
+  if (missing(output)) output = file.path(
+    dirname(dir), paste0(basename(dir), '-bundle')
+  )
+  if (!xfun::same_path(dir, output)) {
+    dir_create(output)
+    file.copy(
+      list_files(dir, recursive = FALSE, all.files = TRUE), output,
+      recursive = TRUE, overwrite = FALSE
+    )
+  }
+  files = list_files(file.path(output, 'content'), md_pattern)
+  bases = xfun::sans_ext(files)
+  i = !basename(bases) %in% c('index', '_index')
+  files = files[i]; bases = bases[i]
+  for (b in unique(bases)) dir_create(b)
+  files2 = file.path(bases, paste('index', xfun::file_ext(files), sep = '.'))
+  i = file.copy(files, files2)
+  if (any(i)) {
+    message(
+      'Moved these files into leaf bundles:\n\n',
+      paste('*', files[i], '->', files2[i], collapse = '\n')
+    )
+    unlink(files[i])
+  }
+}

@@ -2,6 +2,7 @@
 
 export(build_dir)
 export(build_site)
+export(bundle_site)
 export(count_yaml)
 export(dep_path)
 export(find_categories)
