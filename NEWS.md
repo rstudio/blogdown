@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 0.22
+
+
 # CHANGES IN blogdown VERSION 0.21
 
 ## NEW FEATURES
