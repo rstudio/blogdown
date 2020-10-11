@@ -191,7 +191,6 @@ load_config = function() {
   parser = switch(f, 'config.toml' = read_toml, 'config.yaml' = yaml_load_file)
   config = parser(f)
   attr(config, 'config_time') = m
-  attr(config, 'config_content') = read_utf8(f)
   opts$set(config = config)
   check_config(config, f)
 }
@@ -351,6 +350,10 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
     v2 = as.integer(v)
     if (isTRUE(v2 == v)) v2 else v
   })
+  # lists (cannot parse their content)
+  r = '^\\[{1,2}([^]]+)\\]{1,2}$'
+  y = grep(r, x, value = TRUE)
+  z[unlist(lapply(strsplit(gsub(r, '\\1', y), '[.]'), `[[`, 1))] = list(list())
   z
 }
 
@@ -461,9 +464,7 @@ use_bundle = function() {
 auto_slug = function() {
   if (!use_bundle()) return(TRUE)
   cfg = load_config()
-  if (length(cfg[['permalinks']]) > 0) return(TRUE)
-  con = attr(cfg, 'config_content')
-  length(grep('permalinks', con)) > 0
+  !is.null(cfg[['permalinks']])
 }
 
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)
