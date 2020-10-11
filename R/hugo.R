@@ -323,7 +323,8 @@ default_kind = function(path) {
   gsub('/.*', '', path)
 }
 
-# Hugo cannot convert a single file: https://github.com/gohugoio/hugo/issues/3632
+# a hack to convert the metadata of a .md post to YAML/TOML/JSON, since Hugo
+# cannot convert a single file: https://github.com/gohugoio/hugo/issues/3632
 hugo_convert_one = function(file, to = c('YAML', 'TOML', 'JSON')) {
   if (length(x <- trim_ws(readLines(file, 1))) == 0 || all(x == '')) {
     warning('The file ', file, ' seems to be empty')
