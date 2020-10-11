@@ -122,7 +122,7 @@ new_site = function(
   files = setdiff(files, c('LICENSE', 'README', 'README.md'))
   force = length(files) == 0
   if (!force) warning("The directory '", dir, "' is not empty")
-  if (install_hugo) tryCatch(find_hugo(), error = function(e) install_hugo())
+  if (install_hugo && !hugo_available()) install_hugo()
   if (hugo_cmd(
     c('new', 'site', shQuote(path.expand(dir)), if (force) '--force', '-f', format),
     stdout = FALSE
