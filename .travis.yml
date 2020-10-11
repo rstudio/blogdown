@@ -1,8 +1,5 @@
 language: r
 dist: xenial
-addons:
-  snaps:
-    - hugo
 cache:
   packages: yes
 
@@ -16,7 +13,7 @@ repos:
 before_script:
   - "curl -L https://xran.yihui.org/.gitconfig -o ~/.gitconfig"
   - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
-  - hugo version
+  - Rscript -e "blogdown::install_hugo(); blogdown::hugo_version()"
 
 jobs:
   include:
