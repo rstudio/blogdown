@@ -288,17 +288,17 @@ site_root = function(config = config_files()) {
 #'
 #' For \code{write_toml()}, it converts an R object to YAML via the R package
 #' \pkg{yaml}, and uses Hugo to convert the YAML data to TOML.
-#' @param file Path to a TOML file.
+#' @param file Path to an input (TOML or YAML) file.
 #' @param x For \code{read_toml()}, the TOML data as a character vector (it is
 #'   read from \code{file} by default; if provided, \code{file} will be
 #'   ignored). For \code{write_toml()}, an R object to be converted to TOML.
 #' @param strict Whether to try \pkg{RcppTOML} and Hugo only (i.e., not to use
 #'   the naive parser). If \code{FALSE}, only the naive parser is used (this is
 #'   not recommended, unless you are sure your TOML data is really simple).
-#' @return For \code{read_toml()}, an R object. For \code{write_toml()}, a
-#'   character vector (marked by \code{xfun::\link{raw_string}()}) of the TOML
-#'   data if \code{output = NULL}, otherwise the TOML data is written to the
-#'   output file.
+#' @return For \code{read_toml()}, an R object. For \code{write_toml()},
+#'   \code{toml2yaml()}, and \code{yaml2toml()}, a character vector (marked by
+#'   \code{xfun::\link{raw_string}()}) of the TOML/YAML data if \code{output =
+#'   NULL}, otherwise the TOML/YAML data is written to the output file.
 #' @export
 #' @examples
 #' v = blogdown::read_toml(x = c('a = 1', 'b = true', 'c = "Hello"', 'd = [1, 2]'))
@@ -364,6 +364,22 @@ write_toml = function(x, output = NULL) {
   while((n <- length(x)) > 0 && x[n] == '') x = x[-n]  # remove empty lines at the end
   if (is.null(output)) xfun::raw_string(x) else write_utf8(x, output)
 }
+
+#' @export
+#' @rdname read_toml
+toml2yaml = function(file, output = NULL) {
+  x = read_toml(file, strict = TRUE)
+  x = as.yaml(x)
+  if (is.null(output)) x else write_utf8(x, output)
+}
+
+#' @export
+#' @rdname read_toml
+yaml2toml = function(file, output = NULL) {
+  x = yaml_load_file(file)
+  write_toml(x, output)
+}
+
 
 # option names may be case insensitive
 get_config = function(field, default, config = load_config()) {

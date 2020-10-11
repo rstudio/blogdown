@@ -3,14 +3,20 @@
 \name{read_toml}
 \alias{read_toml}
 \alias{write_toml}
+\alias{toml2yaml}
+\alias{yaml2toml}
 \title{Read and write TOML data (Tom's Obvious Markup Language)}
 \usage{
 read_toml(file, x = read_utf8(file), strict = TRUE)
 
 write_toml(x, output = NULL)
+
+toml2yaml(file, output = NULL)
+
+yaml2toml(file, output = NULL)
 }
 \arguments{
-\item{file}{Path to a TOML file.}
+\item{file}{Path to an input (TOML or YAML) file.}
 
 \item{x}{For \code{read_toml()}, the TOML data as a character vector (it is
 read from \code{file} by default; if provided, \code{file} will be
@@ -24,10 +30,10 @@ not recommended, unless you are sure your TOML data is really simple).}
 returned, otherwise the data is written to the specified file.}
 }
 \value{
-For \code{read_toml()}, an R object. For \code{write_toml()}, a
-  character vector (marked by \code{xfun::\link{raw_string}()}) of the TOML
-  data if \code{output = NULL}, otherwise the TOML data is written to the
-  output file.
+For \code{read_toml()}, an R object. For \code{write_toml()},
+  \code{toml2yaml()}, and \code{yaml2toml()}, a character vector (marked by
+  \code{xfun::\link{raw_string}()}) of the TOML/YAML data if \code{output =
+  NULL}, otherwise the TOML/YAML data is written to the output file.
 }
 \description{
 The function \code{read_toml()} reads TOML data from a file or a character

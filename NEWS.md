@@ -16,7 +16,7 @@
 
 - Added a new function `hugo_available()` to check if Hugo with a minimal version is available.
 
-- Added functions `read_toml()` and `write_toml()` to read/write TOML data. See their help pages for details.
+- Added functions `read_toml()` and `write_toml()` to read/write TOML data, and functions `toml2yaml()` and `yaml2toml()` to convert data between TOML and YAML. See their help pages for details.
 
 - Added the `keep_md` argument to `blogdown::html_page()` (thanks, @lazappi, #445).
 
