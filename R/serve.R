@@ -120,7 +120,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       build_site(TRUE, run_hugo = FALSE, build_rmd = files)
     }
 
-    server = servr::server_config(...)
+    server = servr::server_config(..., baseurl = baseurl)
 
     # launch the hugo/jekyll/hexo server
     cmd = if (g == 'hugo') find_hugo() else g

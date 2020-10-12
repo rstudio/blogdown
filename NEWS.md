@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 0.22
 
+## BUG FIXES
+
+- `serve_site()` fails to start the server when the config file contains a `baseURL` value that includes a subpath in it (thanks, @giabaio, #254).
+
 ## MINOR CHANGES
 
 - For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.
