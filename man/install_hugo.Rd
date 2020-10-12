@@ -7,7 +7,7 @@
 \usage{
 install_hugo(
   version = "latest",
-  use_brew = Sys.which("brew") != "",
+  use_brew = FALSE,
   force = FALSE,
   extended = TRUE
 )
@@ -22,16 +22,16 @@ tarball of the Hugo installer that has already been downloaded from Github,
 in which case it will not be downloaded again.}
 
 \item{use_brew}{Whether to use Homebrew (\url{https://brew.sh}) on macOS to
-install Hugo (recommended if you have already installed Homebrew). Note
-Homebrew will be automatically installed if it has not been installed when
-\code{use_brew = TRUE}.}
+install Hugo. This argument has been deprecated. You are not recommended to
+install Hugo via Homebrew, because you may accidentally update it to the
+latest version, which might break your existing sites.}
 
 \item{force}{Whether to install Hugo even if it has already been installed.
 This may be useful when upgrading Hugo (if you use Homebrew, run the
 command \command{brew update && brew upgrade} instead).}
 
-\item{extended}{Whether to use extended version of Hugo that has SCSS/SASS support.
-You only need the extended version if you want to edit SCSS/SASS.}
+\item{extended}{Whether to use extended version of Hugo that has SCSS/SASS
+support. You only need the extended version if you want to edit SCSS/SASS.}
 }
 \description{
 Download the appropriate Hugo executable for your platform from Github and

@@ -31,18 +31,23 @@
 #'   tarball of the Hugo installer that has already been downloaded from Github,
 #'   in which case it will not be downloaded again.
 #' @param use_brew Whether to use Homebrew (\url{https://brew.sh}) on macOS to
-#'   install Hugo (recommended if you have already installed Homebrew). Note
-#'   Homebrew will be automatically installed if it has not been installed when
-#'   \code{use_brew = TRUE}.
+#'   install Hugo. This argument has been deprecated. You are not recommended to
+#'   install Hugo via Homebrew, because you may accidentally update it to the
+#'   latest version, which might break your existing sites.
 #' @param force Whether to install Hugo even if it has already been installed.
 #'   This may be useful when upgrading Hugo (if you use Homebrew, run the
 #'   command \command{brew update && brew upgrade} instead).
-#' @param extended Whether to use extended version of Hugo that has SCSS/SASS support.
-#'   You only need the extended version if you want to edit SCSS/SASS.
+#' @param extended Whether to use extended version of Hugo that has SCSS/SASS
+#'   support. You only need the extended version if you want to edit SCSS/SASS.
 #' @export
 install_hugo = function(
-  version = 'latest', use_brew = Sys.which('brew') != '', force = FALSE, extended = TRUE
+  version = 'latest', use_brew = FALSE, force = FALSE, extended = TRUE
 ) {
+
+  if (!missing(use_brew)) message(
+    "The argument 'use_brew' has been deprecated in install_hugo(). If you want to ",
+    "install Hugo via Homebrew, please use the command line instead: brew install hugo"
+  )
 
   if (Sys.which('hugo') != '' && !force) {
     message('It seems Hugo has been installed. Use force = TRUE to reinstall or upgrade.')
@@ -152,9 +157,7 @@ install_hugo_bin = function(exec) {
 
 #' @export
 #' @rdname install_hugo
-update_hugo = function() install_hugo(
-  force = TRUE, use_brew = Sys.which('brew') != '' && !any(dir_exists(bin_paths()))
-)
+update_hugo = function() install_hugo(force = TRUE)
 
 brew_hugo = function() {
   install = function() system('brew update && brew reinstall hugo')
