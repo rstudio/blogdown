@@ -23,7 +23,7 @@ hugo_build(local = FALSE)
 new_site(
   dir = ".",
   install_hugo = TRUE,
-  format = "toml",
+  format = "yaml",
   sample = TRUE,
   theme = "yihui/hugo-xmin",
   hostname = "github.com",
@@ -73,7 +73,7 @@ and/or \file{README}/\file{README.md}.}
 
 \item{format}{The format of the configuration file. Note that the frontmatter
 of the new (R) Markdown file created by \code{new_content()} always uses
-YAML instead of TOML.}
+YAML instead of TOML or JSON.}
 
 \item{sample}{Whether to add sample content. Hugo creates an empty site by
 default, but this function adds sample content by default.}

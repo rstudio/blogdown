@@ -8,6 +8,8 @@
 
 - For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.
 
+- The default value for the `format` argument of `new_site()` was changed from `toml` to `yaml`, which means it will generate `config.yaml` instead of `config.toml` by default.
+
 - `read_toml()` and `toml2yaml()` will try to preserve the original order of fields in the TOML data, instead of using the alphabetical order.
 
 - The default theme in `new_site()` was changed from `hugo-lithium` to `hugo-xmin`.

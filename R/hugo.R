@@ -88,7 +88,7 @@ change_config = function(name, value) {
 #' @param install_hugo Whether to install Hugo automatically if it is not found.
 #' @param format The format of the configuration file. Note that the frontmatter
 #'   of the new (R) Markdown file created by \code{new_content()} always uses
-#'   YAML instead of TOML.
+#'   YAML instead of TOML or JSON.
 #' @param sample Whether to add sample content. Hugo creates an empty site by
 #'   default, but this function adds sample content by default.
 #' @param theme A Hugo theme on Github (a character string of the form
@@ -114,7 +114,7 @@ change_config = function(name, value) {
 #' @examples
 #' if (interactive()) blogdown::new_site()
 new_site = function(
-  dir = '.', install_hugo = TRUE, format = 'toml', sample = TRUE,
+  dir = '.', install_hugo = TRUE, format = 'yaml', sample = TRUE,
   theme = 'yihui/hugo-xmin', hostname = 'github.com', theme_example = TRUE,
   empty_dirs = FALSE, to_yaml = TRUE, serve = interactive()
 ) {
