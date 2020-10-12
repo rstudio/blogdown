@@ -797,7 +797,23 @@ is_rstudio_server = local({
   }
 })
 
+# tweak some env vars for hugo server
 tweak_hugo_env = function() {
+  # set baseURL properly when it doesn't contain protocol or domain:
+  # https://github.com/gohugoio/hugo/issues/7823 (add example.org/ to it)
+  b = get_config('baseurl', '/', load_config())
+  if (b != '/' && !grepl('^https?://[^/]+', b)) {
+    b = sub('^/', '', b)
+    Sys.setenv(HUGO_BASEURL = print(paste0('https://example.org/', b)))
+    do.call(
+      on.exit, list(substitute(Sys.unsetenv('HUGO_BASEURL')), add = TRUE),
+      envir = parent.frame()
+    )
+  }
+
+  # RStudio Server uses a proxy like http://localhost:8787/p/56a946ed/ for
+  # http://localhost:4321, so we must use relativeURLs = TRUE:
+  # https://github.com/rstudio/blogdown/issues/124
   if (!is_rstudio_server()) return()
   Sys.setenv(HUGO_RELATIVEURLS = 'true')
   do.call(
