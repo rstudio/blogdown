@@ -69,6 +69,17 @@ preview_site = function(..., startup = FALSE) {
   if (startup) {
     opts$set(preview = TRUE)
     on.exit(opts$set(preview = NULL), add = TRUE)
+    if (is.null(init <- getOption('blogdown.initial_files.open'))) {
+      if (init <- is.null(rstudioapi::getSourceEditorContext())) {
+        message2(
+          'The RStudio editor seems to be empty right now. I will open some (R) ',
+          'Markdown files and the config file automatically so you can start ',
+          'working on them now. If you do not like this behavior, set the option ',
+          'options(blogdown.initial_files.open = FALSE) in your .Rprofile.'
+        )
+      }
+    }
+    if (init) for (f in initial_files()) open_file(f)
   } else {
     opts$set(knitting = TRUE)
   }
