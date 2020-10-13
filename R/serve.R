@@ -241,6 +241,7 @@ get_config2 = function(key, default) {
   res[[key]] %n% default
 }
 
+# TODO: move bg_progress(), proc_kill(), and child_pids() to xfun
 # start a background process, and return its process ID
 bg_process = function(command, args = character(), timeout = 30) {
   id = NULL
