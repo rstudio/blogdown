@@ -64,7 +64,7 @@ install_hugo = function(
     message('The latest Hugo version is ', version)
   } else if (use_brew) {
     if (is.null(local_file)) warning(
-      "when use_brew = TRUE, only the latest version of Hugo can be installed"
+      'when use_brew = TRUE, only the latest version of Hugo can be installed'
     ) else {
       warning(
         "A local installer was provided through version='", local_file, "', ",
@@ -188,9 +188,9 @@ bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) 
 # find an executable from PATH, APPDATA, system.file(), ~/bin, etc
 find_exec = function(cmd, dir, info = '') {
   for (d in bin_paths(dir)) {
-    exec = if (is_windows()) paste0(cmd, ".exe") else cmd
+    exec = if (is_windows()) paste0(cmd, '.exe') else cmd
     path = file.path(d, exec)
-    if (utils::file_test("-x", path)) break else path = ''
+    if (utils::file_test('-x', path)) break else path = ''
   }
   path2 = Sys.which(cmd)
   if (path == '' || xfun::same_path(path, path2)) {
