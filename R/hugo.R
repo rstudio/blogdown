@@ -161,8 +161,10 @@ new_site = function(
     file.copy(f1, f2)
     if (interactive() && getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
-  if (!file.exists('index.Rmd'))
+  if (!file.exists('index.Rmd')) {
     writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
+    Sys.chmod('index.Rmd', '444')
+  }
 
   if (to_yaml) {
     hugo_convert('YAML', unsafe = TRUE)
