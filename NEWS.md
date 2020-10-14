@@ -10,6 +10,8 @@
 
 - When opening a **blogdown** website project in RStudio and there are no files opened in the RStudio source editor, up to 10 (R) Markdown files in the project will be opened automatically by default, to give you a hint on the possible files to work on next. The number `10` can be customized by the global option `blogdown.initial_files.number`, e.g., `options(blogdown.initial_files.number = 20)`. If you do not prefer files to be opened automatically during startup, you may set `options(blogdown.initial_files.open = FALSE)` in your `.Rprofile`.
 
+- When a website is built or served for the first time in an R session, **blogdown** will check Netlify configurations if the file `netlify.toml` exists. Specifically, it will check if the local Hugo version matches the version specified in `netlify.toml` (in the environment variable `HUGO_VERSION`), and if the `publish` setting in `netlify.toml` matches the `publishDir` setting in Hugo's config file (if it is set). Hints will be printed if potential problems are found. If you think these messages are not helpful and can be ignored, you may suppress the check via the global option `options(blogdown.check.netlify = FALSE)`.
+
 ## MAJOR CHANGES
 
 - `install_hugo()` no longer installs Hugo via Homebrew by default on macOS, but just downloads binaries from Hugo's Github releases, which gives you a stable version of Hugo. The `use_brew` argument of `install_hugo()` has been deprecated. Installing Hugo via Homebrew often leads to accidental updates of Hugo, which may break your existing sites. If you must install Hugo via Homebrew and want to fix its version, you can run `brew pin hugo`, so it will not be updated by accident in the future (e.g., via `brew upgrade`).

@@ -239,6 +239,7 @@ check_config = function(config, f) {
       'See https://github.com/rstudio/blogdown/issues/447 for more information.'
     )
   }
+  check_netlify()
   config
 }
 
@@ -246,6 +247,30 @@ is_example_url = function(url) {
   is.character(url) && grepl(
     '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
   )
+}
+
+check_netlify = function() {
+  if (!file.exists('netlify.toml') || !getOption('blogdown.check.netlify', TRUE))
+    return()
+  x = read_toml('netlify.toml')
+  v = x$context$production$environment$HUGO_VERSION
+  if (is.null(v)) v = x$build$environment$HUGO_VERSION
+
+  if (is.null(v)) message2(
+    "You are recommended to specify the Hugo version in the file 'netlify.toml'. ",
+    "If you are not sure how to do it, see the help page ?blogdown::netlify_config."
+  ) else if ((v2 <- hugo_version()) != v) message2(
+    'Your local Hugo version is ', v2, ' but the Hugo version specified in the ',
+    "'netlify.toml' file is ", v, '. You are recommended to use the same version ',
+    'locally and on Netlify. You may either blogdown::install_hugo("', v, '") or ',
+    'set HUGO_VERSION to ', v2, ' in netlify.toml.'
+  )
+
+  if (!is.null(p1 <- x$build$publish) && !identical(p2 <- publish_dir(tmp = FALSE), p1))
+    message2(
+      "The 'publish' setting in 'netlify.toml' is '", p1, "' but the publish dir in ",
+      "the Hugo config file is '", p2, "'. You may want to change the former to the latter."
+    )
 }
 
 # return a list of files to be opened initially in an RStudio project
@@ -458,7 +483,7 @@ netlify_config = function(output = 'netlify.toml', new_config = list()) {
   d = list(
     build = list(
       command = 'hugo',
-      publish = tryCatch(publish_dir(), error = function(e) 'public'),
+      publish = tryCatch(publish_dir(tmp = FALSE), error = function(e) 'public'),
       environment = list(HUGO_VERSION = as.character(hugo_version()))
     ),
     context = list(
@@ -490,8 +515,9 @@ get_config = function(field, default, config = load_config()) {
 }
 
 # read the publishDir option in config if the temporary publish dir is not set
-publish_dir = function(config = load_config()) {
-  publish_dir_tmp() %n% get_config('publishDir', 'public', config)
+publish_dir = function(config = load_config(), tmp = TRUE) {
+  p = if (tmp) publish_dir_tmp()
+  if (is.null(p)) get_config('publishDir', 'public', config) else p
 }
 
 # only a temporary workaround for the RStudio IDE issue: when a large number of
