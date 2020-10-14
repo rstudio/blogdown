@@ -2,6 +2,8 @@
 
 ## NEW FEATURES
 
+- Added a function `netlify_config()` to help users create the config file `netlify.toml` for Netlify. It sets the `build` commands properly for different deploy contexts, and writes the local Hugo version to the config file, so make sure Netlify uses the same version of Hugo as your local environment. See the help page `?blogdown::netlify_config` for details.
+
 - When opening a **blogdown** website project in RStudio and there are no files opened in the RStudio source editor, up to 10 (R) Markdown files in the project will be opened automatically by default, to give you a hint on the possible files to work on next. The number `10` can be customized by the global option `blogdown.initial_files.number`, e.g., `options(blogdown.initial_files.number = 20)`. If you do not prefer files to be opened automatically during startup, you may set `options(blogdown.initial_files.open = FALSE)` in your `.Rprofile`.
 
 ## MAJOR CHANGES

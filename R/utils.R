@@ -432,6 +432,63 @@ sort_by_names = function(x, names) {
   x[c(intersect(names, m), setdiff(m, names))]
 }
 
+#' Create the configuration (file) for Netlify
+#'
+#' This function provides some default configurations for a Huge website to be
+#' built via Hugo and deployed on Netlify. It sets the build command for the
+#' production and preview contexts, respectively (for preview contexts such as
+#' \samp{deploy-preview}, the command will build future posts). It also sets the
+#' publish directory according to your setting in Hugo's config file (if it
+#' exists, otherwise it will be the default \file{public} directory). The Hugo
+#' version is set to the current version of Hugo found on your computer.
+#' @param output Path to the output file, or \code{NULL}.
+#' @param new_config If any default configuration does not apply to your site,
+#'   you may provide a list of configurations to override the default. For
+#'   example, if you want to use Hugo v0.25.1, you may use \code{new_config =
+#'   list(build = list(environment = list(HUGO_VERSION = '0.25.1')))}.
+#' @return If \code{output = NULL}, a character vector of TOML data representing
+#'   the configurations (which you can preview and decide whether to write it to
+#'   a file), otherwise the TOML data is written to a file.
+#' @references See Netlify's documentation on the configuration file
+#'   \file{netlify.toml} for the possible settings:
+#'   \url{https://docs.netlify.com/configure-builds/file-based-configuration/}
+#' @export
+#' @examples
+#' blogdown::netlify_config(output = NULL)  # default data
+#'
+#' # change the publish dir to 'docs/'
+#' blogdown::netlify_config(NULL, list(build = list(publish = 'docs')))
+netlify_config = function(output = 'netlify.toml', new_config = list()) {
+  # default config
+  d = list(
+    build = list(
+      command = 'hugo',
+      publish = tryCatch(publish_dir(), error = function(e) 'public'),
+      environment = list(HUGO_VERSION = as.character(hugo_version()))
+    ),
+    context = list(
+      production = list(
+        environment = list(HUGO_ENV = "production")
+      ),
+      `deploy-preview` = list(
+        command = "hugo -F -b $DEPLOY_PRIME_URL"
+      )
+    )
+  )
+  d$context$`branch-deploy` = d$context$`deploy-preview`
+  d = modifyList(d, new_config)
+  f = tempfile(); on.exit(unlink(f), add = TRUE)
+  write_toml(d, f)
+  if (is.null(output)) xfun::file_string(f) else {
+    if (file.exists(output)) return(warning(
+      "Cannot write to the output file '", output, "' because it exists. You have ",
+      "to delete it (if you do not need it any more) before I can write to it."
+    ))
+    file.copy(f, output)
+    invisible(output)
+  }
+}
+
 # option names may be case insensitive
 get_config = function(field, default, config = load_config()) {
   config[[field]] %n% config[[match(tolower(field), tolower(names(config)))]] %n% default
