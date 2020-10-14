@@ -36,3 +36,9 @@ Widget: CheckboxInput
 Label: Convert all metadata to YAML
 Default: On
 Position: right
+
+Parameter: netlify
+Widget: CheckboxInput
+Label: Create netlify.toml
+Default: On
+Position: right
