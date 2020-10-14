@@ -208,9 +208,16 @@ find_exec = function(cmd, dir, info = '') {
 find_hugo = local({
   path = NULL  # cache the path to hugo
   function() {
-    if (is.null(path)) path <<- find_exec(
+    if (!is.null(path) && file.exists(exec_path(path))) return(path)
+    # if path not found, find it again
+    path <<- find_exec(
       'hugo', 'Hugo', 'You can install it via blogdown::install_hugo()'
     )
     path
   }
 })
+
+# resolve a command to the actual path of the executable
+exec_path = function(p) {
+  if (file.exists(p)) p else Sys.which(p)
+}
