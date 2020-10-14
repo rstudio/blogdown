@@ -10,13 +10,22 @@ hugo_cmd = function(...) {
 #' @export
 #' @describeIn hugo_cmd Return the version number of Hugo if possible, which is
 #'   extracted from the output of \code{hugo_cmd('version')}.
-hugo_version = function() {
-  x = hugo_cmd('version', stdout = TRUE)
-  r = '^.* v([0-9.]{2,}).*$'
-  if (grepl(r, x)) return(as.numeric_version(gsub(r, '\\1', x)))
-  warning('Cannot extract the version number from Hugo:')
-  cat(x, sep = '\n')
-}
+hugo_version = local({
+  time = NULL  # last modification time of the executable
+  ver  = NULL  # cache the version
+  function() {
+    time2 = file.mtime(exec_path(find_hugo()))
+    if (!is.null(ver) && identical(time2, time)) return(ver)
+    time <<- time2
+
+    x = hugo_cmd('version', stdout = TRUE)
+    r = '^.* v([0-9.]{2,}).*$'
+    if (!grepl(r, x)) stop(paste(
+      c('Cannot extract the version number from Hugo:\n', x), collapse = '\n'
+    ))
+    ver <<- as.numeric_version(gsub(r, '\\1', x))
+  }
+})
 
 #' @param version A version number.
 #' @export
