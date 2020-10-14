@@ -248,13 +248,8 @@ is_example_url = function(url) {
   )
 }
 
-# return a list of files to be opened initially in an RStudio project when no
-# files are open in the project
-initial_files = function(open = getOption(
-  'blogdown.initial_files.open', is.null(tryCatch(
-    rstudioapi::getSourceEditorContext(), error = function(e) FALSE
-  ))
-)) {
+# return a list of files to be opened initially in an RStudio project
+initial_files = function() {
   files = list.files(content_file(), md_pattern, full.names = TRUE, recursive = TRUE)
   # if .Rmd has .md output, exclude .md
   i = grep('^[Rr]', exts <- xfun::file_ext(files))
