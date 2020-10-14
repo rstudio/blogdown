@@ -24,15 +24,15 @@ global option \code{getOption('blogdown.method')} when it is set.}
 compiled.}
 
 \item{build_rmd}{Whether to (re)build R Markdown files. By default, they are
-not rebuilt. See \sQuote{Details} for how \code{build_rmd = TRUE} works.
+not built. See \sQuote{Details} for how \code{build_rmd = TRUE} works.
 Alternatively, it can take a vector of file paths, which means these files
 are to be (re)built. Or you can provide a function that takes a vector of
-paths of R Markdown files, and return a vector of paths of files to be
-built, e.g., \code{build_rmd = blogdown::timestamp_filter}. Two aliases are
-currently provided for such functions: \code{build_rmd = 'timestamp'} is
-equivalent to \code{build_rmd = blogdown::timestamp_filter}, and
-\code{build_rmd = 'md5sum'} is equivalent to \code{build_rmd =
-blogdown::md5sum_filter}.}
+paths of all R Markdown files under the \file{content/} directory, and
+returns a vector of paths of files to be built, e.g., \code{build_rmd =
+blogdown::timestamp_filter}. Two aliases are currently provided for such
+functions: \code{build_rmd = 'timestamp'} is equivalent to \code{build_rmd
+= blogdown::timestamp_filter}, and \code{build_rmd = 'md5sum'} is
+equivalent to \code{build_rmd = blogdown::md5sum_filter}.}
 }
 \description{
 Build the site through Hugo, and optionally (re)build R Markdown files.
