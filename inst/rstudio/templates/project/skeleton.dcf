@@ -3,7 +3,6 @@ Binding: blogdown_skeleton
 Subtitle: Create a new website using Hugo and blogdown
 Caption: Create a new website using Hugo and blogdown
 Icon: hugo-logo.png
-OpenFiles: config.toml
 
 Parameter: install_hugo
 Widget: CheckboxInput
