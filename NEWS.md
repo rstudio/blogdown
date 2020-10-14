@@ -6,6 +6,8 @@
 
 - Added an argument `netlify = TRUE` to `new_site()` to create `netlify.toml` by default.
 
+- The `build_rmd` argument of `build_site()` can take a function as its value now (thanks, [Tyler Smith](https://twitter.com/sedgeboy/status/1308511453129908225)). The function is expected to take a vector of paths of all R Markdown files under the `content/` directory, and returns a vector of paths of R Markdown files to be built. This argument can also take aliases `"timestamp"`, which is equivalent to `blogdown::timestamp_filter`, and `"md5sum"`, which is equivalent to `blogdown::md5sum_filter`. For example, `blogdown::build_site(build_rmd = "timestamp")` means to build all R Markdown files if they are older than their output files (by comparing modification times).
+
 - When opening a **blogdown** website project in RStudio and there are no files opened in the RStudio source editor, up to 10 (R) Markdown files in the project will be opened automatically by default, to give you a hint on the possible files to work on next. The number `10` can be customized by the global option `blogdown.initial_files.number`, e.g., `options(blogdown.initial_files.number = 20)`. If you do not prefer files to be opened automatically during startup, you may set `options(blogdown.initial_files.open = FALSE)` in your `.Rprofile`.
 
 ## MAJOR CHANGES

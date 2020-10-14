@@ -47,9 +47,15 @@
 #' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
 #'   compiled.
 #' @param build_rmd Whether to (re)build R Markdown files. By default, they are
-#'   not rebuilt. See \sQuote{Details} for how \code{build_rmd = TRUE} works.
+#'   not built. See \sQuote{Details} for how \code{build_rmd = TRUE} works.
 #'   Alternatively, it can take a vector of file paths, which means these files
-#'   are to be (re)built.
+#'   are to be (re)built. Or you can provide a function that takes a vector of
+#'   paths of all R Markdown files under the \file{content/} directory, and
+#'   returns a vector of paths of files to be built, e.g., \code{build_rmd =
+#'   blogdown::timestamp_filter}. Two aliases are currently provided for such
+#'   functions: \code{build_rmd = 'timestamp'} is equivalent to \code{build_rmd
+#'   = blogdown::timestamp_filter}, and \code{build_rmd = 'md5sum'} is
+#'   equivalent to \code{build_rmd = blogdown::md5sum_filter}.
 #' @export
 build_site = function(
   local = FALSE, method = c('html', 'custom'), run_hugo = TRUE, build_rmd = FALSE
@@ -58,11 +64,17 @@ build_site = function(
   method = match.arg(method)
   on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (method == 'custom') return()
-  files = build_rmd
-  if (!xfun::isFALSE(files)) {
-    if (isTRUE(files)) files = list_rmds('content', TRUE)
-    if (length(files)) {
-      files = getOption('blogdown.files_filter', identity)(files)
+  if (!xfun::isFALSE(build_rmd)) {
+    if (is.character(build_rmd) && length(build_rmd) == 1) {
+      build_rmd = switch(
+        build_rmd, timestamp = timestamp_filter, md5sum = md5sum_filter, build_rmd
+      )
+    }
+    files = if (is.character(build_rmd)) build_rmd else {
+      files = list_rmds('content', TRUE)
+      if (is.function(build_rmd)) build_rmd(files) else {
+        if (length(files)) getOption('blogdown.files_filter', identity)(files)
+      }
     }
     build_rmds(files)
   }
