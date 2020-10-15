@@ -205,36 +205,34 @@ hrule = function(char = '-', width = getOption('width')) {
   paste(rep('-', width), collapse = '')
 }
 
-message2 = function(...) {
+message2 = function(..., files = NULL) {
   message(hrule())
   message(...)
   message(hrule())
+  if (interactive()) for (f in files) open_file(f)
 }
 
 check_config = function(config, f) {
+  hint = function(...) message2(..., files = f)
   base = config[['baseurl']]
-  if (is_example_url(base)) {
-    open_file(f)
-    warning(
-      'You should change the "baseurl" option in ', f, ' from ', base,
-      ' to your actual domain; if you do not have a domain, set "baseurl" to "/"',
-      immediate. = TRUE, call. = FALSE
-    )
-  }
+  if (is_example_url(base)) hint(
+    'You should change the "baseurl" option in ', f, ' from ', base,
+    ' to your actual domain; if you do not have a domain, set "baseurl" to "/"'
+  )
   ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
-  if (is.null(s <- config[['ignoreFiles']])) message2(
+  if (is.null(s <- config[['ignoreFiles']])) hint(
     "You are recommended to set the 'ignoreFiles' field in ", f, ' to: ',
-    xfun::tojson(ignore)
-  ) else if (!all(ignore %in% s)) message2(
+    xfun::tojson(ignore), file = f
+  ) else if (!all(ignore %in% s)) hint(
     "You are recommended to ignore more items in the 'ignoreFiles' field in ", f, ": ",
     gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
   )
-  if ('_files$' %in% s) message2(
+  if ('_files$' %in% s) hint(
     "You are recommended to remove the item '_files$' in the 'ignoreFiles' field in ", f, '.'
   )
   if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
     h = config$markup$defaultMarkdownHandler
-    if (is.null(h) || h == 'goldmark') message2(
+    if (is.null(h) || h == 'goldmark') hint(
       "'You are recommended to set the option 'unsafe' to true for goldmark in ", f, '. ',
       'See https://github.com/rstudio/blogdown/issues/447 for more information.'
     )
@@ -250,25 +248,26 @@ is_example_url = function(url) {
 }
 
 check_netlify = function() {
-  if (!file.exists('netlify.toml') || !getOption('blogdown.check.netlify', TRUE))
+  if (!file.exists(f <- 'netlify.toml') || !getOption('blogdown.check.netlify', TRUE))
     return()
-  x = read_toml('netlify.toml')
+  hint = function(...) message2(..., files = f)
+  x = read_toml(f)
   v = x$context$production$environment$HUGO_VERSION
   if (is.null(v)) v = x$build$environment$HUGO_VERSION
 
-  if (is.null(v)) message2(
-    "You are recommended to specify the Hugo version in the file 'netlify.toml'. ",
+  if (is.null(v)) hint(
+    "You are recommended to specify the Hugo version in the file '", f, "'. ",
     "If you are not sure how to do it, see the help page ?blogdown::netlify_config."
-  ) else if ((v2 <- hugo_version()) != v) message2(
+  ) else if ((v2 <- hugo_version()) != v) hint(
     'Your local Hugo version is ', v2, ' but the Hugo version specified in the ',
-    "'netlify.toml' file is ", v, '. You are recommended to use the same version ',
+    "'", f, "' file is ", v, '. You are recommended to use the same version ',
     'locally and on Netlify. You may either blogdown::install_hugo("', v, '") or ',
-    'set HUGO_VERSION to ', v2, ' in netlify.toml.'
+    'set HUGO_VERSION to ', v2, ' in ', f, '.'
   )
 
   if (!is.null(p1 <- x$build$publish) && !identical(p2 <- publish_dir(tmp = FALSE), p1))
-    message2(
-      "The 'publish' setting in 'netlify.toml' is '", p1, "' but the publish dir in ",
+    hint(
+      "The 'publish' setting in '", f, "' is '", p1, "' but the publish dir in ",
       "the Hugo config file is '", p2, "'. You may want to change the former to the latter."
     )
 }
@@ -461,7 +460,9 @@ sort_by_names = function(x, names) {
 #' publish directory according to your setting in Hugo's config file (if it
 #' exists, otherwise it will be the default \file{public} directory). The Hugo
 #' version is set to the current version of Hugo found on your computer.
-#' @param output Path to the output file, or \code{NULL}.
+#' @param output Path to the output file, or \code{NULL}. If the file exists and
+#'   the R session is interactive, you will be prompted to decide whether to
+#'   overwrite the file.
 #' @param new_config If any default configuration does not apply to your site,
 #'   you may provide a list of configurations to override the default. For
 #'   example, if you want to use Hugo v0.25.1, you may use \code{new_config =
@@ -501,9 +502,8 @@ netlify_config = function(output = 'netlify.toml', new_config = list()) {
   write_toml(d, f)
   if (is.null(output)) xfun::file_string(f) else {
     if (file.exists(output)) {
-      if (interactive()) open_file(output)
       message("The current existing '", output, "' is:")
-      message2(xfun::file_string(output))
+      message2(xfun::file_string(output), files = output)
       message("The new '", output, "' will be:")
       message2(xfun::file_string(f))
       if (!interactive() || tolower(readline(sprintf("Overwrite the existing '%s'? (y/n) ", output))) != 'y')
