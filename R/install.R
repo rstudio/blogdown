@@ -154,7 +154,14 @@ install_hugo_bin = function(exec, version) {
     'Unable to install Hugo to any of these dirs: ',
     paste(dirs, collapse = ', ')
   )
-  message('Hugo has been installed to ', normalizePath(destdir))
+  message(
+    'Hugo has been installed to "', normalizePath(destdir), '". ',
+    if (is.null(getOption('blogdown.hugo.version'))) c(
+      'You are recommended to set options(blogdown.hugo.version = "', version,
+      '") in the .Rprofile file in your website project. See the blogdown book ',
+      'for more info on .Rprofile: https://bookdown.org/yihui/blogdown/global-options.html'
+    )
+  )
 }
 
 #' @export
