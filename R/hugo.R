@@ -182,10 +182,10 @@ new_site = function(
     }
   }
   if (netlify) {
-    if (!file.exists('netlify.toml')) netlify_config('netlify.toml') else {
+    if (!file.exists('netlify.toml')) config_netlify('netlify.toml') else {
       warning(
         "The file 'netlify.toml' exists, and I will not overwrite it. If you want ",
-        "to overwrite it, you may call blogdown::netlify_config() by yourself."
+        "to overwrite it, you may call blogdown::config_netlify() by yourself."
       )
     }
   }

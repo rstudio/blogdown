@@ -2,7 +2,7 @@
 
 ## NEW FEATURES
 
-- Added a function `netlify_config()` to help users create the config file `netlify.toml` for Netlify. It sets the `build` commands properly for different deploy contexts, and writes the local Hugo version to the config file, so make sure Netlify uses the same version of Hugo as your local environment. See the help page `?blogdown::netlify_config` for details.
+- Added a function `config_netlify()` to help users create the config file `netlify.toml` for Netlify. It sets the `build` commands properly for different deploy contexts, and writes the local Hugo version to the config file, so make sure Netlify uses the same version of Hugo as your local environment. See the help page `?blogdown::config_netlify` for details.
 
 - Added an argument `netlify = TRUE` to `new_site()` to create `netlify.toml` by default.
 

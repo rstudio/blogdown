@@ -257,7 +257,7 @@ check_netlify = function() {
 
   if (is.null(v)) hint(
     "You are recommended to specify the Hugo version in the file '", f, "'. ",
-    "If you are not sure how to do it, see the help page ?blogdown::netlify_config."
+    "If you are not sure how to do it, see the help page ?blogdown::config_netlify."
   ) else if ((v2 <- hugo_version()) != v) hint(
     'Your local Hugo version is ', v2, ' but the Hugo version specified in the ',
     "'", f, "' file is ", v, '. You are recommended to use the same version ',
@@ -475,11 +475,11 @@ sort_by_names = function(x, names) {
 #'   \url{https://docs.netlify.com/configure-builds/file-based-configuration/}
 #' @export
 #' @examples
-#' blogdown::netlify_config(output = NULL)  # default data
+#' blogdown::config_netlify(output = NULL)  # default data
 #'
 #' # change the publish dir to 'docs/'
-#' blogdown::netlify_config(NULL, list(build = list(publish = 'docs')))
-netlify_config = function(output = 'netlify.toml', new_config = list()) {
+#' blogdown::config_netlify(NULL, list(build = list(publish = 'docs')))
+config_netlify = function(output = 'netlify.toml', new_config = list()) {
   # default config
   d = list(
     build = list(
