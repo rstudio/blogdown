@@ -227,15 +227,28 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
   normalizePath(path)
 }
 
+#' Find the Hugo executable
+#'
+#' Search for Hugo in a series of possible installation directories (see
+#' \code{\link{install_hugo}()} for these directories).
+#' @param version The expected version number, e.g., \code{'0.25.1'}. If
+#'   \code{NULL}, it will try to find the maximum possible version.
+#' @export
+#' @return The path to the Hugo executable if found, otherwise it will signal an
+#'   error, with a hint on how to install (the required version of) Hugo.
 find_hugo = local({
-  path = NULL  # cache the path to hugo
+  paths = list()  # cache the paths to hugo (there might be multiple versions)
   function(version = getOption('blogdown.hugo.version')) {
-    if (!is.null(path) && file.exists(exec_path(path))) return(path)
+    i = if (is.null(version)) 'default' else as.character(version)
+    p = paths[[i]]
+    if (!is.null(p) && file.exists(exec_path(p))) return(p)
     # if path not found, find it again
-    path <<- find_exec(
-      'hugo', 'Hugo', version, 'You can install it via blogdown::install_hugo()'
+    p = find_exec(
+      'hugo', 'Hugo', version,
+      c('You may try blogdown::install_hugo(', sprintf('"%s"', version), ').')
     )
-    path
+    paths[[i]] <<- p
+    p
   }
 })
 

@@ -14,6 +14,8 @@
 
 - When a website is built or served for the first time in an R session, **blogdown** will check Netlify configurations if the file `netlify.toml` exists. Specifically, it will check if the local Hugo version matches the version specified in `netlify.toml` (in the environment variable `HUGO_VERSION`), and if the `publish` setting in `netlify.toml` matches the `publishDir` setting in Hugo's config file (if it is set). Hints will be printed if potential problems are found. If you think these messages are not helpful and can be ignored, you may suppress the check via the global option `options(blogdown.check.netlify = FALSE)`.
 
+- Documented and exported the internal function `find_hugo()` to find the Hugo executable. If multiple versions of Hugo are installed, `find_hugo()` can also find a specific version of Hugo, e.g., `blogdown::find_hugo('0.25.1')`.
+
 ## MAJOR CHANGES
 
 - `install_hugo()` no longer installs Hugo via Homebrew by default on macOS, but just downloads binaries from Hugo's Github releases, which gives you a stable version of Hugo. The `use_brew` argument of `install_hugo()` has been deprecated. Installing Hugo via Homebrew often leads to accidental updates of Hugo, which may break your existing sites. If you must install Hugo via Homebrew and want to fix its version, you can run `brew pin hugo`, so it will not be updated by accident in the future (e.g., via `brew upgrade`).
