@@ -210,7 +210,13 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
   }
   path2 = Sys.which(cmd)
   if (path == '' || xfun::same_path(path, path2)) {
-    if (path2 == '') stop(cmd, ' not found. ', info, call. = FALSE)
+    if (path2 == '') stop(
+      cmd, if (!is.null(version)) c(' ', version), ' not found. ', info, call. = FALSE
+    )
+    if (!is.null(version) && (v <- .hugo_version(path2)) != version) stop(
+      "Found '", cmd, "' at '", path2, "' but its version is ", v, " instead of ",
+      "the requested version ", version, ". ", info, call. = FALSE
+    )
     return(cmd)  # do not use the full path of the command
   } else {
     if (path2 != '') warning(
