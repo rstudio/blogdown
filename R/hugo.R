@@ -26,7 +26,7 @@ hugo_version = local({
   x = system2(cmd, 'version', stdout = TRUE)
   r = '^.* v([0-9.]{2,}).*$'
   if (!isTRUE(grepl(r, x))) stop(paste(
-    c('Cannot extract the version number from Hugo:\n', x), collapse = '\n'
+    c("Cannot extract the version number from '", cmd, "':\n", x), collapse = '\n'
   ))
   as.numeric_version(gsub(r, '\\1', x))
 }
