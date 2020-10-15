@@ -31,6 +31,7 @@ new_site(
   empty_dirs = FALSE,
   to_yaml = TRUE,
   netlify = TRUE,
+  .Rprofile = TRUE,
   serve = interactive()
 )
 
@@ -99,6 +100,11 @@ directory if it exists in the theme. Not all themes provide example sites.}
 \item{to_yaml}{Whether to convert the metadata of all posts to YAML.}
 
 \item{netlify}{Whether to create a Netlify config file \file{netlify.toml}.}
+
+\item{.Rprofile}{Whether to create a \file{.Rprofile} file. If \code{TRUE}, a
+sample \file{.Rprofile} will be created. It contains some global options,
+such as \code{options(blogdown.hugo.version)}, which makes sure you will
+use a specific version of Hugo for this site in the future.}
 
 \item{serve}{Whether to start a local server to serve the site.}
 

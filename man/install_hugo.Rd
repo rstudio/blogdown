@@ -27,8 +27,7 @@ install Hugo via Homebrew, because you may accidentally update it to the
 latest version, which might break your existing sites.}
 
 \item{force}{Whether to install Hugo even if it has already been installed.
-This may be useful when upgrading Hugo (if you use Homebrew, run the
-command \command{brew update && brew upgrade} instead).}
+This may be useful when upgrading Hugo.}
 
 \item{extended}{Whether to use extended version of Hugo that has SCSS/SASS
 support. You only need the extended version if you want to edit SCSS/SASS.}
@@ -41,23 +40,26 @@ try to copy it to a system directory so \pkg{blogdown} can run the
 }
 \details{
 This function tries to install Hugo to \code{Sys.getenv('APPDATA')} on
-Windows, \file{~/Library/Application Support} on macOS, and \file{~/bin/} on
-other platforms (such as Linux). If these directories are not writable, the
-package directory \file{Hugo} of \pkg{blogdown} will be used. If it still
-fails, you have to install Hugo by yourself and make sure it can be found via
-the environment variable \code{PATH}.
+Windows, \file{~/Library/Application Support} on macOS, and
+\file{~/.local/share} on other platforms (such as Linux). The \command{hugo}
+executable is installed to a subdirectory with the Hugo version number being
+its name, e.g., \file{~/Library/Application Support/Hugo/0.76.5}. If these
+directories are not writable, the R package directory \file{Hugo} of
+\pkg{blogdown} will be used. If it still fails, you have to install Hugo by
+yourself and make sure it can be found via the environment variable
+\code{PATH}.
 
 This is just a helper function and may fail to choose the correct Hugo
 executable for your operating system, especially if you are not on Windows or
-Mac or a major Linux distribution. When in doubt, read the Hugo documentation
-and install it by yourself: \url{https://gohugo.io}.
+macOS or a major Linux distribution. When in doubt, read the Hugo
+documentation and install it by yourself: \url{https://gohugo.io}.
 
 If you want to install Hugo to a custom path, you can set the global option
 \code{blogdown.hugo.dir} to a directory to store the Hugo executable before
 you call \code{install_hugo()}, e.g., \code{options(blogdown.hugo.dir =
-'~/Downloads/hugo_0.20.1/')}. This may be useful for you to use a specific
-version of Hugo for a specific website. You can set this option per project.
-See \href{https://bookdown.org/yihui/blogdown/global-options.html}{Section
-1.4 Global options} for details, or store a copy of Hugo on a USB Flash drive
+'~/Downloads/Hugo')}. This may be useful for you to use a specific version of
+Hugo for a specific website. You can set this option per project. See
+\href{https://bookdown.org/yihui/blogdown/global-options.html}{Section 1.4
+Global options} for details, or store a copy of Hugo on a USB Flash drive
 along with your website.
 }
