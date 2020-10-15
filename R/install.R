@@ -185,11 +185,17 @@ bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) 
 }
 
 # find an executable from PATH, APPDATA, system.file(), ~/bin, etc
-find_exec = function(cmd, dir, info = '') {
+find_exec = function(cmd, dir, version = NULL, info = '') {
+  path = ''
   for (d in bin_paths(dir)) {
+    if (!dir_exists(d)) next
     exec = if (is_windows()) paste0(cmd, '.exe') else cmd
-    path = file.path(d, exec)
-    if (utils::file_test('-x', path)) break else path = ''
+    move_exec(file.path(d, exec))
+    # if version = NULL, find the max version; if not found, don't use the version dir
+    if (is.null(v <- version)) v = max(as.numeric_version(list.files(d, '^[0-9.]+$')))
+    if (length(v) == 0) next
+    path = file.path(d, v, exec)
+    if (executable(path)) break else path = ''
   }
   path2 = Sys.which(cmd)
   if (path == '' || xfun::same_path(path, path2)) {
@@ -206,17 +212,30 @@ find_exec = function(cmd, dir, info = '') {
 
 find_hugo = local({
   path = NULL  # cache the path to hugo
-  function() {
+  function(version = getOption('blogdown.hugo.version')) {
     if (!is.null(path) && file.exists(exec_path(path))) return(path)
     # if path not found, find it again
     path <<- find_exec(
-      'hugo', 'Hugo', 'You can install it via blogdown::install_hugo()'
+      'hugo', 'Hugo', version, 'You can install it via blogdown::install_hugo()'
     )
     path
   }
 })
 
+executable = function(path) utils::file_test('-x', path)
+
 # resolve a command to the actual path of the executable
 exec_path = function(p) {
   if (file.exists(p)) p else Sys.which(p)
+}
+
+# move an executable to a subdirectory with the dir name being the version number
+move_exec = function(cmd) {
+  if (!executable(cmd)) return()
+  ver = tryCatch(.hugo_version(cmd), error = function(e) NULL)
+  if (is.null(ver)) return()
+  xfun::in_dir(dirname(cmd), {
+    ver = as.character(ver); cmd = basename(cmd)
+    dir_create(ver); file.rename(cmd, file.path(ver, cmd))
+  })
 }
