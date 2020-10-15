@@ -944,3 +944,7 @@ get_subdirs = function() {
 
   union(dirs, getOption('blogdown.subdir', 'post'))
 }
+
+xfun_session_info = function() {
+  tryCatch(paste('Hugo version:', hugo_version()), error = function(e) NULL)
+}
