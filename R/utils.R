@@ -532,7 +532,7 @@ config_Rprofile = function() {
     message("The file '", f1, "' exists, so I will not overwrite it with:")
     message2(xfun::file_string(f2), files = f1)
   }
-  file.copy(f2, f1, './', overwrite = FALSE)
+  file.copy(f2, f1, overwrite = FALSE)
   ver = sprintf('\noptions(blogdown.hugo.version = "%s")\n', hugo_version())
   if (!any(grepl('blogdown[.]hugo[.]version', read_utf8(f1)))) {
     message2(
