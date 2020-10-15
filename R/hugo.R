@@ -190,6 +190,15 @@ new_site = function(
     }
   }
   if (.Rprofile) config_Rprofile()
+  dir_create('R')
+  add_build_script = function(x, f) {
+    write_utf8(c(
+      sprintf('# An optional custom script to run %s Hugo builds your site.', x),
+      '# You can delete it if you do not need it.'
+    ), f)
+  }
+  add_build_script('before', 'R/build.R')
+  add_build_script('after', 'R/build2.R')
   if (serve) serve_site()
 }
 
