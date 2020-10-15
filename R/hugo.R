@@ -14,18 +14,22 @@ hugo_version = local({
   time = NULL  # last modification time of the executable
   ver  = NULL  # cache the version
   function() {
-    time2 = file.mtime(exec_path(find_hugo()))
+    time2 = file.mtime(exec_path(cmd <- find_hugo()))
     if (!is.null(ver) && identical(time2, time)) return(ver)
     time <<- time2
-
-    x = hugo_cmd('version', stdout = TRUE)
-    r = '^.* v([0-9.]{2,}).*$'
-    if (!grepl(r, x)) stop(paste(
-      c('Cannot extract the version number from Hugo:\n', x), collapse = '\n'
-    ))
-    ver <<- as.numeric_version(gsub(r, '\\1', x))
+    ver  <<- .hugo_version(cmd)
+    ver
   }
 })
+
+.hugo_version = function(cmd) {
+  x = system2(cmd, 'version', stdout = TRUE)
+  r = '^.* v([0-9.]{2,}).*$'
+  if (!isTRUE(grepl(r, x))) stop(paste(
+    c('Cannot extract the version number from Hugo:\n', x), collapse = '\n'
+  ))
+  as.numeric_version(gsub(r, '\\1', x))
+}
 
 #' @param version A version number.
 #' @export
