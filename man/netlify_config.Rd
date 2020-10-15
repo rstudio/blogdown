@@ -7,7 +7,9 @@
 netlify_config(output = "netlify.toml", new_config = list())
 }
 \arguments{
-\item{output}{Path to the output file, or \code{NULL}.}
+\item{output}{Path to the output file, or \code{NULL}. If the file exists and
+the R session is interactive, you will be prompted to decide whether to
+overwrite the file.}
 
 \item{new_config}{If any default configuration does not apply to your site,
 you may provide a list of configurations to override the default. For
