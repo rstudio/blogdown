@@ -500,11 +500,19 @@ netlify_config = function(output = 'netlify.toml', new_config = list()) {
   f = tempfile(); on.exit(unlink(f), add = TRUE)
   write_toml(d, f)
   if (is.null(output)) xfun::file_string(f) else {
-    if (file.exists(output)) return(warning(
-      "Cannot write to the output file '", output, "' because it exists. You have ",
-      "to delete it (if you do not need it any more) before I can write to it."
-    ))
-    file.copy(f, output)
+    if (file.exists(output)) {
+      if (interactive()) open_file(output)
+      message("The current existing '", output, "' is:")
+      message2(xfun::file_string(output))
+      message("The new '", output, "' will be:")
+      message2(xfun::file_string(f))
+      if (!interactive() || tolower(readline(sprintf("Overwrite the existing '%s'? (y/n) ", output))) != 'y')
+        return(warning(
+          "Cannot write to the file '", output, "' because it exists. You have ",
+          "to delete it (if you do not need it any more) before I can write to it."
+        ))
+    }
+    file.copy(f, output, overwrite = TRUE)
     invisible(output)
   }
 }
