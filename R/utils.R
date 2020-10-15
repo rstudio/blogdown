@@ -978,3 +978,10 @@ get_subdirs = function() {
 xfun_session_info = function() {
   tryCatch(paste('Hugo version:', hugo_version()), error = function(e) NULL)
 }
+
+clean_hugo_cache = function() {
+  if (!file.exists(tmp <- Sys.getenv('TMPDIR'))) return()
+  # clean up the hugo cache dir during R CMD check
+  if (!is.na(knitr:::check_package_name()))
+    unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
+}

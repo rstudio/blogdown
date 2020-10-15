@@ -15,7 +15,7 @@ raw_list = function(x) {
 
 x1 = c('a = "foo"', '# a comment', 'b = false', 'c3 = 10', 'd_e = "0.10"')
 x2 = list(a = 'foo', b = FALSE, c3 = 10L, d_e = '0.10')
-if (Sys.getenv('NOT_CRAN') == 'true') assert('read_toml() works', {
+assert('read_toml() works', {
   (raw_list(read_toml(x = x1)) %==% x2)
   (read_toml(x = x1, strict = FALSE) %==% x2)
 })
