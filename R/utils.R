@@ -622,8 +622,12 @@ auto_slug = function() {
 trim_ws = function(x) gsub('^\\s+|\\s+$', '', x)
 
 run_script = function(script, ...) {
-  if (file_exists(script) && Rscript(c(shQuote(script), ...)) != 0)
+  if (!empty_script(script) && Rscript(c(shQuote(script), ...)) != 0)
     stop('Failed to run ', script)
+}
+
+empty_script = function(file) {
+  !file_exists(file) || length(grep('^\\s*#', read_utf8(file), invert = TRUE)) == 0
 }
 
 expand_grid = function(...) {
