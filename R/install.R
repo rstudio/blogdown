@@ -199,7 +199,11 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
     exec = if (is_windows()) paste0(cmd, '.exe') else cmd
     move_exec(file.path(d, exec))
     # if version = NULL, find the max version; if not found, don't use the version dir
-    if (is.null(v <- version)) v = max(as.numeric_version(list.files(d, '^[0-9.]+$')))
+    if (is.null(v <- version)) {
+      v = list.files(d, '^[0-9.]+$')
+      v = v[executable(file.path(d, v, exec))]
+      v = max(as.numeric_version(v))
+    }
     if (length(v) == 0) next
     path = file.path(d, v, exec)
     if (executable(path)) break else path = ''
