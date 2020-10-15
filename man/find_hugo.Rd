@@ -18,3 +18,11 @@ The path to the Hugo executable if found, otherwise it will signal an
 Search for Hugo in a series of possible installation directories (see
 \code{\link{install_hugo}()} for these directories).
 }
+\details{
+If your website depends on a specific version of Hugo, we strongly recommend
+that you set \code{options(blogdown.hugo.version = )} to the version number
+you desire in the file \code{.Rprofile} in the root directory of the website
+project, so that \pkg{blogdown} can try to find the right version of Hugo
+before it builds or serves the website. You can use the function
+\code{\link{config_Rprofile}()} to do this automatically.
+}

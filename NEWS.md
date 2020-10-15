@@ -4,6 +4,8 @@
 
 - Added a function `config_netlify()` to help users create the config file `netlify.toml` for Netlify. It sets the `build` commands properly for different deploy contexts, and writes the local Hugo version to the config file, so make sure Netlify uses the same version of Hugo as your local environment. See the help page `?blogdown::config_netlify` for details.
 
+- Added a function `config_Rprofile()` to help create or modify the `.Rprofile` file. In particular, it will try to set the option `blogdown.hugo.version` in it, if the option has not been set. See the help page `?blogdown::config_Rprofile` for details.
+
 - Added an argument `netlify = TRUE` to `new_site()` to create `netlify.toml` by default.
 
 - Added an argument `.Rprofile = TRUE` to `new_site()` to create the `.Rprofile` file by default. This file contains a few sample global options that could affect **blogdown**'s behavior, e.g., the option `blogdown.hugo.version` is set to the current Hugo version, so that a site will not be affected by future Hugo updates and will always use the fixed version of Hugo. This file is provided so that users are better aware of some of these options, and can change them if they want.

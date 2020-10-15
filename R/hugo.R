@@ -189,14 +189,7 @@ new_site = function(
       )
     }
   }
-  if (.Rprofile) {
-    f = '.Rprofile'
-    file.copy(pkg_file('resources', f), './', overwrite = FALSE)
-    ver = sprintf('\noptions(blogdown.hugo.version = "%s")\n', hugo_version())
-    if (!any(grepl('blogdown[.]hugo[.]version', read_utf8(f)))) cat(
-      ver, file = f, append = TRUE
-    )
-  }
+  if (.Rprofile) config_Rprofile()
   if (serve) serve_site()
 }
 

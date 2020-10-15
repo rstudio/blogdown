@@ -3,6 +3,7 @@
 export(build_dir)
 export(build_site)
 export(bundle_site)
+export(config_Rprofile)
 export(config_netlify)
 export(count_yaml)
 export(dep_path)

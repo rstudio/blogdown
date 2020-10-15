@@ -231,6 +231,13 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
 #'
 #' Search for Hugo in a series of possible installation directories (see
 #' \code{\link{install_hugo}()} for these directories).
+#'
+#' If your website depends on a specific version of Hugo, we strongly recommend
+#' that you set \code{options(blogdown.hugo.version = )} to the version number
+#' you desire in the file \code{.Rprofile} in the root directory of the website
+#' project, so that \pkg{blogdown} can try to find the right version of Hugo
+#' before it builds or serves the website. You can use the function
+#' \code{\link{config_Rprofile}()} to do this automatically.
 #' @param version The expected version number, e.g., \code{'0.25.1'}. If
 #'   \code{NULL}, it will try to find the maximum possible version.
 #' @export
