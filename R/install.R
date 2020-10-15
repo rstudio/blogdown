@@ -7,8 +7,10 @@
 #'
 #' This function tries to install Hugo to \code{Sys.getenv('APPDATA')} on
 #' Windows, \file{~/Library/Application Support} on macOS, and
-#' \file{~/.local/share} on other platforms (such as Linux). If these
-#' directories are not writable, the package directory \file{Hugo} of
+#' \file{~/.local/share} on other platforms (such as Linux). The \command{hugo}
+#' executable is installed to a subdirectory with the Hugo version number being
+#' its name, e.g., \file{~/Library/Application Support/Hugo/0.76.5}. If these
+#' directories are not writable, the R package directory \file{Hugo} of
 #' \pkg{blogdown} will be used. If it still fails, you have to install Hugo by
 #' yourself and make sure it can be found via the environment variable
 #' \code{PATH}.
@@ -137,14 +139,14 @@ install_hugo = function(
     Sys.chmod(exec, '0755')  # chmod +x
   }
 
-  install_hugo_bin(exec)
+  install_hugo_bin(exec, version)
 }
 
-install_hugo_bin = function(exec) {
+install_hugo_bin = function(exec, version) {
   success = FALSE
-  dirs = bin_paths()
+  dirs = file.path(bin_paths(), version)
   for (destdir in dirs) {
-    dir.create(destdir, showWarnings = FALSE)
+    dir_create(destdir)
     success = file.copy(exec, destdir, overwrite = TRUE)
     if (success) break
   }
