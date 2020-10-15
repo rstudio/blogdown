@@ -181,7 +181,7 @@ bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) 
     '~/.local/share'
   }, dir)
   path = c(extra_path, path, pkg_file(dir, mustWork = FALSE))
-  path
+  path.expand(path[path != ''])
 }
 
 # find an executable from PATH, APPDATA, system.file(), ~/bin, etc
