@@ -527,15 +527,15 @@ config_netlify = function(output = 'netlify.toml', new_config = list()) {
 #' @export
 #' @return As a side-effect, the file \file{.Rprofile} is created or modified.
 config_Rprofile = function() {
-  f1 = '.Rprofile'; f2 = pkg_file('resources', f1)
+  f1 = '.Rprofile'; f2 = pkg_file('resources', f1); x2 = xfun::file_string(f2)
   if (file.exists(f1)) {
     message("The file '", f1, "' exists, so I will not overwrite it with:")
-    message2(xfun::file_string(f2), files = f1)
+    message2(x2, files = f1)
   }
   file.copy(f2, f1, overwrite = FALSE)
   ver = sprintf('\noptions(blogdown.hugo.version = "%s")\n', hugo_version())
-  if (!any(grepl('blogdown[.]hugo[.]version', read_utf8(f1)))) {
-    message2(
+  if (!any(grepl('blogdown[.]hugo[.]version', x1 <- xfun::file_string(f1)))) {
+    if (!identical(x1, x2)) message2(
       "I didn't find the option blogdown.hugo.version in '", f1,
       "', so I will append the option to it.", files = f1
     )
