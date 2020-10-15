@@ -41,3 +41,9 @@ Widget: CheckboxInput
 Label: Create netlify.toml
 Default: On
 Position: right
+
+Parameter: .Rprofile
+Widget: CheckboxInput
+Label: Create .Rprofile
+Default: On
+Position: right

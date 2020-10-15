@@ -280,7 +280,7 @@ initial_files = function() {
   i = grep('^[Rr]', exts <- xfun::file_ext(files))
   files = setdiff(files, xfun::with_ext(files[i], sub('^[Rr]', '', exts[i])))
   files = head(files, getOption('blogdown.initial_files.number', 10))
-  c(files, existing_files(c('netlify.toml', config_files())))
+  c(files, existing_files(c('netlify.toml', '.Rprofile', config_files())))
 }
 
 generator = function() getOption('blogdown.generator', 'hugo')
