@@ -20,7 +20,7 @@
 
 - By default, `install_hugo()` installs Hugo to `~/.local/share/Hugo` on Linux now, instead of `~/bin`.
 
-- `install_hugo()` installs the `hugo` executable to a directory with the directory name being the Hugo version number, e.g., `~/Library/Application Support/Hugo/0.76.5`, or `~/.local/share/Hugo/0.25.1. This makes it possible to install multiple versions of Hugo on the same computer.
+- `install_hugo()` installs the `hugo` executable to a directory with the directory name being the Hugo version number, e.g., `~/Library/Application Support/Hugo/0.76.5`, or `~/.local/share/Hugo/0.25.1`. This makes it possible to install multiple versions of Hugo on the same computer.
 
 ## BUG FIXES
 
