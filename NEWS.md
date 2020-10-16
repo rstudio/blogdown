@@ -42,6 +42,8 @@
 
 - The default theme in `new_site()` was changed from `hugo-lithium` to `hugo-xmin`.
 
+- For Jekyll sites, the arguments `--watch`, `--incremental`, and `--livereload` are passed to `jekyll serve` by default. These arguments can be set via the global R option `blogdown.jekyll.server`.
+
 # CHANGES IN blogdown VERSION 0.21
 
 ## NEW FEATURES

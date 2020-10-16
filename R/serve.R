@@ -202,11 +202,13 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 }
 
 jekyll_server_args = function(host, port) {
-  c('serve', '--port', port, '--host', host)
+  c('serve', '--port', port, '--host', host, getOption(
+    'blogdown.jekyll.server', c('--watch', '--incremental', '--livereload')
+  ))
 }
 
 hexo_server_args = function(host, port) {
-  c('server', '-p', port, '-i', host)
+  c('server', '-p', port, '-i', host, getOption('blogdown.hexo.server'))
 }
 
 # kill a process and all its child processes
