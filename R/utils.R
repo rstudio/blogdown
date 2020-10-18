@@ -937,7 +937,7 @@ tweak_hugo_env = function() {
   b = get_config('baseurl', '/', load_config())
   if (b != '/' && !grepl('^https?://[^/]+', b)) {
     b = sub('^/', '', b)
-    Sys.setenv(HUGO_BASEURL = print(paste0('https://example.org/', b)))
+    Sys.setenv(HUGO_BASEURL = paste0('https://example.org/', b))
     do.call(
       on.exit, list(substitute(Sys.unsetenv('HUGO_BASEURL')), add = TRUE),
       envir = parent.frame()
