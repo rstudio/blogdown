@@ -82,6 +82,12 @@ preview_site = function(..., startup = FALSE) {
     if (init) for (f in initial_files()) open_file(f)
   } else {
     opts$set(knitting = TRUE)
+    # refresh the viewer because hugo's livereload doesn't work on RStudio
+    # Server: https://github.com/rstudio/rstudio/issues/8096 (TODO: check if
+    # it's fixed in the future: https://github.com/gohugoio/hugo/pull/6698)
+    if (is_rstudio_server()) on.exit(
+      rstudioapi::executeCommand('viewerRefresh'), add = TRUE
+    )
   }
   invisible(serve_site(...))
 }
