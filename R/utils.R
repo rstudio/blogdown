@@ -1,11 +1,9 @@
 # figure out the base dir of the website, e.g. http://example.com/project/ ->
 # project/, so that serve_site() works as a local server when the website is to
 # be generated to a subdirectory of a domain (see the baseurl argument of
-# servr::httw())
+# servr::server_config())
 site_base_dir = function() {
   config = load_config()
-  # baseurl is not meaningful when using relative URLs
-  if (get_config('relativeurls', FALSE, config)) return('/')
   x = get_config('baseurl', '/', config)
   x = gsub('^https?://[^/]+', '', x)
   if (x == '') x = '/'

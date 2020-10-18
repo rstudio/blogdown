@@ -28,7 +28,7 @@
 
 ## BUG FIXES
 
-- `serve_site()` fails to start the server when the config file contains a `baseURL` value that includes a subpath in it (thanks, @giabaio, #254).
+- `serve_site()` fails to start the server when the config file contains a `baseURL` value that includes a subpath in it (thanks, @giabaio #254, @ShixiangWang #494).
 
 ## MINOR CHANGES
 
