@@ -64,8 +64,7 @@ run the command \command{hugo new path}).}
 \item{version}{A version number.}
 
 \item{local}{Whether to build the site for local preview (if \code{TRUE}, all
-drafts and future posts will also be built, and the site configuration
-\code{baseurl} will be set to \code{/} temporarily).}
+drafts and future posts will also be built).}
 
 \item{dir}{The directory of the new site. It should be empty or only contain
 hidden files, RStudio project (\file{*.Rproj}) files, \file{LICENSE},

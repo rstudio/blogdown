@@ -41,8 +41,7 @@ hugo_available = function(version = '0.0.0') {
 }
 
 #' @param local Whether to build the site for local preview (if \code{TRUE}, all
-#'   drafts and future posts will also be built, and the site configuration
-#'   \code{baseurl} will be set to \code{/} temporarily).
+#'   drafts and future posts will also be built).
 #' @export
 #' @describeIn hugo_cmd Build a plain Hugo website. Note that the function
 #'   \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
@@ -53,7 +52,7 @@ hugo_build = function(local = FALSE) {
   on.exit(bookdown:::clean_empty_dir('resources'), add = TRUE)
   if (local) tweak_hugo_env()
   hugo_cmd(c(
-    if (local) c('-b', site_base_dir(), '-D', '-F'),
+    if (local) c('-D', '-F'),
     getOption('blogdown.hugo.args'),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
   ))
