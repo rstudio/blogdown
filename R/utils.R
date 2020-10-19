@@ -161,6 +161,12 @@ timestamp_filter = function(files) {
   files[require_rebuild(output_file(files), files)]
 }
 
+# return the files that do not have corresponding output files, e.g., an .Rmd
+# that doesn't have .html output
+newfile_filter = function(files) {
+  files[!file_exists(output_file(files))]
+}
+
 is_windows = function() xfun::is_windows()
 is_osx = function() xfun::is_macos()
 is_linux = function() xfun::is_linux()

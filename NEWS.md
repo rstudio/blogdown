@@ -26,6 +26,8 @@
 
 - `install_hugo()` installs the `hugo` executable to a directory with the directory name being the Hugo version number, e.g., `~/Library/Application Support/Hugo/0.76.5`, or `~/.local/share/Hugo/0.25.1`. This makes it possible to install multiple versions of Hugo on the same computer.
 
+- When starting to serve the site, `serve_site()` will compile Rmd files that do not have output files initially (thanks, Hannah Wang, https://stackoverflow.com/q/64420476/559676).
+
 ## BUG FIXES
 
 - `serve_site()` fails to start the server when the config file contains a `baseURL` value that includes a subpath in it (thanks, @giabaio #254, @ShixiangWang #494).

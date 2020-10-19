@@ -192,7 +192,10 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       build_site(TRUE, run_hugo = FALSE, build_rmd = files)
     }
 
-    rmd_files = NULL
+    # build Rmd files that are new and don't have corresponding output files
+    rmd_files = newfile_filter(list_rmds(content_file()))
+    rebuild(rmd_files)
+
     watch = servr:::watch_dir('.', rmd_pattern, handler = function(files) {
       rmd_files <<- files
     })
