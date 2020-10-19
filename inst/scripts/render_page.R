@@ -15,10 +15,15 @@ local({
   if (to_md) {
     file.rename(out, out2 <- blogdown:::output_file(input, to_md))
     unlink(xfun::attr(out, 'intermediates'))
-    if (length(xfun::attr(out, 'knit_meta'))) warning(
-      "Objects that have dependencies (e.g. HTML widgets) do not work when the ",
-      "output format is Markdown instead of HTML."
-    )
+    # write HTML dependencies to the body of Markdown
+    if (length(meta <- xfun::attr(out, 'knit_meta'))) {
+      x = xfun::read_utf8(out2)
+      m = rmarkdown:::html_dependencies_as_string(meta, attr(out, 'files_dir'), '.')
+      if (length(i <- grep('^---\\s*$', x)) >= 2) {
+        x = append(x, m, i[2])
+        xfun::write_utf8(x, out2)
+      }
+    }
     # resolve bookdown references (figures, tables, sections, ...)
     bookdown:::process_markdown(out2, 'markdown', NULL, TRUE, to_md)
     # protect math expressions in backticks
