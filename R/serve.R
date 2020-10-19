@@ -118,25 +118,6 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
-    build_it = function(files) {
-      if (is.null(b <- getOption('blogdown.knit.on_save'))) {
-        b = !isTRUE(opts$get('knitting'))
-        if (!b) {
-          options(blogdown.knit.on_save = b)
-          message(
-            'It seems you have clicked the Knit button in RStudio. If you prefer ',
-            'knitting a document manually over letting blogdown automatically ',
-            'knit it on save, you may set options(blogdown.knit.on_save = FALSE) ',
-            'in your .Rprofile so blogdown will not knit documents automatically ',
-            'again (I have just set this option for you for this R session). If ',
-            'you prefer knitting on save, set this option to TRUE instead.'
-          )
-          files = b  # just ignore changed Rmd files, i.e., don't build them
-        }
-      }
-      build_site(TRUE, run_hugo = FALSE, build_rmd = files)
-    }
-
     server = servr::server_config(..., baseurl = baseurl)
 
     # launch the hugo/jekyll/hexo server
@@ -191,6 +172,26 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     # whether to watch for changes in Rmd files?
     if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
 
+    # rebuild specific or changed Rmd files
+    rebuild = function(files) {
+      if (is.null(b <- getOption('blogdown.knit.on_save'))) {
+        b = !isTRUE(opts$get('knitting'))
+        if (!b) {
+          options(blogdown.knit.on_save = b)
+          message(
+            'It seems you have clicked the Knit button in RStudio. If you prefer ',
+            'knitting a document manually over letting blogdown automatically ',
+            'knit it on save, you may set options(blogdown.knit.on_save = FALSE) ',
+            'in your .Rprofile so blogdown will not knit documents automatically ',
+            'again (I have just set this option for you for this R session). If ',
+            'you prefer knitting on save, set this option to TRUE instead.'
+          )
+          files = b  # just ignore changed Rmd files, i.e., don't build them
+        }
+      }
+      build_site(TRUE, run_hugo = FALSE, build_rmd = files)
+    }
+
     rmd_files = NULL
     watch = servr:::watch_dir('.', rmd_pattern, handler = function(files) {
       rmd_files <<- files
@@ -198,7 +199,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
-      if (watch()) try(build_it(rmd_files))
+      if (watch()) try(rebuild(rmd_files))
       if (getOption('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()
