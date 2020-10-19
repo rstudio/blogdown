@@ -189,7 +189,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
           files = b  # just ignore changed Rmd files, i.e., don't build them
         }
       }
-      build_site(TRUE, run_hugo = FALSE, build_rmd = files)
+      xfun::in_dir(root, build_site(TRUE, run_hugo = FALSE, build_rmd = files))
     }
 
     # build Rmd files that are new and don't have corresponding output files
