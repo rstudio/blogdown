@@ -135,11 +135,18 @@ build_rmds = function(files) {
   }
 
   for (i in seq_along(files)) {
-    f = files[i]; d = dirname(f); out = output_file(f, to_md <- is_rmarkdown(f))
+    f = files[i]; d = dirname(f)
     copy_output_yml(d)
     message('Rendering ', f, '... ', appendLF = FALSE)
-    render_page(f)
-    x = read_utf8(out)
+    out = output_file(f, to_md <- is_rmarkdown(f))  # expected output file
+    # TODO: use xfun >= 0.18.5 to provide a better error message
+    res = xfun::Rscript_call(build_one, list(f, to_md))  # actual output file
+
+    xfun::in_dir(d, {
+      x = read_utf8(res)
+      if (res != basename(out)) unlink(res)
+      if (to_md) x = process_markdown(x, res)
+    })
     x = encode_paths(x, lib1[2 * i - 1], d, base, to_md)
     move_files(lib1[2 * i - 0:1], lib2[2 * i - 0:1])
 
@@ -161,6 +168,45 @@ build_rmds = function(files) {
     }
     message('Done.')
   }
+}
+
+build_one = function(input, to_md = FALSE) {
+  options(htmltools.dir.version = FALSE)
+  setwd(dirname(input))
+  input = basename(input)
+  # for bookdown's theorem environments generated from bookdown:::eng_theorem
+  if (to_md) options(bookdown.output.markdown = TRUE)
+  rmarkdown::render(
+    input, 'blogdown::html_page', envir = globalenv(), quiet = TRUE,
+    run_pandoc = !to_md, clean = !to_md
+  )
+}
+
+process_markdown = function(x, res) {
+  unlink(xfun::attr(res, 'intermediates'))
+  # write HTML dependencies to the body of Markdown
+  if (length(meta <- xfun::attr(res, 'knit_meta'))) {
+    m = rmarkdown:::html_dependencies_as_string(meta, attr(res, 'files_dir'), '.')
+    if (length(i <- grep('^---\\s*$', x)) >= 2) {
+      x = append(x, m, i[2])
+    } else warning(
+      'Cannot find the YAML metadata in the .markdown output file. ',
+      'HTML dependencies will not be rendered.'
+    )
+  }
+  # resolve bookdown references (figures, tables, sections, ...)
+  # TODO: use bookdown >= 0.21.2 to avoid the unnecessary file I/O
+  x = xfun::in_dir(tempdir(), {
+    f = tempfile('post', '.', '.md'); on.exit(unlink(f), add = TRUE)
+    write_utf8(x, f)
+    bookdown:::process_markdown(f, 'markdown', NULL, TRUE, TRUE)
+    read_utf8(f)
+  })
+  # protect math expressions in backticks
+  x = xfun::protect_math(x)
+  # remove the special comments from HTML dependencies
+  x = gsub('<!--/?html_preserve-->', '', x)
+  x
 }
 
 render_page = function(input, script = 'render_page.R') {
