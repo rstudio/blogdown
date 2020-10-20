@@ -280,12 +280,12 @@ check_netlify = function() {
 }
 
 # return a list of files to be opened initially in an RStudio project
-initial_files = function() {
+initial_files = function(n = 10) {
   files = list.files(content_file(), md_pattern, full.names = TRUE, recursive = TRUE)
   # if .Rmd has .md output, exclude .md
   i = grep('^[Rr]', exts <- xfun::file_ext(files))
   files = setdiff(files, xfun::with_ext(files[i], sub('^[Rr]', '', exts[i])))
-  files = head(files, getOption('blogdown.initial_files.number', 10))
+  files = head(files, n)
   c(files, existing_files(c('netlify.toml', '.Rprofile', config_files())))
 }
 
