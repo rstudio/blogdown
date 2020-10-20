@@ -209,13 +209,6 @@ process_markdown = function(x, res) {
   x
 }
 
-render_page = function(input, script = 'render_page.R') {
-  # needs --slave due to this bug in Rscript:
-  # https://stat.ethz.ch/pipermail/r-devel/2018-April/075897.html
-  args = c('--slave', pkg_file('scripts', script), input, getwd())
-  if (Rscript(shQuote(args)) != 0) stop("Failed to render '", input, "'")
-}
-
 # given the content of a .html file: replace content/*_files/figure-html with
 # /*_files/figure-html since this dir will be moved to /static/, and move the
 # rest of dirs under content/*_files/ to /static/rmarkdown-libs/ (HTML
