@@ -124,9 +124,8 @@ build_rmds = function(files) {
   }
   on.exit(move_files(lib1, lib2), add = TRUE)
 
-  root = getwd()
   base = site_base_dir()
-  shared_yml = file.path(root, '_output.yml')
+  shared_yml = '_output.yml'
   copied_yaml = character(); on.exit(unlink(copied_yaml), add = TRUE)
 
   copy_output_yml = function(to) {
