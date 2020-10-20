@@ -157,7 +157,7 @@ build_rmds = function(files) {
       prepend_yaml(f, out, x, callback = function(s) {
         if (!getOption('blogdown.draft.output', FALSE)) return(s)
         if (length(s) < 2 || length(grep('^draft: ', s)) > 0) return(s)
-        append(s, 'draft: yes', 1)
+        append(s, 'draft: true', 1)
       })
     }
     message('Done.')
