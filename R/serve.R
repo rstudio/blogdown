@@ -263,6 +263,9 @@ get_config2 = function(key, default) {
 # TODO: move bg_progress(), proc_kill(), and child_pids() to xfun
 # start a background process, and return its process ID
 bg_process = function(command, args = character(), timeout = 30) {
+  f = tryCatch(getFromNamespace('bg_process', 'xfun'), error = function(e) NULL)
+  if (is.function(f)) return(f(command, args))
+
   id = NULL
 
   if (is_windows()) {
