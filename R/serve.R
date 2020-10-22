@@ -85,9 +85,10 @@ preview_site = function(..., startup = FALSE) {
     # refresh the viewer because hugo's livereload doesn't work on RStudio
     # Server: https://github.com/rstudio/rstudio/issues/8096 (TODO: check if
     # it's fixed in the future: https://github.com/gohugoio/hugo/pull/6698)
-    if (is_rstudio_server()) on.exit(
-      rstudioapi::executeCommand('viewerRefresh'), add = TRUE
-    )
+    if (is_rstudio_server()) on.exit({
+      Sys.sleep(getOption('blogdown.rstudio_server.refresh_delay', 1L))
+      rstudioapi::executeCommand('viewerRefresh')
+    }, add = TRUE)
   }
   invisible(serve_site(...))
 }
