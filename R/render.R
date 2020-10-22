@@ -153,7 +153,7 @@ build_rmds = function(files) {
     # when serving the site, pause for a moment so Hugo server's auto navigation
     # can navigate to the output page
     if ((length(opts$get('served_dirs')) || isTRUE(opts$get('render_one')))) {
-      Sys.sleep(getOption('blogdown.build_rmds.wait', 2))
+      server_wait()
     }
 
     if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)

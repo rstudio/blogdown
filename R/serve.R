@@ -82,12 +82,7 @@ preview_site = function(..., startup = FALSE) {
     if (init) for (f in initial_files()) open_file(f)
   } else {
     opts$set(knitting = TRUE)
-    # refresh the viewer because hugo's livereload doesn't work on RStudio
-    # Server: https://github.com/rstudio/rstudio/issues/8096 (TODO: check if
-    # it's fixed in the future: https://github.com/gohugoio/hugo/pull/6698)
-    if (is_rstudio_server()) on.exit(
-      rstudioapi::executeCommand('viewerRefresh'), add = TRUE
-    )
+    on.exit(refresh_viewer(), add = TRUE)
   }
   invisible(serve_site(...))
 }
@@ -202,7 +197,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
-      if (watch()) try(rebuild(rmd_files))
+      if (watch()) try({rebuild(rmd_files); refresh_viewer()})
       if (getOption('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()
@@ -330,4 +325,18 @@ bg_process = function(command, args = character(), timeout = 30) {
     'Failed to run the command in ', timeout, ' seconds (timeout): ',
     paste(shQuote(c(command, args)), collapse = ' ')
   )
+}
+
+
+# refresh the viewer because hugo's livereload doesn't work on RStudio
+# Server: https://github.com/rstudio/rstudio/issues/8096 (TODO: check if
+# it's fixed in the future: https://github.com/gohugoio/hugo/pull/6698)
+refresh_viewer = function() {
+  if (!is_rstudio_server()) return()
+  server_wait()
+  rstudioapi::executeCommand('viewerRefresh')
+}
+
+server_wait = function() {
+  Sys.sleep(getOption('blogdown.server.wait', 2))
 }
