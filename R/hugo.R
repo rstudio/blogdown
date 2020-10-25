@@ -444,7 +444,7 @@ new_post = function(
       'The date of the post is in the future: ', date, '. See ',
       'https://github.com/rstudio/blogdown/issues/377 for consequences, ',
       'and see https://alison.rbind.io/post/2019-03-04-hugo-troubleshooting/#dates ',
-      'for a workaround by distinguishing date and publishDate in YAML header.',
+      'for a workaround by distinguishing date and publishDate in YAML header. ',
       'To turn off this warning, set options(blogdown.warn.future = FALSE).'
     )
   }
