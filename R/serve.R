@@ -165,6 +165,9 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       'To stop it, call blogdown::stop_server() or restart the R session.'
     )
 
+    # delete the resources/ dir if it is empty
+    if (g == 'hugo') bookdown:::clean_empty_dir('resources')
+
     # whether to watch for changes in Rmd files?
     if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
 
