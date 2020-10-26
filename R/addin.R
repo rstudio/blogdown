@@ -1,14 +1,15 @@
-new_post_addin = function() {
-  sys.source(pkg_file('scripts', 'new_post.R'))
+source_addin = function(file) {
+  xfun::in_dir(site_root(), sys.source(
+    pkg_file('scripts', file), envir = new.env(parent = globalenv()),
+    keep.source = FALSE
+  ))
 }
 
-update_meta_addin = function() {
-  sys.source(pkg_file('scripts', 'update_meta.R'))
-}
+new_post_addin = function() source_addin('new_post.R')
 
-insert_image_addin = function() {
-  sys.source(pkg_file('scripts', 'insert_image.R'))
-}
+update_meta_addin = function() source_addin('update_meta.R')
+
+insert_image_addin = function() source_addin('insert_image.R')
 
 # use touch to update the timestamp of a file if available (not on Windows);
 # otherwise modify a file, undo it, and save it
