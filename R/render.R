@@ -147,7 +147,7 @@ build_rmds = function(files) {
       if (res != basename(out)) unlink(res)
       if (to_md) x = process_markdown(x, res)
     })
-    x = encode_paths(x, lib1[2 * i - 1], d, base, to_md)
+    x = encode_paths(x, lib1[2 * i - 1], d, base, to_md, out)
     move_files(lib1[2 * i - 0:1], lib2[2 * i - 0:1])
 
     # when serving the site, pause for a moment so Hugo server's auto navigation
@@ -217,9 +217,9 @@ process_markdown = function(x, res) {
 # are used extensively in a website)
 
 # example values of arguments: x = <html> code; deps = '2017-02-14-foo_files';
-# parent = 'content/post';
-encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
-  if (basename(deps) == 'index_files' || !dir_exists(deps)) return(x)
+# parent = 'content/post'; output = 'content/post/hello.md'
+encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, output) {
+  if (!dir_exists(deps)) return(x)  # no external dependencies such as images
   if (!grepl('/$', parent)) parent = paste0(parent, '/')
   deps = basename(deps)
   need_encode = !to_md
@@ -230,6 +230,16 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE) {
   }
   # find the dependencies referenced in HTML
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
+
+  # for bundle index pages, add {{< relref "output" >}} to URLs, to make sure
+  # the post content can be displayed anywhere (not limited to the post page,
+  # e.g., image paths of a post should also work on the home page if the full
+  # post is included on the home page); see the bug report at
+  # https://github.com/rstudio/blogdown/issues/501
+  if (bundle_index(output)) {
+    x = gsub(r, sprintf('\\1\\2{{< relref "%s" >}}\\3', sub('^content/', '', output)), x)
+    return(x)
+  }
 
   # move figures to /static/path/to/post/foo_files/figure-html
   if (FALSE) {
