@@ -978,11 +978,16 @@ get_subdirs = function() {
 
   # exclude dirs that contain index.??? files
   files = files[!i]
-  for (d in dirname(files[xfun::sans_ext(basename(files)) == 'index'])) {
+  for (d in dirname(files[bundle_index(files)])) {
     dirs = dirs[substr(dirs, 1, nchar(d)) != d]
   }
 
   union(dirs, getOption('blogdown.subdir', 'post'))
+}
+
+# is a file the index page of a leaf bundle? i.e., index.*
+bundle_index = function(x) {
+  xfun::sans_ext(basename(x)) == 'index'
 }
 
 xfun_session_info = function() {
