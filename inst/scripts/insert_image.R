@@ -1,3 +1,5 @@
+warning2 = function(...) warning(..., call. = FALSE)
+
 txt_input = function(..., width = '100%') shiny::textInput(..., width = width)
 
 ctx = rstudioapi::getSourceEditorContext()
@@ -7,10 +9,17 @@ if (ctx$path == '') stop(
 ctx_ext = tolower(xfun::file_ext(ctx$path))
 
 path = xfun::normalize_path(ctx$path)
-imgdir = file.path(
-  'static', dirname(gsub('.*content/', '', path)),
-  paste0(xfun::sans_ext(basename(path)), '_files')
-)
+path = xfun::relative_path(path)
+
+imgdir = if (bundle <- blogdown:::bundle_index(path)) {
+  file.path(dirname(path), 'images')
+} else {
+  file.path(
+    'static', dirname(gsub('^content/', '', path)),
+    paste0(xfun::sans_ext(basename(path)), '_files')
+  )
+}
+
 shiny::runGadget(
   miniUI::miniPage(miniUI::miniContentPanel(
     shiny::fillRow(
@@ -46,36 +55,42 @@ shiny::runGadget(
       )
     })
     shiny::observeEvent(input$done, {
-      if (is.null(input$newimg)) return(
-        warning('You have to choose an image!', call. = FALSE)
-      )
-      if (file.exists(input$target)) {
-        if (!as.logical(input$overwrite)) warning(
+      if (is.null(input$newimg)) return(warning2('You have to choose an image!'))
+      target = input$target
+      if (bundle) {
+        if (!startsWith(target, dirname(path))) return(warning2(
+          "The target file path must be under the directory '", dirname(path), "'."
+        ))
+      } else {
+        if (!grepl('^static/', target)) return(warning2(
+          "The target file path must start with 'static/'."
+        ))
+      }
+      if (file.exists(target)) {
+        if (!as.logical(input$overwrite)) warning2(
           'The image already exists and you chose not to overwrite it! ',
-          'Linking to the previous version of the image.', call. = FALSE
+          'Linking to the previous version of the image.'
         )
       }
-      target_dir = dirname(input$target)
-      dir.create(target_dir, showWarnings = FALSE, recursive = TRUE)
+      blogdown:::dir_create(dirname(target))
       copy_check = file.copy(
-        input$newimg$datapath, input$target,
+        input$newimg$datapath, target,
         overwrite = if (is.null(input$overwrite)) FALSE else as.logical(input$overwrite)
       )
-      if (copy_check) message('Successfully copied the image to ', input$target)
+      if (copy_check) message('Successfully copied the image to ', target)
 
       validate_css_unit = function(x) {
         if (x == '') return(x)
         tryCatch(htmltools::validateCssUnit(x), error = function(e) {
-          warning(e$message, call. = FALSE)
+          warning2(e$message)
           x
         })
       }
       image_code = function() {
-        s = paste0(
+        s = if (bundle) substring(target, nchar(dirname(path)) + 2) else paste0(
           ifelse(getOption('blogdown.insertimage.usebaseurl', FALSE),
-            blogdown:::load_config()$baseurl, "/"),
-          basename(dirname(target_dir)), "/",
-          basename(target_dir), "/", basename(input$target)
+            blogdown:::load_config()$baseurl, '/'),
+          gsub('^static/', '', target)
         )
         w = input$w; h = input$h; alt = input$alt
         if (w == '' && h == '') {
