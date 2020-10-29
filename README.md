@@ -1,6 +1,6 @@
 # blogdown
 
-[![Build Status](https://travis-ci.org/rstudio/blogdown.svg)](https://travis-ci.org/rstudio/blogdown)
+[![Build Status](https://travis-ci.com/rstudio/blogdown.svg)](https://travis-ci.com/rstudio/blogdown)
 [![Coverage status](https://codecov.io/gh/rstudio/blogdown/branch/master/graph/badge.svg)](https://codecov.io/github/rstudio/blogdown?branch=master)
 [![Downloads from the RStudio CRAN mirror](https://cranlogs.r-pkg.org/badges/blogdown)](https://cran.r-project.org/package=blogdown)
 
