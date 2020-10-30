@@ -14,7 +14,7 @@ blogdown_site = function(input, ...) {
     if (!is.null(input_file)) xfun::in_dir(site_root(), {
       # set a global option
       opts$set(render_one = TRUE); on.exit(opts$set(render_one = NULL), add = TRUE)
-      input_file = rmarkdown::relative_to(getwd(), input_file)
+      input_file = xfun::relative_path(input_file)
       if (grepl(rmd_pattern, input_file))
         build_site(TRUE, run_hugo = FALSE, build_rmd = input_file)
       # run serve_site() to preview the site if the server has not been started
