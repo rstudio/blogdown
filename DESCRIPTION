@@ -1,7 +1,7 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.21.31
+Version: 0.21.32
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
     person("Beilei", "Bian", role = "ctb"),
@@ -30,7 +30,7 @@ Imports:
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
     later,
-    xfun (>= 0.18),
+    xfun (>= 0.19),
     servr (>= 0.20)
 Suggests:
   testit,

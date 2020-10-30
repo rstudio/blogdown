@@ -133,7 +133,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       proc = processx::process$new(cmd, cmd_args, stderr = '|', cleanup_tree = TRUE)
       I(proc$get_pid())
     } else {
-      bg_process(cmd, cmd_args)
+      xfun::bg_process(cmd, cmd_args)
     }
     opts$append(pids = list(pid))
 
@@ -223,27 +223,6 @@ hexo_server_args = function(host, port) {
   c('server', '-p', port, '-i', host, getOption('blogdown.hexo.server'))
 }
 
-# kill a process and all its child processes
-proc_kill = function(pid, recursive = TRUE, ...) {
-  run_cmd = base::system2
-  if (is_windows()) {
-    run_cmd('taskkill', c(if (recursive) '/t', '/f', '/pid', pid), ...)
-  } else {
-    run_cmd('kill', c(pid, if (recursive) child_pids(pid)), ...)
-  }
-}
-
-# obtain pids of all child processes (recursively)
-child_pids = function(id) {
-  x = system2('sh', shQuote(c(pkg_file('scripts', 'child_pids.sh'), id)), stdout = TRUE)
-  grep('^[0-9]+$', x, value = TRUE)
-}
-
-powershell = function(command) {
-  if (Sys.which('powershell') == '') return()
-  system2('powershell', c('-Command', shQuote(command)), stdout = TRUE)
-}
-
 #' @export
 #' @rdname serve_site
 stop_server = function() {
@@ -252,7 +231,7 @@ stop_server = function() {
   for (i in opts$get('pids')) {
     # no need to kill a process started by processx when R is quitting
     if (quitting && inherits(i, 'AsIs')) next
-    if (proc_kill(i, stdout = FALSE, stderr = FALSE) != 0) ids = c(ids, i)
+    if (xfun::proc_kill(i, stdout = FALSE, stderr = FALSE) != 0) ids = c(ids, i)
   }
   if (length(ids)) warning(
     'Failed to kill the process(es): ', paste(i, collapse = ' '),
@@ -265,78 +244,6 @@ get_config2 = function(key, default) {
   res = yaml_load_file('_config.yml')
   res[[key]] %n% default
 }
-
-# TODO: move bg_progress(), proc_kill(), and child_pids() to xfun
-# start a background process, and return its process ID
-bg_process = function(command, args = character(), timeout = 30) {
-  f = tryCatch(getFromNamespace('bg_process', 'xfun'), error = function(e) NULL)
-  if (is.function(f)) return(f(command, args))
-
-  id = NULL
-
-  if (is_windows()) {
-    # format of task list: hugo.exe    4592 Console      1     35,188 K
-    tasklist = function() system2('tasklist', stdout = TRUE)
-    pid1 = tasklist()
-    system2(command, args, wait = FALSE)
-
-    get_pid = function(time) {
-      # make sure the command points to an actual executable (e.g., resolve 'R'
-      # to 'R.exe')
-      if (!file.exists(command)) {
-        if (Sys.which(command) != '') command = Sys.which(command)
-      }
-      cmd = basename(command)
-
-      # use PowerShell to figure out the PID if possible:
-      res = powershell(sprintf(
-        'Get-CimInstance Win32_Process -Filter "name = \'%s\'" | select CommandLine, ProcessId | ConvertTo-Csv', cmd
-      ))
-      if (length(res) > 1) {
-        res = read.csv(text = res, comment.char = '#', stringsAsFactors = FALSE)
-        if (length(r1 <- res[, 'CommandLine']) && length(r2 <- res[, 'ProcessId'])) {
-          cmd2 = paste(c(cmd, args), collapse = ' ')
-          r2 = r2[grep(cmd2, r1, fixed = TRUE)]
-          if (length(r2)) return(r2)
-        }
-      }
-
-      # don't try this method until 1/5 of timeout has passed
-      if (!is.null(res) && time < timeout/5) return()
-      pid2 = setdiff(tasklist(), pid1)
-      # the process's info should start with the command name
-      pid2 = pid2[substr(pid2, 1, nchar(cmd)) == cmd]
-      if (length(pid2) == 0) return()
-      m = regexec('\\s+([0-9]+)\\s+', pid2)
-      for (v in regmatches(pid2, m)) if (length(v) >= 2) return(v[2])
-    }
-  } else {
-    pid = tempfile(); on.exit(unlink(pid), add = TRUE)
-    code = paste(c(
-      shQuote(c(command, args)),
-      if (!getOption('xfun.bg_process.verbose', FALSE)) '> /dev/null',
-      '& echo $! >', shQuote(pid)
-    ), collapse = ' ')
-    system2('sh', c('-c', shQuote(code)))
-    get_pid = function(time) {
-      if (file.exists(pid)) readLines(pid)
-    }
-  }
-
-  t0 = Sys.time()
-  while ((time <- difftime(Sys.time(), t0, units = 'secs')) < timeout) {
-    if (length(id <- get_pid(time)) == 1) break
-  }
-
-  if (length(id) == 1) return(id)
-
-  system2(command, args, timeout = timeout)  # see what the error is
-  stop(
-    'Failed to run the command in ', timeout, ' seconds (timeout): ',
-    paste(shQuote(c(command, args)), collapse = ' ')
-  )
-}
-
 
 # refresh the viewer because hugo's livereload doesn't work on RStudio
 # Server: https://github.com/rstudio/rstudio/issues/8096 (TODO: check if

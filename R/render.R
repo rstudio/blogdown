@@ -98,13 +98,11 @@ list_rmds = function(dir, check = FALSE) {
 
 # build R Markdown posts
 build_rmds = function(files) {
-  cdir = rel_path(content_file())
-  # TODO: use xfun::is_sub_path(files, cdir)
-  i = substr(files, 1, nchar(cdir)) == cdir
+  i = xfun::is_sub_path(files, rel_path(content_file()))
   # use rmarkdown::render() when a file is outside the content/ dir
   for (f in files[!i]) {
     message('Rendering ', f, '... ', appendLF = FALSE)
-    xfun::Rscript_call(rmarkdown::render, list(f, envir = globalenv(), quiet = TRUE))
+    render_new(f)
     message('Done.')
   }
 
@@ -149,8 +147,9 @@ build_rmds = function(files) {
     copy_output_yml(d)
     message('Rendering ', f, '... ', appendLF = FALSE)
     out = output_file(f, to_md <- is_rmarkdown(f))  # expected output file
-    # TODO: use xfun >= 0.18.5 to provide a better error message
-    res = xfun::Rscript_call(build_one, list(f, to_md))  # actual output file
+    res = xfun::Rscript_call(
+      build_one, list(f, to_md), fail = c('Failed to render ', f)
+    )  # actual output file
 
     xfun::in_dir(d, {
       x = read_utf8(res)

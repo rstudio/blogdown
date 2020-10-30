@@ -52,9 +52,6 @@ file.copy2 = function(from, to, ...) {
   } else mapply(file.copy, from, to, ...)
 }
 
-# TODO: use xfun::file_exists
-file_exists = function(x) file_test('-f', x)
-
 dir_rename = function(from, to, clean = FALSE) {
   if (!dir_exists(from)) return()
   if (clean) unlink(to, recursive = TRUE)
@@ -104,19 +101,21 @@ require_rebuild = function(html, rmd, N = getOption('blogdown.time_diff', 0)) {
 #' @export
 build_dir = function(dir = '.', force = FALSE, ignore = '[.]Rproj$') {
   for (f in list_rmds(dir)) {
-    # TODO: provide a clearer error message with xfun >= 0.18.5
-    render_it = function() xfun::Rscript_call(
-      rmarkdown::render, list(f, envir = globalenv(), quiet = TRUE)
-    )
-    if (force) { render_it(); next }
+    if (force) { render_new(f); next }
     files = list.files(dirname(f), full.names = TRUE)
     files = grep(ignore, files, value = TRUE, invert = TRUE)
     i = files == f  # should be only one in files matching f
     bases = with_ext(files, '')
     files = files[!i & bases == bases[i]]  # files with same basename as f (Rmd)
-    if (length(files) == 0 || any(require_rebuild(files, f))) render_it()
+    if (length(files) == 0 || any(require_rebuild(files, f))) render_new(f)
   }
 }
+
+# render Rmd in a new R session
+render_new = function(f) xfun::Rscript_call(
+  rmarkdown::render, list(f, envir = globalenv(), quiet = TRUE),
+  fail = c('Failed to render ', f)
+)
 
 #' Look for files that have been possibly modified
 #'
@@ -1013,7 +1012,6 @@ xfun_session_info = function() {
 clean_hugo_cache = function() {
   if (!file.exists(tmp <- Sys.getenv('TMPDIR'))) return()
   # clean up the hugo cache dir during R CMD check
-  # TODO: use xfun::is_R_CMD_check()
-  if (!is.na(knitr:::check_package_name()))
+  if (xfun::is_R_CMD_check())
     unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
 }
