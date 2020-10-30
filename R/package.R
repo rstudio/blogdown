@@ -16,6 +16,7 @@
 NULL
 
 with_ext = function(...) xfun::with_ext(...)
+# TODO: use exported functions from xfun
 dir_exists = bookdown:::dir_exists
 dir_create = bookdown:::dir_create
 existing_files = bookdown:::existing_files
