@@ -98,7 +98,17 @@ list_rmds = function(dir, check = FALSE) {
 
 # build R Markdown posts
 build_rmds = function(files) {
-  if (length(files) == 0) return()
+  cdir = rel_path(content_file())
+  # TODO: use xfun::is_sub_path(files, cdir)
+  i = substr(files, 1, nchar(cdir)) == cdir
+  # use rmarkdown::render() when a file is outside the content/ dir
+  for (f in files[!i]) {
+    message('Rendering ', f, '... ', appendLF = FALSE)
+    xfun::Rscript_call(rmarkdown::render, list(f, envir = globalenv(), quiet = TRUE))
+    message('Done.')
+  }
+
+  if (length(files <- files[i]) == 0) return()
   # ignore files that are locked (being rendered by another process)
   i = !file.exists(locks <- paste0(files, '.lock~'))
   if (!any(i)) return()  # all files are currently being rendered

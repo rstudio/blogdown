@@ -74,6 +74,11 @@ dirs_rename = function(from, to, ...) {
   for (i in seq_len(n)) dir_rename(from[i], to[i], ...)
 }
 
+# relative path with '/' as the path separator
+rel_path = function(x) {
+  xfun::relative_path(xfun::normalize_path(x))
+}
+
 # change the default of full.names and recursive in list.files() because these
 # values are used much more frequently than the original defaults
 list_files = function(..., full.names = TRUE, recursive = TRUE) {
