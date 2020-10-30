@@ -58,6 +58,8 @@
 
 - The internal function `Rscript()` was removed and it is publicly available in the **xfun** package now. If you need this function, please use `xfun::Rscript()` instead.
 
+- Removed internal functions `is_windows()`, `is_osx()`, and `is_linux()`. They are available in the **xfun** package now (note that `is_osx()` has become `xfun::is_macos()`).
+
 # CHANGES IN blogdown VERSION 0.21
 
 ## NEW FEATURES

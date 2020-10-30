@@ -112,7 +112,7 @@ install_hugo = function(
 
   files = if (is_windows()) {
     download_zip('Windows')
-  } else if (is_osx()) {
+  } else if (is_macos()) {
     if (use_brew) {
       if (brew_hugo() == 0) return()
       warning(
@@ -182,7 +182,7 @@ brew_hugo = function() {
 bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) {
   path = file.path(if (is_windows()) {
     Sys.getenv('APPDATA', '')
-  } else if (is_osx()) {
+  } else if (is_macos()) {
     '~/Library/Application Support'
   } else {
     '~/.local/share'

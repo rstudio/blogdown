@@ -52,7 +52,7 @@ file.copy2 = function(from, to, ...) {
   } else mapply(file.copy, from, to, ...)
 }
 
-# make sure it is a file instead of an existing dir
+# TODO: use xfun::file_exists
 file_exists = function(x) file_test('-f', x)
 
 dir_rename = function(from, to, clean = FALSE) {
@@ -174,10 +174,6 @@ timestamp_filter = function(files) {
 newfile_filter = function(files) {
   files[!file_exists(output_file(files))]
 }
-
-is_windows = function() xfun::is_windows()
-is_osx = function() xfun::is_macos()
-is_linux = function() xfun::is_linux()
 
 # guess if the OS is 64bit
 is_64bit = function() {
@@ -1017,6 +1013,7 @@ xfun_session_info = function() {
 clean_hugo_cache = function() {
   if (!file.exists(tmp <- Sys.getenv('TMPDIR'))) return()
   # clean up the hugo cache dir during R CMD check
+  # TODO: use xfun::is_R_CMD_check()
   if (!is.na(knitr:::check_package_name()))
     unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
 }
