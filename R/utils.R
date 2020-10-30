@@ -985,9 +985,12 @@ get_subdirs = function() {
   union(dirs, getOption('blogdown.subdir', 'post'))
 }
 
-# is a file the index page of a leaf bundle? i.e., index.*
-bundle_index = function(x) {
-  xfun::sans_ext(basename(x)) == 'index'
+# is a file the index page of a leaf bundle? i.e., index.*; the filename may
+# also contain language code, e.g., index.fr.Rmd
+bundle_index = function(x, ext = TRUE) {
+  x = basename(x)
+  if (ext) x = xfun::sans_ext(x)
+  grepl('^index([.][a-z]{2})?$', x)
 }
 
 xfun_session_info = function() {

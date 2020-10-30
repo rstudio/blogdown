@@ -43,6 +43,14 @@ assert('post_slug() extracts a slug from a filename', {
   (post_slug('path/to/2015-07-23-foo-bar/index.Rmd') %==% 'foo-bar')
 })
 
+assert('bundle_index() checks if a file path points to the index page of a bundle', {
+  (bundle_index(c('index.Rmd', 'index.Rmarkdown', 'index.html', 'index.md')))
+  (bundle_index(c('index.en.Rmd', 'index.ja.html', 'index.fr.Rmarkdown')))
+  (!bundle_index(c('index2.Rmd', 'index .md', 'abc.html', 'index.zzz.md')))
+  (bundle_index(c('index', 'index.en'), ext = FALSE))
+  (!bundle_index(c('index_', 'index.en_'), ext = FALSE))
+})
+
 test_rmd_file = tempfile()
 test_rmd = '---
 date: \'2017-05-01\'

@@ -119,7 +119,7 @@ build_rmds = function(files) {
   # source directory clean
   move_files = function(lib1, lib2) {
     # don't move by-products of leaf bundles
-    i = grep('^index_(files|cache)$', basename(lib1), invert = TRUE)
+    i = !bundle_index(gsub('_(files|cache)$', '', lib1), ext = FALSE)
     dirs_rename(lib1[i], lib2[i])
   }
   on.exit(move_files(lib1, lib2), add = TRUE)

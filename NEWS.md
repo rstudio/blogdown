@@ -38,6 +38,8 @@
 
 - For a post that is the index page of a bundle, its images could not be displayed when the post content is displayed on other pages such as the home page (thanks, @andremrsantos, #501).
 
+- The `_files/` and `_cache/` folders are not correctly moved for index pages of leaf bundles when the filename of an index page contains a language code such as `index.en.Rmd` (thanks, @cderv, #500).
+
 ## MINOR CHANGES
 
 - For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.
