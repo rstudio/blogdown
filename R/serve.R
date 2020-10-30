@@ -145,7 +145,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     repeat {
       Sys.sleep(1)
       if (server_ready(server$url)) break
-      if (i >= getOption('blogdown.server.timeout', 5)) {
+      if (i >= getOption('blogdown.server.timeout', 30)) {
         s = proc_kill(pid)  # if s == 0, the server must have been started successfully
         stop(if (s == 0) c(
           'Failed to launch the preview of the site. This may be a bug of blogdown. ',
