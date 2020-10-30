@@ -78,7 +78,7 @@ local({
 
 - What `knitr::render_jekyll()` does\index{knitr::render\_jekyll()} is mainly to set up some **knitr** output hooks so that source code and text output from R code chunks will be wrapped in Liquid tags `{% highlight %}` and `{% end highlight %}`.
 
-- Remember in `build.R`, we passed the variable `io` to the Rscript call `blogdown:::Rscript`. Here in `build_one.R`, we can receive them from `commandArgs(TRUE)`. The variable `a` contains an `.Rmd` and an `.md` file path. We removed the possible leading underscore (`^_`) and the extension (`[.][a-zA-Z]$`) in the path. Next we set figure and cache paths using this string. For example, for a post `_posts/foo.Rmd`, its figures will be written to `figure/foo/` and its cache databases (if there are any) will be stored under `cache/foo/`. Both directories are under the root directory of the project.
+- Remember in `build.R`, we passed the variable `io` to the Rscript call `xfun::Rscript()`. Here in `build_one.R`, we can receive them from `commandArgs(TRUE)`. The variable `a` contains an `.Rmd` and an `.md` file path. We removed the possible leading underscore (`^_`) and the extension (`[.][a-zA-Z]$`) in the path. Next we set figure and cache paths using this string. For example, for a post `_posts/foo.Rmd`, its figures will be written to `figure/foo/` and its cache databases (if there are any) will be stored under `cache/foo/`. Both directories are under the root directory of the project.
 
 - Lastly, we call `knitr::knit()` to knit the Rmd file to a Markdown output file, which will be processed by Jekyll later.
 

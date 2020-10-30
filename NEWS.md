@@ -56,6 +56,8 @@
 
 - For Jekyll sites, the arguments `--watch`, `--incremental`, and `--livereload` are passed to `jekyll serve` by default. These arguments can be set via the global R option `blogdown.jekyll.server`.
 
+- The internal function `Rscript()` was removed and it is publicly available in the **xfun** package now. If you need this function, please use `xfun::Rscript()` instead.
+
 # CHANGES IN blogdown VERSION 0.21
 
 ## NEW FEATURES
