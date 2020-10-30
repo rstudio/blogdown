@@ -567,8 +567,6 @@ config_Rprofile = function() {
 
 # option names may be case insensitive
 get_config = function(field, default, config = load_config()) {
-  # use get_config2() if generator is not hugo
-  if (generator() != 'hugo') return(get_config2(field, default))
   config[[field]] %n% config[[match(tolower(field), tolower(names(config)))]] %n% default
 }
 
@@ -983,8 +981,7 @@ get_author = function() {
 }
 
 get_subdirs = function() {
-  if (!dir_exists(cdir <- content_file())) cdir = '.'  # TODO: should be 'source' for hexo
-  owd = setwd(cdir); on.exit(setwd(owd), add = TRUE)
+  owd = setwd(content_file()); on.exit(setwd(owd), add = TRUE)
   files = list_files(include.dirs = TRUE)
   files = sub('^[.]/', '', files)
   i = file_test('-d', files)

@@ -390,7 +390,14 @@ hugo_convert_one = function(file, to = c('YAML', 'TOML', 'JSON')) {
   })
 }
 
-content_file = function(...) file.path(get_config('contentDir', 'content'), ...)
+content_file = function(...) file.path(
+  switch(
+    generator(),
+    hugo = get_config('contentDir', 'content'),
+    hexo = get_config2('source_dir', 'source'),
+    '.'
+  ), ...
+)
 
 #' @param title The title of the post.
 #' @param author The author of the post.
