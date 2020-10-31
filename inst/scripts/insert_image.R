@@ -72,7 +72,7 @@ shiny::runGadget(
           'Linking to the previous version of the image.'
         )
       }
-      blogdown:::dir_create(dirname(target))
+      xfun:::dir_create(dirname(target))
       copy_check = file.copy(
         input$newimg$datapath, target,
         overwrite = if (is.null(input$overwrite)) FALSE else as.logical(input$overwrite)
