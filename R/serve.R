@@ -231,13 +231,29 @@ stop_server = function() {
   for (i in opts$get('pids')) {
     # no need to kill a process started by processx when R is quitting
     if (quitting && inherits(i, 'AsIs')) next
-    if (xfun::proc_kill(i, stdout = FALSE, stderr = FALSE) != 0) ids = c(ids, i)
+    if (proc_kill(i, stdout = FALSE, stderr = FALSE) != 0) ids = c(ids, i)
   }
   if (length(ids)) warning(
     'Failed to kill the process(es): ', paste(i, collapse = ' '),
     '. You may need to kill them manually.'
   ) else if (!quitting) message('The web server has been stopped.')
   opts$set(pids = NULL, served_dirs = NULL)
+}
+
+# TODO: remove the following two functions and import xfun::proc_kill() after
+# xfun 0.20 is released because 0.19 contains a bug
+proc_kill = function(pid, recursive = TRUE, ...) {
+  if (is_windows()) {
+    xfun::proc_kill(pid, recursive, ...)
+  } else {
+    system2('kill', c(pid, if (recursive) child_pids(pid)), ...)
+  }
+}
+child_pids = function(id) {
+  x = system2('sh', shQuote(c(
+    system.file('scripts', 'child_pids.sh', package = 'xfun'), id
+  )), stdout = TRUE)
+  grep('^[0-9]+$', x, value = TRUE)
 }
 
 get_config2 = function(key, default) {
