@@ -386,8 +386,7 @@ hugo_convert_one = function(file, to = c('YAML', 'TOML', 'JSON')) {
   in_dir(tmp, {
     dir.create('content'); file.copy(file, file2)
     writeLines(c('baseurl = "/"', 'builddrafts = true'), 'config.toml')
-    hugo_convert(to, unsafe = TRUE)
-    file.copy(file2, file, overwrite = TRUE)
+    if (hugo_convert(to, unsafe = TRUE) == 0) file.copy(file2, file, overwrite = TRUE)
   })
 }
 

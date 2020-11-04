@@ -377,19 +377,25 @@ site_root = function(config = config_files()) {
 read_toml = function(file, x = read_utf8(file), strict = TRUE) {
   if (strict) {
     x2 = read_toml(x = x, strict = FALSE)  # obtain the names of top-level fields
+    ok = FALSE
     if (xfun::loadable('RcppTOML')) {
       x = paste(x, collapse = '\n')
       parser = getFromNamespace('parseTOML', 'RcppTOML')
       x = parser(x, fromFile = FALSE)
+      ok = TRUE
     } else if (hugo_available()) {
       f2 = tempfile('toml', fileext = '.md'); on.exit(unlink(f2), add = TRUE)
       write_utf8(c('+++', x, '+++'), f2)
-      hugo_convert_one(f2)
-      x = yaml_load_file(f2)
-    } else if (missing(strict)) {
-      return(x2)
-    } else stop(
-      'Cannot parse TOML data because neither Hugo nor the R package RcppTOML is available.'
+      # Hugo may fail to convert TOML to YAML, e.g., https://community.rstudio.com/t/86903
+      x = if (!is.null(hugo_convert_one(f2))) {
+        ok = TRUE
+        yaml_load_file(f2)
+      }
+    }
+    if (missing(strict)) {
+      if (!ok) return(x2)
+    } else if (!ok) stop(
+      'Neither Hugo nor the R package RcppTOML is available or able to parse the TOML data.'
     )
     return(sort_by_names(x, names(x2)))
   }
