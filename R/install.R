@@ -227,7 +227,7 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
       "Found '", cmd, "' at '", path2, "' but its version is ", v, " instead of ",
       "the requested version ", version, ". ", info, call. = FALSE
     )
-    return(cmd)  # do not use the full path of the command
+    return(basename(path2))  # do not use the full path of the command
   } else {
     if (path2 != '') warning(
       'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
