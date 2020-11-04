@@ -409,8 +409,8 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
   m = regexec(r, x)
   z = lapply(regmatches(x, m), function(v) {
     if (length(v) < 6) return()
-    # when data is '[foo]' instead of 'foo = bar', just return 'OMITTED'
-    if (v[3] == '') return(named_list('OMITTED!', keys(v[5])))
+    # when data is '[foo]' instead of 'foo = bar', just return NULL
+    if (v[3] == '') return(named_list(NULL, keys(v[5])))
     y = v[4]
     # strings
     if (grepl(r <- '^"([^"]*?)"$', y)) y = gsub(r, '\\1', y) else {
