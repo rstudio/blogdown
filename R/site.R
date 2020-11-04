@@ -1,6 +1,6 @@
 blogdown_site = function(input, ...) {
   # start serving the site when a blogdown project is opened in RStudio
-  if (interactive() && getOption('blogdown.serve_site.startup', TRUE)) try({
+  if (interactive() && getOption('blogdown.serve_site.startup', FALSE)) try({
     if (!isTRUE(opts$get('startup'))) {
       rstudioapi::sendToConsole('blogdown:::preview_site(startup = TRUE)')
       opts$set(startup = TRUE)  # don't send the above code again in this session
