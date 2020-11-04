@@ -8,11 +8,13 @@ find_hugo(version = getOption("blogdown.hugo.version"))
 }
 \arguments{
 \item{version}{The expected version number, e.g., \code{'0.25.1'}. If
-\code{NULL}, it will try to find the maximum possible version.}
+\code{NULL}, it will try to find the maximum possible version. If
+\code{'all'}, find all possible versions.}
 }
 \value{
 The path to the Hugo executable if found, otherwise it will signal an
-  error, with a hint on how to install (the required version of) Hugo.
+  error, with a hint on how to install (the required version of) Hugo. If
+  \code{version = 'all'}, return the paths of all versions of Hugo installed.
 }
 \description{
 Search for Hugo in a series of possible installation directories (see

@@ -79,6 +79,11 @@ install_hugo = function(
   if (!is.null(local_file)) version = gsub('^hugo_([0-9.]+)_.*', '\\1', basename(local_file))
 
   version = gsub('^[vV]', '', version)  # pure version number
+  if (!is.null(ver <- getOption('blogdown.hugo.version')) && ver != version) message2(
+    "You have set the option 'blogdown.hugo.version' to '", ver, "' (perhaps in .Rprofile), ",
+    "but you are installing the Hugo version '", version, "' now. You may want to update ",
+    "the option 'blogdown.hugo.version' accordingly.", files = existing_files('.Rprofile')
+  )
   version2 = as.numeric_version(version)
   bit = if (is_64bit()) '64bit' else '32bit'
   if (extended) {
@@ -199,15 +204,20 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
     exec = if (is_windows()) paste0(cmd, '.exe') else cmd
     move_exec(file.path(d, exec))
     # if version = NULL, find the max version; if not found, don't use the version dir
-    if (is.null(v <- version)) {
+    if (is.null(v <- version) || version == 'all') {
       v = list.files(d, '^[0-9.]+$')
       v = v[executable(file.path(d, v, exec))]
-      v = max(as.numeric_version(v))
+      v = as.numeric_version(v)
     }
     if (length(v) == 0) next
+    if (is.null(version)) v = max(v)
     path = file.path(d, v, exec)
-    if (executable(path)) break else path = ''
+    path = path[executable(path)]
+    if (length(path)) break else path = ''
   }
+
+  if (identical(version, 'all')) return(if (!identical(path, '')) path)
+
   path2 = Sys.which(cmd)
   if (path == '' || xfun::same_path(path, path2)) {
     if (path2 == '') stop(
@@ -239,10 +249,12 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
 #' before it builds or serves the website. You can use the function
 #' \code{\link{config_Rprofile}()} to do this automatically.
 #' @param version The expected version number, e.g., \code{'0.25.1'}. If
-#'   \code{NULL}, it will try to find the maximum possible version.
+#'   \code{NULL}, it will try to find the maximum possible version. If
+#'   \code{'all'}, find all possible versions.
 #' @export
 #' @return The path to the Hugo executable if found, otherwise it will signal an
-#'   error, with a hint on how to install (the required version of) Hugo.
+#'   error, with a hint on how to install (the required version of) Hugo. If
+#'   \code{version = 'all'}, return the paths of all versions of Hugo installed.
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
   function(version = getOption('blogdown.hugo.version')) {
@@ -254,7 +266,7 @@ find_hugo = local({
       'hugo', 'Hugo', version,
       c('You may try blogdown::install_hugo(', sprintf('"%s"', version), ').')
     )
-    paths[[i]] <<- p
+    if (!identical(version, 'all')) paths[[i]] <<- p
     p
   }
 })
