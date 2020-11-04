@@ -382,7 +382,7 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
       parser = getFromNamespace('parseTOML', 'RcppTOML')
       x = parser(x, fromFile = FALSE)
     } else if (hugo_available()) {
-      f2 = tempfile(fileext = '.md'); on.exit(unlink(f2), add = TRUE)
+      f2 = tempfile('toml', fileext = '.md'); on.exit(unlink(f2), add = TRUE)
       write_utf8(c('+++', x, '+++'), f2)
       hugo_convert_one(f2)
       x = yaml_load_file(f2)
@@ -438,7 +438,7 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
 #' @rdname read_toml
 write_toml = function(x, output = NULL) {
   if (!hugo_available()) stop('Hugo is required but not found.')
-  f = tempfile(fileext = '.md'); on.exit(unlink(f), add = TRUE)
+  f = tempfile('yaml', fileext = '.md'); on.exit(unlink(f), add = TRUE)
   write_utf8(c('---', as.yaml(x), '---'), f)
   hugo_convert_one(f, 'TOML')
   x = trim_ws(read_utf8(f))
@@ -520,7 +520,7 @@ config_netlify = function(output = 'netlify.toml', new_config = list()) {
   )
   d$context$`branch-deploy` = d$context$`deploy-preview`
   d = modifyList(d, new_config)
-  f = tempfile(); on.exit(unlink(f), add = TRUE)
+  f = tempfile('netlify'); on.exit(unlink(f), add = TRUE)
   write_toml(d, f)
   if (is.null(output)) xfun::file_string(f) else {
     if (file.exists(output)) {
