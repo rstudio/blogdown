@@ -1,0 +1,5 @@
+---
+title: "Get started"
+---
+
+Learn more about how to start using blogdown at <https://bookdown.org/yihui/blogdown/>.
