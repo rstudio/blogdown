@@ -229,12 +229,29 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
     )
     return(basename(path2))  # do not use the full path of the command
   } else {
-    if (path2 != '') warning(
+    if (path2 != '') warning2(
       'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
-      "If you don't need both copies, you may delete/uninstall one."
+      "If you don't need both copies, you may delete/uninstall the latter",
+      uninstall_tip(path2), "."
     )
   }
   normalizePath(path)
+}
+
+uninstall_tip = function(p) {
+  if (is_macos()) {
+    p = Sys.readlink(p)
+    # check if it is installed via Homebrew
+    if (!grepl(r <- '^([.][.]/Cellar/)([^/]+)(/.+)$', p)) return()
+    sprintf(' with system("brew uninstall %s") in R', gsub(r, '\\2', p))
+  } else if (is_windows()) {
+    m = if (grepl('scoop', p)) 'scoop' else if (grepl('choco', p, ignore.case = TRUE)) 'choco'
+    if (!is.null(m)) sprintf(
+      'perhaps with system2("%s", c("uninstall", "%s"))', m, xfun::sans_ext(basename(p))
+    )
+  } else {
+    'with your system package manager such as apt or yum'
+  }
 }
 
 #' Find the Hugo executable

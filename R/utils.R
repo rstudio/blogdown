@@ -212,6 +212,8 @@ hrule = function(char = '-', width = getOption('width')) {
   paste(rep('-', width), collapse = '')
 }
 
+warning2 = function(...) warning(..., call. = FALSE)
+
 message2 = function(..., files = NULL) {
   message(hrule())
   message(...)
