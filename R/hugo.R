@@ -49,7 +49,7 @@ hugo_available = function(version = '0.0.0') {
 hugo_build = function(local = FALSE) {
   config = load_config()
   # Hugo 0.48 generates an ugly empty resources/ dir in the root dir
-  on.exit(xfun::del_empty_dir('resources'), add = TRUE)
+  on.exit(del_empty_dir('resources'), add = TRUE)
   if (local) tweak_hugo_env()
   hugo_cmd(c(
     if (local) c('-D', '-F'),
@@ -151,7 +151,7 @@ new_site = function(
   # remove Hugo's default archetype (I think draft: true is a confusing default)
   unlink(file.path('archetypes', 'default.md'))
   # remove empty dirs
-  if (!empty_dirs) for (d in list.dirs(recursive = FALSE)) xfun::del_empty_dir(d)
+  if (!empty_dirs) for (d in list.dirs(recursive = FALSE)) del_empty_dir(d)
   if (is.character(theme) && length(theme) == 1 && !is.na(theme))
     install_theme(theme, theme_example, hostname = hostname)
   # remove the .gitignore that ignores everything under static/:
@@ -274,7 +274,7 @@ install_theme = function(
     # (because they are only useful to themes.gohugo.io and not to users)
     if (dir_exists(thndir <- file.path(zipdir, 'images'))) {
       unlink(file.path(thndir, c('tn.png', 'screenshot.png')))
-      xfun::del_empty_dir(thndir)
+      del_empty_dir(thndir)
     }
     # check the minimal version of Hugo required by the theme
     if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {

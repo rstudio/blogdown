@@ -307,7 +307,7 @@ remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FAL
     if (force || grepl('^[0-9.]+$', basename(d))) {
       message("Removing '", f, "'...")
       unlink(f)
-      xfun::del_empty_dir(d)
+      del_empty_dir(d)
     } else warning2(
       "'", f, "' does not seem to be installed via blogdown::install_hugo(), ",
       "and I will not remove it. If you are sure it can be removed, you may ",

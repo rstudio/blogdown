@@ -19,7 +19,9 @@ NULL
 with_ext = function(...) xfun::with_ext(...)
 existing_files = bookdown:::existing_files
 fetch_yaml = function(f) bookdown:::fetch_yaml(read_utf8(f))
+# TODO: use functions from xfun
 dir_create = function(x) xfun:::dir_create(x)
+del_empty_dir = bookdown:::clean_empty_dir
 
 `%n%` = knitr:::`%n%`
 
