@@ -8,6 +8,8 @@
 
 - Documented and exported the internal function `find_hugo()` to find the Hugo executable. If multiple versions of Hugo are installed, `find_hugo()` can also find a specific version of Hugo, e.g., `blogdown::find_hugo('0.25.1')`. You may use `blogdown::find_hugo('all')` to find all possible versions of Hugo currently installed.
 
+- Added a function `remove_hugo()` to remove Hugo (thanks, @cderv, #504).
+
 - The file format `.Rmarkdown` supports HTML widgets and citations now, just like the `.Rmd` format. If you are not familiar with the `.Rmarkdown` format, you may see https://bookdown.org/yihui/blogdown/output-format.html.
 
 - Added a function `config_netlify()` to help users create the config file `netlify.toml` for Netlify. It sets the `build` commands properly for different deploy contexts, and writes the local Hugo version to the config file, so make sure Netlify uses the same version of Hugo as your local environment. See the help page `?blogdown::config_netlify` for details.

@@ -63,3 +63,6 @@ Hugo for a specific website. You can set this option per project. See
 Global options} for details, or store a copy of Hugo on a USB Flash drive
 along with your website.
 }
+\seealso{
+\code{\link{remove_hugo}()} to remove Hugo.
+}

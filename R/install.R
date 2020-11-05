@@ -41,6 +41,7 @@
 #'   This may be useful when upgrading Hugo.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
+#' @seealso \code{\link{remove_hugo}()} to remove Hugo.
 #' @export
 install_hugo = function(
   version = 'latest', use_brew = FALSE, force = FALSE, extended = TRUE
@@ -218,7 +219,8 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
   path2 = Sys.which(cmd)
 
   if (identical(version, 'all')) {
-    path = xfun::normalize_path(c(path, path2))
+    path = c(path, path2)
+    if (is_windows()) path = xfun::normalize_path(path)
     return(unname(unique(path[path != ''])))
   }
 
@@ -257,10 +259,11 @@ uninstall_tip = function(p) {
   }
 }
 
-#' Find the Hugo executable
+#' Find or remove the Hugo executable
 #'
 #' Search for Hugo in a series of possible installation directories (see
-#' \code{\link{install_hugo}()} for these directories).
+#' \code{\link{install_hugo}()} for these directories) with \code{find_hugo()},
+#' or remove the Hugo executable(s) found with \code{remove_hugo()}.
 #'
 #' If your website depends on a specific version of Hugo, we strongly recommend
 #' that you set \code{options(blogdown.hugo.version = )} to the version number
@@ -269,12 +272,13 @@ uninstall_tip = function(p) {
 #' before it builds or serves the website. You can use the function
 #' \code{\link{config_Rprofile}()} to do this automatically.
 #' @param version The expected version number, e.g., \code{'0.25.1'}. If
-#'   \code{NULL}, it will try to find the maximum possible version. If
-#'   \code{'all'}, find all possible versions.
+#'   \code{NULL}, it will try to find/remove the maximum possible version. If
+#'   \code{'all'}, find/remove all possible versions.
 #' @export
-#' @return The path to the Hugo executable if found, otherwise it will signal an
-#'   error, with a hint on how to install (the required version of) Hugo. If
-#'   \code{version = 'all'}, return the paths of all versions of Hugo installed.
+#' @return For \code{find_hugo()}, it returns the path to the Hugo executable if
+#'   found, otherwise it will signal an error, with a hint on how to install
+#'   (the required version of) Hugo. If \code{version = 'all'}, return the paths
+#'   of all versions of Hugo installed.
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
   function(version = getOption('blogdown.hugo.version')) {
@@ -290,6 +294,28 @@ find_hugo = local({
     p
   }
 })
+
+#' @param force By default, \code{remove_hugo()} only removes Hugo installed via
+#'   \code{\link{install_hugo}()}. For \code{force = TRUE}, it will try to
+#'   remove any Hugo executables found via \code{find_hugo()}.
+#' @export
+#' @rdname find_hugo
+remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
+  for (f in find_hugo(version)) {
+    d = dirname(f)
+    # the parent folder name must be a version number
+    if (force || grepl('^[0-9.]+$', basename(d))) {
+      message("Removing '", f, "'...")
+      unlink(f)
+      xfun::del_empty_dir(d)
+    } else warning2(
+      "'", f, "' does not seem to be installed via blogdown::install_hugo(), ",
+      "and I will not remove it. If you are sure it can be removed, you may ",
+      "call blogdown::remove_hugo() with the argument force = TRUE to delete it",
+      sprintf(' or %s (recommended)', uninstall_tip(f)), "."
+    )
+  }
+}
 
 executable = function(path) utils::file_test('-x', path)
 

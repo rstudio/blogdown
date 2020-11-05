@@ -2,23 +2,32 @@
 % Please edit documentation in R/install.R
 \name{find_hugo}
 \alias{find_hugo}
-\title{Find the Hugo executable}
+\alias{remove_hugo}
+\title{Find or remove the Hugo executable}
 \usage{
 find_hugo(version = getOption("blogdown.hugo.version"))
+
+remove_hugo(version = getOption("blogdown.hugo.version"), force = FALSE)
 }
 \arguments{
 \item{version}{The expected version number, e.g., \code{'0.25.1'}. If
-\code{NULL}, it will try to find the maximum possible version. If
-\code{'all'}, find all possible versions.}
+\code{NULL}, it will try to find/remove the maximum possible version. If
+\code{'all'}, find/remove all possible versions.}
+
+\item{force}{By default, \code{remove_hugo()} only removes Hugo installed via
+\code{\link{install_hugo}()}. For \code{force = TRUE}, it will try to
+remove any Hugo executables found via \code{find_hugo()}.}
 }
 \value{
-The path to the Hugo executable if found, otherwise it will signal an
-  error, with a hint on how to install (the required version of) Hugo. If
-  \code{version = 'all'}, return the paths of all versions of Hugo installed.
+For \code{find_hugo()}, it returns the path to the Hugo executable if
+  found, otherwise it will signal an error, with a hint on how to install
+  (the required version of) Hugo. If \code{version = 'all'}, return the paths
+  of all versions of Hugo installed.
 }
 \description{
 Search for Hugo in a series of possible installation directories (see
-\code{\link{install_hugo}()} for these directories).
+\code{\link{install_hugo}()} for these directories) with \code{find_hugo()},
+or remove the Hugo executable(s) found with \code{remove_hugo()}.
 }
 \details{
 If your website depends on a specific version of Hugo, we strongly recommend
