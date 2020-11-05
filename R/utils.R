@@ -561,7 +561,7 @@ config_Rprofile = function() {
     message2(x2, files = f1)
   }
   file.copy(f2, f1, overwrite = FALSE)
-  ver = sprintf('\noptions(blogdown.hugo.version = "%s")\n', hugo_version())
+  ver = sprintf('\n# fix Hugo version\noptions(blogdown.hugo.version = "%s")\n', hugo_version())
   if (!any(grepl('blogdown[.]hugo[.]version', x1 <- xfun::file_string(f1)))) {
     if (!identical(x1, x2)) message2(
       "I didn't find the option blogdown.hugo.version in '", f1,
