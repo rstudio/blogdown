@@ -20,7 +20,7 @@
 
 - Documented and exported the internal function `find_hugo()` to find the Hugo executable. If multiple versions of Hugo are installed, `find_hugo()` can also find a specific version of Hugo, e.g., `blogdown::find_hugo('0.25.1')`. You may use `blogdown::find_hugo('all')` to find all possible versions of Hugo currently installed.
 
-- The file format `.Rmarkdown` supports HTML widgets now, just like the `.Rmd` format. If you are not familiar with the `.Rmarkdown` format, you may see https://bookdown.org/yihui/blogdown/output-format.html.
+- The file format `.Rmarkdown` supports HTML widgets and citations now, just like the `.Rmd` format. If you are not familiar with the `.Rmarkdown` format, you may see https://bookdown.org/yihui/blogdown/output-format.html.
 
 ## MAJOR CHANGES
 

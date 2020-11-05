@@ -215,6 +215,18 @@ process_markdown = function(x, res) {
   x = xfun::protect_math(x)
   # remove the special comments from HTML dependencies
   x = gsub('<!--/?html_preserve-->', '', x)
+  # render citations
+  if (length(grep('^(references|bibliography):($| )', x))) {
+    # temporary .md files to generate citations
+    mds = replicate(2, wd_tempfile('.md~', pattern = 'citation'))
+    on.exit(unlink(mds), add = TRUE)
+    write_utf8(x, mds[1])
+    rmarkdown::pandoc_convert(
+      mds[1], from = 'markdown', to = 'gfm+tex_math_dollars+footnotes', output = mds[2],
+      options = c('--atx-headers', '--wrap=preserve'), citeproc = TRUE
+    )
+    x = c(bookdown:::fetch_yaml(x), '', read_utf8(mds[2]))
+  }
   x
 }
 
