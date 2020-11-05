@@ -247,10 +247,10 @@ uninstall_tip = function(p) {
   } else if (is_windows()) {
     m = if (grepl('scoop', p)) 'scoop' else if (grepl('choco', p, ignore.case = TRUE)) 'choco'
     if (!is.null(m)) sprintf(
-      'perhaps with system2("%s", c("uninstall", "%s"))', m, xfun::sans_ext(basename(p))
+      ' perhaps with system2("%s", c("uninstall", "%s"))', m, xfun::sans_ext(basename(p))
     )
   } else {
-    'with your system package manager such as apt or yum'
+    ' with your system package manager such as apt or yum'
   }
 }
 
