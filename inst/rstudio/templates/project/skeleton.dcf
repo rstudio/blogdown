@@ -17,7 +17,7 @@ Default: On
 Parameter: theme
 Widget: TextInput
 Label: Hugo theme
-Default: yihui/hugo-xmin
+Default: yihui/hugo-stoic
 
 Parameter: theme_example
 Widget: CheckboxInput

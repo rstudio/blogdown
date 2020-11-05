@@ -54,7 +54,7 @@
 
 - `read_toml()` and `toml2yaml()` will try to preserve the original order of fields in the TOML data, instead of using the alphabetical order.
 
-- The default theme in `new_site()` was changed from `hugo-lithium` to `hugo-xmin`.
+- The default theme in `new_site()` was changed from `hugo-lithium` to `hugo-stoic` (this may change again in the future).
 
 - For Jekyll sites, the arguments `--watch`, `--incremental`, and `--livereload` are passed to `jekyll serve` by default. These arguments can be set via the global R option `blogdown.jekyll.server`.
 
