@@ -215,10 +215,13 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
     path = path[executable(path)]
     if (length(path)) break else path = ''
   }
-
-  if (identical(version, 'all')) return(if (!identical(path, '')) path)
-
   path2 = Sys.which(cmd)
+
+  if (identical(version, 'all')) {
+    path = xfun::normalize_path(c(path, path2))
+    return(unname(unique(path[path != ''])))
+  }
+
   if (path == '' || xfun::same_path(path, path2)) {
     if (path2 == '') stop(
       cmd, if (!is.null(version)) c(' ', version), ' not found. ', info, call. = FALSE
