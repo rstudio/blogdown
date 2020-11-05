@@ -161,7 +161,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     )
 
     # delete the resources/ dir if it is empty
-    if (g == 'hugo') bookdown:::clean_empty_dir('resources')
+    if (g == 'hugo') xfun::del_empty_dir('resources')
 
     # whether to watch for changes in Rmd files?
     if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
