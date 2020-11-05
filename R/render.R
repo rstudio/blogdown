@@ -205,8 +205,8 @@ process_markdown = function(x, res) {
   }
   # resolve bookdown references (figures, tables, sections, ...)
   # TODO: use bookdown >= 0.21.2 to avoid the unnecessary file I/O
-  x = xfun::in_dir(tempdir(), {
-    f = tempfile('post', '.', '.md'); on.exit(unlink(f), add = TRUE)
+  x = local({
+    f = wd_tempfile('.md~', pattern = 'post'); on.exit(unlink(f), add = TRUE)
     write_utf8(x, f)
     bookdown:::process_markdown(f, 'markdown', NULL, TRUE, TRUE)
     read_utf8(f)
