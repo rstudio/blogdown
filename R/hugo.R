@@ -332,7 +332,7 @@ download_modules = function(mod) {
     dir_create(v[2])
     file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
   })
-  unlink(xfun::with_ext(mod, c('.mod', '.sum')))
+  unlink(with_ext(mod, c('.mod', '.sum')))
 }
 
 #' @param path The path to the new file under the \file{content} directory.
