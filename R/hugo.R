@@ -347,16 +347,18 @@ download_modules = function(mod) {
 new_content = function(path, kind = '', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
   path2 = with_ext(path, '.md')
-  file  = content_file(path)
-  file2 = content_file(path2)
   if (grepl('/$', kind)) {
-    file2 = file.path(dirname(file2), 'index.md')
     path2 = dirname(path2)
     kind  = sub('/$', '', kind)
   }
-  hugo_cmd(c('new', shQuote(path2), if (kind != '') c('-k', kind)))
+  file2 = hugo_cmd(c('new', shQuote(path2), if (kind != '') c('-k', kind)), stdout = TRUE)
+  if (length(i <- grep(r <- ' created$', file2)) != 1) stop(
+    "Failed to create the file '", path, "'."
+  )
+  file2 = sub(r, '', file2)
   hugo_convert_one(file2)
-  file.rename(file2, file)
+  file = with_ext(file2, file_ext(path))
+  if (file != file2) file.rename(file2, file)
   if (open) open_file(file)
   file
 }
