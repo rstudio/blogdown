@@ -25,7 +25,7 @@ new_site(
   install_hugo = TRUE,
   format = "yaml",
   sample = TRUE,
-  theme = "yihui/hugo-stoic",
+  theme = "yihui/hugo-prose",
   hostname = "github.com",
   theme_example = TRUE,
   empty_dirs = FALSE,
