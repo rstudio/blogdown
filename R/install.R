@@ -306,9 +306,10 @@ find_hugo = local({
 #' @rdname find_hugo
 remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
   for (f in find_hugo(version)) {
+    if (!file_exists(f)) f = Sys.which(f)  # e.g., hugo.exe returned from find_hugo()
     d = dirname(f)
     # the parent folder name must be a version number
-    if (force || grepl('^[0-9.]+$', basename(d))) {
+    if (force || is_version(basename(d))) {
       message("Removing '", f, "'...")
       unlink(f)
       del_empty_dir(d)
@@ -320,6 +321,8 @@ remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FAL
     )
   }
 }
+
+is_version = function(x) grepl('^([0-9]+)([.][0-9]+)*$', x)
 
 executable = function(path) utils::file_test('-x', path)
 
