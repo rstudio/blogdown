@@ -277,8 +277,12 @@ uninstall_tip = function(p) {
 #' @export
 #' @return For \code{find_hugo()}, it returns the path to the Hugo executable if
 #'   found, otherwise it will signal an error, with a hint on how to install
-#'   (the required version of) Hugo. If \code{version = 'all'}, return the paths
-#'   of all versions of Hugo installed.
+#'   (the required version of) Hugo. If Hugo is found via the environment
+#'   variable \var{PATH}, only the base name of the path is returned (you may
+#'   use \code{\link{Sys.which}('hugo')} to obtain the full path).
+#'
+#'   If \code{version = 'all'}, return the paths of all versions of Hugo
+#'   installed.
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
   function(version = getOption('blogdown.hugo.version')) {
