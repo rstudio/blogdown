@@ -351,7 +351,10 @@ new_content = function(path, kind = '', open = interactive()) {
     path2 = dirname(path2)
     kind  = sub('/$', '', kind)
   }
-  file2 = hugo_cmd(c('new', shQuote(path2), if (kind != '') c('-k', kind)), stdout = TRUE)
+  file2 = hugo_cmd(
+    c('new', shQuote(path2), if (kind != '') c('-k', kind), theme_flag()),
+    stdout = TRUE
+  )
   if (length(i <- grep(r <- ' created$', file2)) != 1) stop(
     "Failed to create the file '", path, "'."
   )
