@@ -13,10 +13,10 @@
 #' features are supported, such as numbering and cross-referencing
 #' figures/tables.
 #'
-#' @param ...,number_sections,self_contained,highlight,template Arguments passed
-#'   to \code{bookdown::html_document2()} (note the option \code{theme} is not
-#'   supported and set to \code{NULL} internally, and when \code{template =
-#'   NULL}, a default template in \pkg{blogdown} will be used).
+#' @param ...,number_sections,self_contained,highlight,template,pandoc_args
+#'   Arguments passed to \code{bookdown::html_document2()} (note the option
+#'   \code{theme} is not supported and set to \code{NULL} internally, and when
+#'   \code{template = NULL}, a default template in \pkg{blogdown} will be used).
 #' @param keep_md,pre_knit,post_processor Passed to
 #'   \code{rmarkdown::\link{output_format}}.
 #'
@@ -32,7 +32,8 @@
 #' @export
 html_page = function(
   ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
-  template = NULL, keep_md = FALSE, pre_knit = NULL, post_processor = NULL
+  template = NULL, pandoc_args = NULL, keep_md = FALSE,
+  pre_knit = NULL, post_processor = NULL
 ) {
   if (identical(template, 'default')) stop(
     'blogdown::html_page() does not support template = "default"'
@@ -54,6 +55,7 @@ html_page = function(
     base_format = bookdown::html_document2(
       ..., number_sections = number_sections, theme = NULL,
       self_contained = self_contained, highlight = highlight,
+      pandoc_args = c('-M', 'link-citations=true', pandoc_args),
       template = template %n% pkg_file('resources', 'template-minimal.html')
     )
   )

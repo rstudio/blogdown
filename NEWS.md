@@ -60,6 +60,8 @@
 
 - For Jekyll sites, the arguments `--watch`, `--incremental`, and `--livereload` are passed to `jekyll serve` by default. These arguments can be set via the global R option `blogdown.jekyll.server`.
 
+- The meta variable `link-citations` is set to `true` for the `pandoc_args` argument of `blogdown::html_page()`, so that links can be generated on citation items by default.
+
 - The internal function `Rscript()` was removed and it is publicly available in the **xfun** package now. If you need this function, please use `xfun::Rscript()` instead.
 
 - Removed internal functions `is_windows()`, `is_osx()`, and `is_linux()`. They are available in the **xfun** package now (note that `is_osx()` has become `xfun::is_macos()`).
