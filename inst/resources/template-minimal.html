@@ -14,8 +14,11 @@ $for(include-before)$
 $include-before$
 $endfor$
 $if(toc)$
-<div id="$idprefix$TOC">
-$toc$
+<div id="TOC">
+$if(toc-title)$
+<h2 id="$toc-title$">$toc-title$</h2>
+$endif$
+$table-of-contents$
 </div>
 $endif$
 
