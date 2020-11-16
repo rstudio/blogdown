@@ -150,7 +150,7 @@ public
 
 The `blogdown/` directory is used to store cache files, and they are most likely to be useless to the published website. Only **knitr** may use them, and the published website will not depend on these files.
 
-The `public/` directory should be ignored if your website is to going to be automatically (re)built on a remote server such as Netlify.
+The `public/` directory should be ignored if your website is going to be automatically (re)built on a remote server such as Netlify.
 
 As we mentioned in Section \@ref(dep-path), R plots will be copied to `static/`, so you may see new files in GIT after you render an Rmd file that has graphics output. You need to add and commit these new files in GIT, because the website will use them.
 
