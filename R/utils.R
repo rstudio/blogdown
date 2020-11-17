@@ -278,8 +278,10 @@ check_netlify = function() {
   if (!is.null(p1 <- x$build$publish) &&
       !identical(p2 <- publish_dir(tmp = FALSE), gsub("/$", "", p1)))
     hint(
-      "The 'publish' setting in '", f, "' is '", p1, "' but the publish dir in ",
-      "the Hugo config file is '", p2, "'. You may want to change the former to the latter."
+      "The 'publish' setting in '", f, "' is '", p1, "' but the 'publishDir' setting in ",
+      "the Hugo config file is '", p2, "'. You may want to change the former to the latter.",
+      " If you don't have a 'publishDir' setting in 'config.toml' or 'config.yaml',",
+      " the default value for Hugo is 'public'."
     )
 }
 
