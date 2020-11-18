@@ -231,7 +231,7 @@ check_config = function(config, f) {
   ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
   if (is.null(s <- config[['ignoreFiles']])) hint(
     "You are recommended to set the 'ignoreFiles' field in ", f, ' to: ',
-    xfun::tojson(ignore), file = f
+    xfun::tojson(ignore)
   ) else if (!all(ignore %in% s)) hint(
     "You are recommended to ignore more items in the 'ignoreFiles' field in ", f, ": ",
     gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
@@ -242,7 +242,7 @@ check_config = function(config, f) {
   if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
     h = config$markup$defaultMarkdownHandler
     if (is.null(h) || h == 'goldmark') hint(
-      "'You are recommended to set the option 'unsafe' to true for goldmark in ", f, '. ',
+      "You are recommended to set the option 'unsafe' to true for goldmark in ", f, '. ',
       'See https://github.com/rstudio/blogdown/issues/447 for more information.'
     )
   }
