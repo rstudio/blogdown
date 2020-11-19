@@ -40,6 +40,8 @@
 
 - `serve_site()` fails to start the server when the config file contains a `baseURL` value that includes a subpath in it (thanks, @giabaio #254, @ShixiangWang #494).
 
+- `serve_site()` and `hugo_build()` fail to resolve URLs when `relativeURLs` is configured to `true` (thanks, @TianyiShi2001, #506).
+
 - The "Insert Image" addin works with posts that are index pages of leaf bundles now. The images are added to the `images/` folder under the post directory by default instead of the top-level `static/` directory (thanks, @amssljc, #499).
 
 - For a post that is the index page of a bundle, its images could not be displayed when the post content is displayed on other pages such as the home page (thanks, @andremrsantos, #501).

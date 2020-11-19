@@ -4,6 +4,8 @@
 # servr::server_config())
 site_base_dir = function() {
   config = load_config()
+  # baseurl is not meaningful when using relative URLs
+  if (get_config('relativeurls', FALSE, config)) return('/')
   x = get_config('baseurl', '/', config)
   x = gsub('^https?://[^/]+', '', x)
   if (x == '') x = '/'
@@ -961,19 +963,26 @@ is_rstudio_server = local({
   }
 })
 
-# tweak some env vars for hugo server
-tweak_hugo_env = function() {
+# tweak some env vars when building a site or running the hugo server
+tweak_hugo_env = function(server = TRUE) {
   # set baseURL properly when it doesn't contain protocol or domain:
-  # https://github.com/gohugoio/hugo/issues/7823 (add example.org/ to it)
-  b = get_config('baseurl', '/', load_config())
-  if (b != '/' && !grepl('^https?://[^/]+', b)) {
+  # https://github.com/gohugoio/hugo/issues/7823 (add example.org/ to it); or
+  # when relativeURLs = true, set baseURL to /
+  config = load_config()
+  b = get_config('baseurl', '/', config)
+  c1 = b != '/' && !grepl('^https?://[^/]+', b)
+  c2 = get_config('relativeurls', FALSE, config)
+  if (c2 || c1) {
     b = sub('^/', '', b)
-    Sys.setenv(HUGO_BASEURL = paste0('https://example.org/', b))
+    if (server) b = paste0('https://example.org/', b)
+    Sys.setenv(HUGO_BASEURL = if (c2) '/' else b)
     do.call(
       on.exit, list(substitute(Sys.unsetenv('HUGO_BASEURL')), add = TRUE),
       envir = parent.frame()
     )
   }
+
+  if (!server) return()
 
   # RStudio Server uses a proxy like http://localhost:8787/p/56a946ed/ for
   # http://localhost:4321, so we must use relativeURLs = TRUE:

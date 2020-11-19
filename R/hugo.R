@@ -50,7 +50,7 @@ hugo_build = function(local = FALSE) {
   config = load_config()
   # Hugo 0.48 generates an ugly empty resources/ dir in the root dir
   on.exit(del_empty_dir('resources'), add = TRUE)
-  if (local) tweak_hugo_env()
+  tweak_hugo_env(FALSE)
   hugo_cmd(c(
     if (local) c('-D', '-F'),
     getOption('blogdown.hugo.args'),
