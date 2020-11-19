@@ -267,7 +267,7 @@ install_theme = function(
       in_dir('..', change_config('themesDir', NA))
     } else warning(
       "The theme has provided an example site. You should read the theme's documentation ",
-      'and at least take a look at the config file config.toml of the example site, ',
+      'and at least take a look at the config file config.toml (or .yaml) of the example site, ',
       'because not all Hugo themes work with any config files.', call. = FALSE
     )
     # delete the images dir that contains thumbnail and screenshot of the theme
@@ -276,6 +276,8 @@ install_theme = function(
       unlink(file.path(thndir, c('tn.png', 'screenshot.png')))
       del_empty_dir(thndir)
     }
+    # delete the .Rprofile if exists, since it's unlikely to be useful
+    unlink(file.path(zipdir, '.Rprofile'))
     # check the minimal version of Hugo required by the theme
     if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {
       if (!is.null(minver <- read_toml(theme_cfg)[['min_version']])) {
