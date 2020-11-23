@@ -71,7 +71,7 @@ jobs:
           remotes::install_cran("sessioninfo")
         shell: Rscript {0}
 
-      - name: Install blogdown and Hugo
+      - name: Install Hugo using blogdown
         run: |
           xfun::install_dir(".")
           blogdown::install_hugo()
