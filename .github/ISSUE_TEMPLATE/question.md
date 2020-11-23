@@ -8,7 +8,7 @@ assignees: ''
 
 Welcome to the blogdown GitHub repo 👋
 
-We use the GitHub repository mainly to respond to bug reports and feature requests. The issue tracker is not for asking questions. However, in some cases, linking to unanswered questions can help us trace bugs or ways to improve our documentation. 
+We use the GitHub repository mainly to respond to bug reports and feature requests. The issue tracker is not for asking questions. However, in some cases, linking to unanswered questions can help us trace bugs or improve our documentation. 
 
 You may use an issue to link to an existing but unanswered question about blogdown here. The best places to ask questions are:
 
