@@ -33,6 +33,13 @@ lapply(c(), function(pkg) {
 
 # Preface {-}
 
+```{asis, echo=!knitr::is_latex_output()}
+::: {.infobox .caution}
+**A note from the authors**: This book contains some information and instructions that are now out of date because of changes to Hugo and the blogdown package. Thanks for your patience while we work to update the book, and please stay tuned for the revised version! <br>
+Thank you &mdash; Yihui, Amber, & Alison
+:::
+```
+
 ```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://www.crcpress.com/p/book/9780815363729', out.width='50%'}
 knitr::include_graphics('images/cover.png', dpi = NA)
 ```
