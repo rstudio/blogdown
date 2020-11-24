@@ -1,8 +1,10 @@
 # blogdown
 
-[![Build Status](https://travis-ci.com/rstudio/blogdown.svg)](https://travis-ci.com/rstudio/blogdown)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/rstudio/blogdown/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/blogdown/actions)
 [![Coverage status](https://codecov.io/gh/rstudio/blogdown/branch/master/graph/badge.svg)](https://codecov.io/github/rstudio/blogdown?branch=master)
 [![Downloads from the RStudio CRAN mirror](https://cranlogs.r-pkg.org/badges/blogdown)](https://cran.r-project.org/package=blogdown)
+<!-- badges: end -->
 
 <a href="https://bookdown.org/yihui/blogdown"><img src="https://bookdown.org/yihui/blogdown/images/logo.png" alt="blogdown logo" align="right" /></a>
 
