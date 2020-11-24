@@ -223,7 +223,8 @@ process_markdown = function(x, res) {
     write_utf8(x, mds[1])
     rmarkdown::pandoc_convert(
       mds[1], from = 'markdown', to = 'gfm+tex_math_dollars+footnotes', output = mds[2],
-      options = c('--atx-headers', '--wrap=preserve'), citeproc = TRUE
+      options = c(if (!rmarkdown::pandoc_available('2.11.2')) '--atx-headers', '--wrap=preserve'),
+      citeproc = TRUE
     )
     x = c(bookdown:::fetch_yaml(x), '', read_utf8(mds[2]))
   }
