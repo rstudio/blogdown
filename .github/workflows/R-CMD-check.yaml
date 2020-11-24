@@ -5,10 +5,16 @@ on:
     branches:
       - main
       - master
+    paths_ignore:
+      - 'docs/**'
+      - '.github/ISSUE_TEMPLATE'
   pull_request:
     branches:
       - main
       - master
+    paths_ignore:
+      - 'docs/**'
+      - '.github/ISSUE_TEMPLATE'
 
 name: R-CMD-check
 
