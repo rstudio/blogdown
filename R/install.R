@@ -77,7 +77,9 @@ install_hugo = function(
     }
   }
 
-  if (!is.null(local_file)) version = gsub('^hugo_([0-9.]+)_.*', '\\1', basename(local_file))
+  if (!is.null(local_file)) version = gsub(
+    '^hugo(_extended)?_([0-9.]+)_.*', '\\2', basename(local_file)
+  )
 
   version = gsub('^[vV]', '', version)  # pure version number
   if (!is.null(ver <- getOption('blogdown.hugo.version')) && ver != version) message2(
