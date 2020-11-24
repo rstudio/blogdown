@@ -1,4 +1,6 @@
 bookdown::gitbook:
+  includes:
+    before_body: WIP.html
   css: css/style.css
   split_by: section
   config:

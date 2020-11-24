@@ -33,15 +33,6 @@ lapply(c(), function(pkg) {
 
 # Preface {-}
 
-```{asis, echo=!knitr::is_latex_output()}
-::: {.infobox .caution}
-**A note from the authors**: Some of the information and instructions in this book are now out of date because of changes to Hugo and the blogdown package.
-If you have suggestions for improving this book, please file an issue in our [GitHub repository](https://github.com/rstudio/blogdown/issues/new?template=documentation.md).
-Thanks for your patience while we work to update the book, and please stay tuned for the revised version! <br>
-&mdash; Yihui, Amber, & Alison
-:::
-```
-
 ```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), fig.link='https://www.crcpress.com/p/book/9780815363729', out.width='50%'}
 knitr::include_graphics('images/cover.png', dpi = NA)
 ```

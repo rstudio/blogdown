@@ -42,7 +42,7 @@ h1.title {
   font-weight: 600;
 }
 
-.infobox {
+.caution {
   border: 4px #096B7263;
   border-style: dashed solid;
   padding: 1em;
@@ -54,8 +54,5 @@ h1.title {
   min-height: 120px;
   color: #096B72;
   background-color: #e6f3fc80;
-}
-
-.caution {
   background-image: url("../images/caution.png");
 }
