@@ -248,7 +248,7 @@ check_config = function(config, f) {
       'See https://github.com/rstudio/blogdown/issues/447 for more information.'
     )
   }
-  check_netlify()
+  check_netlify(f)
   if (getOption('blogdown.check_html', TRUE)) check_garbage_html()
   config
 }
@@ -259,7 +259,7 @@ is_example_url = function(url) {
   )
 }
 
-check_netlify = function() {
+check_netlify = function(cfg) {
   if (!file.exists(f <- 'netlify.toml') || !getOption('blogdown.check.netlify', TRUE))
     return()
   hint = function(...) message2(..., files = f)
@@ -277,14 +277,15 @@ check_netlify = function() {
     'set HUGO_VERSION to ', v2, ' in ', f, '.'
   )
 
-  if (!is.null(p1 <- x$build$publish) &&
-      !identical(p2 <- publish_dir(tmp = FALSE), gsub("/$", "", p1)))
-    hint(
-      "The 'publish' setting in '", f, "' is '", p1, "' but the 'publishDir' setting in ",
-      "the Hugo config file is '", p2, "'. You may want to change the former to the latter.",
-      " If you don't have a 'publishDir' setting in 'config.toml' or 'config.yaml',",
-      " the default value for Hugo is 'public'."
+  if (!is.null(p1 <- x$build$publish)) {
+    p2 = publish_dir(tmp = FALSE, default = NULL)
+    if (p3 <- is.null(p2)) p2 = 'public'
+    if (!identical(p2, gsub('/$', '', p1))) hint(
+      "The 'publish' setting in '", f, "' is '", p1, "' but the 'publishDir' setting for ",
+      "Hugo is '", p2, "' (", if (p3) "Hugo's default" else c("as set in ", cfg),
+      '). We recommend that you set publish = "', p2, '" in ', f, '.'
     )
+  }
 }
 
 check_garbage_html = function() {
@@ -584,9 +585,9 @@ get_config = function(field, default, config = load_config()) {
 }
 
 # read the publishDir option in config if the temporary publish dir is not set
-publish_dir = function(config = load_config(), tmp = TRUE) {
+publish_dir = function(config = load_config(), tmp = TRUE, default = 'public') {
   p = if (tmp) publish_dir_tmp()
-  if (is.null(p)) get_config('publishDir', 'public', config) else p
+  if (is.null(p)) get_config('publishDir', default, config) else p
 }
 
 # only a temporary workaround for the RStudio IDE issue: when a large number of
