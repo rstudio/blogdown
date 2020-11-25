@@ -5,12 +5,7 @@
 \alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(
-  version = "latest",
-  use_brew = FALSE,
-  force = FALSE,
-  extended = TRUE
-)
+install_hugo(version = "latest", use_brew = FALSE, extended = TRUE, ...)
 
 update_hugo()
 }
@@ -26,17 +21,15 @@ install Hugo. This argument has been deprecated. You are not recommended to
 install Hugo via Homebrew, because you may accidentally update it to the
 latest version, which might break your existing sites.}
 
-\item{force}{Whether to install Hugo even if it has already been installed.
-This may be useful when upgrading Hugo.}
-
 \item{extended}{Whether to use extended version of Hugo that has SCSS/SASS
 support. You only need the extended version if you want to edit SCSS/SASS.}
+
+\item{...}{Ignored.}
 }
 \description{
 Download the appropriate Hugo executable for your platform from Github and
 try to copy it to a system directory so \pkg{blogdown} can run the
-\command{hugo} command to build a site. \code{update_hugo()} is a wrapper of
-\code{install_hugo(force = TRUE)}.
+\command{hugo} command to build a site.
 }
 \details{
 This function tries to install Hugo to \code{Sys.getenv('APPDATA')} on

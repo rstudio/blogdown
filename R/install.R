@@ -2,8 +2,7 @@
 #'
 #' Download the appropriate Hugo executable for your platform from Github and
 #' try to copy it to a system directory so \pkg{blogdown} can run the
-#' \command{hugo} command to build a site. \code{update_hugo()} is a wrapper of
-#' \code{install_hugo(force = TRUE)}.
+#' \command{hugo} command to build a site.
 #'
 #' This function tries to install Hugo to \code{Sys.getenv('APPDATA')} on
 #' Windows, \file{~/Library/Application Support} on macOS, and
@@ -37,25 +36,17 @@
 #'   install Hugo. This argument has been deprecated. You are not recommended to
 #'   install Hugo via Homebrew, because you may accidentally update it to the
 #'   latest version, which might break your existing sites.
-#' @param force Whether to install Hugo even if it has already been installed.
-#'   This may be useful when upgrading Hugo.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
+#' @param ... Ignored.
 #' @seealso \code{\link{remove_hugo}()} to remove Hugo.
 #' @export
-install_hugo = function(
-  version = 'latest', use_brew = FALSE, force = FALSE, extended = TRUE
-) {
+install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, ...) {
 
   if (!missing(use_brew)) message(
     "The argument 'use_brew' has been deprecated in install_hugo(). If you want to ",
     "install Hugo via Homebrew, please use the command line instead: brew install hugo"
   )
-
-  if (Sys.which('hugo') != '' && !force) {
-    message('It seems Hugo has been installed. Use force = TRUE to reinstall or upgrade.')
-    return(invisible())
-  }
 
   local_file = if (grepl('[.](zip|tar[.]gz)$', version) && file.exists(version))
     normalizePath(version)
@@ -174,7 +165,10 @@ install_hugo_bin = function(exec, version) {
 
 #' @export
 #' @rdname install_hugo
-update_hugo = function() install_hugo(force = TRUE)
+update_hugo = function() {
+  message('blogdown::update_hugo() has been deprecated. Please use blogdown::install_hugo() instead.')
+  install_hugo()
+}
 
 brew_hugo = function() {
   install = function() system('brew update && brew reinstall hugo')
