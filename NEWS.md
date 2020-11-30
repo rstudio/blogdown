@@ -52,6 +52,8 @@
 
 - `install_hugo()` could not install the extended version of Hugo that was downloaded manually, e.g., `blogdown::install_hugo('~/Downloads/hugo_extended_0.78.2_Linux-64bit.tar.gz')` would fail (thanks, Stuart, https://stackoverflow.com/q/64962659/559676).
 
+- `new_post(date = "")` or `new_post(date = NULL)` failed to work. In both cases, it should create a post without the `date` field in the YAML metadata (thanks, Caleb Stevens, https://stackoverflow.com/q/65067164/559676).
+
 ## MINOR CHANGES
 
 - For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.
