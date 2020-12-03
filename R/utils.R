@@ -243,10 +243,7 @@ check_config = function(config, f) {
   )
   if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
     h = config$markup$defaultMarkdownHandler
-    if (is.null(h) || h == 'goldmark') hint(
-      "You are recommended to set the option 'unsafe' to true for goldmark in ", f, '. ',
-      'See https://github.com/rstudio/blogdown/issues/447 for more information.'
-    )
+    if (is.null(h) || h == 'goldmark') config_goldmark(f)
   }
   check_netlify(f)
   if (getOption('blogdown.check_html', TRUE)) check_garbage_html()
@@ -257,6 +254,34 @@ is_example_url = function(url) {
   is.character(url) && grepl(
     '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
   )
+}
+
+config_goldmark = function(f, silent = FALSE) {
+  x = switch(
+    xfun::file_ext(f),
+    yaml = '
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+',
+    toml = '
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+'
+    )
+  if (is.null(x)) return()
+  if (!silent) message(
+    "You are recommended to set the option 'unsafe' to true for goldmark in '", f,
+    "' (see https://github.com/rstudio/blogdown/issues/447 for more info). "
+  )
+  if (silent || yes_no("Do you want blogdown to automatically set it for you?")) {
+    cat(x, file = f, append = TRUE)
+  } else message(c(
+    "To set the option manually, add the following settings to '", f, "':\n", x
+  ))
 }
 
 check_netlify = function(cfg) {
