@@ -542,7 +542,7 @@ config_netlify = function(output = 'netlify.toml', new_config = list()) {
       message2(xfun::file_string(output), files = output)
       message("The new '", output, "' will be:")
       message2(xfun::file_string(f))
-      if (!interactive() || tolower(readline(sprintf("Overwrite the existing '%s'? (y/n) ", output))) != 'y')
+      if (!yes_no(sprintf("Overwrite the existing '%s'?", output)))
         return(warning(
           "Cannot write to the file '", output, "' because it exists. You have ",
           "to delete it (if you do not need it any more) before I can write to it."
@@ -1035,4 +1035,8 @@ clean_hugo_cache = function() {
   # clean up the hugo cache dir during R CMD check
   if (xfun::is_R_CMD_check())
     unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
+}
+
+yes_no = function(question) {
+  interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
 }
