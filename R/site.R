@@ -23,7 +23,13 @@ blogdown_site = function(input, ...) {
       )
     }) else {
       build_site()
-      if (!quiet) message("\nOutput created: ", paste0(output_dir, '/index.html'))
+      if (!quiet) message(
+        "\n==> The site has been generated to the directory '", output_dir, "'.\n\n",
+        "** Note that normally you cannot just open the .html files in this directory ",
+        "to view them in a browser. This directory need to be served before you can ",
+        "preview web pages correctly (e.g., you may deploy the folder to a web server). ",
+        "Alternatively, blogdown::serve_site() gives you a local preview of the site.\n"
+      )
     }
   }
 
