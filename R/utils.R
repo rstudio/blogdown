@@ -358,9 +358,12 @@ find_config = function(files = config_files(), error = TRUE) {
 }
 
 # figure out the possible root directory of the website
-site_root = function(config = config_files()) {
+site_root = function(config = config_files(), .site_dir = NULL) {
   if (!is.null(root <- opts$get('site_root'))) return(root)
   owd = getwd(); on.exit(setwd(owd), add = TRUE)
+  # If starting point has been provided change to this directory
+  if(!is.null(.site_dir) && owd != .site_dir)
+    setwd(.site_dir)
   paths = NULL
   while (length(find_config(config, error = FALSE)) == 0) {
     w1 = getwd(); w2 = dirname(w1)

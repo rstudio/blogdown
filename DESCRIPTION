@@ -15,6 +15,7 @@ Authors@R: c(
     person("Xianying", "Tan", role = "ctb"),
     person("Raniere", "Silva", role = "ctb"),
     person("Jozef", "Hajnala", role = "ctb"),
+    person("Oliver", "Madsen", role = "ctb", email = "oliver.p.madsen@gmail.com"),
     person(family = "RStudio, PBC", role = "cph"),
     person()
     )
