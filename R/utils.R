@@ -190,10 +190,12 @@ output_file = function(file, md = is_rmarkdown(file)) {
 
 opts = knitr:::new_defaults()
 
+# execute code in the site root dir
+in_root = function(expr) xfun::in_dir(site_root(), expr)
+
 # read config file and cache the options (i.e. do not read again unless the config is newer)
-load_config = function() {
+load_config = function() in_root({
   config = opts$get('config')
-  owd = setwd(site_root()); on.exit(setwd(owd), add = TRUE)
   f = find_config(); m = file.info(f)[, 'mtime']
   # read config only if it has been updated
   if (identical(attr(config, 'config_time'), m)) return(config)
