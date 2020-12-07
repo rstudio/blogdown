@@ -64,8 +64,6 @@
 
 - `read_toml()` and `toml2yaml()` will try to preserve the original order of fields in the TOML data, instead of using the alphabetical order.
 
-- The default theme in `new_site()` was changed from `hugo-lithium` to [`hugo-prose`](https://github.com/yihui/hugo-prose) (this may change again in the future).
-
 - When clicking the "Build Website" button in RStudio, it will no longer open the `index.html` file in the generated site folder, but emit a message telling users that this folder needs to be served before the web pages can be correctly previewed (#522).
 
 - For Jekyll sites, the arguments `--watch`, `--incremental`, and `--livereload` are passed to `jekyll serve` by default. These arguments can be set via the global R option `blogdown.jekyll.server`.
