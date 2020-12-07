@@ -33,8 +33,8 @@ This function only moves (R) Markdown source files. If these files use
 }
 \examples{
 \dontrun{
-blogdown::bundle_site(".", "../new-site/")
-blogdown::bundle_site(".", ".")  # move files within the current working directory
+blogdown::bundle_site('.', '../new-site/')
+blogdown::bundle_site('.', '.')  # move files within the current working directory
 }
 }
 \references{

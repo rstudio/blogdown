@@ -67,16 +67,16 @@ Since Hugo v0.60, Hugo has switched its default Markdown rendering
 \examples{
 library(blogdown)
 
-shortcode("tweet", "1234567")
-shortcodes("tweet", as.character(1:5))  # multiple tweets
-shortcode("figure", src = "/images/foo.png", alt = "A nice figure")
-shortcode("highlight", "bash", .content = "echo hello world;")
+shortcode('tweet', '1234567')
+shortcodes('tweet', as.character(1:5))  # multiple tweets
+shortcode('figure', src='/images/foo.png', alt='A nice figure')
+shortcode('highlight', 'bash', .content = 'echo hello world;')
 
-shortcode_html("myshortcode", .content = "My <strong>shortcode</strong>.")
+shortcode_html('myshortcode', .content='My <strong>shortcode</strong>.')
 
-shortcode_open("figure", src = "/images/foo.png")
+shortcode_open('figure', src='/images/foo.png')
 # This inner text will be *processed* by Pandoc, @Smith2006
-shortcode_close("figure")
+shortcode_close('figure')
 }
 \references{
 \url{https://gohugo.io/extras/shortcodes/}

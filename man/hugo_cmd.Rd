@@ -197,7 +197,7 @@ different formats via \command{hugo convert}.
 }}
 
 \examples{
-blogdown::hugo_available("1.2.3")
+blogdown::hugo_available('1.2.3')
 if (interactive()) blogdown::new_site()
 }
 \references{
