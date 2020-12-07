@@ -34,7 +34,7 @@ version is set to the current version of Hugo found on your computer.
 blogdown::config_netlify(output = NULL)  # default data
 
 # change the publish dir to 'docs/'
-blogdown::config_netlify(NULL, list(build = list(publish = 'docs')))
+blogdown::config_netlify(NULL, list(build = list(publish = "docs")))
 }
 \references{
 See Netlify's documentation on the configuration file

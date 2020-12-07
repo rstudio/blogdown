@@ -52,7 +52,7 @@ For \code{write_toml()}, it converts an R object to YAML via the R package
 }
 \examples{
 \dontrun{
-v = blogdown::read_toml(x = c('a = 1', 'b = true', 'c = "Hello"', 'd = [1, 2]'))
+v = blogdown::read_toml(x = c("a = 1", "b = true", "c = \"Hello\"", "d = [1, 2]"))
 v
 blogdown::write_toml(v)
 }
