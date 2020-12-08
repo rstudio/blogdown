@@ -222,8 +222,9 @@ message2 = function(..., files = NULL) {
   message(hrule())
   message(...)
   message(hrule())
-  if (interactive()) for (f in files) open_file(f)
+  for (f in files) open_file(f)
 }
+
 
 # return a list of files to be opened initially in an RStudio project
 initial_files = function(n = 10) {
@@ -523,8 +524,8 @@ publish_dir_tmp = function() {
 }
 
 # use RStudio to open the file if possible
-open_file = function(x) {
-  tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
+open_file = function(x, open = interactive()) {
+  if (open) tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
 }
 
 # produce a dash-separated filename by replacing non-alnum chars with -
@@ -666,7 +667,7 @@ find_yaml = function(field = character(), value = character(), open = FALSE) {
   }))))
   n = length(files)
   if (n == 0) return(invisible(files))
-  if (open) for (f in files) open_file(f)
+  if (open) for (f in files) open_file(f, TRUE)
   files
 }
 

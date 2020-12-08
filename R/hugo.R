@@ -168,7 +168,7 @@ new_site = function(
     dir_create(d)
     f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
     file.copy(f1, f2)
-    if (interactive() && getOption('blogdown.open_sample', TRUE)) open_file(f2)
+    if (getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
   if (!file.exists('index.Rmd')) {
     writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
@@ -364,7 +364,7 @@ new_content = function(path, kind = '', open = interactive()) {
   hugo_convert_one(file2)
   file = with_ext(file2, file_ext(path))
   if (file != file2) file.rename(file2, file)
-  if (open) open_file(file)
+  open_file(file, open)
   file
 }
 
@@ -468,7 +468,7 @@ new_post = function(
     categories = as.list(categories), tags = as.list(tags)
   ), if (!file.exists('archetypes/default.md')) list(draft = NULL)
   ))
-  if (open) open_file(file)
+  open_file(file, open)
   file
 }
 
