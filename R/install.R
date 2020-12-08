@@ -230,7 +230,7 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
     )
     return(basename(path2))  # do not use the full path of the command
   } else {
-    if (path2 != '') warning2(
+    if (path2 != '') msg2(
       'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
       "If you don't need both copies, you may delete/uninstall the latter",
       uninstall_tip(path2), "."
