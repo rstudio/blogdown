@@ -505,7 +505,12 @@ config_Rprofile = function() {
 
 # option names may be case insensitive
 get_config = function(field, default, config = load_config()) {
-  config[[field]] %n% config[[match(tolower(field), tolower(names(config)))]] %n% default
+  config[[field]] %n% index_ci(config, field) %n% default
+}
+
+# index an object with a case-insensitive name
+index_ci = function(x, name) {
+  x[[match(tolower(name), tolower(names(x)))]]
 }
 
 # read the publishDir option in config if the temporary publish dir is not set
