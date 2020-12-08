@@ -225,6 +225,8 @@ message2 = function(..., files = NULL) {
   for (f in files) open_file(f)
 }
 
+msg1 = function(...) message('* ', ...)
+msg2 = function(...) message('\n==> ', ..., '\n')
 
 # return a list of files to be opened initially in an RStudio project
 initial_files = function(n = 10) {
