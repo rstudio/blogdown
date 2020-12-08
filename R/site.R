@@ -40,7 +40,8 @@ blogdown_site = function(input, ...) {
     render = render,
     subdirs = TRUE,
     clean = function() {
-      c('blogdown', output_dir, clean_targets())
+      x = c('blogdown', output_dir, clean_targets())
+      x[file.exists(x)]
     }
   )
 }
@@ -48,7 +49,6 @@ blogdown_site = function(input, ...) {
 clean_targets = function() {
   rmds = list_rmds('content')
   files = by_products(rmds, c('.html', '.markdown'))
-  files = files[file.exists(files)]
   c(files, 'static/rmarkdown-libs', list_files(
     'static', '.+_files$', include.dirs = TRUE
   ))
