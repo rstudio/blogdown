@@ -47,7 +47,7 @@ check_gitignore = function() {
   msg1('Checking ', f)
   if (!file_exists(f)) return(msg1(f, ' was not found'))
   x = read_utf8(f)
-  y = c('*.html', '*.md', 'static')
+  y = c('*.html', '*.md', 'static', 'config.toml', 'config.yaml')
   if (any(i <- x %in% y)) msg2(
     'These items should probably not be ignored: ', paste(x[i], collapse = ', ')
   )
