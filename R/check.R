@@ -193,13 +193,14 @@ check_content = function() {
   files = setdiff(rmds, files)
   files = files[require_rebuild(output_file(files), files)]
   if (length(files)) msg2(
-    'You may want to re-render these posts:\n\n', indent_list(files)
+    'You may want to re-render these posts with blogdown::build_site(build_rmd = "timestamp"):\n\n',
+    indent_list(files)
   )
-  msg1('Checking for plain Markdown posts that .html output files')
-  files = list_rmds(pattern = '[.](md|markdown)$')
-  files = files[file_exists(with_ext(files, 'html'))]
+  msg1('Checking for plain Markdown posts that have unnecessary .html output files')
+  files = with_ext(list_rmds(pattern = '[.](md|markdown)$'), 'html')
+  files = files[file_exists(files)]
   if (length(files)) msg2(
-    'You may want to delete the .html output files of these posts:\n\n', indent_list(files)
+    'You may want to delete these .html output files:\n\n', remove_list(files)
   )
   check_garbage_html()
 }
@@ -212,6 +213,7 @@ check_garbage_html = function() {
     if (any(x == '<meta name="generator" content="pandoc" />')) return(f)
   }))
   if (length(res)) msg2(
-    'You may want to delete these files:\n\n', paste(' ', res, collapse = '\n')
+    'You may want to delete these files and rebuild their source files with blogdown::build_site(build_rmd = "newfile"):\n\n',
+    remove_list(res)
   )
 }

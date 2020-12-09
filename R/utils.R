@@ -242,7 +242,17 @@ message2 = function(..., files = NULL) {
 msg1 = function(...) message('* ', ...)
 msg2 = function(...) message('\n==> ', ..., '\n')
 
-indent_list = function(x) paste0('  ', x, collapse = '\n')
+# c(ITEM, ITEM, ITEM) ->
+#   before ITEM after sep
+#   before ITEM after sep
+#   before ITEM after
+indent_list = function(x, before = '', after = '', sep = '\n') {
+  paste0('  ', before, x, after, collapse = sep)
+}
+
+remove_list = function(x) {
+  paste0('  file.remove(c(\n', indent_list(x, '"', '"', ',\n'), '\n  ))')
+}
 
 # return a list of files to be opened initially in an RStudio project
 initial_files = function(n = 10) {
