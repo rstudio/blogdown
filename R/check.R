@@ -185,8 +185,9 @@ check_content = function() {
   )
   msg1('Checking for R Markdown posts that have not been rendered')
   rmds = list_rmds()
-  if (length(files <- newfile_filter(rmds))) msg2(
-    'Found the following posts that have not been rendered:\n\n', indent_list(files)
+  if (length(files <- filter_newfile(rmds))) msg2(
+    'You may want to render the following posts with blogdown::build_site(build_rmd = "newfile"):\n\n',
+    indent_list(files)
   )
   msg1('Checking for R Markdown posts with out-of-date output files')
   files = setdiff(rmds, files)

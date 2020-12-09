@@ -124,7 +124,7 @@ render_new = function(f) xfun::Rscript_call(
 #' Filter files by checking if their modification times or MD5 checksums have
 #' changed.
 #'
-#' The function \code{newfile_filter()} returns paths of source files that do
+#' The function \code{filter_newfile()} returns paths of source files that do
 #' not have corresponding output files, e.g., an \file{.Rmd} file that doesn't
 #' have the \file{.html} output file.
 #'
@@ -137,7 +137,7 @@ render_new = function(f) xfun::Rscript_call(
 #' file will be returned when its modification time at least 5 seconds newer
 #' than its output file's modification time.
 #'
-#' The function \code{md5sum_filter()} reads the MD5 checksums of files from a
+#' The function \code{filter_md5sum()} reads the MD5 checksums of files from a
 #' database (a tab-separated text file), and returns the files of which the
 #' checksums have changed. If the database does not exist, write the checksums
 #' of files to it, otherwise update the checksums after the changed files have
@@ -149,20 +149,20 @@ render_new = function(f) xfun::Rscript_call(
 #' @param files A vector of file paths.
 #' @return The filtered file paths.
 #' @export
-newfile_filter = function(files) {
+filter_newfile = function(files) {
   files[!file_exists(output_file(files))]
 }
 
-#' @rdname newfile_filter
+#' @rdname filter_newfile
 #' @export
-timestamp_filter = function(files) {
+filter_timestamp = function(files) {
   files[require_rebuild(output_file(files), files)]
 }
 
 #' @param db Path to the database file.
-#' @rdname newfile_filter
+#' @rdname filter_newfile
 #' @export
-md5sum_filter = function(files, db = 'blogdown/md5sum.txt') {
+filter_md5sum = function(files, db = 'blogdown/md5sum.txt') {
   opt = options(stringsAsFactors = FALSE); on.exit(options(opt), add = TRUE)
   md5 = data.frame(file = files, checksum = tools::md5sum(files))  # new checksums
   if (!file.exists(db)) {
@@ -178,6 +178,16 @@ md5sum_filter = function(files, db = 'blogdown/md5sum.txt') {
   one[i, 2] = one[i, 3]  # update checksums
   write.table(one[, 1:2], db, row.names = FALSE)
   files
+}
+
+# TODO: remove them in the future
+md5sum_filter = function(...) {
+  warning('The function md5sum_filter() has been renamed to filter_md5sum()')
+  filter_md5sum(...)
+}
+timestamp_filter = function(...) {
+  warning('The function timestamp_filter() has been renamed to filter_timestamp()')
+  filter_timestamp(...)
 }
 
 # guess if the OS is 64bit

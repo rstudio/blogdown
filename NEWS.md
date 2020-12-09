@@ -1,4 +1,4 @@
-# CHANGES IN blogdown VERSION 0.22
+# CHANGES IN blogdown VERSION 1.0
 
 ## NEW FEATURES
 
@@ -18,7 +18,7 @@
 
 - Added an argument `.Rprofile = TRUE` to `new_site()` to create the `.Rprofile` file by default. This file contains a few sample global options that could affect **blogdown**'s behavior, e.g., the option `blogdown.hugo.version` is set to the current Hugo version, so that a site will not be affected by future Hugo updates and will always use the fixed version of Hugo. This file is provided so that users are better aware of some of these options, and can change them if they want.
 
-- The `build_rmd` argument of `build_site()` can take a function as its value now (thanks, [Tyler Smith](https://twitter.com/sedgeboy/status/1308511453129908225)). The function is expected to take a vector of paths of all R Markdown files under the `content/` directory, and returns a vector of paths of R Markdown files to be built. This argument can also take aliases `"timestamp"`, which is equivalent to `blogdown::timestamp_filter`, and `"md5sum"`, which is equivalent to `blogdown::md5sum_filter`. For example, `blogdown::build_site(build_rmd = "timestamp")` means to build all R Markdown files if they are older than their output files (by comparing modification times).
+- The `build_rmd` argument of `build_site()` can take a function as its value now (thanks, [Tyler Smith](https://twitter.com/sedgeboy/status/1308511453129908225)). The function is expected to take a vector of paths of all R Markdown files under the `content/` directory, and returns a vector of paths of R Markdown files to be built. This argument can also take aliases `"timestamp"`, which is equivalent to `blogdown::filter_timestamp`, and `"md5sum"`, which is equivalent to `blogdown::filter_md5sum`. For example, `blogdown::build_site(build_rmd = "timestamp")` means to build all R Markdown files if they are older than their output files (by comparing modification times).
 
 - When opening a **blogdown** website project in RStudio, you can specify a number of files to be automatically opened every time via the global option `blogdown.initial_files` in your `.Rprofile`. This option can take a vector of file paths, e.g., `options(blogdown.initial_files = c('config.yaml', '.Rprofile', 'content/post/my-first-post/index.Rmd'))` (files that do not exist will be ignored). Alternatively, this option can take a function that returns a vector of file paths, e.g., `options(blogdown.initial_files = blogdown:::initial_files)`.
 
@@ -35,6 +35,8 @@
 - The default value of the global option `blogdown.serve_site.startup` was changed from `TRUE` to `FALSE`, meaning that the site will not by served by default when the RStudio project is first opened. If you want the previous behavior, you may set `options(blogdown.serve_site.startup = TRUE)` in your `.Rprofile`.
 
 - The function `update_hugo()` and the argument `force` of `install_hugo()` have been deprecated. If you want to update Hugo to a newer version, you can call `install_hugo()` and specify a desired version.
+
+- The functions `md5sum_filter` and `timestamp_filter` have been renamed to `filter_md5sum` and `filter_timestamp`, respectively.
 
 ## BUG FIXES
 
@@ -84,9 +86,9 @@
 
 - Added a helper function `blogdown::bundle_site()` to move post files into leaf bundles in a website, e.g., from `content/foo/bar/hello-world.Rmd` to `content/foo/bar/hello-world/index.Rmd`.
 
-- Exported the (previously internal) function `blogdown::md5sum_filter` function (#341). See its potential application on the help page `?blogdown::build_site`.
+- Exported the (previously internal) function `blogdown::filter_md5sum` function (#341). See its potential application on the help page `?blogdown::build_site`.
 
-- Similarly, the function `blogdown::timestamp_filter()` has been exported and documented.
+- Similarly, the function `blogdown::filter_timestamp()` has been exported and documented.
 
 - If a theme contains Hugo modules (e.g., the former hugo-academic theme), the modules will be resolved at the time when a theme is installed, which means users will not need to install Go or GIT to work with themes that contain Hugo modules.
 
@@ -208,7 +210,7 @@
 
 - Added an argument `empty_dirs` to `new_site()` so that you can preserve the empty directories via `blogdown::new_site(empty_dirs = TRUE)`. By default, empty directories will be deleted when a new site is created (thanks, @apreshill, rstudio-education/arm-workshop-rsc2019#8).
 
-- Added a global option `blogdown.files_filter` to allow users to decide which Rmd files to be rebuilt (this option can be set in `.Rprofile`). The default filter is `blogdown:::timestamp_filter`, i.e., only Rmd files which are older than their output files will be recompiled when rebuilding a site. You can set `options(blogdown.files_filter = blogdown:::md5sum_filter)` to use a different filter based on MD5 checksums, i.e., only rebuild an Rmd file if its MD5 checksum has changed. The checksums of Rmd files are saved in the file `blogdown/md5sum.txt` under the website root directory (thanks, @jonathan-g, #341).
+- Added a global option `blogdown.files_filter` to allow users to decide which Rmd files to be rebuilt (this option can be set in `.Rprofile`). The default filter is `blogdown:::filter_timestamp`, i.e., only Rmd files which are older than their output files will be recompiled when rebuilding a site. You can set `options(blogdown.files_filter = blogdown:::filter_md5sum)` to use a different filter based on MD5 checksums, i.e., only rebuild an Rmd file if its MD5 checksum has changed. The checksums of Rmd files are saved in the file `blogdown/md5sum.txt` under the website root directory (thanks, @jonathan-g, #341).
 
 ## MINOR CHANGES
 
