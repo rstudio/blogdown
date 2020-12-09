@@ -228,6 +228,8 @@ message2 = function(..., files = NULL) {
 msg1 = function(...) message('* ', ...)
 msg2 = function(...) message('\n==> ', ..., '\n')
 
+indent_list = function(x) paste0('  ', x, collapse = '\n')
+
 # return a list of files to be opened initially in an RStudio project
 initial_files = function(n = 10) {
   files = list.files(content_file(), md_pattern, full.names = TRUE, recursive = TRUE)
