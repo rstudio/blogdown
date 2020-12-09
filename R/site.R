@@ -47,7 +47,7 @@ blogdown_site = function(input, ...) {
 }
 
 clean_targets = function() {
-  rmds = list_rmds('content')
+  rmds = list_rmds()
   files = by_products(rmds, c('.html', '.markdown'))
   c(files, 'static/rmarkdown-libs', list_files(
     'static', '.+_files$', include.dirs = TRUE

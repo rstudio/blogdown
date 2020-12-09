@@ -71,7 +71,7 @@ build_site = function(
       )
     }
     files = if (is.character(build_rmd)) build_rmd else {
-      files = list_rmds('content', TRUE)
+      files = list_rmds(check = TRUE)
       if (is.function(build_rmd)) build_rmd(files) else {
         if (length(files)) getOption('blogdown.files_filter', identity)(files)
       }
@@ -83,8 +83,8 @@ build_site = function(
   invisible()
 }
 
-list_rmds = function(dir, check = FALSE) {
-  files = list_files(dir, rmd_pattern)
+list_rmds = function(dir = content_file(), check = FALSE, pattern = rmd_pattern) {
+  files = list_files(dir, pattern)
   # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
   # but include _index.Rmd/.md
   files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
