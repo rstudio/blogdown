@@ -119,10 +119,23 @@ render_new = function(f) xfun::Rscript_call(
   fail = c('Failed to render ', f)
 )
 
-#' Look for files that have been possibly modified
+#' Look for files that have been possibly modified or out-of-date
 #'
 #' Filter files by checking if their modification times or MD5 checksums have
 #' changed.
+#'
+#' The function \code{newfile_filter()} returns paths of source files that do
+#' not have corresponding output files, e.g., an \file{.Rmd} file that doesn't
+#' have the \file{.html} output file.
+#'
+#' The function \code{timestamp_filer()} compares the modification time of an
+#' Rmd file with that of its output file, and returns the path of a file if it
+#' is newer than its output file by \code{N} seconds (or if the output file does
+#' not exist), where \code{N} is obtained from the R global option
+#' \code{blogdown.time_diff}. By default, \code{N = 0}. You may change it via
+#' \code{options()}, e.g., \code{options(blogdown.time_diff = 5)} means an Rmd
+#' file will be returned when its modification time at least 5 seconds newer
+#' than its output file's modification time.
 #'
 #' The function \code{md5sum_filter()} reads the MD5 checksums of files from a
 #' database (a tab-separated text file), and returns the files of which the
@@ -131,20 +144,23 @@ render_new = function(f) xfun::Rscript_call(
 #' been identified. When a file is modified, its MD5 checksum is very likely to
 #' change.
 #'
-#' The function \code{timestamp_filer()} compares the modification time of an
-#' Rmd file with that of its output file, and returns a file if it's newer than
-#' its output file by \code{N} seconds (or if the output file does not exist),
-#' where \code{N} is obtained from the R global option
-#' \code{blogdown.time_diff}. By default, \code{N = 0}. You may change it via
-#' \code{options()}, e.g., \code{options(blogdown.time_diff = 5)} means an Rmd
-#' file will be returned when its modification time at least 5 seconds newer
-#' than its output file's modification time.
-#'
 #' These functions can be used to determine which Rmd files to be rebuilt in a
 #' \pkg{blogdown} website. See \code{\link{build_site}()} for more information.
 #' @param files A vector of file paths.
+#' @return The filtered file paths.
+#' @export
+newfile_filter = function(files) {
+  files[!file_exists(output_file(files))]
+}
+
+#' @rdname newfile_filter
+#' @export
+timestamp_filter = function(files) {
+  files[require_rebuild(output_file(files), files)]
+}
+
 #' @param db Path to the database file.
-#' @return Paths of files of which the checksums have changed.
+#' @rdname newfile_filter
 #' @export
 md5sum_filter = function(files, db = 'blogdown/md5sum.txt') {
   opt = options(stringsAsFactors = FALSE); on.exit(options(opt), add = TRUE)
@@ -162,18 +178,6 @@ md5sum_filter = function(files, db = 'blogdown/md5sum.txt') {
   one[i, 2] = one[i, 3]  # update checksums
   write.table(one[, 1:2], db, row.names = FALSE)
   files
-}
-
-#' @rdname md5sum_filter
-#' @export
-timestamp_filter = function(files) {
-  files[require_rebuild(output_file(files), files)]
-}
-
-# return the files that do not have corresponding output files, e.g., an .Rmd
-# that doesn't have .html output
-newfile_filter = function(files) {
-  files[!file_exists(output_file(files))]
 }
 
 # guess if the OS is 64bit
