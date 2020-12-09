@@ -102,6 +102,7 @@ markup:
 #' @rdname check_site
 #' @export
 check_hugo = function() {
+  if (generator() != 'hugo') return()
   msg1('Checking Hugo')
   if (!hugo_available()) return(msg2(
     'Hugo not found; you may install it via blogdown::install_hugo()'
