@@ -353,14 +353,20 @@ new_content = function(path, kind = '', open = interactive()) {
     path2 = dirname(path2)
     kind  = sub('/$', '', kind)
   }
+  files = list_mds()
   file2 = hugo_cmd(
     c('new', shQuote(path2), if (kind != '') c('-k', kind), theme_flag()),
     stdout = TRUE
   )
-  if (length(i <- grep(r <- ' created$', file2)) != 1) stop(
-    "Failed to create the file '", path, "'."
-  )
-  file2 = sub(r, '', file2)
+  if (length(i <- grep(r <- ' created$', file2)) == 1) {
+    file2 = sub(r, '', file2[i])
+  } else {
+    # should the above method fail to identify the newly created .md, search for
+    # the new file with brute force
+    files = setdiff(list_mds(), files)  # new file(s) created
+    file2 = files[basename(files) == basename(path2)]
+  }
+  if (length(file2) != 1) stop("Failed to create the file '", path, "'.")
   hugo_convert_one(file2)
   file = with_ext(file2, file_ext(path))
   if (file != file2) file.rename(file2, file)

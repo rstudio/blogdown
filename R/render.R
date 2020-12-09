@@ -99,6 +99,9 @@ list_rmds = function(dir = content_file(), check = FALSE, pattern = rmd_pattern)
   files
 }
 
+# list .md files
+list_mds = function() list_files(content_file(), '[.]md$')
+
 # build R Markdown posts
 build_rmds = function(files) {
   i = xfun::is_sub_path(files, rel_path(content_file()))
