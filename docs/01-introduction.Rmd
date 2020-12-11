@@ -2,48 +2,87 @@
 
 # Get Started
 
-In this chapter, we show how to create a simple website from scratch. The website will contain a home page, an "About" page, one R Markdown post, and a plain Markdown post. You will learn the basic concepts for creating websites with **blogdown**. For beginners, we recommend that you get started with the RStudio IDE, but it is not really required. The RStudio IDE can make a few things easier, but you are free to use any editor if you do not care about the extra benefits in RStudio.
+In this chapter, we show how to create a simple website from scratch. The website will contain a home page, an "About" page, one R Markdown post, and two plain Markdown posts. You will learn the basic concepts for creating websites with **blogdown**. For beginners, we recommend that you get started with the RStudio IDE, but it is not required. The RStudio IDE can make a few things easier, but you are free to use any editor if you do not care about the extra benefits in RStudio.
 
 ## Installation
 
-We assume you have already installed R (https://www.r-project.org) [@R-base] and the RStudio IDE (https://www.rstudio.com). If you do not have RStudio IDE installed, please install Pandoc\index{Pandoc} (http://pandoc.org). Next we need to install the **blogdown** package in R. It is available on CRAN and GitHub, and you can install it with:
+We assume you have already installed:
+
++ R (https://www.r-project.org) [@R-base] and 
++ the RStudio IDE (https://rstudio.com/products/rstudio/download/). 
+
+If you are not using the RStudio IDE, please install Pandoc\index{Pandoc} (http://pandoc.org). 
+
+The **blogdown** package is available on CRAN and you can install it with:
 
 ```{r eval=FALSE}
 ## Install from CRAN
 install.packages('blogdown') 
+```
+
+To follow along with this book, we recommend using **blogdown** `r packageVersion("blogdown")`. 
+
+### Installation troubleshooting
+
+Do you have an old version of **blogdown**? Compare your version against ours and upgrade if necessary.
+
+```{r}
+packageVersion("blogdown")
+```
+
+To update **blogdown**:
+
+```{r eval = FALSE}
+update.packages('blogdown')
+# or alternatively
+install.packages('blogdown')
+```
+
+Do you have an old version of **rmarkdown**? The updated version of the **blogdown** package imports the **rmarkdown** package version 2.5. If your **rmarkdown** version is out of date, it will be updated using the RStudio IDE. However, if you are experiencing problems, compare your version against ours and upgrade if necessary.
+
+```{r eval = FALSE}
+packageVersion('rmarkdown')
+```
+
+Update using the same code provided above, replacing **blogdown** with **rmarkdown**.
+
+If you are still experiencing issues with **blogdown**, you may try installing the development version from GitHub:
+
+```{r}
 ## Or, install from GitHub
 if (!requireNamespace("devtools")) install.packages('devtools')
 devtools::install_github('rstudio/blogdown')
 ```
 
-Since **blogdown** is based on the static site generator Hugo (https://gohugo.io), you also need to install Hugo\index{Hugo}. There is a helper function in **blogdown** to download and install it automatically on major operating systems (Windows, macOS, and Linux):
-
-```{r eval=FALSE}
-blogdown::install_hugo()
-```
-
-By default, it installs the latest version of Hugo, but you can choose a specific version through the `version` argument if you prefer.
-
-
-### Update
-
-To upgrade or reinstall Hugo, you may call `blogdown::install_hugo()` again. You can check the installed Hugo version via `blogdown::hugo_version()`, and find the available or latest version(s) of Hugo at <https://github.com/gohugoio/hugo/releases>.
-
-<!--
-To update **blogdown**, use `update.packages()` or `install.packages('blogdown')`.
--->
 
 ## A quick example
 
-From our experience, Hugo's documentation may be a little daunting to read and digest for beginners.^[One day I was almost ready to kill myself when I was trying to figure out how `_index.md` works by reading the documentation over and over again, and desperately searching on the Hugo forum.] For example, its "Quickstart" guide used to have 12 steps, and you can easily get lost if you have not used a static website generator before. For **blogdown**, we hope users of all levels can at least get started as quickly as possible. There are many things you may want to tweak for the website later, but the first step is actually fairly simple: create a new project under a new directory in the RStudio IDE (`File -> New Project`), and call the function in the R console of the new project\index{blogdown::new\_site()}:
+In this section, we aim to take you from no website to a simple **blogdown** website with minimal time and friction. We will briefly run through the development of a simple toy website with the default Hugo theme used by the **blogdown** package. This section is meant to paint the Big Picture and suggest a workflow, before we dive deeper into **blogdown**, Hugo, version control, and deployment options. 
 
-```{r eval=FALSE}
-blogdown::new_site()
+To keep the pace brisk, we assume that you are using the RStudio IDE and will rely on some of the built-in features that make life easier for **blogdown** users.^[The instructions here rely on a recent RStudio IDE version; v1.1.383 You may download all RStudio official releases including v1.1.383 from <https://www.rstudio.com/products/rstudio/download/>.]
+
+The easiest way to get started is to use the RStudio New Project Wizard (`File -> New Project -> New Directory`) (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
+
+```{r new-project, echo=FALSE, fig.cap='Create a new website project in RStudio.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/new-project.png')
 ```
 
-Then wait for this function to create a new site, download the default theme, add some sample posts, open them, build the site, and launch it in the RStudio Viewer, so you can immediately preview it. If you do not use the RStudio IDE, you need to make sure you are currently in an empty directory,^[Check the output of `list.files('.')` in R, and make sure it does not include files other than `LICENSE`, the RStudio project file (`*.Rproj`), `README` or `README.md`.] in which case `new_site()` will do the same thing, but the website will be launched in your web browser instead of the RStudio Viewer.
+```{r blogdown-project, echo=FALSE, fig.cap='Create a website project based on blogdown.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/blogdown-project.png')
+```
 
-Now you should see a bunch of directories and files under the RStudio project or your current working directory. Before we explain these new directories and files, let's introduce an important and helpful technology first: _LiveReload._\index{LiveReload} This means your website^[Until you set up your website to be deployed, LiveReload only updates the *local* version of your website. This version is only visible to you. In order to make your website searchable, discoverable, and live on the internet you will need to upload your website's files to a site builder. See Chapter \@ref(deployment) for details.] will be automatically rebuilt and reloaded in your web browser^[You can also think of the RStudio Viewer as a web browser.] when you modify any source file of your website and save it. Basically, once you launch the website in a web browser, you do not need to rebuild it explicitly anymore. All you need to do is edit the source files, such as R Markdown documents, and save them. There is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()`\index{blogdown::serve\_site()}, which is based on the R package **servr** [@R-servr] by default.^[Hugo has its own LiveReload implementation. If you want to take advantage of it, you may set the global option `options(blogdown.generator.server = TRUE)`. See Section \@ref(livereload) for more information.]
+Click "Create Project". The project wizard then runs a function that does the following:
+
+1. Creates a new site, 
+1. Downloads the default theme, 
+1. Adds some sample posts, 
+1. Build the sites, and 
+1. Launched it in the RStudio Viewer so you can immediately preview it. 
+
+Now you should see a bunch of directories and files under the RStudio project. You'll spend most of your time inside the `content/` folder, which happens to be where all your site's content lives. However, when you are first setting your site, you'll want to open up the site's `config.yaml` file first.
+
+
+Before we explain these new directories and files, let's introduce an important and helpful technology first: _LiveReload._\index{LiveReload} This means your website^[Until you set up your website to be deployed, LiveReload only updates the *local* version of your website. This version is only visible to you. In order to make your website searchable, discoverable, and live on the internet you will need to upload your website's files to a site builder. See Chapter \@ref(deployment) for details.] will be automatically rebuilt and reloaded in your web browser^[You can also think of the RStudio Viewer as a web browser.] when you modify any source file of your website and save it. Basically, once you launch the website in a web browser, you do not need to rebuild it explicitly anymore. All you need to do is edit the source files, such as R Markdown documents, and save them. There is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()`\index{blogdown::serve\_site()}, which is based on the R package **servr** [@R-servr] by default.^[Hugo has its own LiveReload implementation. If you want to take advantage of it, you may set the global option `options(blogdown.generator.server = TRUE)`. See Section \@ref(livereload) for more information.]
 
 The `new_site()` function has several arguments, and you may check out its R help page (`?blogdown::new_site`) for details. A minimal default theme named "hugo-lithium" is provided as the default theme of the new site,^[You can find its source on GitHub: https://github.com/yihui/hugo-lithium. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.] and you can see what it looks like in Figure \@ref(fig:lithium).
 
@@ -118,15 +157,7 @@ knitr::include_graphics('images/overwrite-image.png')
 
 With these addins, you should rarely need to run any R commands manually after you have set up your website, since all your posts will be automatically compiled whenever you create a new post or modify an existing post due to the LiveReload feature.
 
-If your RStudio version is at least v1.1.383,^[You may download all RStudio official releases including v1.1.383 from <https://www.rstudio.com/products/rstudio/download/>.] you can actually create a website project directly from the menu `File -> New Project -> New Directory` (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
 
-```{r new-project, echo=FALSE, fig.cap='Create a new website project in RStudio.', out.width='80%', fig.align='center'}
-knitr::include_graphics('images/new-project.png')
-```
-
-```{r blogdown-project, echo=FALSE, fig.cap='Create a website project based on blogdown.', out.width='80%', fig.align='center'}
-knitr::include_graphics('images/blogdown-project.png')
-```
 
 If your website was created using the function `blogdown::new_site()` instead of the RStudio menu for the first time, you can quit RStudio and open the project again. If you go to the menu `Tools -> Project Options`, your project type should be "Website" like what you can see in Figure \@ref(fig:project-options).
 
@@ -318,6 +349,34 @@ Another thing to keep in mind is that the more effort you make in a complicated 
 > If you choose to dig a rather deep hole, someday you will have no choice but keep on digging, even with tears.
 >
 > --- Liyun Chen^[Translated from her Chinese Weibo.]
+
+## Install and maintain Hugo
+
+Since **blogdown** is based on the static site generator Hugo (https://gohugo.io), you also need to install Hugo\index{Hugo}. There is a helper function in **blogdown** to download and install it automatically on major operating systems (Windows, macOS, and Linux):
+
+```{r eval=FALSE}
+blogdown::install_hugo()
+```
+
+By default, it installs the latest version of Hugo, but you can choose a specific version through the `version` argument if you prefer.
+
+## Quick start with version control
+
+To start, create a new project under a new directory in the RStudio IDE (`File -> New Project`), and call the function in the R console of the new project\index{blogdown::new\_site()}:
+
+```{r eval=FALSE}
+blogdown::new_site()
+```
+
+If you do not use the RStudio IDE, you need to make sure you are currently in an empty directory,^[Check the output of `list.files('.')` in R, and make sure it does not include files other than `LICENSE`, the RStudio project file (`*.Rproj`), `README` or `README.md`.] in which case `new_site()` will do the same thing, but the website will be launched in your web browser instead of the RStudio Viewer.
+
+### Update
+
+To upgrade or reinstall Hugo, you may call `blogdown::install_hugo()` again. You can check the installed Hugo version via `blogdown::hugo_version()`, and find the available or latest version(s) of Hugo at <https://github.com/gohugoio/hugo/releases>.
+
+<!--
+To update **blogdown**, use `update.packages()` or `install.packages('blogdown')`.
+-->
 
 ## A recommended workflow {#workflow}
 
