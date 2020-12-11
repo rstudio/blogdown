@@ -281,7 +281,7 @@ install_theme = function(
     # check the minimal version of Hugo required by the theme
     if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {
       if (!is.null(minver <- read_toml(theme_cfg)[['min_version']])) {
-        if (!hugo_available(minver)) update_hugo()
+        if (!hugo_available(minver)) install_hugo()
       }
     }
     newdir = sub(tmpdir, '.', zipdir, fixed = TRUE)
