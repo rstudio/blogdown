@@ -239,8 +239,15 @@ message2 = function(..., files = NULL) {
   for (f in files) open_file(f)
 }
 
-msg1 = function(...) message('* ', ...)
-msg2 = function(...) message('\n==> ', ..., '\n')
+msg_cat = function(...) {
+  x = paste(c(...), collapse = '')
+  withRestarts({
+    signalCondition(simpleMessage(x))
+    cat(x)
+  }, muffleMessage = function() invisible(NULL))
+}
+msg1 = function(...) msg_cat('* ', ..., '\n')
+msg2 = function(...) msg_cat('\n==> ', ..., '\n\n')
 
 # c(ITEM, ITEM, ITEM) ->
 #   before ITEM after sep
