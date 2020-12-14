@@ -55,7 +55,7 @@ check_config = function() {
     check_progress("You are using the '", h, "' markdown renderer.")
     if (is.null(h) || h == 'goldmark') config_goldmark(f)
     else if (h == 'blackfriday')
-      check_success("No 'TODO's now. If you 'update_hugo()', re-run this check.")
+      check_success("No 'TODO's now. If you install a new Hugoo version, re-run this check.")
   }
   else if (!is.null(s <- config$markup$goldmark$renderer$unsafe))
     check_success("All set! Found 'unsafe' setting - Hugo will render raw HTML.")
