@@ -301,7 +301,12 @@ find_hugo = local({
 #' @export
 #' @rdname find_hugo
 remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
-  for (f in find_hugo(version)) {
+  installed = if (interactive()) {
+    select_choice(find_hugo("all"), "Hugo versions found. Which one to uninstall ?")
+  } else {
+    find_hugo(version)
+  }
+  for (f in installed) {
     if (!file_exists(f)) f = Sys.which(f)  # e.g., hugo.exe returned from find_hugo()
     d = dirname(f)
     # the parent folder name must be a version number
