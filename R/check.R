@@ -57,6 +57,8 @@ check_config = function() {
     else if (h == 'blackfriday')
       check_success("No 'TODO's now. If you 'update_hugo()', re-run this check.")
   }
+  else if (!is.null(s <- config$markup$goldmark$renderer$unsafe))
+    check_success("All set! Found 'unsafe' setting - Hugo will render raw HTML.")
   check_done(f)
 }
 
