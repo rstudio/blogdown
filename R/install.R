@@ -236,7 +236,7 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
       uninstall_tip(path2), "."
     )
   }
-  normalizePath(path)
+  xfun::normalize_path(path)
 }
 
 uninstall_tip = function(p) {
