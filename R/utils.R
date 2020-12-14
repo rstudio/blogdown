@@ -243,6 +243,7 @@ check_init = function(...) cat('\u2015 ', ..., '\n', sep = "")
 check_progress = function(...) cat('\u007c ', ..., '\n', sep = "")
 check_todo = function(...) cat('\u25cf', "[TODO]", ..., '\n')
 check_success = function(...) cat('\u25cb', ..., '\n')
+check_done = function(...) check_init("Check complete: ", ...)
 
 msg1 = function(...) cat('| ', ...)
 msg2 = function(...) cat('— ', ..., '\n')
