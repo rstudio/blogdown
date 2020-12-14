@@ -31,7 +31,7 @@ Imports:
     httpuv (>= 1.4.0),
     later,
     xfun (>= 0.19),
-    servr (>= 0.20)
+    servr (>= 0.21)
 Suggests:
   testit,
   shiny,
@@ -47,4 +47,3 @@ BugReports: https://github.com/rstudio/blogdown/issues
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<https://pandoc.org>)
 RoxygenNote: 7.1.1
 Encoding: UTF-8
-Remotes: yihui/servr
