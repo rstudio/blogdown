@@ -42,8 +42,6 @@
 
 ## BUG FIXES
 
-- `new_site()` does not show anymore Hugo messages on Windows (#532).
-
 - `serve_site()` fails to start the server when the config file contains a `baseURL` value that includes a subpath in it (thanks, @giabaio #254, @ShixiangWang #494).
 
 - `serve_site()` and `hugo_build()` fail to resolve URLs when `relativeURLs` is configured to `true` (thanks, @TianyiShi2001, #506).
@@ -57,6 +55,8 @@
 - `install_hugo()` could not install the extended version of Hugo that was downloaded manually, e.g., `blogdown::install_hugo('~/Downloads/hugo_extended_0.78.2_Linux-64bit.tar.gz')` would fail (thanks, Stuart, https://stackoverflow.com/q/64962659/559676).
 
 - `new_post(date = "")` or `new_post(date = NULL)` failed to work. In both cases, it should create a post without the `date` field in the YAML metadata (thanks, Caleb Stevens, https://stackoverflow.com/q/65067164/559676).
+
+- `new_site()` no longer shows Hugo messages on Windows (#532).
 
 ## MINOR CHANGES
 
