@@ -1006,3 +1006,21 @@ clean_hugo_cache = function() {
 yes_no = function(question) {
   interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
 }
+
+
+select_choice <- function(choices, title, message, width = getOption("width")) {
+  if (!missing(title)) {
+    cat(format(title, width = width), sep = "\n")
+    cat(hrule(width = width), sep = "\n")
+  }
+  if (missing(message)) {
+    message = "Select one choice above (type ESC twice to cancel): "
+  }
+  index = seq_along(choices)
+  cat(format(paste(index, choices, sep = ": "), width = width), sep = "\n")
+  choice = ""
+  while (!choice %in% as.character(index)) {
+    choice = readline(message)
+  }
+  choices[as.integer(choice)]
+}
