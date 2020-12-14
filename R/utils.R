@@ -239,8 +239,13 @@ message2 = function(..., files = NULL) {
   for (f in files) open_file(f)
 }
 
-msg1 = function(...) message('* ', ...)
-msg2 = function(...) message('\n==> ', ..., '\n')
+check_init = function(...) cat('\u2015 ', ..., '\n', sep = "")
+check_progress = function(...) cat('\u007c ', ..., '\n', sep = "")
+check_todo = function(...) cat('\u25cf', "[TODO]", ..., '\n')
+check_success = function(...) cat('\u25cb', ..., '\n')
+
+msg1 = function(...) cat('| ', ...)
+msg2 = function(...) cat('— ', ..., '\n')
 
 # c(ITEM, ITEM, ITEM) ->
 #   before ITEM after sep
