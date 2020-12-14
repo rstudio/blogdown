@@ -308,7 +308,7 @@ remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FAL
       names(vers) = ""
       names(vers)[w] = "Used by project"
     }
-    select_choice(vers, "Hugo versions found. Which one to uninstall ?")
+    select_choice(vers, "Hugo versions found. Which one to remove ?")
   } else {
     find_hugo(version)
   }
