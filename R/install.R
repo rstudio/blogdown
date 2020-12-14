@@ -302,7 +302,13 @@ find_hugo = local({
 #' @rdname find_hugo
 remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
   installed = if (interactive()) {
-    select_choice(find_hugo("all"), "Hugo versions found. Which one to uninstall ?")
+    vers = find_hugo("all")
+    default = suppressMessages(find_hugo(version))
+    if (length(w <- which(default == vers)) != 0) {
+      names(vers) = ""
+      names(vers)[w] = "Used by project"
+    }
+    select_choice(vers, "Hugo versions found. Which one to uninstall ?")
   } else {
     find_hugo(version)
   }
