@@ -1007,7 +1007,8 @@ yes_no = function(question) {
   interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
 }
 
-
+# if choices is named, the name is used as suffix i.e
+# 1: value (name)
 select_choice <- function(choices, title, message, width = getOption("width")) {
   if (!missing(title)) {
     cat(format(title, width = width), sep = "\n")
@@ -1017,6 +1018,12 @@ select_choice <- function(choices, title, message, width = getOption("width")) {
     message = "Select one choice above (type ESC twice to cancel): "
   }
   index = seq_along(choices)
+  if (!is.null(nm <- names(choices))) {
+    for (j in nm) {
+      if (!is.na(j) && nzchar(j))
+        choices[j] <- sprintf("%s (%s)", choices[j], j)
+    }
+  }
   cat(format(paste(index, choices, sep = ": "), width = width), sep = "\n")
   choice = ""
   while (!choice %in% as.character(index)) {
