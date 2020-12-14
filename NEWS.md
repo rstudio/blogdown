@@ -42,6 +42,8 @@
 
 ## BUG FIXES
 
+- `new_site()` does not show anymore Hugo messages on Windows (#532).
+
 - `serve_site()` fails to start the server when the config file contains a `baseURL` value that includes a subpath in it (thanks, @giabaio #254, @ShixiangWang #494).
 
 - `serve_site()` and `hugo_build()` fail to resolve URLs when `relativeURLs` is configured to `true` (thanks, @TianyiShi2001, #506).
