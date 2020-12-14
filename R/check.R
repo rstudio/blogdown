@@ -21,36 +21,55 @@ check_site = function() in_root({
 check_config = function() {
   config = load_config()
   f = find_config()
-  msg1('Checking ', f)
+  check_init('Checking ', f)
   open_file(f)
-  msg1("Checking the 'baseURL' setting")
+  check_progress("Checking 'baseURL' setting for Hugo...")
   base = index_ci(config, 'baseurl')
-  if (is_example_url(base)) msg2(
-    "You should change the 'baseURL' option in '", f, "' from '", base,
-    "' to your actual domain; if you do not have a domain, set 'baseURL' to '/'"
-  )
-  msg1('Checking the ignoreFiles setting')
+  check_progress("Found 'baseURL = ", base, "'")
+  if (is_example_url(base)) check_todo(
+    "Set 'baseURL = /' if you do not yet have a domain."
+    )
+  else if (is_slash_url(base))
+    check_todo("Update 'baseURL' to your actual URL when ready to publish.")
+  else check_success("'baseURL' set- nothing to do here!")
+  check_progress("Checking 'ignoreFiles' setting for Hugo...")
   ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
-  if (is.null(s <- config[['ignoreFiles']])) msg2(
-    "You are recommended to set the 'ignoreFiles' field in ", f, ' to: ',
-    xfun::tojson(ignore)
-  ) else if (!all(ignore %in% s)) msg2(
-    "You are recommended to ignore more items in the 'ignoreFiles' field in ", f, ": ",
-    gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
-  )
-  if ('_files$' %in% s) msg2(
-    "You are recommended to remove the item '_files$' in the 'ignoreFiles' field in ", f, '.'
-  )
-  msg1("Checking the 'unsafe' option for goldmark (Hugo's Markdown renderer)")
+  if (is.null(s <- config[['ignoreFiles']])) check_todo(
+    "Add 'ignoreFiles:'", xfun::tojson(ignore))
+  else if (!all(ignore %in% s) & (!'_files$' %in% s))
+    check_success("Found all recommended 'ignoreFiles':",
+                  "\n",
+                  "",
+                  gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
+                  )
+  else if (!all(ignore %in% s) & ('_files$' %in% s))
+    check_todo("Remove '_files$' from 'ignoreFiles':",
+               "\n",
+               "",
+               gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
+               )
+  else check_success("'ignoreFiles' looks good- nothing to do here!")
+  check_progress("Checking setting for Hugo's markdown renderer to allow raw HTML...")
   if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
     h = config$markup$defaultMarkdownHandler
     if (is.null(h) || h == 'goldmark') config_goldmark(f)
+    else if (is.null(h) || h == 'blackfriday')
+      check_success("You are using the 'blackfriday' markdown renderer- no changes needed.",
+                    "\n", "If you 'update_hugo()', re-run this check.")
+
   }
+  check_done(f)
 }
 
 is_example_url = function(url) {
   is.character(url) && grepl(
     '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
+  )
+}
+
+is_slash_url = function(url) {
+  is.character(url) && grepl(
+    '^/$', url
   )
 }
 
@@ -66,6 +85,20 @@ check_gitignore = function() {
   y = c('*.html', '*.md', '*.markdown', 'static', 'config.toml', 'config.yaml')
   if (any(i <- x %in% y)) msg2(
     'These items should probably not be ignored: ', paste(x[i], collapse = ', ')
+  )
+}
+
+config_ignorefiles = function(f, silent = FALSE) {
+  ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
+  x = switch(
+    xfun::file_ext(f),
+    yaml = as.yaml(ignore),
+    toml = xfun::tojson(ignore)
+  )
+  if (is.null(x)) return()
+  if (!silent) check_todo(
+    "Allow raw HTML by setting 'unsafe = TRUE''", f,
+    "' (see https://github.com/rstudio/blogdown/issues/447 for more info). "
   )
 }
 
@@ -86,15 +119,12 @@ markup:
 '
   )
   if (is.null(x)) return()
-  if (!silent) msg2(
-    "You are recommended to set the option 'unsafe' to true for goldmark in '", f,
-    "' (see https://github.com/rstudio/blogdown/issues/447 for more info). "
+  if (!silent) check_todo(
+    "Allow raw HTML to be rendered by adding this setting to", f, ":\n", x
   )
-  if (silent || yes_no("==> Do you want blogdown to automatically set it for you?")) {
+  if (silent || yes_no("==> Do you want blogdown to set this for you?")) {
     cat(x, file = f, append = TRUE)
-  } else msg2(c(
-    "To set the option manually, add the following settings to '", f, "':\n", x
-  ))
+  }
 }
 
 #' @details \code{check_hugo()} checks possible problems with the Hugo
