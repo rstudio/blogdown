@@ -239,6 +239,7 @@ message2 = function(..., files = NULL) {
   for (f in files) open_file(f)
 }
 
+# TODO: use xfun::msg_cat() in xfun 0.20
 msg_cat = function(...) {
   x = paste(c(...), collapse = '')
   withRestarts({
