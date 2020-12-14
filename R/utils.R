@@ -1007,15 +1007,18 @@ yes_no = function(question) {
   interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
 }
 
-# if choices is named, the name is used as suffix i.e
+# Will output like this
+# If choices is named, the name is used as suffix as in example below
+# Title:
+# ---------
 # 1: value (name)
-select_choice <- function(choices, title, message, width = getOption("width")) {
+# ---------
+# footnote
+# ask
+select_choice <- function(choices, title, footnote, ask, width = getOption("width")) {
   if (!missing(title)) {
     cat(format(title, width = width), sep = "\n")
     cat(hrule(width = width), sep = "\n")
-  }
-  if (missing(message)) {
-    message = "Select one choice above (type ESC twice to cancel): "
   }
   index = seq_along(choices)
   if (!is.null(nm <- names(choices))) {
@@ -1025,9 +1028,14 @@ select_choice <- function(choices, title, message, width = getOption("width")) {
     }
   }
   cat(format(paste(index, choices, sep = ": "), width = width), sep = "\n")
+  cat(hrule(width = width), sep = "\n")
+  if (!missing(footnote)) cat(format(footnote, width = width), sep = "\n")
+  if (missing(ask)) {
+    ask = "Use a number above to select (type ESC twice to cancel): "
+  }
   choice = ""
   while (!choice %in% as.character(index)) {
-    choice = readline(message)
+    choice = readline(ask)
   }
   choices[as.integer(choice)]
 }
