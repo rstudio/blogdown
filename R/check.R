@@ -49,14 +49,13 @@ check_config = function() {
                gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
                )
   else check_success("'ignoreFiles' looks good- nothing to do here!")
-  check_progress("Checking setting for Hugo's markdown renderer to allow raw HTML...")
+  check_progress("Checking setting for Hugo's markdown renderer...")
   if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
     h = config$markup$defaultMarkdownHandler
+    check_progress("You are using the '", h, "' markdown renderer.")
     if (is.null(h) || h == 'goldmark') config_goldmark(f)
-    else if (is.null(h) || h == 'blackfriday')
-      check_success("You are using the 'blackfriday' markdown renderer- no changes needed.",
-                    "\n", "If you 'update_hugo()', re-run this check.")
-
+    else if (h == 'blackfriday')
+      check_success("No 'TODO's now. If you 'update_hugo()', re-run this check.")
   }
   check_done(f)
 }
@@ -88,20 +87,6 @@ check_gitignore = function() {
   )
 }
 
-config_ignorefiles = function(f, silent = FALSE) {
-  ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
-  x = switch(
-    xfun::file_ext(f),
-    yaml = as.yaml(ignore),
-    toml = xfun::tojson(ignore)
-  )
-  if (is.null(x)) return()
-  if (!silent) check_todo(
-    "Allow raw HTML by setting 'unsafe = TRUE''", f,
-    "' (see https://github.com/rstudio/blogdown/issues/447 for more info). "
-  )
-}
-
 config_goldmark = function(f, silent = FALSE) {
   x = switch(
     xfun::file_ext(f),
@@ -120,7 +105,7 @@ markup:
   )
   if (is.null(x)) return()
   if (!silent) check_todo(
-    "Allow raw HTML to be rendered by adding this setting to", f, ":\n", x
+    "Allow goldmark to render raw HTML by adding this setting to", f, ":\n", x
   )
   if (silent || yes_no("==> Do you want blogdown to set this for you?")) {
     cat(x, file = f, append = TRUE)
