@@ -245,8 +245,16 @@ check_todo = function(...) cat('\u25cf', "[TODO]", ..., '\n')
 check_success = function(...) cat('\u25cb', ..., '\n')
 check_done = function(...) check_init("Check complete: ", ...)
 
-msg1 = function(...) cat('| ', ...)
-msg2 = function(...) cat('— ', ..., '\n')
+# TODO: use xfun::msg_cat() in xfun 0.20
+msg_cat = function(...) {
+  x = paste(c(...), collapse = '')
+  withRestarts({
+    signalCondition(simpleMessage(x))
+    cat(x)
+  }, muffleMessage = function() invisible(NULL))
+}
+msg1 = function(...) msg_cat('* ', ..., '\n')
+msg2 = function(...) msg_cat('\n==> ', ..., '\n\n')
 
 # c(ITEM, ITEM, ITEM) ->
 #   before ITEM after sep
