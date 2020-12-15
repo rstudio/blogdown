@@ -1008,7 +1008,7 @@ yes_no = function(question) {
 }
 
 # Will output like this
-# If choices is named, the name is used as suffix as in example below
+# If choices is named, the name is used as suffix i.e
 # --------------------------
 # <Title>
 # --------------------------
@@ -1018,16 +1018,20 @@ yes_no = function(question) {
 #
 # Selection:
 #
-select_choice <- function(choices, title = NULL, ask) {
-  if (missing(ask)) {
-    ask = "Use a number below to select (type 0 to cancel): "
-  }
+select_choice <- function(choices, title = NULL, multiple = FALSE) {
+  ask = if (!multiple) {
+    "Use a number below to select (type 0 to cancel): "
+  } else NULL
   if (!is.null(title)) {
-    title = paste(hrule(), title, hrule(), ask, sep = "\n")
+    title = paste(hrule(), title, hrule(), sep = "\n")
+    if (!multiple) title = paste(title, ask, sep = "\n")
   }
   if (!is.null(nm <- names(choices))) {
     choices = paste(choices, ifelse(is.na(nm) | nm == '', '', nm))
   }
-  choice <- utils::select.list(choices, title = title, graphics = FALSE)
-  if (!nzchar(choice)) stop("Operation Cancelled", call. = FALSE)
+  choice = utils::select.list(choices, title = title,
+                               multiple = multiple, graphics = FALSE)
+  if (length(choice) == 1 && !nzchar(choice))
+    stop("Operation Cancelled", call. = FALSE)
+  choice
 }

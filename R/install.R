@@ -310,7 +310,8 @@ remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FAL
     }
     title = sprintf("%s Hugo version%s found. Which Hugo version would you like to remove?",
                     n <- length(vers), if (n > 1) "s" else "")
-    select_choice(vers, title)
+    res = select_choice(vers, title, multiple = TRUE)
+    gsub("\\s+\\(Used by project\\)$", "", res)
   } else {
     find_hugo(version)
   }
