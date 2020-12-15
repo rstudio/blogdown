@@ -306,7 +306,7 @@ remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FAL
     default = suppressMessages(find_hugo(version))
     if (length(w <- which(default == vers)) != 0) {
       names(vers) = ""
-      names(vers)[w] = "Used by project"
+      names(vers)[w] = "(Used by project)"
     }
     title = sprintf("%s Hugo version%s found: ",
                     n <- length(vers), if (n > 1) "s" else "")

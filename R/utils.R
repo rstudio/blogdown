@@ -1011,7 +1011,7 @@ yes_no = function(question) {
 # If choices is named, the name is used as suffix as in example below
 # Title:
 # ---------
-# 1: value (name)
+# 1: value name
 # ---------
 # footnote
 # ask
@@ -1022,10 +1022,7 @@ select_choice <- function(choices, title, footnote, ask) {
   }
   index = seq_along(choices)
   if (!is.null(nm <- names(choices))) {
-    for (j in nm) {
-      if (!is.na(j) && nzchar(j))
-        choices[j] <- sprintf("%s (%s)", choices[j], j)
-    }
+    choices = paste(choices, ifelse(is.na(nm) | nm == '', '', nm))
   }
   cat(paste(index, choices, sep = ": "), sep = "\n")
   cat(hrule(), sep = "\n")
