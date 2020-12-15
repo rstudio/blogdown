@@ -4,7 +4,7 @@
 #' project (see \sQuote{Details}).
 #' @export
 check_site = function() in_root({
-  msg1('Checking the website project for possible problems')
+  check_init('Running checks for the blogdown website project', '\n')
   check_config()
   check_gitignore()
   check_hugo()
@@ -23,42 +23,42 @@ check_config = function() {
   f = find_config()
   check_init('Checking ', f)
   open_file(f)
-  check_progress("Checking 'baseURL' setting for Hugo...")
+  check_progress('Checking "baseURL" setting for Hugo...')
   base = index_ci(config, 'baseurl')
-  check_progress("Found 'baseURL = ", base, "'")
+  check_progress('Found "baseURL = ', base, '"')
   if (is_example_url(base)) check_todo(
-    "Set 'baseURL = /' if you do not yet have a domain."
+    'Set "baseURL = /" if you do not yet have a domain.'
     )
   else if (is_slash_url(base))
-    check_todo("Update 'baseURL' to your actual URL when ready to publish.")
-  else check_success("'baseURL' set- nothing to do here!")
-  check_progress("Checking 'ignoreFiles' setting for Hugo...")
+    check_todo('Update "baseURL" to your actual URL when ready to publish.')
+  else check_success('"baseURL" set- nothing to do here!')
+  check_progress('Checking "ignoreFiles" setting for Hugo...')
   ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
   if (is.null(s <- config[['ignoreFiles']])) check_todo(
-    "Add 'ignoreFiles:'", xfun::tojson(ignore))
+    'Add "ignoreFiles:"', xfun::tojson(ignore))
   else if (!all(ignore %in% s) & (!'_files$' %in% s))
-    check_success("Found all recommended 'ignoreFiles':",
-                  "\n",
-                  "",
+    check_success('Found all recommended "ignoreFiles":',
+                  '\n',
+                  '',
                   gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
                   )
   else if (!all(ignore %in% s) & ('_files$' %in% s))
-    check_todo("Remove '_files$' from 'ignoreFiles':",
-               "\n",
-               "",
+    check_todo('Remove "_files$" from "ignoreFiles":',
+               '\n',
+               '',
                gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
                )
-  else check_success("'ignoreFiles' looks good- nothing to do here!")
-  check_progress("Checking setting for Hugo's markdown renderer...")
+  else check_success('"ignoreFiles" looks good- nothing to do here!')
+  check_progress('Checking setting for Hugo markdown renderer...')
   if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
     h = config$markup$defaultMarkdownHandler
-    check_progress("You are using the '", h, "' markdown renderer.")
+    check_progress('You are using the "', h, '" markdown renderer.')
     if (is.null(h) || h == 'goldmark') config_goldmark(f)
     else if (h == 'blackfriday')
-      check_success("No 'TODO's now. If you install a new Hugoo version, re-run this check.")
+      check_success('No todos now. If you install a new Hugo version, re-run this check.')
   }
   else if (!is.null(s <- config$markup$goldmark$renderer$unsafe))
-    check_success("All set! Found 'unsafe' setting - Hugo will render raw HTML.")
+    check_success('All set! Found "unsafe" setting - Hugo will render raw HTML.')
   check_done(f)
 }
 
@@ -141,7 +141,7 @@ markup:
 #' @export
 check_hugo = function() {
   if (generator() != 'hugo') return()
-  check_init('Checking Hugo')
+  check_init('Checking Hugo...')
   if (!hugo_available()) return(msg2(
     'Hugo not found; you may install it via blogdown::install_hugo()'
   ))
