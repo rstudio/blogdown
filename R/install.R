@@ -301,7 +301,7 @@ find_hugo = local({
 #' @export
 #' @rdname find_hugo
 remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
-  installed = if (interactive()) {
+  installed = if (interactive() && missing(version)) {
     vers = find_hugo("all")
     default = suppressMessages(find_hugo(version))
     if (length(w <- which(default == vers)) != 0) {
