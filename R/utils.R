@@ -1009,30 +1009,25 @@ yes_no = function(question) {
 
 # Will output like this
 # If choices is named, the name is used as suffix as in example below
-# Title:
-# ---------
-# 1: value name
-# ---------
-# footnote
-# ask
-select_choice <- function(choices, title, footnote, ask) {
-  if (!missing(title)) {
-    cat(title, sep = "\n")
-    cat(hrule(), sep = "\n")
+# --------------------------
+# <Title>
+# --------------------------
+# <ask>
+#
+# 1: <choice value> <choice name>
+#
+# Selection:
+#
+select_choice <- function(choices, title = NULL, ask) {
+  if (missing(ask)) {
+    ask = "Use a number below to select (type 0 to cancel): "
   }
-  index = seq_along(choices)
+  if (!is.null(title)) {
+    title = paste(hrule(), title, hrule(), ask, sep = "\n")
+  }
   if (!is.null(nm <- names(choices))) {
     choices = paste(choices, ifelse(is.na(nm) | nm == '', '', nm))
   }
-  cat(paste(index, choices, sep = ": "), sep = "\n")
-  cat(hrule(), sep = "\n")
-  if (!missing(footnote)) cat(footnote, sep = "\n")
-  if (missing(ask)) {
-    ask = "Use a number above to select (type ESC twice to cancel): "
-  }
-  choice = ""
-  while (!choice %in% as.character(index)) {
-    choice = readline(ask)
-  }
-  choices[as.integer(choice)]
+  choice <- utils::select.list(choices, title = title, graphics = FALSE)
+  if (!nzchar(choice)) stop("Operation Cancelled", call. = FALSE)
 }
