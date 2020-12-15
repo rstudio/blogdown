@@ -252,7 +252,7 @@ msg2 = function(...) msg_cat('\n==> ', ..., '\n\n')
 
 check_init = function(...) msg_cat('\u2015 ', ..., '\n', sep = "")
 check_progress = function(...) msg_cat('\u007c ', ..., '\n', sep = "")
-check_todo = function(...) msg_cat('\u25cf ', "[TODO]", ..., '\n', sep = "")
+check_todo = function(...) msg_cat('\u25cf ', "[TODO] ", ..., '\n', sep = "")
 check_success = function(...) msg_cat('\u25cb ', ..., '\n', sep = "")
 check_done = function(...) check_init("Check complete: ", ..., '\n')
 
