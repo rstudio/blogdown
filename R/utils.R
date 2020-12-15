@@ -1027,7 +1027,9 @@ select_choice <- function(choices, title = NULL, multiple = FALSE) {
     if (!multiple) title = paste(title, ask, sep = "\n")
   }
   if (!is.null(nm <- names(choices))) {
-    choices = paste0(choices, ifelse(is.na(nm) | nm == '', '', c(" ", nm)))
+    for (j in nm) {
+      if (!is.na(j) && nzchar(j)) choices[j] <- sprintf("%s %s", choices[j], j)
+    }
   }
   choice = utils::select.list(choices, title = title,
                                multiple = multiple, graphics = FALSE)
