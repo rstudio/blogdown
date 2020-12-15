@@ -80,13 +80,34 @@ is_slash_url = function(url) {
 #' @export
 check_gitignore = function() {
   f = '.gitignore'
-  msg1('Checking ', f)
-  if (!file_exists(f)) return(msg1(f, ' was not found'))
+  check_init('Checking ', f)
+  if (!file_exists(f)) return(check_todo(f, ' was not found. You may want to add this.'))
   x = read_utf8(f)
-  y = c('*.html', '*.md', '*.markdown', 'static', 'config.toml', 'config.yaml')
-  if (any(i <- x %in% y)) msg2(
-    'These items should probably not be ignored: ', paste(x[i], collapse = ', ')
+  check_progress("Checking for items you can safely ignore...")
+  yes_ignore = c('blogdown', '.DS_Store', 'Thumbs.db')
+  if (any(i <- x %in% yes_ignore))
+    check_success('Found! You have safely ignored:', paste(x[i], collapse = ', '))
+  ignore_missing = setdiff(yes_ignore, x[i])
+  if (length(ignore_missing) >= 1)
+    check_todo("You can safely add to", f, ":",
+               paste(ignore_missing, collapse = ', '))
+  check_progress("Checking for items to remove...")
+  no_ignore = c('*.html', '*.md', '*.markdown', 'static', 'config.toml', 'config.yaml')
+  if (any(i <- x %in% no_ignore)) check_todo(
+    "Remove items from", f, ":", paste(x[i], collapse = ', ')
   )
+  else check_success('Nothing to see here - found no items to remove.')
+  check_progress("Checking for items to ignore if Netlify builds your site...")
+  if (!file_exists('netlify.toml')) return(check_progress(f, " was not found. Use 'config_netlify()' to set one up."))
+  netlify_ignore = c('public', 'resources')
+  if (any(i <- x %in% netlify_ignore))
+    check_success('Found! You have safely ignored:', paste(x[i], collapse = ', '))
+  netlify_missing = setdiff(netlify_ignore, x[i])
+  if (length(netlify_missing) >= 1)
+    check_todo("With Netlify building your site, you can safely add to", f, ":",
+               paste(netlify_missing, collapse = ', '))
+  else check_todo("Almost clear for takeoff - use 'check_netlify()' too.")
+  check_done(f)
 }
 
 config_goldmark = function(f, silent = FALSE) {
