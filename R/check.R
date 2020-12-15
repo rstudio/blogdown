@@ -83,6 +83,12 @@ check_gitignore = function() {
   check_init('Checking ', f)
   if (!file_exists(f)) return(check_todo(f, ' was not found. You may want to add this.'))
   x = read_utf8(f)
+  check_progress("Checking for items to remove...")
+  no_ignore = c('*.html', '*.md', '*.markdown', 'static', 'config.toml', 'config.yaml')
+  if (any(i <- x %in% no_ignore)) check_todo(
+    "Remove items from", f, ":", paste(x[i], collapse = ', ')
+  )
+  else check_success('Nothing to see here - found no items to remove.')
   check_progress("Checking for items you can safely ignore...")
   yes_ignore = c('blogdown', '.DS_Store', 'Thumbs.db')
   if (any(i <- x %in% yes_ignore))
@@ -91,12 +97,6 @@ check_gitignore = function() {
   if (length(ignore_missing) >= 1)
     check_todo("You can safely add to", f, ":",
                paste(ignore_missing, collapse = ', '))
-  check_progress("Checking for items to remove...")
-  no_ignore = c('*.html', '*.md', '*.markdown', 'static', 'config.toml', 'config.yaml')
-  if (any(i <- x %in% no_ignore)) check_todo(
-    "Remove items from", f, ":", paste(x[i], collapse = ', ')
-  )
-  else check_success('Nothing to see here - found no items to remove.')
   check_progress("Checking for items to ignore if Netlify builds your site...")
   if (!file_exists('netlify.toml')) return(check_progress(f, " was not found. Use 'config_netlify()' to set one up."))
   netlify_ignore = c('public', 'resources')
