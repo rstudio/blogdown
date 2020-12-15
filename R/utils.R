@@ -1015,10 +1015,10 @@ yes_no = function(question) {
 # ---------
 # footnote
 # ask
-select_choice <- function(choices, title, footnote, ask, width = getOption("width")) {
+select_choice <- function(choices, title, footnote, ask) {
   if (!missing(title)) {
-    cat(format(title, width = width), sep = "\n")
-    cat(hrule(width = width), sep = "\n")
+    cat(title, sep = "\n")
+    cat(hrule(), sep = "\n")
   }
   index = seq_along(choices)
   if (!is.null(nm <- names(choices))) {
@@ -1027,9 +1027,9 @@ select_choice <- function(choices, title, footnote, ask, width = getOption("widt
         choices[j] <- sprintf("%s (%s)", choices[j], j)
     }
   }
-  cat(format(paste(index, choices, sep = ": "), width = width), sep = "\n")
-  cat(hrule(width = width), sep = "\n")
-  if (!missing(footnote)) cat(format(footnote, width = width), sep = "\n")
+  cat(paste(index, choices, sep = ": "), sep = "\n")
+  cat(hrule(), sep = "\n")
+  if (!missing(footnote)) cat(footnote, sep = "\n")
   if (missing(ask)) {
     ask = "Use a number above to select (type ESC twice to cancel): "
   }
