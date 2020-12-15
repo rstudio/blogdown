@@ -141,7 +141,7 @@ markup:
 #' @export
 check_hugo = function() {
   if (generator() != 'hugo') return()
-  msg1('Checking Hugo')
+  check_init('Checking Hugo')
   if (!hugo_available()) return(msg2(
     'Hugo not found; you may install it via blogdown::install_hugo()'
   ))
