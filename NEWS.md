@@ -56,6 +56,8 @@
 
 - `new_post(date = "")` or `new_post(date = NULL)` failed to work. In both cases, it should create a post without the `date` field in the YAML metadata (thanks, Caleb Stevens, https://stackoverflow.com/q/65067164/559676).
 
+- `new_site()` no longer shows Hugo messages on Windows (#532).
+
 ## MINOR CHANGES
 
 - For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.

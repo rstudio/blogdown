@@ -53,6 +53,8 @@ serve_site = function(...) {
 }
 
 server_ready = function(url) {
+  # for some reason, R cannot read localhost, but 127.0.0.1 works
+  url = sub('^http://localhost:', 'http://127.0.0.1:', url)
   !inherits(
     xfun::try_silent(suppressWarnings(readLines(url))), 'try-error'
   )
@@ -106,7 +108,9 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
-    server = servr::server_config(..., baseurl = baseurl)
+    server = servr::server_config(..., baseurl = baseurl, hosturl = function(host) {
+      if (g == 'hugo' && host == '127.0.0.1') 'localhost' else host
+    })
 
     # launch the hugo/jekyll/hexo server
     cmd = if (g == 'hugo') find_hugo() else g

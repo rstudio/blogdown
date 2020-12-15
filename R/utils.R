@@ -880,7 +880,8 @@ if (is_windows()) system2 = function(command, args = character(), stdout = '', .
     })
   )
 
-  if ((res <- base::system2(command, args, ...)) == 0) return(invisible(res))
+  if ((res <- base::system2(command, args, stdout = stdout, ...)) == 0)
+    return(invisible(res))
 
   if ((res <- system(cmd)) == 0) {
     options(blogdown.windows.shell = 'system')
