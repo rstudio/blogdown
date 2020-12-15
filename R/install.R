@@ -269,7 +269,10 @@ uninstall_tip = function(p) {
 #' \code{\link{config_Rprofile}()} to do this automatically.
 #' @param version The expected version number, e.g., \code{'0.25.1'}. If
 #'   \code{NULL}, it will try to find/remove the maximum possible version. If
-#'   \code{'all'}, find/remove all possible versions.
+#'   \code{'all'}, find/remove all possible versions. In an interactive R
+#'   session when \code{version} is not provided), \code{remove_hugo()} will
+#'   list all installed versions of Hugo, and you can select which versions to
+#'   remove.
 #' @export
 #' @return For \code{find_hugo()}, it returns the path to the Hugo executable if
 #'   found, otherwise it will signal an error, with a hint on how to install
@@ -302,17 +305,16 @@ find_hugo = local({
 #' @rdname find_hugo
 remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
   installed = if (interactive() && missing(version)) {
-    vers = find_hugo("all")
-    default = suppressMessages(find_hugo(version))
-    if (length(w <- which(default == vers)) != 0) {
-      names(vers)[w] = "(Used by project)"
-    }
-    title = sprintf("%s Hugo version%s found. Which Hugo version would you like to remove?",
-                    n <- length(vers), if (n > 1) "s" else "")
-    res = select_choice(vers, title, multiple = TRUE)
-    gsub("\\s+\\(Used by project\\)$", "", res)
+    if (length(vers <- find_hugo('all')) == 0) return(msg_cat('Hugo not found.\n'))
+    ver = suppressMessages(find_hugo(version))  # the version currently used
+    title = paste0(
+      hrule(), '\n', n <- length(vers), ' Hugo version', if (n > 1) 's',
+      ' found and listed below', sprintf(' (currently using #%d)', which(vers == ver)),
+      '. Which version(s) would you like to remove?\n', hrule()
+    )
+    select.list(vers, title = title, multiple = TRUE, graphics = FALSE)
   } else {
-    find_hugo(version)
+    suppressMessages(find_hugo(version))
   }
   for (f in installed) {
     if (!file_exists(f)) f = Sys.which(f)  # e.g., hugo.exe returned from find_hugo()
@@ -326,7 +328,7 @@ remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FAL
       "'", f, "' does not seem to be installed via blogdown::install_hugo(), ",
       "and I will not remove it. If you are sure it can be removed, you may ",
       "call blogdown::remove_hugo() with the argument force = TRUE to delete it",
-      sprintf(' or %s (recommended)', uninstall_tip(f)), "."
+      sprintf(', or %s (the latter is recommended)', uninstall_tip(f)), "."
     )
   }
 }

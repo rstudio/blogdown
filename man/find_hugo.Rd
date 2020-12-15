@@ -12,7 +12,10 @@ remove_hugo(version = getOption("blogdown.hugo.version"), force = FALSE)
 \arguments{
 \item{version}{The expected version number, e.g., \code{'0.25.1'}. If
 \code{NULL}, it will try to find/remove the maximum possible version. If
-\code{'all'}, find/remove all possible versions.}
+\code{'all'}, find/remove all possible versions. In an interactive R
+session when \code{version} is not provided), \code{remove_hugo()} will
+list all installed versions of Hugo, and you can select which versions to
+remove.}
 
 \item{force}{By default, \code{remove_hugo()} only removes Hugo installed via
 \code{\link{install_hugo}()}. For \code{force = TRUE}, it will try to

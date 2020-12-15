@@ -1006,34 +1006,3 @@ clean_hugo_cache = function() {
 yes_no = function(question) {
   interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
 }
-
-# Will output like this
-# If choices is named, the name is used as suffix i.e
-# --------------------------
-# <Title>
-# --------------------------
-# <ask>
-#
-# 1: <choice value> <choice name>
-#
-# Selection:
-#
-select_choice <- function(choices, title = NULL, multiple = FALSE) {
-  ask = if (!multiple) {
-    "Use a number below to select (type 0 to cancel): "
-  } else NULL
-  if (!is.null(title)) {
-    title = paste(hrule(), title, hrule(), sep = "\n")
-    if (!multiple) title = paste(title, ask, sep = "\n")
-  }
-  if (!is.null(nm <- names(choices))) {
-    for (j in nm) {
-      if (!is.na(j) && nzchar(j)) choices[j] <- sprintf("%s %s", choices[j], j)
-    }
-  }
-  choice = utils::select.list(choices, title = title,
-                               multiple = multiple, graphics = FALSE)
-  if (length(choice) == 1 && !nzchar(choice))
-    stop("Operation Cancelled", call. = FALSE)
-  choice
-}
