@@ -308,19 +308,18 @@ find_hugo = local({
 #' @export
 #' @rdname find_hugo
 remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
-  installed = if (interactive() && missing(version)) {
-    if (length(vers <- find_hugo('all')) == 0) return(msg_cat('Hugo not found.\n'))
-    ver = find_hugo(version, TRUE)  # the version currently used
+  if (length(vers <- find_hugo('all')) == 0) return(msg_cat('Hugo not found.\n'))
+  ver = find_hugo(version, TRUE)  # the version currently used
+  if (interactive() && missing(version)) {
     title = paste0(
       hrule(), '\n', n <- length(vers), ' Hugo version', if (n > 1) 's',
-      ' found and listed below', sprintf(' (currently using #%d)', which(vers == ver)),
+      ' found and listed below',
+      sprintf(' (#%d on the list is currently used)', which(vers == ver)),
       '. Which version(s) would you like to remove?\n', hrule()
     )
-    select.list(vers, title = title, multiple = TRUE, graphics = FALSE)
-  } else {
-    find_hugo(version, TRUE)
+    ver = select.list(vers, title = title, multiple = TRUE, graphics = FALSE)
   }
-  for (f in installed) {
+  for (f in ver) {
     if (!file_exists(f)) f = Sys.which(f)  # e.g., hugo.exe returned from find_hugo()
     d = dirname(f)
     # the parent folder name must be a version number
@@ -331,8 +330,8 @@ remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FAL
     } else warning2(
       "'", f, "' does not seem to be installed via blogdown::install_hugo(), ",
       "and I will not remove it. If you are sure it can be removed, you may ",
-      "call blogdown::remove_hugo() with the argument force = TRUE to delete it",
-      sprintf(', or %s (the latter is recommended)', uninstall_tip(f)), "."
+      "delete it with blogdown::remove_hugo(force = TRUE)",
+      sprintf(', or%s (the latter is recommended)', uninstall_tip(f)), "."
     )
   }
 }
