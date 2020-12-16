@@ -4,7 +4,13 @@
 #' project (see \sQuote{Details}).
 #' @export
 check_site = function() in_root({
-  check_init('Running checks for the blogdown website project', '\n')
+  check_init('Running a series of automated checks for your blogdown website project...')
+  paste(
+    check_success('A successful check looks like this.'),
+    check_todo('A check that needs your attention looks like this.'),
+    check_progress("Let's check out your blogdown site!"),
+    hrule())
+  message(hrule())
   check_config()
   check_gitignore()
   check_hugo()
@@ -147,7 +153,7 @@ check_hugo = function() {
   check_init('Checking Hugo')
   check_progress('Checking Hugo version...')
   # variables
-  v  = format(hugo_version(), decimal.mark='.')
+  cv  = format(hugo_version(), decimal.mark='.') # current version
   av = find_hugo("all", quiet = TRUE) # save all versions installed
   nv = vapply(av, .hugo_version, as.numeric_version("0.78.2")) # numeric versions
   mv = max(as.numeric_version(nv)) # max numeric version installed
@@ -159,7 +165,7 @@ check_hugo = function() {
 
   # if Hugo version is available (either set in .Rprofile or default)
   if (hugo_available())
-    check_success('Found Hugo! You are using Hugo ', v, '.')
+    check_success('Found Hugo! You are using Hugo ', cv, '.')
 
   check_progress('Checking .Rprofile for Hugo version used by blogdown...')
 
@@ -171,7 +177,7 @@ check_hugo = function() {
   if (hugo_available() && is.null(v_set)) {
     check_progress('Hugo version not set in .Rprofile.')
     check_todo('Use blogdown::config_Rprofile() to create project .Rprofile.')
-    check_todo('Set options(blogdown.hugo.version = "', v, '")', ' in .Rprofile to use current Hugo version.')
+    check_todo('Set options(blogdown.hugo.version = "', cv, '")', ' in .Rprofile to use current Hugo version.')
   }
 
   check_progress('Checking for more recently installed Hugo versions...')
