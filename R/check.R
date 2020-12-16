@@ -30,57 +30,51 @@ check_config = function() {
   f = find_config()
   check_init('Checking ', f)
   open_file(f)
+
   check_progress('Checking "baseURL" setting for Hugo...')
   base = index_ci(config, 'baseurl')
-  if (is_example_url(base)) check_todo(
-    'Set "baseURL = /" if you do not yet have a domain.'
-    )
-  else if (is_slash_url(base))
+  if (is_example_url(base)) {
+    check_todo('Set "baseURL" to "/" if you do not yet have a domain.')
+  } else if (identical(base, '/')) {
     check_todo('Update "baseURL" to your actual URL when ready to publish.')
-  else check_success('Found "baseURL = ', base, 'nothing to do here!')
+  } else {
+    check_success('Found baseURL = "', base, '"; nothing to do here!')
+  }
+
   check_progress('Checking "ignoreFiles" setting for Hugo...')
   ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
-  if (is.null(s <- config[['ignoreFiles']])) check_todo(
-    'Add "ignoreFiles:"', xfun::tojson(ignore))
-  else if (!all(ignore %in% s) & (!'_files$' %in% s))
-    check_success('Found all recommended "ignoreFiles":',
-                  '\n',
-                  '',
-                  gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
-                  )
-  else if (!all(ignore %in% s) & ('_files$' %in% s))
-    check_todo('Remove "_files$" from "ignoreFiles":',
-               '\n',
-               '',
-               gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
-               )
-  else check_success('"ignoreFiles" looks good- nothing to do here!')
-  check_progress('Checking setting for Hugo markdown renderer...')
+  if (is.null(s <- config[['ignoreFiles']])) {
+    check_todo('Set "ignoreFiles" to ', xfun::tojson(ignore))
+  } else if (!all(ignore %in% s)) {
+    check_todo(
+      'Add these items to the "ignoreFiles" setting: ',
+      gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
+    )
+  } else if ('_files$' %in% s) {
+    check_todo('Remove "_files$" from "ignoreFiles"')
+  } else {
+    check_success('"ignoreFiles" looks good - nothing to do here!')
+  }
+
+  check_progress("Checking setting for Hugo's Markdown renderer...")
   if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
     h = config$markup$defaultMarkdownHandler
     if (is.null(h) || h == 'goldmark') {
-      check_progress('You are using the goldmark markdown renderer.')
+      check_progress("You are using the Markdown renderer 'goldmark'.")
       config_goldmark(f)
-    }
-    else if (h == 'blackfriday')
-      check_progress('You are using the ', h, ' markdown renderer.')
+    } else if (!is.null(h)) {
+      check_progress("You are using the Markdown renderer '", h, "'.")
       check_success('No todos now. If you install a new Hugo version, re-run this check.')
+    }
+  } else {
+    check_success('All set!', if (!is.null(s)) ' Found the "unsafe" setting for goldmark.')
   }
-  else if (!is.null(s) && hugo_available('0.60'))
-    check_progress('You are using the goldmark markdown renderer.')
-    check_success('All set! Found "unsafe" setting - Hugo will render raw HTML.')
   check_done(f)
 }
 
 is_example_url = function(url) {
   is.character(url) && grepl(
     '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
-  )
-}
-
-is_slash_url = function(url) {
-  is.character(url) && grepl(
-    '^/$', url
   )
 }
 
