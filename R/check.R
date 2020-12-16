@@ -5,12 +5,13 @@
 #' @export
 check_site = function() in_root({
   check_init('Running a series of automated checks for your blogdown website project...')
-  paste(
-    check_success('A successful check looks like this.'),
-    check_todo('A check that needs your attention looks like this.'),
-    check_progress("Let's check out your blogdown site!"),
-    hrule())
+
   message(hrule())
+  check_success('A successful check looks like this.')
+  check_todo('A check that needs your attention looks like this.')
+  check_progress("Let's check out your blogdown site!")
+  message(hrule())
+
   check_config()
   check_gitignore()
   check_hugo()
