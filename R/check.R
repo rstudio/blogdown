@@ -50,7 +50,7 @@ check_config = function() {
                )
   else check_success('"ignoreFiles" looks good- nothing to do here!')
   check_progress('Checking setting for Hugo markdown renderer...')
-  if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
+  if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60', quiet = TRUE)) {
     h = config$markup$defaultMarkdownHandler
     check_progress('You are using the "', h, '" markdown renderer.')
     if (is.null(h) || h == 'goldmark') config_goldmark(f)
@@ -144,8 +144,8 @@ check_hugo = function() {
   check_init('Checking Hugo')
   check_progress('Checking Hugo version...')
   # variables
-  v  = format(hugo_version(), decimal.mark='.')
-  av = find_hugo("all") # save all versions installed
+  v  = format(hugo_version(quiet = TRUE), decimal.mark='.')
+  av = find_hugo("all", quiet = TRUE) # save all versions installed
   nv = vapply(av, .hugo_version, as.numeric_version("0.78.2")) # numeric versions
   mv = max(as.numeric_version(nv)) # max numeric version installed
 
@@ -155,39 +155,30 @@ check_hugo = function() {
   ))
 
   # if Hugo version is available (either set in .Rprofile or default)
-  if (hugo_available())
+  if (hugo_available(quiet = TRUE))
     check_success('Found Hugo! You are using Hugo ', v, '.')
 
   check_progress('Checking .Rprofile for Hugo version used by blogdown...')
 
   # .Rprofile exists + most recent Hugo
-  if (hugo_available() && !(is.null(v_set <- getOption('blogdown.hugo.version'))))
+  if (hugo_available(quiet = TRUE) && !(is.null(v_set <- getOption('blogdown.hugo.version'))))
     check_success('Blogdown is using Hugo ', format(v_set, decimal.mark = '.'), ' to build site locally.')
 
   # If no Hugo version set in .Rprofile
-  if (hugo_available() && is.null(v_set)) {
+  if (hugo_available(quiet = TRUE) && is.null(v_set)) {
     check_progress('Hugo version not set in .Rprofile.')
     check_todo('Use blogdown::config_Rprofile() to create project .Rprofile.')
     check_todo('Set options(blogdown.hugo.version = "', v, '")', ' in .Rprofile to use current Hugo version.')
   }
 
-  # .Rprofile sets Hugo version, but Hugo version not available
-  if (!hugo_available() && !(is.null(v_set))) {
-    check_progress('Found Hugo ', v, ' in .Rprofile, but version ', v_set, ' is not installed.')
-    check_progress('Found ', sprintf("%s Hugo version%s", n <- length(vers), if (n > 1) "s" else ""), ' installed.')
-    check_todo("Use blogdown::find_hugo('all') to list installed Hugo versions.")
-    check_todo('Set options(blogdown.hugo.version = "',
-               format(mv, decimal.mark='.'), '")', ' to use newest installed Hugo version.')
-  }
-
   check_progress('Checking for more recently installed Hugo versions...')
   # More recent Hugo version is available than in .Rprofile
-  if (hugo_available() && (v_set < mv)) {
+  if (hugo_available(quiet = TRUE) && (v_set < mv)) {
     check_progress('Found Hugo version ', format(v_set, decimal.mark='.'), ' in .Rprofile, but version ', format(mv, decimal.mark='.'), ' is more recent.')
     check_todo('Set options(blogdown.hugo.version = "',
-               format(mv, decimal.mark='.'), '")', ' to use newest installed Hugo version.')
+               format(mv, decimal.mark='.'), '")', ' in .Rprofile to use newest installed Hugo version.')
   }
-  else if (hugo_available() && (v_set == mv))
+  else if (hugo_available(quiet = TRUE) && (v_set == mv))
     check_success('Blogdown is using the most up-to-date Hugo version installed (', format(v_set, decimal.mark = '.'), ') to build site locally.')
 
   check_done('Hugo')
@@ -224,13 +215,13 @@ check_netlify = function() {
   }
 
   check_progress('Checking that Netlify & blogdown Hugo versions match...')
-  if ((v2 <- hugo_version()) == v) {
+  if ((v2 <- hugo_version(quiet = TRUE)) == v) {
     check_success("It's a match! Blogdown is using the same Hugo version (",
                   format(v2, decimal.mark('.')),
                   ") to build site locally.")
   }
 
-  else if ((v2 <- hugo_version()) != v) {
+  else if ((v2 <- hugo_version(quiet = TRUE)) != v) {
     check_progress('Blogdown is using a different Hugo version (',
                    format(v2, decimal.mark('.')),
                    ') to build site locally.')
