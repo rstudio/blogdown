@@ -14,7 +14,7 @@ hugo_version = local({
   time = NULL  # last modification time of the executable
   ver  = NULL  # cache the version
   function() {
-    time2 = file.mtime(exec_path(cmd <- find_hugo()))
+    time2 = file.mtime(exec_path(cmd <- find_hugo(quiet = TRUE)))
     if (!is.null(ver) && identical(time2, time)) return(ver)
     time <<- time2
     ver  <<- .hugo_version(cmd)
