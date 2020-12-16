@@ -204,22 +204,39 @@ check_hugo = function() {
 #' @export
 check_netlify = function() {
   check_init('Checking netlify.toml...')
-  if (!file.exists(f <- 'netlify.toml')) return(msg1(f, ' was not found'))
+  if (!file.exists(f <- 'netlify.toml')) return(
+    check_todo(f, ' was not found. Use blogdown::config_netlify() to create file.')
+    )
   cfg = find_config()
   open_file(f)
   x = read_toml(f)
   v = x$context$production$environment$HUGO_VERSION
   if (is.null(v)) v = x$build$environment$HUGO_VERSION
 
-  if (is.null(v)) msg2(
-    "You are recommended to specify the Hugo version in the file '", f, "'. ",
-    "If you are not sure how to do it, see the help page ?blogdown::config_netlify."
-  ) else if ((v2 <- hugo_version()) != v) msg2(
-    'Your local Hugo version is ', v2, ' but the Hugo version specified in the ',
-    "'", f, "' file is ", v, '. You are recommended to use the same version ',
-    'locally and on Netlify. You may either blogdown::install_hugo("', v, '") or ',
-    'set HUGO_VERSION to ', v2, ' in ', f, '.'
-  )
+  check_progress('Checking HUGO_VERSION setting in ', f, '...')
+  if (is.null(v)) {
+    check_progress('HUGO_VERSION not found in ', f, '.')
+    check_todo("Set the Hugo version in ", f, ".")
+  }
+
+  else if (!is.null(v)) {
+    check_success('Found HUGO_VERSION = ', v, ' in ', f, '.')
+  }
+
+  check_progress('Checking that Netlify & blogdown Hugo versions match...')
+  if ((v2 <- hugo_version()) == v) {
+    check_success("It's a match! Blogdown is using the same Hugo version (",
+                  format(v2, decimal.mark('.')),
+                  ") to build site locally.")
+  }
+
+  else if ((v2 <- hugo_version()) != v) {
+    check_progress('Blogdown is using a different Hugo version (',
+                   format(v2, decimal.mark('.')),
+                   ') to build site locally.')
+    check_todo('Option 1: Change HUGO_VERSION = ', format(v2, decimal.mark('.')), ' in ', f, '.')
+    check_todo('Option 2: Use blogdown::install_hugo("', v, '").')
+  }
 
   if (!is.null(p1 <- x$build$publish)) {
     p2 = publish_dir(tmp = FALSE, default = NULL)
@@ -230,6 +247,8 @@ check_netlify = function() {
       '). We recommend that you set publish = "', p2, '" in ', f, '.'
     )
   }
+
+  check_done(f)
 }
 
 #' @details \code{check_content()} checks for possible problems in the content
