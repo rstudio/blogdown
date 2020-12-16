@@ -218,29 +218,35 @@ check_netlify = function() {
     check_success('Found HUGO_VERSION = ', v, ' in ', f, '.')
   }
 
-  check_progress('Checking that Netlify & blogdown Hugo versions match...')
+  check_progress('Checking that Netlify & local Hugo versions match...')
   if ((v2 <- hugo_version()) == v) {
-    check_success("It's a match! Blogdown is using the same Hugo version (",
-                  format(v2, decimal.mark('.')),
-                  ") to build site locally.")
+    check_success("It's a match! Blogdown and Netlify are using the same Hugo version (",
+                  format(v2, decimal.mark('.')),").")
   }
 
   else if ((v2 <- hugo_version()) != v) {
-    check_progress('Blogdown is using a different Hugo version (',
-                   format(v2, decimal.mark('.')),
+    check_progress('Mismatch found:')
+    check_progress('blogdown is using Hugo version (', format(v2, decimal.mark('.')),
                    ') to build site locally.')
-    check_todo('Option 1: Change HUGO_VERSION = ', format(v2, decimal.mark('.')), ' in ', f, '.')
-    check_todo('Option 2: Use blogdown::install_hugo("', v, '").')
+    check_progress('Netlify is using Hugo version (', v, ') to build site.')
+    check_todo('Option 1: Change HUGO_VERSION = ', format(v2, decimal.mark('.')), ' in ', f, ' to match local version.')
+    check_todo('Option 2: Use blogdown::install_hugo("', v, '") to match Netlify version.')
+    check_todo('If Option 2: Set options(blogdown.hugo.version = "', v, '")', ' in .Rprofile to pin this Hugo version.')
   }
 
+  check_progress('Checking that Netlify & local Hugo publish directories match...')
   if (!is.null(p1 <- x$build$publish)) {
     p2 = publish_dir(tmp = FALSE, default = NULL)
     if (p3 <- is.null(p2)) p2 = 'public'
-    if (!identical(p2, gsub('/$', '', p1))) msg2(
-      "The 'publish' setting in '", f, "' is '", p1, "' but the 'publishDir' setting for ",
-      "Hugo is '", p2, "' (", if (p3) "Hugo's default" else c("as set in ", cfg),
-      '). We recommend that you set publish = "', p2, '" in ', f, '.'
-    )
+    if (!identical(p2, gsub('/$', '', p1))) {
+      check_progress('Mismatch found:')
+      check_progress("The Netlify 'publish' directory in '", f, "' is '", p1, "'.")
+      check_progress("The local Hugo 'publishDir' directory is '", p2,
+                     "' (", if (p3) "Hugo's default" else c("as set in ", cfg),
+                     ')')
+      check_todo('Open ', f, ' and under [build] set publish = "', p2, '".')
+    }
+    else check_success('Good to go - blogdown and Netlify are using the same publish directory (', p2, ').')
   }
 
   check_done(f)
