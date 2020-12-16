@@ -189,6 +189,8 @@ check_hugo = function() {
   }
   else if (hugo_available() && (v_set == mv))
     check_success('Blogdown is using the most up-to-date Hugo version installed (', format(v_set, decimal.mark = '.'), ') to build site locally.')
+
+  check_done('Hugo')
 }
 
 #' @details \code{check_netlify()} checks the Hugo version specification and the
@@ -201,7 +203,7 @@ check_hugo = function() {
 #' @rdname check_site
 #' @export
 check_netlify = function() {
-  msg1('Checking netlify.toml')
+  check_init('Checking netlify.toml...')
   if (!file.exists(f <- 'netlify.toml')) return(msg1(f, ' was not found'))
   cfg = find_config()
   open_file(f)
