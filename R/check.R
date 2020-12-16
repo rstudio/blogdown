@@ -25,13 +25,12 @@ check_config = function() {
   open_file(f)
   check_progress('Checking "baseURL" setting for Hugo...')
   base = index_ci(config, 'baseurl')
-  check_progress('Found "baseURL = ', base, '"')
   if (is_example_url(base)) check_todo(
     'Set "baseURL = /" if you do not yet have a domain.'
     )
   else if (is_slash_url(base))
     check_todo('Update "baseURL" to your actual URL when ready to publish.')
-  else check_success('"baseURL" set- nothing to do here!')
+  else check_success('Found "baseURL = ', base, 'nothing to do here!')
   check_progress('Checking "ignoreFiles" setting for Hugo...')
   ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
   if (is.null(s <- config[['ignoreFiles']])) check_todo(
@@ -206,29 +205,29 @@ check_netlify = function() {
   open_file(f)
   x = read_toml(f)
   v = x$context$production$environment$HUGO_VERSION
+  v2 = hugo_version()
   if (is.null(v)) v = x$build$environment$HUGO_VERSION
 
-  check_progress('Checking HUGO_VERSION setting in ', f, '...')
   if (is.null(v)) {
     check_progress('HUGO_VERSION not found in ', f, '.')
-    check_todo("Set the Hugo version in ", f, ".")
+    check_todo('Set HUGO_VERSION = ', v2, ' in [build] context of ', f, '.')
   }
 
   else if (!is.null(v)) {
-    check_success('Found HUGO_VERSION = ', v, ' in ', f, '.')
+    check_success('Found HUGO_VERSION = ', v, ' in [build] context of ', f, '.')
   }
 
   check_progress('Checking that Netlify & local Hugo versions match...')
-  if ((v2 <- hugo_version()) == v) {
+  if (v2 == v) {
     check_success("It's a match! Blogdown and Netlify are using the same Hugo version (",
                   format(v2, decimal.mark('.')),").")
   }
 
-  else if ((v2 <- hugo_version()) != v) {
-    check_progress('Mismatch found:')
-    check_progress('blogdown is using Hugo version (', format(v2, decimal.mark('.')),
-                   ') to build site locally.')
-    check_progress('Netlify is using Hugo version (', v, ') to build site.')
+  else if (v2 != v) {
+    check_progress('Mismatch found:\n',
+                   '  blogdown is using Hugo version (', format(v2, decimal.mark('.')),
+                   ') to build site locally.\n',
+                   '  Netlify is using Hugo version (', v, ') to build site.')
     check_todo('Option 1: Change HUGO_VERSION = ', format(v2, decimal.mark('.')), ' in ', f, ' to match local version.')
     check_todo('Option 2: Use blogdown::install_hugo("', v, '") to match Netlify version.')
     check_todo('If Option 2: Set options(blogdown.hugo.version = "', v, '")', ' in .Rprofile to pin this Hugo version.')
@@ -239,14 +238,14 @@ check_netlify = function() {
     p2 = publish_dir(tmp = FALSE, default = NULL)
     if (p3 <- is.null(p2)) p2 = 'public'
     if (!identical(p2, gsub('/$', '', p1))) {
-      check_progress('Mismatch found:')
-      check_progress("The Netlify 'publish' directory in '", f, "' is '", p1, "'.")
-      check_progress("The local Hugo 'publishDir' directory is '", p2,
+      check_progress('Mismatch found:\n',
+                     "  The Netlify 'publish' directory in '", f, "' is '", p1, "'.\n",
+                     "  The local Hugo 'publishDir' directory is '", p2,
                      "' (", if (p3) "Hugo's default" else c("as set in ", cfg),
                      ')')
       check_todo('Open ', f, ' and under [build] set publish = "', p2, '".')
     }
-    else check_success('Good to go - blogdown and Netlify are using the same publish directory (', p2, ').')
+    else check_success('Good to go - blogdown and Netlify are using the same publish directory: ', p2)
   }
 
   check_done(f)
@@ -270,7 +269,7 @@ check_content = function() {
   detect = function(field, fun) names(unlist(lapply(
     meta, function(m) fun(m[[field]])
   )))
-  check_progress('Checking for content that is previewed locally, but not published...')
+  check_progress('Checking for previewed content that will not be published...')
   files = detect('date', function(d) tryCatch(
     if (isTRUE(as.Date(d) > Sys.Date())) TRUE, error = function(e) NULL
   ))
@@ -278,7 +277,7 @@ check_content = function() {
     check_todo('Found ', n <- length(files), ' file', if (n > 1) 's',
                ' marked with a future publish date:\n\n',
                indent_list(files), '\n\n',
-               "  To publish today, change a file's YAML key 'date: ",
+               "  To publish today, change a file's YAML key to 'date: ",
                format(Sys.Date(), "%Y-%m-%d"), "'")
   }
   else check_success('Found 0 files with future publish dates.')
@@ -296,7 +295,7 @@ check_content = function() {
     check_todo('Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
                ' that need to be knit:\n\n',
                indent_list(files), '\n\n',
-               "  To render these files, knit or use blogdown::build_site(build_rmd = 'newfile')")
+               "  To render a file, knit or use blogdown::build_site(build_rmd = 'newfile')")
   }
   else check_success('All R Markdown files have been knitted.')
   files = setdiff(rmds, files)
@@ -305,7 +304,7 @@ check_content = function() {
     check_todo('Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
                ' that need to be re-knit:\n\n',
                indent_list(files), '\n\n',
-               "  To update these files, re-knit or use blogdown::build_site(build_rmd = 'timestamp')")
+               "  To update a file, re-knit or use blogdown::build_site(build_rmd = 'timestamp')")
   }
   else check_success('All knitted R Markdown files are up to date with their source files.')
   check_progress('Checking for .html files to clean up...')
@@ -314,7 +313,7 @@ check_content = function() {
   if (length(files)) {
     check_todo('Found ', n <- length(files), ' duplicated plain Markdown and .html output file', if (n > 1) 's', ':\n\n',
                indent_list(files), '\n\n',
-               "  To fix, keep the Markdown file and delete the duplicate .html output file.")
+               "  To fix, keep each Markdown file and delete the duplicate .html output file.")
   }
   else check_success('Found 0 duplicate .html output files.')
   check_garbage_html()
@@ -330,7 +329,7 @@ check_garbage_html = function() {
   if (length(res)) {
     check_todo('Found ', n <- length(res), ' incompatible .html file', if (n > 1) 's', ' introduced by previous blogdown versions:\n\n',
                remove_list(res), '\n\n',
-               "  To fix, delete the .html file and re-render with blogdown::build_site(build_rmd = 'newfile').")
+               "  To fix, delete each .html file and re-render with blogdown::build_site(build_rmd = 'newfile').")
   }
   else check_success('Found 0 incompatible .html files to clean up.')
 }
