@@ -265,54 +265,68 @@ check_netlify = function() {
 #' @rdname check_site
 #' @export
 check_content = function() {
-  msg1('Checking content files')
+  check_init('Checking content files')
   meta = scan_yaml()
   detect = function(field, fun) names(unlist(lapply(
     meta, function(m) fun(m[[field]])
   )))
-  msg1('Checking for posts with future publish dates')
+  check_progress('Checking for content that will be previewed locally, but will not be published...')
+  check_progress('Checking for content with future publish dates')
   files = detect('date', function(d) tryCatch(
     if (isTRUE(as.Date(d) > Sys.Date())) TRUE, error = function(e) NULL
   ))
-  if (length(files)) msg2(
-    'The dates of the following posts are in the future:\n\n', indent_list(files)
-  )
-  msg1('Checking for draft posts')
+  if (length(files)) {
+    check_progress('Found the following files with future publish dates:\n\n', indent_list(files))
+    check_todo('To publish now, open file and change date in YAML to ', print(Sys.Date()))
+  }
+  else check_success('Found 0 files with future publish dates.')
+  check_progress('Checking for content marked as drafts')
   files = detect('draft', function(d) if (isTRUE(d)) TRUE)
-  if (length(files)) msg2(
-    'Found the following draft posts:\n\n', indent_list(files)
-  )
-  msg1('Checking for R Markdown posts that have not been rendered')
+  if (length(files)) {
+    check_progress('Found the following files marked as drafts:\n\n', indent_list(files))
+    check_todo("To remove draft status, open file and set 'draft: FALSE' in the YAML.")
+  }
+  else check_success('Found 0 files marked as drafts.')
+  check_progress('Checking for R Markdown files to render...')
   rmds = list_rmds()
-  if (length(files <- filter_newfile(rmds))) msg2(
-    'You may want to render the following posts with blogdown::build_site(build_rmd = "newfile"):\n\n',
-    indent_list(files)
-  )
-  msg1('Checking for R Markdown posts with out-of-date output files')
+  if (length(files <- filter_newfile(rmds))) {
+    check_progress('Found ', length(files), ' R Markdown files that need to be knit.')
+    check_todo('To render these files, knit or use blogdown::build_site(build_rmd = "newfile"):\n\n',
+    indent_list(files))
+  }
+  else check_success('All R Markdown files have been knitted.')
+  check_progress('Checking for R Markdown files with changes since last render...')
   files = setdiff(rmds, files)
   files = files[require_rebuild(output_file(files), files)]
-  if (length(files)) msg2(
-    'You may want to re-render these posts with blogdown::build_site(build_rmd = "timestamp"):\n\n',
-    indent_list(files)
-  )
-  msg1('Checking for plain Markdown posts that have unnecessary .html output files')
+  if (length(files)) {
+    check_progress('Found ', length(files), ' changed R Markdown files that need to be re-knit.')
+    check_todo('To update these files, re-knit or use blogdown::build_site(build_rmd = "timestamp"):\n\n',
+               indent_list(files))
+  }
+  else check_success('All knitted R Markdown files look up to date!')
+  check_progress('Checking for plain Markdown files with duplicate .html output files...')
   files = with_ext(list_rmds(pattern = '[.](md|markdown)$'), 'html')
   files = files[file_exists(files)]
-  if (length(files)) msg2(
-    'You may want to delete these .html output files:\n\n', remove_list(files)
-  )
+  if (length(files)) {
+    check_progress('Found ', length(files), ' changed duplicated output files.')
+    check_todo('Delete these .html output files, but keep the markdown files:\n\n', remove_list(files))
+  }
+  else check_success('Found 0 duplicated output files.')
   check_garbage_html()
+  check_done('Content')
 }
 
 check_garbage_html = function() {
-  msg1('Checking for bad .html files generated with old versions of blogdown')
+  check_progress('Checking for .html files to clean up...')
   res = unlist(lapply(list_files(content_file(), '[.]html$'), function(f) {
     if (file.size(f) < 200000) return()
     x = readLines(f, n = 15)
     if (any(x == '<meta name="generator" content="pandoc" />')) return(f)
   }))
-  if (length(res)) msg2(
-    'You may want to delete these files and rebuild their source files with blogdown::build_site(build_rmd = "newfile"):\n\n',
-    remove_list(res)
-  )
+  if (length(res)) {
+    check_progress('Found ', length(res), ' incompatible .html files introduced by previous blogdown versions.')
+    check_todo('Delete these .html files and re-render with blogdown::build_site(build_rmd = "newfile"):\n\n',
+               remove_list(res))
+  }
+  else check_success('Found 0 .html files to clean up.')
 }
