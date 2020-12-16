@@ -194,7 +194,7 @@ bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) 
 }
 
 # find an executable from PATH, APPDATA, system.file(), ~/bin, etc
-find_exec = function(cmd, dir, version = NULL, info = '') {
+find_exec = function(cmd, dir, version = NULL, info = '', quiet = FALSE) {
   path = ''
   for (d in bin_paths(dir)) {
     if (!dir_exists(d)) next
@@ -230,7 +230,7 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
     )
     return(basename(path2))  # do not use the full path of the command
   } else {
-    if (path2 != '') msg2(
+    if (!quiet && path2 != '') msg2(
       'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
       "If you don't need both copies, you may delete/uninstall the latter",
       uninstall_tip(path2), "."
@@ -270,9 +270,12 @@ uninstall_tip = function(p) {
 #' @param version The expected version number, e.g., \code{'0.25.1'}. If
 #'   \code{NULL}, it will try to find/remove the maximum possible version. If
 #'   \code{'all'}, find/remove all possible versions. In an interactive R
-#'   session when \code{version} is not provided), \code{remove_hugo()} will
-#'   list all installed versions of Hugo, and you can select which versions to
+#'   session when \code{version} is not provided, \code{remove_hugo()} will list
+#'   all installed versions of Hugo, and you can select which versions to
 #'   remove.
+#' @param quiet Whether to signal a message when two versions of Hugo are found:
+#'   one is found on the system \var{PATH} variable, and one is installed by
+#'   \code{\link{install_hugo}()}.
 #' @export
 #' @return For \code{find_hugo()}, it returns the path to the Hugo executable if
 #'   found, otherwise it will signal an error, with a hint on how to install
@@ -284,14 +287,15 @@ uninstall_tip = function(p) {
 #'   installed.
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
-  function(version = getOption('blogdown.hugo.version')) {
+  function(version = getOption('blogdown.hugo.version'), quiet = FALSE) {
     i = if (is.null(version)) 'default' else as.character(version)
     p = paths[[i]]
     if (!is.null(p) && file.exists(exec_path(p))) return(p)
     # if path not found, find it again
     p = find_exec(
       'hugo', 'Hugo', version,
-      c('You may try blogdown::install_hugo(', sprintf('"%s"', version), ').')
+      c('You may try blogdown::install_hugo(', sprintf('"%s"', version), ').'),
+      quiet
     )
     if (!identical(version, 'all')) paths[[i]] <<- p
     p
@@ -306,7 +310,7 @@ find_hugo = local({
 remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
   installed = if (interactive() && missing(version)) {
     if (length(vers <- find_hugo('all')) == 0) return(msg_cat('Hugo not found.\n'))
-    ver = suppressMessages(find_hugo(version))  # the version currently used
+    ver = find_hugo(version, TRUE)  # the version currently used
     title = paste0(
       hrule(), '\n', n <- length(vers), ' Hugo version', if (n > 1) 's',
       ' found and listed below', sprintf(' (currently using #%d)', which(vers == ver)),
@@ -314,7 +318,7 @@ remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FAL
     )
     select.list(vers, title = title, multiple = TRUE, graphics = FALSE)
   } else {
-    suppressMessages(find_hugo(version))
+    find_hugo(version, TRUE)
   }
   for (f in installed) {
     if (!file_exists(f)) f = Sys.which(f)  # e.g., hugo.exe returned from find_hugo()
