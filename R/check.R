@@ -52,12 +52,16 @@ check_config = function() {
   check_progress('Checking setting for Hugo markdown renderer...')
   if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
     h = config$markup$defaultMarkdownHandler
-    check_progress('You are using the "', h, '" markdown renderer.')
-    if (is.null(h) || h == 'goldmark') config_goldmark(f)
+    if (is.null(h) || h == 'goldmark') {
+      check_progress('You are using the goldmark markdown renderer.')
+      config_goldmark(f)
+    }
     else if (h == 'blackfriday')
+      check_progress('You are using the ', h, ' markdown renderer.')
       check_success('No todos now. If you install a new Hugo version, re-run this check.')
   }
-  else if (!is.null(s <- config$markup$goldmark$renderer$unsafe))
+  else if (!is.null(s) && hugo_available('0.60'))
+    check_progress('You are using the goldmark markdown renderer.')
     check_success('All set! Found "unsafe" setting - Hugo will render raw HTML.')
   check_done(f)
 }
@@ -98,15 +102,15 @@ check_gitignore = function() {
     check_todo('You can safely add to', f, ':',
                paste(ignore_missing, collapse = ', '))
   check_progress('Checking for items to ignore if Netlify builds your site...')
-  if (!file_exists('netlify.toml')) return(check_progress(f, " was not found. Use 'config_netlify()' to set one up."))
+  if (!file_exists('netlify.toml')) return(check_progress(f, " was not found. Use blogdown::config_netlify() to set one up."))
   netlify_ignore = c('public', 'resources')
   if (any(i <- x %in% netlify_ignore))
     check_success('Found! You have safely ignored:', paste(x[i], collapse = ', '))
   netlify_missing = setdiff(netlify_ignore, x[i])
   if (length(netlify_missing) >= 1)
-    check_todo('With Netlify building your site, you can safely add to', f, ':',
+    check_todo('When Netlify builds your site, you can safely add to', f, ':',
                paste(netlify_missing, collapse = ', '))
-  else check_todo('Almost clear for takeoff - use "check_netlify()" too.')
+  else check_todo('Almost clear for takeoff - use blogdown::check_netlify() too.')
   check_done(f)
 }
 
