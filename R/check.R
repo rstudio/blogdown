@@ -275,7 +275,7 @@ check_content = function() {
   ))
   if (length(files)) {
     check_todo('Found ', n <- length(files), ' file', if (n > 1) 's',
-               ' marked with a future publish date:\n\n',
+               ' with a future publish date:\n\n',
                indent_list(files), '\n\n',
                "  To publish today, change a file's YAML key to 'date: ",
                format(Sys.Date(), "%Y-%m-%d"), "'")
@@ -293,7 +293,7 @@ check_content = function() {
   rmds = list_rmds()
   if (length(files <- filter_newfile(rmds))) {
     check_todo('Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
-               ' that need to be knit:\n\n',
+               ' to render:\n\n',
                indent_list(files), '\n\n',
                "  To render a file, knit or use blogdown::build_site(build_rmd = 'newfile')")
   }
@@ -302,11 +302,11 @@ check_content = function() {
   files = files[require_rebuild(output_file(files), files)]
   if (length(files)) {
     check_todo('Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
-               ' that need to be re-knit:\n\n',
+               ' to update by re-rendering:\n\n',
                indent_list(files), '\n\n',
                "  To update a file, re-knit or use blogdown::build_site(build_rmd = 'timestamp')")
   }
-  else check_success('All knitted R Markdown files are up to date with their source files.')
+  else check_success('All R Markdown output files are up to date with their source files.')
   check_progress('Checking for .html files to clean up...')
   files = with_ext(list_rmds(pattern = '[.](md|markdown)$'), 'html')
   files = files[file_exists(files)]
