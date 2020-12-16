@@ -86,31 +86,36 @@ check_gitignore = function() {
   f = '.gitignore'
   check_init('Checking ', f)
   if (!file_exists(f)) return(check_todo(f, ' was not found. You may want to add this.'))
+
   x = read_utf8(f)
   check_progress('Checking for items to remove...')
-  no_ignore = c('*.html', '*.md', '*.markdown', 'static', 'config.toml', 'config.yaml')
-  if (any(i <- x %in% no_ignore)) check_todo(
-    'Remove items from', f, ':', paste(x[i], collapse = ', ')
-  )
-  else check_success('Nothing to see here - found no items to remove.')
+  x1 = c('*.html', '*.md', '*.markdown', 'static', 'config.toml', 'config.yaml')
+  if (any(i <- x %in% x1)) check_todo(
+    'Remove items from ', f, ':', paste(x[i], collapse = ', ')
+  ) else check_success('Nothing to see here - found no items to remove.')
+
   check_progress('Checking for items you can safely ignore...')
-  yes_ignore = c('blogdown', '.DS_Store', 'Thumbs.db')
-  if (any(i <- x %in% yes_ignore))
-    check_success('Found! You have safely ignored:', paste(x[i], collapse = ', '))
-  ignore_missing = setdiff(yes_ignore, x[i])
-  if (length(ignore_missing) >= 1)
-    check_todo('You can safely add to', f, ':',
-               paste(ignore_missing, collapse = ', '))
-  check_progress('Checking for items to ignore if Netlify builds your site...')
-  if (!file_exists('netlify.toml')) return(check_progress(f, " was not found. Use blogdown::config_netlify() to set one up."))
-  netlify_ignore = c('public', 'resources')
-  if (any(i <- x %in% netlify_ignore))
-    check_success('Found! You have safely ignored:', paste(x[i], collapse = ', '))
-  netlify_missing = setdiff(netlify_ignore, x[i])
-  if (length(netlify_missing) >= 1)
-    check_todo('When Netlify builds your site, you can safely add to', f, ':',
-               paste(netlify_missing, collapse = ', '))
-  else check_todo('Almost clear for takeoff - use blogdown::check_netlify() too.')
+  x2 = c('.DS_Store', 'Thumbs.db')
+  if (any(i <- x %in% x2))
+    check_success('Found! You have safely ignored: ', paste(x[i], collapse = ', '))
+  x3 = setdiff(x2, x)
+  if (length(x3)) check_todo('You can safely add to ', f, ':', paste(x3, collapse = ', '))
+
+  if (file_exists('netlify.toml')) {
+    check_progress('Checking for items to ignore if you build the site on Netlify...')
+    x4 = c('public', 'resources')
+    if (any(i <- x %in% x4))
+      check_success('Found! You have safely ignored: ', paste(x[i], collapse = ', '))
+    x5 = setdiff(x4, x)
+    if (length(x5)) {
+      check_todo(
+        'When Netlify builds your site, you can safely add to ', f, ':',
+        paste(x5, collapse = ', ')
+      )
+    } else {
+      check_todo('Almost clear for takeoff - use blogdown::check_netlify() too.')
+    }
+  }
   check_done(f)
 }
 
