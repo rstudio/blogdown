@@ -112,8 +112,6 @@ check_gitignore = function() {
         'When Netlify builds your site, you can safely add to ', f, ': ',
         paste(x5, collapse = ', ')
       )
-    } else {
-      check_todo('Almost clear for takeoff - use blogdown::check_netlify() too.')
     }
   }
   check_done(f)
