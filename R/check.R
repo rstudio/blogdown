@@ -91,7 +91,7 @@ check_gitignore = function() {
   check_progress('Checking for items to remove...')
   x1 = c('*.html', '*.md', '*.markdown', 'static', 'config.toml', 'config.yaml')
   if (any(i <- x %in% x1)) check_todo(
-    'Remove items from ', f, ':', paste(x[i], collapse = ', ')
+    'Remove items from ', f, ': ', paste(x[i], collapse = ', ')
   ) else check_success('Nothing to see here - found no items to remove.')
 
   check_progress('Checking for items you can safely ignore...')
@@ -99,7 +99,7 @@ check_gitignore = function() {
   if (any(i <- x %in% x2))
     check_success('Found! You have safely ignored: ', paste(x[i], collapse = ', '))
   x3 = setdiff(x2, x)
-  if (length(x3)) check_todo('You can safely add to ', f, ':', paste(x3, collapse = ', '))
+  if (length(x3)) check_todo('You can safely add to ', f, ': ', paste(x3, collapse = ', '))
 
   if (file_exists('netlify.toml')) {
     check_progress('Checking for items to ignore if you build the site on Netlify...')
@@ -109,7 +109,7 @@ check_gitignore = function() {
     x5 = setdiff(x4, x)
     if (length(x5)) {
       check_todo(
-        'When Netlify builds your site, you can safely add to ', f, ':',
+        'When Netlify builds your site, you can safely add to ', f, ': ',
         paste(x5, collapse = ', ')
       )
     } else {
@@ -153,32 +153,29 @@ check_hugo = function() {
   if (generator() != 'hugo') return()
   check_init('Checking Hugo')
   check_progress('Checking Hugo version...')
-  # variables
-  cv  = format(hugo_version(), decimal.mark='.') # current version
-  av = find_hugo("all", quiet = TRUE) # save all versions installed
-  nv = vapply(av, .hugo_version, as.numeric_version("0.78.2")) # numeric versions
-  mv = max(as.numeric_version(nv)) # max numeric version installed
+  # current version and all possible versions of Hugo
+  cv = hugo_version()
+  av = find_hugo("all", quiet = TRUE)
 
   # if no Hugo versions are installed
-  if (is.null(av)) return(check_todo(
+  if ((n <- length(av)) == 0) return(check_todo(
     'Hugo not found - use blogdown::install_hugo() to install.'
   ))
 
-  # if Hugo version is available (either set in .Rprofile or default)
-  if (hugo_available())
-    check_success('Found Hugo! You are using Hugo ', cv, '.')
+  check_success(sprintf(
+    'Found %sHugo. You are using Hugo %s.', if (n > 1) paste(n, 'versions of ') else '', cv
+  ))
 
   check_progress('Checking .Rprofile for Hugo version used by blogdown...')
 
   # .Rprofile exists + most recent Hugo
-  if (hugo_available() && !(is.null(v_set <- getOption('blogdown.hugo.version'))))
-    check_success('Blogdown is using Hugo ', format(v_set, decimal.mark = '.'), ' to build site locally.')
-
-  # If no Hugo version set in .Rprofile
-  if (hugo_available() && is.null(v_set)) {
+  if (!(is.null(sv <- getOption('blogdown.hugo.version')))) {
+    check_success(sprintf('blogdown is using Hugo %s to build site locally.'), sv)
+  } else {
     check_progress('Hugo version not set in .Rprofile.')
-    check_todo('Use blogdown::config_Rprofile() to create project .Rprofile.')
-    check_todo('Set options(blogdown.hugo.version = "', cv, '")', ' in .Rprofile to use current Hugo version.')
+    if (!file_exists('.Rprofile'))
+      check_todo('Use blogdown::config_Rprofile() to create .Rprofile for the current project.')
+    check_todo(sprintf('Set options(blogdown.hugo.version = "%s") in .Rprofile.', cv))
   }
 
   check_done('Hugo')
