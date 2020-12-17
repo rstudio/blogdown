@@ -264,56 +264,107 @@ check_content = function() {
   detect = function(field, fun) names(unlist(lapply(
     meta, function(m) fun(m[[field]])
   )))
+
   check_progress('Checking for previewed content that will not be published...')
   files = detect('date', function(d) tryCatch(
     if (isTRUE(as.Date(d) > Sys.Date())) TRUE, error = function(e) NULL
   ))
   if (length(files)) {
-    check_todo('Found ', n <- length(files), ' file', if (n > 1) 's',
-               ' with a future publish date:\n\n',
-               indent_list(files), '\n\n',
-               "  To publish today, change a file's YAML key to 'date: ",
-               format(Sys.Date(), "%Y-%m-%d"), "'")
+    check_todo(
+      'Found ', n <- length(files), ' file', if (n > 1) 's',
+      ' with a future publish date:\n\n', indent_list(files), '\n\n',
+      "  If you want to publish today, change a file's YAML key to 'date: ",
+      format(Sys.Date(), '%Y-%m-%d'), "'"
+    )
+  } else {
+    check_success('Found 0 files with future publish dates.')
   }
-  else check_success('Found 0 files with future publish dates.')
+
   files = detect('draft', function(d) if (isTRUE(d)) TRUE)
   if (length(files)) {
-    check_todo('Found ', n <- length(files), ' file', if (n > 1) 's',
-               ' marked as drafts:\n\n',
-               indent_list(files), '\n\n',
-               "  To un-draft, change a file's YAML from 'draft: TRUE' to 'draft: FALSE'")
+    check_todo(
+      'Found ', n <- length(files), ' file', if (n > 1) 's',
+      ' marked as drafts:\n\n', indent_list(files), '\n\n',
+      "  To un-draft, change a file's YAML from 'draft: true' to 'draft: false'"
+    )
+  } else {
+    check_success('Found 0 files marked as drafts.')
   }
-  else check_success('Found 0 files marked as drafts.')
+
   check_progress('Checking your R Markdown content...')
   rmds = list_rmds()
   if (length(files <- filter_newfile(rmds))) {
-    check_todo('Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
-               ' to render:\n\n',
-               indent_list(files), '\n\n',
-               "  To render a file, knit or use blogdown::build_site(build_rmd = 'newfile')")
+    check_todo(
+      'Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
+      ' to render:\n\n', indent_list(files), '\n\n',
+      "  To render a file, knit or use blogdown::build_site(build_rmd = 'newfile')"
+    )
+  } else {
+    check_success('All R Markdown files have been knitted.')
   }
-  else check_success('All R Markdown files have been knitted.')
+
   files = setdiff(rmds, files)
   files = files[require_rebuild(output_file(files), files)]
   if (length(files)) {
-    check_todo('Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
-               ' to update by re-rendering:\n\n',
-               indent_list(files), '\n\n',
-               "  To update a file, re-knit or use blogdown::build_site(build_rmd = 'timestamp')")
+    check_todo(
+      'Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
+      ' to update by re-rendering:\n\n', indent_list(files), '\n\n',
+      "  To update a file, re-knit or use blogdown::build_site(build_rmd = 'timestamp')"
+    )
+  } else {
+    check_success('All R Markdown output files are up to date with their source files.')
   }
-  else check_success('All R Markdown output files are up to date with their source files.')
-  check_progress('Checking for .html files to clean up...')
-  files = with_ext(list_rmds(pattern = '[.](md|markdown)$'), 'html')
-  files = files[file_exists(files)]
-  if (length(files)) {
-    check_todo('Found ', n <- length(files), ' duplicated plain Markdown and .html output file', if (n > 1) 's', ':\n\n',
-               indent_list(files), '\n\n',
-               "  To fix, keep each Markdown file and delete the duplicate .html output file.")
+
+  check_progress('Checking for .html/.md files to clean up...')
+  if (n <- length(files <- list_duplicates())) {
+    check_todo(
+      'Found ', n, ' duplicated plain Markdown and .html output file',
+      if (n > 1) 's', ':\n\n', indent_list(files), '\n\n',
+      "  To fix, run blogdown::clean_duplicates()."
+    )
+  } else {
+    check_success('Found 0 duplicate .html output files.')
   }
-  else check_success('Found 0 duplicate .html output files.')
   check_garbage_html()
   check_done('Content')
 }
+
+list_duplicates = function() in_root({
+  x = with_ext(list_rmds(pattern = '[.](md|markdown)$'), 'html')
+  x[file_exists(x)]
+})
+
+#' Clean duplicated output files
+#'
+#' For an output file \file{FOO.html}, \file{FOO.md} should be deleted if
+#' \file{FOO.Rmd} exists, and \file{FOO.html} should be deleted when
+#' \file{FOO.Rmarkdown} exists (because \file{FOO.Rmarkdown} should generate
+#' \file{FOO.markdown} instead) or neither \file{FOO.Rmarkdown} nor
+#' \file{FOO.Rmd} exists (because a plain Markdown file should not be knitted to
+#' HTML).
+#' @param preview Whether to preview the file list, or just delete the files. If
+#'   you are sure the files can be safely deleted, use \code{preview = FALSE}.
+#' @export
+#' @return For \code{preview = TRUE}, a logical vector indicating if each file
+#'   was successfully deleted; for \code{preview = FALSE}, the file list is
+#'   printed.
+clean_duplicates = function(preview = TRUE) in_root({
+  x = list_duplicates()
+  x1 = with_ext(x, 'Rmd');       i1 = file_exists(x1)
+  x2 = with_ext(x, 'Rmarkdown'); i2 = file_exists(x2)
+  # if .Rmd exists, delete .md; if .Rmd does not exist or .Rmarkdown exists,
+  # delete .html
+  x = c(with_ext(x[i1], 'md'), x[i2 | !i1])
+  x = x[file_exists(x)]
+  if (length(x)) {
+    if (preview) msg_cat(
+      'Found possibly duplicated output files. Run blogdown::clean_duplicates(preview = FALSE)',
+      ' if you are sure they can be deleted:\n\n', indent_list(x), '\n'
+    ) else file.remove(x)
+  } else {
+    msg_cat('No duplicated output files were found.\n')
+  }
+})
 
 check_garbage_html = function() {
   res = unlist(lapply(list_files(content_file(), '[.]html$'), function(f) {
@@ -321,10 +372,13 @@ check_garbage_html = function() {
     x = readLines(f, n = 15)
     if (any(x == '<meta name="generator" content="pandoc" />')) return(f)
   }))
-  if (length(res)) {
-    check_todo('Found ', n <- length(res), ' incompatible .html file', if (n > 1) 's', ' introduced by previous blogdown versions:\n\n',
-               remove_list(res), '\n\n',
-               "  To fix, delete each .html file and re-render with blogdown::build_site(build_rmd = 'newfile').")
+  if (n <- length(res)) {
+    check_todo(
+      'Found ', n, ' incompatible .html file', if (n > 1) 's',
+      ' introduced by previous blogdown versions:\n\n', remove_list(res), '\n\n',
+      '  To fix, run the above command and then blogdown::build_site(build_rmd = "newfile").'
+    )
+  } else {
+    check_success('Found 0 incompatible .html files to clean up.')
   }
-  else check_success('Found 0 incompatible .html files to clean up.')
 }
