@@ -1,9 +1,7 @@
-source_addin = function(file) {
-  xfun::in_dir(site_root(), sys.source(
-    pkg_file('scripts', file), envir = new.env(parent = globalenv()),
-    keep.source = FALSE
-  ))
-}
+source_addin = function(file) in_root(sys.source(
+  pkg_file('scripts', file), envir = new.env(parent = globalenv()),
+  keep.source = FALSE
+))
 
 new_post_addin = function() source_addin('new_post.R')
 

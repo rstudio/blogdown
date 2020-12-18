@@ -2,8 +2,7 @@
 #'
 #' Download the appropriate Hugo executable for your platform from Github and
 #' try to copy it to a system directory so \pkg{blogdown} can run the
-#' \command{hugo} command to build a site. \code{update_hugo()} is a wrapper of
-#' \code{install_hugo(force = TRUE)}.
+#' \command{hugo} command to build a site.
 #'
 #' This function tries to install Hugo to \code{Sys.getenv('APPDATA')} on
 #' Windows, \file{~/Library/Application Support} on macOS, and
@@ -37,24 +36,17 @@
 #'   install Hugo. This argument has been deprecated. You are not recommended to
 #'   install Hugo via Homebrew, because you may accidentally update it to the
 #'   latest version, which might break your existing sites.
-#' @param force Whether to install Hugo even if it has already been installed.
-#'   This may be useful when upgrading Hugo.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
+#' @param ... Ignored.
+#' @seealso \code{\link{remove_hugo}()} to remove Hugo.
 #' @export
-install_hugo = function(
-  version = 'latest', use_brew = FALSE, force = FALSE, extended = TRUE
-) {
+install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, ...) {
 
   if (!missing(use_brew)) message(
     "The argument 'use_brew' has been deprecated in install_hugo(). If you want to ",
     "install Hugo via Homebrew, please use the command line instead: brew install hugo"
   )
-
-  if (Sys.which('hugo') != '' && !force) {
-    message('It seems Hugo has been installed. Use force = TRUE to reinstall or upgrade.')
-    return(invisible())
-  }
 
   local_file = if (grepl('[.](zip|tar[.]gz)$', version) && file.exists(version))
     normalizePath(version)
@@ -76,7 +68,9 @@ install_hugo = function(
     }
   }
 
-  if (!is.null(local_file)) version = gsub('^hugo_([0-9.]+)_.*', '\\1', basename(local_file))
+  if (!is.null(local_file)) version = gsub(
+    '^hugo(_extended)?_([0-9.]+)_.*', '\\2', basename(local_file)
+  )
 
   version = gsub('^[vV]', '', version)  # pure version number
   if (!is.null(ver <- getOption('blogdown.hugo.version')) && ver != version) message2(
@@ -171,7 +165,10 @@ install_hugo_bin = function(exec, version) {
 
 #' @export
 #' @rdname install_hugo
-update_hugo = function() install_hugo(force = TRUE)
+update_hugo = function() {
+  message('blogdown::update_hugo() has been deprecated. Please use blogdown::install_hugo() in future.')
+  install_hugo()
+}
 
 brew_hugo = function() {
   install = function() system('brew update && brew reinstall hugo')
@@ -197,7 +194,7 @@ bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) 
 }
 
 # find an executable from PATH, APPDATA, system.file(), ~/bin, etc
-find_exec = function(cmd, dir, version = NULL, info = '') {
+find_exec = function(cmd, dir, version = NULL, info = '', quiet = FALSE) {
   path = ''
   for (d in bin_paths(dir)) {
     if (!dir_exists(d)) next
@@ -215,10 +212,14 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
     path = path[executable(path)]
     if (length(path)) break else path = ''
   }
-
-  if (identical(version, 'all')) return(if (!identical(path, '')) path)
-
   path2 = Sys.which(cmd)
+
+  if (identical(version, 'all')) {
+    path = c(path, path2)
+    if (is_windows()) path = xfun::normalize_path(path)
+    return(unname(unique(path[path != ''])))
+  }
+
   if (path == '' || xfun::same_path(path, path2)) {
     if (path2 == '') stop(
       cmd, if (!is.null(version)) c(' ', version), ' not found. ', info, call. = FALSE
@@ -229,13 +230,13 @@ find_exec = function(cmd, dir, version = NULL, info = '') {
     )
     return(basename(path2))  # do not use the full path of the command
   } else {
-    if (path2 != '') warning2(
+    if (!quiet && path2 != '') msg2(
       'Found ', cmd, ' at "', path, '" and "', path2, '". The former will be used. ',
       "If you don't need both copies, you may delete/uninstall the latter",
       uninstall_tip(path2), "."
     )
   }
-  normalizePath(path)
+  xfun::normalize_path(path)
 }
 
 uninstall_tip = function(p) {
@@ -254,10 +255,11 @@ uninstall_tip = function(p) {
   }
 }
 
-#' Find the Hugo executable
+#' Find or remove the Hugo executable
 #'
 #' Search for Hugo in a series of possible installation directories (see
-#' \code{\link{install_hugo}()} for these directories).
+#' \code{\link{install_hugo}()} for these directories) with \code{find_hugo()},
+#' or remove the Hugo executable(s) found with \code{remove_hugo()}.
 #'
 #' If your website depends on a specific version of Hugo, we strongly recommend
 #' that you set \code{options(blogdown.hugo.version = )} to the version number
@@ -266,27 +268,75 @@ uninstall_tip = function(p) {
 #' before it builds or serves the website. You can use the function
 #' \code{\link{config_Rprofile}()} to do this automatically.
 #' @param version The expected version number, e.g., \code{'0.25.1'}. If
-#'   \code{NULL}, it will try to find the maximum possible version. If
-#'   \code{'all'}, find all possible versions.
+#'   \code{NULL}, it will try to find/remove the maximum possible version. If
+#'   \code{'all'}, find/remove all possible versions. In an interactive R
+#'   session when \code{version} is not provided, \code{remove_hugo()} will list
+#'   all installed versions of Hugo, and you can select which versions to
+#'   remove.
+#' @param quiet Whether to signal a message when two versions of Hugo are found:
+#'   one is found on the system \var{PATH} variable, and one is installed by
+#'   \code{\link{install_hugo}()}.
 #' @export
-#' @return The path to the Hugo executable if found, otherwise it will signal an
-#'   error, with a hint on how to install (the required version of) Hugo. If
-#'   \code{version = 'all'}, return the paths of all versions of Hugo installed.
+#' @return For \code{find_hugo()}, it returns the path to the Hugo executable if
+#'   found, otherwise it will signal an error, with a hint on how to install
+#'   (the required version of) Hugo. If Hugo is found via the environment
+#'   variable \var{PATH}, only the base name of the path is returned (you may
+#'   use \code{\link{Sys.which}('hugo')} to obtain the full path).
+#'
+#'   If \code{version = 'all'}, return the paths of all versions of Hugo
+#'   installed.
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
-  function(version = getOption('blogdown.hugo.version')) {
+  function(version = getOption('blogdown.hugo.version'), quiet = FALSE) {
     i = if (is.null(version)) 'default' else as.character(version)
     p = paths[[i]]
     if (!is.null(p) && file.exists(exec_path(p))) return(p)
     # if path not found, find it again
     p = find_exec(
       'hugo', 'Hugo', version,
-      c('You may try blogdown::install_hugo(', sprintf('"%s"', version), ').')
+      c('You may try blogdown::install_hugo(', sprintf('"%s"', version), ').'),
+      quiet
     )
     if (!identical(version, 'all')) paths[[i]] <<- p
     p
   }
 })
+
+#' @param force By default, \code{remove_hugo()} only removes Hugo installed via
+#'   \code{\link{install_hugo}()}. For \code{force = TRUE}, it will try to
+#'   remove any Hugo executables found via \code{find_hugo()}.
+#' @export
+#' @rdname find_hugo
+remove_hugo = function(version = getOption('blogdown.hugo.version'), force = FALSE) {
+  if (length(vers <- find_hugo('all')) == 0) return(msg_cat('Hugo not found.\n'))
+  ver = find_hugo(version, TRUE)  # the version currently used
+  if (interactive() && missing(version)) {
+    title = paste0(
+      hrule(), '\n', n <- length(vers), ' Hugo version', if (n > 1) 's',
+      ' found and listed below',
+      sprintf(' (#%d on the list is currently used)', which(vers == ver)),
+      '. Which version(s) would you like to remove?\n', hrule()
+    )
+    ver = select.list(vers, title = title, multiple = TRUE, graphics = FALSE)
+  }
+  for (f in ver) {
+    if (!file_exists(f)) f = Sys.which(f)  # e.g., hugo.exe returned from find_hugo()
+    d = dirname(f)
+    # the parent folder name must be a version number
+    if (force || is_version(basename(d))) {
+      message("Removing '", f, "'...")
+      unlink(f)
+      del_empty_dir(d)
+    } else warning2(
+      "'", f, "' does not seem to be installed via blogdown::install_hugo(), ",
+      "and I will not remove it. If you are sure it can be removed, you may ",
+      "delete it with blogdown::remove_hugo(force = TRUE)",
+      sprintf(', or%s (the latter is recommended)', uninstall_tip(f)), "."
+    )
+  }
+}
+
+is_version = function(x) grepl('^([0-9]+)([.][0-9]+)*$', x)
 
 executable = function(path) utils::file_test('-x', path)
 

@@ -79,7 +79,7 @@ You may take a look at the source code (https://github.com/rstudio/blogdown) if 
 
 ### Exported functions
 
-Installation: You can install Hugo with `install_hugo()`, update Hugo with `update_hugo()`, and install a Hugo theme with `install_theme()`.
+Installation: You can install Hugo with `install_hugo()`, and install a Hugo theme with `install_theme()`.
 
 Wrappers of Hugo commands: `hugo_cmd()` is a general wrapper of `system2('hugo', ...)`, and all later functions execute specific Hugo commands based on this general wrapper function; `hugo_version()` executes the command `hugo version` (i.e., `system2('hugo', 'version')` in R); `hugo_build()` executes `hugo` with optional parameters; `new_site()` executes `hugo new site`; `new_content()` executes `hugo new` to create a new content file, and `new_post()` is a wrapper based on `new_content()` to create a new blog post with appropriate YAML metadata and filename; `hugo_convert()` executes `hugo convert`; `hugo_server()` executes `hugo server`.
 
@@ -150,7 +150,7 @@ public
 
 The `blogdown/` directory is used to store cache files, and they are most likely to be useless to the published website. Only **knitr** may use them, and the published website will not depend on these files.
 
-The `public/` directory should be ignored if your website is to going to be automatically (re)built on a remote server such as Netlify.
+The `public/` directory should be ignored if your website is going to be automatically (re)built on a remote server such as Netlify.
 
 As we mentioned in Section \@ref(dep-path), R plots will be copied to `static/`, so you may see new files in GIT after you render an Rmd file that has graphics output. You need to add and commit these new files in GIT, because the website will use them.
 

@@ -14,7 +14,7 @@ hugo_version = local({
   time = NULL  # last modification time of the executable
   ver  = NULL  # cache the version
   function() {
-    time2 = file.mtime(exec_path(cmd <- find_hugo()))
+    time2 = file.mtime(exec_path(cmd <- find_hugo(quiet = TRUE)))
     if (!is.null(ver) && identical(time2, time)) return(ver)
     time <<- time2
     ver  <<- .hugo_version(cmd)
@@ -49,8 +49,8 @@ hugo_available = function(version = '0.0.0') {
 hugo_build = function(local = FALSE) {
   config = load_config()
   # Hugo 0.48 generates an ugly empty resources/ dir in the root dir
-  on.exit(bookdown:::clean_empty_dir('resources'), add = TRUE)
-  if (local) tweak_hugo_env()
+  on.exit(del_empty_dir('resources'), add = TRUE)
+  tweak_hugo_env(FALSE)
   hugo_cmd(c(
     if (local) c('-D', '-F'),
     getOption('blogdown.hugo.args'),
@@ -133,7 +133,7 @@ change_config = function(name, value) {
 #' if (interactive()) blogdown::new_site()
 new_site = function(
   dir = '.', install_hugo = TRUE, format = 'yaml', sample = TRUE,
-  theme = 'yihui/hugo-xmin', hostname = 'github.com', theme_example = TRUE,
+  theme = 'yihui/hugo-lithium', hostname = 'github.com', theme_example = TRUE,
   empty_dirs = FALSE, to_yaml = TRUE, netlify = TRUE, .Rprofile = TRUE,
   serve = interactive()
 ) {
@@ -151,7 +151,7 @@ new_site = function(
   # remove Hugo's default archetype (I think draft: true is a confusing default)
   unlink(file.path('archetypes', 'default.md'))
   # remove empty dirs
-  if (!empty_dirs) for (d in list.dirs(recursive = FALSE)) bookdown:::clean_empty_dir(d)
+  if (!empty_dirs) for (d in list.dirs(recursive = FALSE)) del_empty_dir(d)
   if (is.character(theme) && length(theme) == 1 && !is.na(theme))
     install_theme(theme, theme_example, hostname = hostname)
   # remove the .gitignore that ignores everything under static/:
@@ -168,7 +168,7 @@ new_site = function(
     dir_create(d)
     f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
     file.copy(f1, f2)
-    if (interactive() && getOption('blogdown.open_sample', TRUE)) open_file(f2)
+    if (getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
   if (!file.exists('index.Rmd')) {
     writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
@@ -267,19 +267,21 @@ install_theme = function(
       in_dir('..', change_config('themesDir', NA))
     } else warning(
       "The theme has provided an example site. You should read the theme's documentation ",
-      'and at least take a look at the config file config.toml of the example site, ',
+      'and at least take a look at the config file config.toml (or .yaml) of the example site, ',
       'because not all Hugo themes work with any config files.', call. = FALSE
     )
     # delete the images dir that contains thumbnail and screenshot of the theme
     # (because they are only useful to themes.gohugo.io and not to users)
     if (dir_exists(thndir <- file.path(zipdir, 'images'))) {
       unlink(file.path(thndir, c('tn.png', 'screenshot.png')))
-      xfun::del_empty_dir(thndir)
+      del_empty_dir(thndir)
     }
+    # delete the .Rprofile if exists, since it's unlikely to be useful
+    unlink(file.path(zipdir, '.Rprofile'))
     # check the minimal version of Hugo required by the theme
     if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {
       if (!is.null(minver <- read_toml(theme_cfg)[['min_version']])) {
-        if (!hugo_available(minver)) update_hugo()
+        if (!hugo_available(minver)) install_hugo()
       }
     }
     newdir = sub(tmpdir, '.', zipdir, fixed = TRUE)
@@ -332,7 +334,7 @@ download_modules = function(mod) {
     dir_create(v[2])
     file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
   })
-  unlink(xfun::with_ext(mod, c('.mod', '.sum')))
+  unlink(with_ext(mod, c('.mod', '.sum')))
 }
 
 #' @param path The path to the new file under the \file{content} directory.
@@ -347,17 +349,28 @@ download_modules = function(mod) {
 new_content = function(path, kind = '', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
   path2 = with_ext(path, '.md')
-  file  = content_file(path)
-  file2 = content_file(path2)
   if (grepl('/$', kind)) {
-    file2 = file.path(dirname(file2), 'index.md')
     path2 = dirname(path2)
     kind  = sub('/$', '', kind)
   }
-  hugo_cmd(c('new', shQuote(path2), if (kind != '') c('-k', kind)))
+  files = list_mds()
+  file2 = hugo_cmd(
+    c('new', shQuote(path2), if (kind != '') c('-k', kind), theme_flag()),
+    stdout = TRUE
+  )
+  if (length(i <- grep(r <- ' created$', file2)) == 1) {
+    file2 = sub(r, '', file2[i])
+  } else {
+    # should the above method fail to identify the newly created .md, search for
+    # the new file with brute force
+    files = setdiff(list_mds(), files)  # new file(s) created
+    file2 = files[basename(files) == basename(path2)]
+  }
+  if (length(file2) != 1) stop("Failed to create the file '", path, "'.")
   hugo_convert_one(file2)
-  file.rename(file2, file)
-  if (open) open_file(file)
+  file = with_ext(file2, file_ext(path))
+  if (file != file2) file.rename(file2, file)
+  open_file(file, open)
   file
 }
 
@@ -447,7 +460,7 @@ new_post = function(
   if (isTRUE(title_case)) title_case = tools::toTitleCase
   if (is.function(title_case)) title = title_case(title)
   if (getOption('blogdown.warn.future', TRUE)) {
-    if (tryCatch(date > Sys.Date(), error = function(e) FALSE)) warning(
+    if (isTRUE(tryCatch(date > Sys.Date(), error = function(e) FALSE))) warning(
       'The date of the post is in the future: ', date, '. See ',
       'https://github.com/rstudio/blogdown/issues/377 for consequences, ',
       'and see https://alison.rbind.io/post/2019-03-04-hugo-troubleshooting/#dates ',
@@ -461,7 +474,7 @@ new_post = function(
     categories = as.list(categories), tags = as.list(tags)
   ), if (!file.exists('archetypes/default.md')) list(draft = NULL)
   ))
-  if (open) open_file(file)
+  open_file(file, open)
   file
 }
 

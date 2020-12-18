@@ -4,6 +4,8 @@
 # servr::server_config())
 site_base_dir = function() {
   config = load_config()
+  # baseurl is not meaningful when using relative URLs
+  if (get_config('relativeurls', FALSE, config)) return('/')
   x = get_config('baseurl', '/', config)
   x = gsub('^https?://[^/]+', '', x)
   if (x == '') x = '/'
@@ -117,34 +119,50 @@ render_new = function(f) xfun::Rscript_call(
   fail = c('Failed to render ', f)
 )
 
-#' Look for files that have been possibly modified
+#' Look for files that have been possibly modified or out-of-date
 #'
 #' Filter files by checking if their modification times or MD5 checksums have
 #' changed.
 #'
-#' The function \code{md5sum_filter()} reads the MD5 checksums of files from a
+#' The function \code{filter_newfile()} returns paths of source files that do
+#' not have corresponding output files, e.g., an \file{.Rmd} file that doesn't
+#' have the \file{.html} output file.
+#'
+#' The function \code{timestamp_filer()} compares the modification time of an
+#' Rmd file with that of its output file, and returns the path of a file if it
+#' is newer than its output file by \code{N} seconds (or if the output file does
+#' not exist), where \code{N} is obtained from the R global option
+#' \code{blogdown.time_diff}. By default, \code{N = 0}. You may change it via
+#' \code{options()}, e.g., \code{options(blogdown.time_diff = 5)} means an Rmd
+#' file will be returned when its modification time at least 5 seconds newer
+#' than its output file's modification time.
+#'
+#' The function \code{filter_md5sum()} reads the MD5 checksums of files from a
 #' database (a tab-separated text file), and returns the files of which the
 #' checksums have changed. If the database does not exist, write the checksums
 #' of files to it, otherwise update the checksums after the changed files have
 #' been identified. When a file is modified, its MD5 checksum is very likely to
 #' change.
 #'
-#' The function \code{timestamp_filer()} compares the modification time of an
-#' Rmd file with that of its output file, and returns a file if it's newer than
-#' its output file by \code{N} seconds (or if the output file does not exist),
-#' where \code{N} is obtained from the R global option
-#' \code{blogdown.time_diff}. By default, \code{N = 0}. You may change it via
-#' \code{options()}, e.g., \code{options(blogdown.time_diff = 5)} means an Rmd
-#' file will be returned when its modification time at least 5 seconds newer
-#' than its output file's modification time.
-#'
 #' These functions can be used to determine which Rmd files to be rebuilt in a
 #' \pkg{blogdown} website. See \code{\link{build_site}()} for more information.
 #' @param files A vector of file paths.
-#' @param db Path to the database file.
-#' @return Paths of files of which the checksums have changed.
+#' @return The filtered file paths.
 #' @export
-md5sum_filter = function(files, db = 'blogdown/md5sum.txt') {
+filter_newfile = function(files) {
+  files[!file_exists(output_file(files))]
+}
+
+#' @rdname filter_newfile
+#' @export
+filter_timestamp = function(files) {
+  files[require_rebuild(output_file(files), files)]
+}
+
+#' @param db Path to the database file.
+#' @rdname filter_newfile
+#' @export
+filter_md5sum = function(files, db = 'blogdown/md5sum.txt') {
   opt = options(stringsAsFactors = FALSE); on.exit(options(opt), add = TRUE)
   md5 = data.frame(file = files, checksum = tools::md5sum(files))  # new checksums
   if (!file.exists(db)) {
@@ -162,16 +180,14 @@ md5sum_filter = function(files, db = 'blogdown/md5sum.txt') {
   files
 }
 
-#' @rdname md5sum_filter
-#' @export
-timestamp_filter = function(files) {
-  files[require_rebuild(output_file(files), files)]
+# TODO: remove them in the future
+md5sum_filter = function(...) {
+  warning('The function md5sum_filter() has been renamed to filter_md5sum()')
+  filter_md5sum(...)
 }
-
-# return the files that do not have corresponding output files, e.g., an .Rmd
-# that doesn't have .html output
-newfile_filter = function(files) {
-  files[!file_exists(output_file(files))]
+timestamp_filter = function(...) {
+  warning('The function timestamp_filter() has been renamed to filter_timestamp()')
+  filter_timestamp(...)
 }
 
 # guess if the OS is 64bit
@@ -188,10 +204,12 @@ output_file = function(file, md = is_rmarkdown(file)) {
 
 opts = knitr:::new_defaults()
 
+# execute code in the site root dir
+in_root = function(expr) xfun::in_dir(site_root(), expr)
+
 # read config file and cache the options (i.e. do not read again unless the config is newer)
-load_config = function() {
+load_config = function() in_root({
   config = opts$get('config')
-  owd = setwd(site_root()); on.exit(setwd(owd), add = TRUE)
   f = find_config(); m = file.info(f)[, 'mtime']
   # read config only if it has been updated
   if (identical(attr(config, 'config_time'), m)) return(config)
@@ -199,8 +217,8 @@ load_config = function() {
   config = parser(f)
   attr(config, 'config_time') = m
   opts$set(config = config)
-  check_config(config, f)
-}
+  config
+})
 
 # check if the user has configured Multilingual Mode for Hugo in config.toml
 check_lang = function(config = load_config()) {
@@ -218,82 +236,36 @@ message2 = function(..., files = NULL) {
   message(hrule())
   message(...)
   message(hrule())
-  if (interactive()) for (f in files) open_file(f)
+  for (f in files) open_file(f)
 }
 
-check_config = function(config, f) {
-  hint = function(...) message2(..., files = f)
-  base = config[['baseurl']]
-  if (is_example_url(base)) hint(
-    'You should change the "baseurl" option in ', f, ' from ', base,
-    ' to your actual domain; if you do not have a domain, set "baseurl" to "/"'
-  )
-  ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
-  if (is.null(s <- config[['ignoreFiles']])) hint(
-    "You are recommended to set the 'ignoreFiles' field in ", f, ' to: ',
-    xfun::tojson(ignore), file = f
-  ) else if (!all(ignore %in% s)) hint(
-    "You are recommended to ignore more items in the 'ignoreFiles' field in ", f, ": ",
-    gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
-  )
-  if ('_files$' %in% s) hint(
-    "You are recommended to remove the item '_files$' in the 'ignoreFiles' field in ", f, '.'
-  )
-  if (is.null(s <- config$markup$goldmark$renderer$unsafe) && hugo_available('0.60')) {
-    h = config$markup$defaultMarkdownHandler
-    if (is.null(h) || h == 'goldmark') hint(
-      "'You are recommended to set the option 'unsafe' to true for goldmark in ", f, '. ',
-      'See https://github.com/rstudio/blogdown/issues/447 for more information.'
-    )
-  }
-  check_netlify()
-  if (getOption('blogdown.check_html', TRUE)) check_garbage_html()
-  config
+# TODO: use xfun::msg_cat() in xfun 0.20
+msg_cat = function(...) {
+  x = paste(c(...), collapse = '')
+  withRestarts({
+    signalCondition(simpleMessage(x))
+    cat(x)
+  }, muffleMessage = function() invisible(NULL))
+}
+msg1 = function(...) msg_cat('* ', ..., '\n')
+msg2 = function(...) msg_cat('\n==> ', ..., '\n\n')
+
+check_init = function(...) msg_cat('\u2015 ', ..., '\n', sep = "")
+check_progress = function(...) msg_cat('\u007c ', ..., '\n', sep = "")
+check_todo = function(...) msg_cat('\u25cf ', "[TODO] ", ..., '\n', sep = "")
+check_success = function(...) msg_cat('\u25cb ', ..., '\n', sep = "")
+check_done = function(...) check_init("Check complete: ", ..., '\n')
+
+# c(ITEM, ITEM, ITEM) ->
+#   before ITEM after sep
+#   before ITEM after sep
+#   before ITEM after
+indent_list = function(x, before = '', after = '', sep = '\n') {
+  paste0('  ', before, x, after, collapse = sep)
 }
 
-is_example_url = function(url) {
-  is.character(url) && grepl(
-    '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
-  )
-}
-
-check_netlify = function() {
-  if (!file.exists(f <- 'netlify.toml') || !getOption('blogdown.check.netlify', TRUE))
-    return()
-  hint = function(...) message2(..., files = f)
-  x = read_toml(f)
-  v = x$context$production$environment$HUGO_VERSION
-  if (is.null(v)) v = x$build$environment$HUGO_VERSION
-
-  if (is.null(v)) hint(
-    "You are recommended to specify the Hugo version in the file '", f, "'. ",
-    "If you are not sure how to do it, see the help page ?blogdown::config_netlify."
-  ) else if ((v2 <- hugo_version()) != v) hint(
-    'Your local Hugo version is ', v2, ' but the Hugo version specified in the ',
-    "'", f, "' file is ", v, '. You are recommended to use the same version ',
-    'locally and on Netlify. You may either blogdown::install_hugo("', v, '") or ',
-    'set HUGO_VERSION to ', v2, ' in ', f, '.'
-  )
-
-  if (!is.null(p1 <- x$build$publish) && !identical(p2 <- publish_dir(tmp = FALSE), p1))
-    hint(
-      "The 'publish' setting in '", f, "' is '", p1, "' but the publish dir in ",
-      "the Hugo config file is '", p2, "'. You may want to change the former to the latter."
-    )
-}
-
-check_garbage_html = function() {
-  res = unlist(lapply(list_files(content_file(), '[.]html$'), function(f) {
-    if (file.size(f) < 200000) return()
-    x = readLines(f, n = 15)
-    if (any(x == '<meta name="generator" content="pandoc" />')) return(f)
-  }))
-  if (length(res)) message2(
-    'Detected .html files that might have been generated by clicking the Knit ',
-    'button in RStudio with blogdown < v0.21 and you may want to delete them:\n\n',
-    paste(' ', res, collapse = '\n'), '\n\nIf you believe this is a false alarm, ',
-    'you may set options(blogdown.check.html = FALSE) in your .Rprofile.'
-  )
+remove_list = function(x) {
+  paste0('  file.remove(c(\n', indent_list(x, '"', '"', ',\n'), '\n  ))')
 }
 
 # return a list of files to be opened initially in an RStudio project
@@ -301,7 +273,7 @@ initial_files = function(n = 10) {
   files = list.files(content_file(), md_pattern, full.names = TRUE, recursive = TRUE)
   # if .Rmd has .md output, exclude .md
   i = grep('^[Rr]', exts <- xfun::file_ext(files))
-  files = setdiff(files, xfun::with_ext(files[i], sub('^[Rr]', '', exts[i])))
+  files = setdiff(files, with_ext(files[i], sub('^[Rr]', '', exts[i])))
   files = head(files, n)
   c(files, existing_files(c('netlify.toml', '.Rprofile', config_files())))
 }
@@ -536,7 +508,7 @@ config_netlify = function(output = 'netlify.toml', new_config = list()) {
       message2(xfun::file_string(output), files = output)
       message("The new '", output, "' will be:")
       message2(xfun::file_string(f))
-      if (!interactive() || tolower(readline(sprintf("Overwrite the existing '%s'? (y/n) ", output))) != 'y')
+      if (!yes_no(sprintf("Overwrite the existing '%s'?", output)))
         return(warning(
           "Cannot write to the file '", output, "' because it exists. You have ",
           "to delete it (if you do not need it any more) before I can write to it."
@@ -575,13 +547,18 @@ config_Rprofile = function() {
 
 # option names may be case insensitive
 get_config = function(field, default, config = load_config()) {
-  config[[field]] %n% config[[match(tolower(field), tolower(names(config)))]] %n% default
+  config[[field]] %n% index_ci(config, field) %n% default
+}
+
+# index an object with a case-insensitive name
+index_ci = function(x, name) {
+  x[[match(tolower(name), tolower(names(x)))]]
 }
 
 # read the publishDir option in config if the temporary publish dir is not set
-publish_dir = function(config = load_config(), tmp = TRUE) {
+publish_dir = function(config = load_config(), tmp = TRUE, default = 'public') {
   p = if (tmp) publish_dir_tmp()
-  if (is.null(p)) get_config('publishDir', 'public', config) else p
+  if (is.null(p)) get_config('publishDir', default, config) else p
 }
 
 # only a temporary workaround for the RStudio IDE issue: when a large number of
@@ -594,8 +571,8 @@ publish_dir_tmp = function() {
 }
 
 # use RStudio to open the file if possible
-open_file = function(x) {
-  tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
+open_file = function(x, open = interactive()) {
+  if (open) tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
 }
 
 # produce a dash-separated filename by replacing non-alnum chars with -
@@ -737,7 +714,7 @@ find_yaml = function(field = character(), value = character(), open = FALSE) {
   }))))
   n = length(files)
   if (n == 0) return(invisible(files))
-  if (open) for (f in files) open_file(f)
+  if (open) for (f in files) open_file(f, TRUE)
   files
 }
 
@@ -903,7 +880,8 @@ if (is_windows()) system2 = function(command, args = character(), stdout = '', .
     })
   )
 
-  if ((res <- base::system2(command, args, ...)) == 0) return(invisible(res))
+  if ((res <- base::system2(command, args, stdout = stdout, ...)) == 0)
+    return(invisible(res))
 
   if ((res <- system(cmd)) == 0) {
     options(blogdown.windows.shell = 'system')
@@ -958,19 +936,26 @@ is_rstudio_server = local({
   }
 })
 
-# tweak some env vars for hugo server
-tweak_hugo_env = function() {
+# tweak some env vars when building a site or running the hugo server
+tweak_hugo_env = function(server = TRUE) {
   # set baseURL properly when it doesn't contain protocol or domain:
-  # https://github.com/gohugoio/hugo/issues/7823 (add example.org/ to it)
-  b = get_config('baseurl', '/', load_config())
-  if (b != '/' && !grepl('^https?://[^/]+', b)) {
+  # https://github.com/gohugoio/hugo/issues/7823 (add example.org/ to it); or
+  # when relativeURLs = true, set baseURL to /
+  config = load_config()
+  b = get_config('baseurl', '/', config)
+  c1 = b != '/' && !grepl('^https?://[^/]+', b)
+  c2 = get_config('relativeurls', FALSE, config)
+  if (c2 || c1) {
     b = sub('^/', '', b)
-    Sys.setenv(HUGO_BASEURL = paste0('https://example.org/', b))
+    if (server) b = paste0('https://example.org/', b)
+    Sys.setenv(HUGO_BASEURL = if (c2) '/' else b)
     do.call(
       on.exit, list(substitute(Sys.unsetenv('HUGO_BASEURL')), add = TRUE),
       envir = parent.frame()
     )
   }
+
+  if (!server) return()
 
   # RStudio Server uses a proxy like http://localhost:8787/p/56a946ed/ for
   # http://localhost:4321, so we must use relativeURLs = TRUE:
@@ -1022,4 +1007,8 @@ clean_hugo_cache = function() {
   # clean up the hugo cache dir during R CMD check
   if (xfun::is_R_CMD_check())
     unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
+}
+
+yes_no = function(question) {
+  interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
 }

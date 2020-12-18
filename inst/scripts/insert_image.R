@@ -1,4 +1,4 @@
-warning2 = function(...) warning(..., call. = FALSE)
+warning2 = blogdown:::warning2
 
 txt_input = function(..., width = '100%') shiny::textInput(..., width = width)
 

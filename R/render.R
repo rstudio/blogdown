@@ -33,10 +33,11 @@
 #' which Rmd files to build when \code{build_rmd = TRUE}. This function takes a
 #' vector of Rmd file paths, and should return a subset of these paths to be
 #' built. By default, \code{options(blogdown.files_filter = \link{identity}}.
-#' You can use \code{blogdown::\link{timestamp_filter}}, which filters the files
-#' by comparing their time stamps (modification time) with the time stamps of
-#' their output files. Another filter function is
-#' \code{blogdown::\link{md5sum_filter}}, which is more robust in determining if
+#' You can use \code{blogdown::\link{filter_newfile}}, which means to build new
+#' Rmd files that have not been built before, or
+#' \code{blogdown::\link{filter_timestamp}} to build Rmd files if their time
+#' stamps (modification time) are newer than their output files, or
+#' \code{blogdown::\link{filter_md5sum}}, which is more robust in determining if
 #' an Rmd file has been modified (hence needs to be rebuilt).
 #' @param local Whether to build the website locally. This argument is passed to
 #'   \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
@@ -52,10 +53,11 @@
 #'   are to be (re)built. Or you can provide a function that takes a vector of
 #'   paths of all R Markdown files under the \file{content/} directory, and
 #'   returns a vector of paths of files to be built, e.g., \code{build_rmd =
-#'   blogdown::timestamp_filter}. Two aliases are currently provided for such
-#'   functions: \code{build_rmd = 'timestamp'} is equivalent to \code{build_rmd
-#'   = blogdown::timestamp_filter}, and \code{build_rmd = 'md5sum'} is
-#'   equivalent to \code{build_rmd = blogdown::md5sum_filter}.
+#'   blogdown::filter_timestamp}. A few aliases are currently provided for such
+#'   functions: \code{build_rmd = 'newfile'} is equivalent to \code{build_rmd =
+#'   blogdown::filter_newfile}, \code{build_rmd = 'timestamp'} is equivalent to
+#'   \code{build_rmd = blogdown::filter_timestamp}, and \code{build_rmd =
+#'   'md5sum'} is equivalent to \code{build_rmd = blogdown::filter_md5sum}.
 #' @export
 build_site = function(
   local = FALSE, method = c('html', 'custom'), run_hugo = TRUE, build_rmd = FALSE
@@ -67,11 +69,12 @@ build_site = function(
   if (!xfun::isFALSE(build_rmd)) {
     if (is.character(build_rmd) && length(build_rmd) == 1) {
       build_rmd = switch(
-        build_rmd, timestamp = timestamp_filter, md5sum = md5sum_filter, build_rmd
+        build_rmd, timestamp = filter_timestamp, md5sum = filter_md5sum,
+        newfile = filter_newfile, build_rmd
       )
     }
     files = if (is.character(build_rmd)) build_rmd else {
-      files = list_rmds('content', TRUE)
+      files = list_rmds(check = TRUE)
       if (is.function(build_rmd)) build_rmd(files) else {
         if (length(files)) getOption('blogdown.files_filter', identity)(files)
       }
@@ -83,8 +86,8 @@ build_site = function(
   invisible()
 }
 
-list_rmds = function(dir, check = FALSE) {
-  files = list_files(dir, rmd_pattern)
+list_rmds = function(dir = content_file(), check = FALSE, pattern = rmd_pattern) {
+  files = list_files(dir, pattern)
   # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
   # but include _index.Rmd/.md
   files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
@@ -95,6 +98,9 @@ list_rmds = function(dir, check = FALSE) {
   if (check) bookdown:::check_special_chars(files)
   files
 }
+
+# list .md files
+list_mds = function() list_files(content_file(), '[.]md$')
 
 # build R Markdown posts
 build_rmds = function(files) {
@@ -223,7 +229,8 @@ process_markdown = function(x, res) {
     write_utf8(x, mds[1])
     rmarkdown::pandoc_convert(
       mds[1], from = 'markdown', to = 'gfm+tex_math_dollars+footnotes', output = mds[2],
-      options = c('--atx-headers', '--wrap=preserve'), citeproc = TRUE
+      options = c(if (!rmarkdown::pandoc_available('2.11.2')) '--atx-headers', '--wrap=preserve'),
+      citeproc = TRUE
     )
     x = c(bookdown:::fetch_yaml(x), '', read_utf8(mds[2]))
   }

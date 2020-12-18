@@ -11,8 +11,6 @@ graphics: yes
 lot: yes
 lof: yes
 fontsize: 12pt
-monofont: "Source Code Pro"
-monofontoptions: "Scale=0.7"
 site: bookdown::bookdown_site
 description: "A guide to creating websites with R Markdown and the R package blogdown."
 url: 'https\://bookdown.org/yihui/blogdown/'

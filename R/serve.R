@@ -53,6 +53,8 @@ serve_site = function(...) {
 }
 
 server_ready = function(url) {
+  # for some reason, R cannot read localhost, but 127.0.0.1 works
+  url = sub('^http://localhost:', 'http://127.0.0.1:', url)
   !inherits(
     xfun::try_silent(suppressWarnings(readLines(url))), 'try-error'
   )
@@ -106,7 +108,9 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
-    server = servr::server_config(..., baseurl = baseurl)
+    server = servr::server_config(..., baseurl = baseurl, hosturl = function(host) {
+      if (g == 'hugo' && host == '127.0.0.1') 'localhost' else host
+    })
 
     # launch the hugo/jekyll/hexo server
     cmd = if (g == 'hugo') find_hugo() else g
@@ -161,7 +165,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     )
 
     # delete the resources/ dir if it is empty
-    if (g == 'hugo') bookdown:::clean_empty_dir('resources')
+    if (g == 'hugo') del_empty_dir('resources')
 
     # whether to watch for changes in Rmd files?
     if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
@@ -187,8 +191,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     }
 
     # build Rmd files that are new and don't have corresponding output files
-    rmd_files = newfile_filter(list_rmds(content_file()))
-    rebuild(rmd_files)
+    rebuild(rmd_files <- filter_newfile(list_rmds()))
 
     watch = servr:::watch_dir('.', rmd_pattern, handler = function(files) {
       rmd_files <<- files

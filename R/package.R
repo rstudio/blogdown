@@ -12,14 +12,16 @@
 #' @import utils
 #' @import stats
 #' @importFrom xfun attr in_dir read_utf8 write_utf8 is_windows is_macos
-#'   file_exists dir_exists
+#'   file_exists dir_exists file_ext
 #' @examples if (interactive()) blogdown::new_site()
 NULL
 
 with_ext = function(...) xfun::with_ext(...)
 existing_files = bookdown:::existing_files
 fetch_yaml = function(f) bookdown:::fetch_yaml(read_utf8(f))
+# TODO: use functions from xfun
 dir_create = function(x) xfun:::dir_create(x)
+del_empty_dir = bookdown:::clean_empty_dir
 
 `%n%` = knitr:::`%n%`
 
