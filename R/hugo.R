@@ -175,11 +175,9 @@ new_site = function(
     Sys.chmod('index.Rmd', '444')
   }
 
-  if (to_yaml) {
-    hugo_convert('YAML', unsafe = TRUE)
-    if (file.exists(cfg <- 'config.toml')) {
-      toml2yaml(cfg, 'config.yaml'); unlink(cfg)
-    }
+  if (to_yaml) hugo_convert('YAML', unsafe = TRUE)
+  if (format == 'yaml' && file.exists(cfg <- 'config.toml')) {
+    toml2yaml(cfg, 'config.yaml'); unlink(cfg)
   }
   if (netlify) {
     if (!file.exists('netlify.toml')) config_netlify('netlify.toml') else {
