@@ -168,7 +168,7 @@ check_hugo = function() {
 
   # .Rprofile exists + most recent Hugo
   if (!(is.null(sv <- getOption('blogdown.hugo.version')))) {
-    check_success(sprintf('blogdown is using Hugo %s to build site locally.'), sv)
+    check_success(sprintf('blogdown is using Hugo %s to build site locally.', sv))
   } else {
     check_progress('Hugo version not set in .Rprofile.')
     if (!file_exists('.Rprofile'))
