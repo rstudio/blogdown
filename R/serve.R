@@ -140,6 +140,13 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     i = 0
     repeat {
       Sys.sleep(1)
+      # for a process started with processx, check if it has died with an error
+      if (inherits(pid, 'AsIs') && !proc$is_alive()) {
+        err = paste(gsub('^Error: ', '', proc$read_error()), collapse = '\n')
+        stop(if (err == '') {
+          'Failed to serve the site; see if blogdown::build_site() gives more info.'
+        } else err, call. = FALSE)
+      }
       if (server_ready(server$url)) break
       if (i >= getOption('blogdown.server.timeout', 30)) {
         s = proc_kill(pid)  # if s == 0, the server must have been started successfully
