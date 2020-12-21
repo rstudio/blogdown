@@ -235,6 +235,7 @@ install_theme = function(
   # the hugo-academic theme has moved
   if (theme == 'gcushen/hugo-academic') theme = 'wowchemy/starter-academic'
   dir_create('themes')
+  is_theme = FALSE
   in_dir('themes', {
     url = if (theme_is_url) theme else {
       sprintf('https://%s/%s/archive/%s.tar.gz', hostname, theme, branch)
@@ -252,6 +253,7 @@ install_theme = function(
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
+    is_theme = file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))
     if (dir_exists(expdir)) if (theme_example) {
       # post-process go.mod so that users don't need to install Go (it sounds
       # unbelievable that a user needs to install Go just to use a Hugo theme)
@@ -279,7 +281,7 @@ install_theme = function(
     # delete the .Rprofile if exists, since it's unlikely to be useful
     unlink(file.path(zipdir, '.Rprofile'))
     # check the minimal version of Hugo required by the theme
-    if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {
+    if (update_hugo && is_theme) {
       if (!is.null(minver <- read_toml(theme_cfg)[['min_version']])) {
         if (!hugo_available(minver)) install_hugo()
       }
@@ -295,8 +297,15 @@ install_theme = function(
     file.rename(zipdir, newdir)
     unlink(c(zipfile, file.path(newdir, '*.Rproj')))
     theme = gsub('^[.][\\/]+', '', newdir)
+    if (!is_theme) {
+      files1 = list_files(theme, recursive = FALSE)
+      download_modules(file.path(theme, 'go.mod'), FALSE)
+      file.copy(files1[file.exists(files1)], '..', recursive = TRUE)
+      unlink(files1, recursive = TRUE)
+      if (length(list.files(theme)) == 0) unlink(theme, recursive = TRUE)
+    }
   })
-  if (update_config) {
+  if (is_theme) if (update_config) {
     change_config('theme', sprintf('"%s"', theme))
   } else message(
     "Do not forget to change the 'theme' option in '", find_config(), "' to \"", theme, '"'
