@@ -58,6 +58,8 @@
 
 - `new_site()` no longer shows Hugo messages on Windows (#532).
 
+- `new_site()` can figure out the default branch name of a theme repo now, instead of assuming the `master` branch is the default (thanks, @c1au6i0, #541).
+
 ## MINOR CHANGES
 
 - For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.

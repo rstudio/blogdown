@@ -228,8 +228,10 @@ install_theme = function(
     return(invisible())
   }
   branch = sub('^@', '', gsub(r, '\\2', theme))
-  if (branch == '' || theme_is_url) branch = 'master'
-  theme = gsub(r, '\\1', theme)
+  if (!theme_is_url) {
+    theme = gsub(r, '\\1', theme)
+    if (branch == '') branch = default_branch(theme, hostname)
+  }
   # the hugo-academic theme has moved
   if (theme == 'gcushen/hugo-academic') theme = 'wowchemy/starter-academic'
   dir_create('themes')
@@ -299,6 +301,23 @@ install_theme = function(
   } else message(
     "Do not forget to change the 'theme' option in '", find_config(), "' to \"", theme, '"'
   )
+}
+
+# obtain the default branch of a repo from the API
+default_branch = function(repo, hostname = 'github.com') {
+  fallback = function(...) {
+    message(
+      'Unable to obtain the default branch of the repo "', repo,
+      '". Trying the branch "master", which may be inaccurate. You are recommended ',
+      'to specify the branch name after the repo name, e.g., user/repo@branch.'
+    )
+    'master'
+  }
+  tryCatch({
+    x = read_utf8(sprintf('https://api.%s/repos/%s', hostname, repo))
+    x = xfun::grep_sub('.*?\\s*"default_branch":\\s*"([^"]+)",.*', '\\1', x)
+    if (length(x) > 0) x[1] else fallback()
+  }, error = fallback)
 }
 
 # download Hugo modules with R, instead of Go/GIT, so users won't need to
