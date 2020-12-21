@@ -227,8 +227,10 @@ install_theme = function(
     )
     return(invisible())
   }
-  branch = sub('^@', '', gsub(r, '\\2', theme))
-  if (!theme_is_url) {
+  if (theme_is_url) {
+    branch = xfun::sans_ext(basename(theme))
+  } else {
+    branch = sub('^@', '', gsub(r, '\\2', theme))
     theme = gsub(r, '\\1', theme)
     if (branch == '') branch = default_branch(theme, hostname)
   }
