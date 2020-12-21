@@ -259,14 +259,6 @@ install_theme = function(
       # unbelievable that a user needs to install Go just to use a Hugo theme)
       download_modules(file.path(expdir, 'go.mod'))
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
-      # themes may use config/_default/config.toml, e.g. hugo-academic; we need
-      # to move this config to the root dir, because blogdown assumes the config
-      # file is under the root dir
-      if (file.exists(cfg <- file.path('..', 'config', '_default', 'config.toml'))) {
-        file.rename(cfg, '../config.toml')
-      }
-      # remove the themesDir setting; it is unlikely that you need it
-      in_dir('..', change_config('themesDir', NA))
     } else warning(
       "The theme has provided an example site. You should read the theme's documentation ",
       'and at least take a look at the config file config.toml (or .yaml) of the example site, ',
@@ -298,12 +290,19 @@ install_theme = function(
     unlink(c(zipfile, file.path(newdir, '*.Rproj')))
     theme = gsub('^[.][\\/]+', '', newdir)
     if (!is_theme) {
-      files1 = list_files(theme, recursive = FALSE)
-      download_modules(file.path(theme, 'go.mod'), FALSE)
-      file.copy(files1[file.exists(files1)], '..', recursive = TRUE)
-      unlink(files1, recursive = TRUE)
-      if (length(list.files(theme)) == 0) unlink(theme, recursive = TRUE)
+      download_modules(file.path(theme, 'go.mod'))
+      file.copy(list.files(theme, full.names = TRUE), '../', recursive = TRUE)
+      unlink(theme, recursive = TRUE)
     }
+    # themes may use config/_default/config.toml, e.g. hugo-academic; we need to
+    # move this config to the root dir, because blogdown assumes the config file
+    # is under the root dir
+    if (file.exists(cfg <- file.path('..', 'config', '_default', 'config.toml'))) {
+      file.rename(cfg, '../config.toml')
+      unlink('../config.yaml')
+    }
+    # remove the themesDir setting; it is unlikely that you need it
+    in_dir('..', change_config('themesDir', NA))
   })
   if (is_theme) if (update_config) {
     change_config('theme', sprintf('"%s"', theme))
