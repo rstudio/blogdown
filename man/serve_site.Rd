@@ -15,7 +15,7 @@ arguments \code{host}, \code{port}, \code{browser}, \code{daemon}, and
 \code{interval} are supported).}
 
 \item{.site_dir}{Directory to search for site configuration file
-(defaults to getwd())}
+(defaults to \code{getwd()}).}
 }
 \description{
 The function \code{serve_site()} executes the server command of a static site
