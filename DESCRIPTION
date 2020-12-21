@@ -28,6 +28,7 @@ Authors@R: c(
     person("Maëlle", "Salmon", role = "ctb"),
     person("Maria Paula", "Caldas", role = "ctb"),
     person("Nicolas", "Roelandt", role = "ctb"),
+    person("Oliver", "Madsen", role = "ctb", email = "oliver.p.madsen@gmail.com"),
     person("Raniere", "Silva", role = "ctb"),
     person("TC", "Zhang", role = "ctb"),
     person("Xianying", "Tan", role = "ctb"),
