@@ -55,6 +55,8 @@ serve_site = function(..., .site_dir = NULL) {
 }
 
 server_ready = function(url) {
+  # for some reason, R cannot read localhost, but 127.0.0.1 works
+  url = sub('^http://localhost:', 'http://127.0.0.1:', url)
   !inherits(
     xfun::try_silent(suppressWarnings(readLines(url))), 'try-error'
   )
@@ -108,7 +110,9 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
-    server = servr::server_config(..., baseurl = baseurl)
+    server = servr::server_config(..., baseurl = baseurl, hosturl = function(host) {
+      if (g == 'hugo' && host == '127.0.0.1') 'localhost' else host
+    })
 
     # launch the hugo/jekyll/hexo server
     cmd = if (g == 'hugo') find_hugo() else g
@@ -138,6 +142,13 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     i = 0
     repeat {
       Sys.sleep(1)
+      # for a process started with processx, check if it has died with an error
+      if (inherits(pid, 'AsIs') && !proc$is_alive()) {
+        err = paste(gsub('^Error: ', '', proc$read_error()), collapse = '\n')
+        stop(if (err == '') {
+          'Failed to serve the site; see if blogdown::build_site() gives more info.'
+        } else err, call. = FALSE)
+      }
       if (server_ready(server$url)) break
       if (i >= getOption('blogdown.server.timeout', 30)) {
         s = proc_kill(pid)  # if s == 0, the server must have been started successfully
@@ -189,8 +200,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     }
 
     # build Rmd files that are new and don't have corresponding output files
-    rmd_files = newfile_filter(list_rmds(content_file()))
-    rebuild(rmd_files)
+    rebuild(rmd_files <- filter_newfile(list_rmds()))
 
     watch = servr:::watch_dir('.', rmd_pattern, handler = function(files) {
       rmd_files <<- files

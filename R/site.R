@@ -11,7 +11,7 @@ blogdown_site = function(input, ...) {
   render = function(input_file, output_format, envir, quiet, ...) {
     # input_file is NULL when render the whole site, and is a file path when
     # rendering a single file (by clicking the Knit button)
-    if (!is.null(input_file)) xfun::in_dir(site_root(), {
+    if (!is.null(input_file)) in_root({
       # set a global option
       opts$set(render_one = TRUE); on.exit(opts$set(render_one = NULL), add = TRUE)
       input_file = rel_path(input_file)
@@ -40,15 +40,15 @@ blogdown_site = function(input, ...) {
     render = render,
     subdirs = TRUE,
     clean = function() {
-      c('blogdown', output_dir, clean_targets())
+      x = c('blogdown', output_dir, clean_targets())
+      x[file.exists(x)]
     }
   )
 }
 
 clean_targets = function() {
-  rmds = list_rmds('content')
+  rmds = list_rmds()
   files = by_products(rmds, c('.html', '.markdown'))
-  files = files[file.exists(files)]
   c(files, 'static/rmarkdown-libs', list_files(
     'static', '.+_files$', include.dirs = TRUE
   ))
