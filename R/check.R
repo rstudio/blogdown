@@ -12,6 +12,8 @@ check_site = function() in_root({
   check_progress("Let's check out your blogdown site!")
   message(hrule())
 
+  opts$set(check_site = TRUE); on.exit(opts$set(check_site = NULL), add = TRUE)
+
   check_config()
   check_gitignore()
   check_hugo()
@@ -175,6 +177,10 @@ check_hugo = function() {
       check_todo('Use blogdown::config_Rprofile() to create .Rprofile for the current project.')
     check_todo(sprintf('Set options(blogdown.hugo.version = "%s") in .Rprofile.', cv))
   }
+
+  if (file_exists('netlify.toml') && !isTRUE(opts$get('check_site'))) check_todo(
+    'Also run blogdown::check_netlify() to check for possible problems with Hugo and Netlify.'
+  )
 
   check_done('Hugo')
 }
