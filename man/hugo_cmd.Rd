@@ -16,7 +16,7 @@ hugo_cmd(...)
 
 hugo_version()
 
-hugo_available(version = "0.0.0")
+hugo_available(version = "0.0.0", exact = FALSE)
 
 hugo_build(local = FALSE)
 
@@ -62,6 +62,10 @@ hugo_server(host, port)
 run the command \command{hugo new path}).}
 
 \item{version}{A version number.}
+
+\item{exact}{If \code{FALSE}, check if the current Hugo version is equal to
+or higher than the specified \code{version}. If \code{TRUE}, check if the
+exact version is available.}
 
 \item{local}{Whether to build the site for local preview (if \code{TRUE}, all
 drafts and future posts will also be built).}
@@ -170,8 +174,8 @@ Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 \item \code{hugo_version}: Return the version number of Hugo if possible, which is
 extracted from the output of \code{hugo_cmd('version')}.
 
-\item \code{hugo_available}: Check if Hugo with a certain version or above is
-available.
+\item \code{hugo_available}: Check if Hugo of a certain version (or above if
+\code{exact = FALSE}) is available.
 
 \item \code{hugo_build}: Build a plain Hugo website. Note that the function
 \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo

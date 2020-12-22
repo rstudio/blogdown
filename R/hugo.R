@@ -32,12 +32,15 @@ hugo_version = local({
 }
 
 #' @param version A version number.
+#' @param exact If \code{FALSE}, check if the current Hugo version is equal to
+#'   or higher than the specified \code{version}. If \code{TRUE}, check if the
+#'   exact version is available.
 #' @export
-#' @describeIn hugo_cmd Check if Hugo with a certain version or above is
-#'   available.
+#' @describeIn hugo_cmd Check if Hugo of a certain version (or above if
+#'   \code{exact = FALSE}) is available.
 #' @examples blogdown::hugo_available('1.2.3')
-hugo_available = function(version = '0.0.0') {
-  tryCatch(hugo_version() >= version, error = function(e) FALSE)
+hugo_available = function(version = '0.0.0', exact = FALSE) {
+  tryCatch((if (exact) `==` else `>=`)(hugo_version(), version), error = function(e) FALSE)
 }
 
 #' @param local Whether to build the site for local preview (if \code{TRUE}, all
