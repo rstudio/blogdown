@@ -149,18 +149,18 @@ build_rmds = function(files) {
   }
 
   for (i in seq_along(files)) {
-    f = files[i]; d = dirname(f)
+    f = files[i]; d = dirname(f); out = output_file(f, to_md <- is_rmarkdown(f))
+    out2 = paste0(out, '~')  # first generate a file with ~ in ext so Hugo won't watch
     copy_output_yml(d)
     message('Rendering ', f, '... ', appendLF = FALSE)
-    out = output_file(f, to_md <- is_rmarkdown(f))  # expected output file
     res = xfun::Rscript_call(
-      build_one, list(f, to_md), fail = c('Failed to render ', f)
+      build_one, list(f, I(basename(out2)), to_md), fail = c('Failed to render ', f)
     )  # actual output file
 
     xfun::in_dir(d, {
       x = read_utf8(res)
-      if (res != basename(out)) unlink(res)
       if (to_md) x = process_markdown(x, res)
+      unlink(res)
     })
     x = encode_paths(x, lib1[2 * i - 1], d, base, to_md, out)
     move_files(lib1[2 * i - 0:1], lib2[2 * i - 0:1])
@@ -185,15 +185,15 @@ build_rmds = function(files) {
   }
 }
 
-build_one = function(input, to_md = FALSE) {
+build_one = function(input, output = NULL, to_md = FALSE) {
   options(htmltools.dir.version = FALSE)
   setwd(dirname(input))
   input = basename(input)
   # for bookdown's theorem environments generated from bookdown:::eng_theorem
   if (to_md) options(bookdown.output.markdown = TRUE)
   rmarkdown::render(
-    input, 'blogdown::html_page', envir = globalenv(), quiet = TRUE,
-    run_pandoc = !to_md, clean = !to_md
+    input, 'blogdown::html_page', output_file = output, envir = globalenv(),
+    quiet = TRUE, run_pandoc = !to_md, clean = !to_md
   )
 }
 
