@@ -259,14 +259,14 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, output) {
   # find the dependencies referenced in HTML
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
 
-  # for bundle index pages, add {{< relref "output" >}} to URLs, to make sure
+  # for bundle index pages, add {{< blogdown/postref >}} to URLs, to make sure
   # the post content can be displayed anywhere (not limited to the post page,
   # e.g., image paths of a post should also work on the home page if the full
   # post is included on the home page); see the bug report at
   # https://github.com/rstudio/blogdown/issues/501
   if (bundle_index(output)) {
-    x = gsub(r, sprintf('\\1\\2{{< relref "%s" >}}\\3', sub('^content/', '', output)), x)
-    return(x)
+    create_shortcode('postref.html', ref <- 'blogdown/postref')
+    return(gsub(r, sprintf('\\1\\2{{< %s >}}\\3', ref), x))
   }
 
   # move figures to /static/path/to/post/foo_files/figure-html
@@ -291,3 +291,10 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, output) {
   dirs_rename(libs, to, clean = TRUE)
   x
 }
+
+create_shortcode = function(from, to) in_root({
+  to = sprintf('layouts/shortcodes/%s.html', to)
+  dir_create(dirname(to))
+  from = pkg_file('resources', from)
+  file.copy(from, to, overwrite = getOption('blogdown.update.shortcode', FALSE))
+})
