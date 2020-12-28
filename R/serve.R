@@ -122,7 +122,11 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     )
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
-    if (g == 'hugo') tweak_hugo_env()
+    if (g == 'hugo') {
+      tweak_hugo_env()
+      if (length(list_rmds(pattern = '^index.R(md|markdown)$')))
+        create_shortcode('postref.html', 'blogdown/postref')
+    }
     # if requested not to demonize the server, run it in the foreground process,
     # which will block the R session
     if (!server$daemon) return(system2(cmd, cmd_args))
