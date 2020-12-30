@@ -302,7 +302,7 @@ blogdown::new_site(theme = 'lxndrblz/anatole')
 
 To save you some time, we list a few themes below that match our taste:
 
-- Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) [Tanka,](https://github.com/road2stat/hugo-tanka)
+- Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) [Tanka,](https://themes.gohugo.io/hugo-tanka/)
 [Cupper,](https://themes.gohugo.io/cupper-hugo-theme/)
 [simple-a,](https://themes.gohugo.io/simple-a/) and [ghostwriter.](https://themes.gohugo.io/ghostwriter/)
 
