@@ -166,7 +166,7 @@ new_site = function(
   if (sample) {
     d = file.path('content', 'blog')
     if (!dir_exists(d)) d = file.path('content', 'post')
-    f1 = pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd')
+    f1 = pkg_file('resources', '2020-12-01-r-rmarkdown.Rmd')
     if (use_bundle()) d = file.path(d, basename(xfun::sans_ext(f1)))
     dir_create(d)
     f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
@@ -459,7 +459,7 @@ content_file = function(...) file.path(
 #'   date.
 #' @param slug The slug of the post. By default (\code{NULL}), the slug is
 #'   generated from the filename by removing the date and filename extension,
-#'   e.g., if \code{file = 'post/2015-07-23-hi-there.md'}, \code{slug} will be
+#'   e.g., if \code{file = 'post/2020-07-23-hi-there.md'}, \code{slug} will be
 #'   \code{hi-there}. Set \code{slug = ''} if you do not want it.
 #' @param title_case A function to convert the title to title case. If
 #'   \code{TRUE}, the function is \code{tools::\link[tools]{toTitleCase}()}).
