@@ -137,8 +137,8 @@ markup:
   )
   if (is.null(x)) return()
   if (!silent) check_todo(
-    'Allow goldmark to render raw HTML by adding this setting to', f,
-    '(see https://github.com/rstudio/blogdown/issues/447 for more info):\n', x
+    'Allow goldmark to render raw HTML by adding this setting to ', f,
+    ' (see https://github.com/rstudio/blogdown/issues/447 for more info):\n', x
   )
   if (silent || yes_no("==> Do you want blogdown to set this for you?")) {
     cat(x, file = f, append = TRUE)
