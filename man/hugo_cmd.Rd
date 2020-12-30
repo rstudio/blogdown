@@ -139,7 +139,7 @@ date.}
 
 \item{slug}{The slug of the post. By default (\code{NULL}), the slug is
 generated from the filename by removing the date and filename extension,
-e.g., if \code{file = 'post/2015-07-23-hi-there.md'}, \code{slug} will be
+e.g., if \code{file = 'post/2020-07-23-hi-there.md'}, \code{slug} will be
 \code{hi-there}. Set \code{slug = ''} if you do not want it.}
 
 \item{title_case}{A function to convert the title to title case. If
