@@ -194,7 +194,7 @@ Table: (\#tab:md-diff) Differences among the three document formats.
 |Bibliography |yes  |yes        |no   |
 |Task list    |maybe|yes        |yes  |
 |MathJax      |yes  |maybe      |maybe|
-|HTML widgets |yes  |yes        |no   |
+|HTML widgets |yes  |no         |no   |
 
 1. You cannot execute any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```` ```{r} ````). However, you can still embed R code in plain Markdown using the syntax for fenced code blocks ```` ```r ```` (note there are no curly braces `{}`). Such code blocks will not be executed and may be suitable for pure demonstration purposes. Below is an example of an R code chunk in R Markdown:
 
