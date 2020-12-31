@@ -153,15 +153,10 @@ build_rmds = function(files) {
     out2 = paste0(out, '~')  # first generate a file with ~ in ext so Hugo won't watch
     copy_output_yml(d)
     message('Rendering ', f, '... ', appendLF = FALSE)
-    res = xfun::Rscript_call(
+    x = xfun::Rscript_call(
       build_one, list(f, I(basename(out2)), to_md), fail = c('Failed to render ', f)
-    )  # actual output file
+    )
 
-    xfun::in_dir(d, {
-      x = read_utf8(res)
-      if (to_md) x = process_markdown(x, res)
-      unlink(res)
-    })
     x = encode_paths(x, lib1[2 * i - 1], d, base, to_md, out)
     move_files(lib1[2 * i - 0:1], lib2[2 * i - 0:1])
 
@@ -185,19 +180,23 @@ build_rmds = function(files) {
   }
 }
 
-build_one = function(input, output = NULL, to_md = FALSE) {
+build_one = function(input, output, to_md = file_ext(output) != 'html') {
   options(htmltools.dir.version = FALSE)
   setwd(dirname(input))
   input = basename(input)
   # for bookdown's theorem environments generated from bookdown:::eng_theorem
   if (to_md) options(bookdown.output.markdown = TRUE)
-  rmarkdown::render(
+  res = rmarkdown::render(
     input, 'blogdown::html_page', output_file = output, envir = globalenv(),
     quiet = TRUE, run_pandoc = !to_md, clean = !to_md
   )
+  x = read_utf8(res)
+  if (to_md) x = process_markdown(res, x)
+  unlink(res)
+  x
 }
 
-process_markdown = function(x, res) {
+process_markdown = function(res, x = read_utf8(res)) {
   unlink(xfun::attr(res, 'intermediates'))
   # write HTML dependencies to the body of Markdown
   if (length(meta <- xfun::attr(res, 'knit_meta'))) {
