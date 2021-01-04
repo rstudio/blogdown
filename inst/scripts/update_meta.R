@@ -16,7 +16,7 @@ slct = rstudioapi::getSourceEditorContext()$selection[[1]]
 if (length(yml) == 0) yml = list()
 yml = blogdown:::filter_list(yml)
 if (is.null(yml[['title']])) yml$title = ''
-if (is.null(yml[['author']])) yml$author = getOption('blogdown.author', '')
+if (is.null(yml[['author']])) yml$author = blogdown:::get_author()
 if (is.null(yml[['date']])) yml$date = Sys.Date()
 
 shiny::runGadget(
@@ -54,7 +54,7 @@ shiny::runGadget(
       )
       yml = c(res, yml[setdiff(names(yml), names(res))])
       for (i in seq_keys) yml[[i]] = if (length(yml[[i]]) > 0) as.list(yml[[i]])
-      if (!getOption('blogdown.yaml.empty', TRUE)) yml = blogdown:::filter_list(yml)
+      if (!blogdown:::get_option('blogdown.yaml.empty', TRUE)) yml = blogdown:::filter_list(yml)
       rstudioapi::modifyRange(
         slct$range, blogdown:::as.yaml(yml, .trim_ws = FALSE)
       )

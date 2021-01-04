@@ -70,6 +70,8 @@
 
 - `new_site()` will create two sample scripts `R/build.R` and `R/build2.R` (they can be deleted if you don't need them). See the help page `?blogdown::build_site` for their meanings.
 
+- Autocomplete is supported for the names of important global options when typing inside `options()` in RStudio, e.g., when typing `options(blogdown.au)`, RStudio will show the candidate `blogdown.author`.
+
 - `read_toml()` and `toml2yaml()` will try to preserve the original order of fields in the TOML data, instead of using the alphabetical order.
 
 - When clicking the "Build Website" button in RStudio, it will no longer open the `index.html` file in the generated site folder, but emit a message telling users that this folder needs to be served before the web pages can be correctly previewed (#522).

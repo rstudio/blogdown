@@ -73,7 +73,7 @@ install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, .
   )
 
   version = gsub('^[vV]', '', version)  # pure version number
-  if (!is.null(ver <- getOption('blogdown.hugo.version')) && ver != version) message2(
+  if (!is.null(ver <- get_option('blogdown.hugo.version')) && ver != version) message2(
     "You have set the option 'blogdown.hugo.version' to '", ver, "' (perhaps in .Rprofile), ",
     "but you are installing the Hugo version '", version, "' now. You may want to update ",
     "the option 'blogdown.hugo.version' accordingly.", files = existing_files('.Rprofile')
@@ -155,7 +155,7 @@ install_hugo_bin = function(exec, version) {
   )
   message(
     'Hugo has been installed to "', normalizePath(destdir), '". ',
-    if (is.null(getOption('blogdown.hugo.version'))) c(
+    if (is.null(get_option('blogdown.hugo.version'))) c(
       'You are recommended to set options(blogdown.hugo.version = "', version,
       '") in the .Rprofile file in your website project. See the blogdown book ',
       'for more info on .Rprofile: https://bookdown.org/yihui/blogdown/global-options.html'
@@ -181,7 +181,7 @@ brew_hugo = function() {
 }
 
 # possible locations of the Hugo executable
-bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) {
+bin_paths = function(dir = 'Hugo', extra_path = get_option('blogdown.hugo.dir')) {
   path = file.path(if (is_windows()) {
     Sys.getenv('APPDATA', '')
   } else if (is_macos()) {
@@ -288,7 +288,7 @@ uninstall_tip = function(p) {
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
   function(version = getOption('blogdown.hugo.version'), quiet = FALSE) {
-    i = if (is.null(version)) 'default' else as.character(version)
+    i = if (is.null(version <- na2null(version))) 'default' else as.character(version)
     p = paths[[i]]
     if (!is.null(p) && file.exists(exec_path(p))) return(p)
     # if path not found, find it again

@@ -56,7 +56,7 @@ hugo_build = function(local = FALSE) {
   tweak_hugo_env(FALSE)
   hugo_cmd(c(
     if (local) c('-D', '-F'),
-    getOption('blogdown.hugo.args'),
+    get_option('blogdown.hugo.args'),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
   ))
 }
@@ -493,7 +493,7 @@ new_post = function(
   }
   if (isTRUE(title_case)) title_case = tools::toTitleCase
   if (is.function(title_case)) title = title_case(title)
-  if (getOption('blogdown.warn.future', TRUE)) {
+  if (get_option('blogdown.warn.future', TRUE)) {
     if (isTRUE(tryCatch(date > Sys.Date(), error = function(e) FALSE))) warning(
       'The date of the post is in the future: ', date, '. See ',
       'https://github.com/rstudio/blogdown/issues/377 for consequences, ',
@@ -535,7 +535,7 @@ hugo_server = function(host, port) {
 
 hugo_server_args = function(host, port) {
   c(
-    'server', '--bind', host, '-p', port, theme_flag(), getOption('blogdown.hugo.server', c(
+    'server', '--bind', host, '-p', port, theme_flag(), get_option('blogdown.hugo.server', c(
       '-D', '-F', if (hugo_available('0.25')) '--navigateToChanged'
     ))
   )

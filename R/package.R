@@ -30,10 +30,18 @@ blogdown_skeleton = function(path, ...) {
   new_site(dir = path, ..., serve = FALSE)
 }
 
-# stop all servers when the package is unloaded or R session is ended
 .onLoad = function(libname, pkgname) {
+  # stop all servers when the package is unloaded or R session is ended
   reg.finalizer(asNamespace(pkgname), function(e) {
     opts$set(quitting = TRUE); on.exit(opts$set(quitting = NULL), add = TRUE)
     stop_server()
   }, onexit = TRUE)
+
+  # initialize some important global options, so RStudio could autocomplete
+  # options(); I can't set them to NULL directly because options(foo = NULL)
+  # would *remove* the option 'foo', so RStudio won't be able to recognize
+  # option names (I have to set them to I(NA) instead); I hate this ugly hack
+  if (interactive()) for (i in names(.options)) {
+    if (is.null(getOption(i))) options(.options[i])
+  }
 }

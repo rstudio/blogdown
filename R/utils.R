@@ -85,7 +85,7 @@ list_files = function(..., full.names = TRUE, recursive = TRUE) {
 }
 
 # does html output file not exist, or is it older than Rmd for at least N seconds?
-require_rebuild = function(html, rmd, N = getOption('blogdown.time_diff', 0)) {
+require_rebuild = function(html, rmd, N = get_option('blogdown.time_diff', 0)) {
   m1 = file.mtime(html); m2 = file.mtime(rmd)
   !file_exists(html) | difftime(m2, m1, units = 'secs') > N
 }
@@ -278,7 +278,7 @@ initial_files = function(n = 10) {
   c(files, existing_files(c('netlify.toml', '.Rprofile', config_files())))
 }
 
-generator = function() getOption('blogdown.generator', 'hugo')
+generator = function() get_option('blogdown.generator', 'hugo')
 
 # config files for different site generators
 config_files = function(which = generator()) {
@@ -580,7 +580,7 @@ open_file = function(x, open = interactive()) {
 # produce a dash-separated filename by replacing non-alnum chars with -
 dash_filename = function(
   string, pattern = '[^[:alnum:]]+',
-  pre = getOption('blogdown.filename.pre_processor', identity)
+  pre = get_option('blogdown.filename.pre_processor', identity)
 ) {
   tolower(gsub('^-+|-+$', '', gsub(pattern, '-', pre(string))))
 }
@@ -617,7 +617,7 @@ post_slug = function(x) {
 }
 
 use_bundle = function() {
-  getOption('blogdown.new_bundle', generator() == 'hugo' && hugo_available('0.32'))
+  get_option('blogdown.new_bundle', generator() == 'hugo' && hugo_available('0.32'))
 }
 
 # don't add slugs to posts when creating new posts as bundles and permalinks is
@@ -810,7 +810,7 @@ append_yaml = function(x, value = list()) {
 # particular order, and optionally remove empty fields
 modify_yaml = function(
   file, ..., .order = character(), .keep_fields = NULL,
-  .keep_empty = getOption('blogdown.yaml.empty', TRUE)
+  .keep_empty = get_option('blogdown.yaml.empty', TRUE)
 ) {
   x = read_utf8(file)
   res = split_yaml_body(x)
@@ -989,7 +989,7 @@ get_subdirs = function() {
     dirs = dirs[substr(dirs, 1, nchar(d)) != d]
   }
 
-  union(dirs, getOption('blogdown.subdir', 'post'))
+  union(dirs, get_option('blogdown.subdir', 'post'))
 }
 
 # is a file the index page of a leaf bundle? i.e., index.*; the filename may
@@ -1014,3 +1014,31 @@ clean_hugo_cache = function() {
 yes_no = function(question) {
   interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
 }
+
+# treat the special value I(NA) as NULL; see .onLoad()
+get_option = function(x, default = NULL) na2null(getOption(x), default)
+
+na_null = I(NA)
+na2null = function(x, default = NULL) {
+  if (is.null(x) || identical(x, I(NA))) default else x
+}
+
+# global options in blogdown that are likely to be useful to some users
+.options = local({
+  g = generator()
+  i = c(
+    'filename.pre_processor', 'files_filter', 'generator', 'initial_files',
+    'knit.on_save', 'method', 'rename_file', 'serve_site.startup', 'server.timeout',
+    'subdir_fun', 'time_diff', 'warn.future', 'widgetsID', 'yaml.empty',
+    paste0(g, '.server'),
+    if (g == 'hugo') c(
+      'hugo.args', 'hugo.dir', 'hugo.version', 'new_bundle', 'server.wait'
+    )
+  )
+  # default them to I(NA) instead of NULL for reasons explained in .onLoad()
+  x = setNames(rep(list(na_null), length(i)), i)
+  x = c(x, list(author = get_author(), subdir = 'post', title_case = FALSE, ext = '.md'))
+  names(x) = paste0('blogdown.', names(x))
+  x = x[sort(names(x))]
+  x
+})

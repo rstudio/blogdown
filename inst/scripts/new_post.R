@@ -86,7 +86,7 @@ shiny::runGadget(
       if (grepl('^\\s*$', input$file)) return(
         warning('The filename is empty!', call. = FALSE)
       )
-      if (is.null(getOption('blogdown.author'))) options(blogdown.author = input$author)
+      options(blogdown.author = input$author)  # remember the author name
       blogdown::new_post(
         input$title, author = input$author, ext = input$format,
         categories = input$cat, tags = input$tag,

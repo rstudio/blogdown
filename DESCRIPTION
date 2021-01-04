@@ -1,7 +1,7 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.21.71
+Version: 0.21.72
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
     person("Christophe", "Dervieux", role = "aut", email = "cderv@rstudio.com", comment = c(ORCID = "0000-0003-4474-2498")),

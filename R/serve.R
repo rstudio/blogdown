@@ -74,7 +74,7 @@ preview_site = function(..., startup = FALSE) {
     opts$set(preview = TRUE)
     on.exit(opts$set(preview = NULL), add = TRUE)
     # open some files initially if specified
-    init_files = getOption('blogdown.initial_files')
+    init_files = get_option('blogdown.initial_files')
     if (is.function(init_files)) init_files = init_files()
     for (f in init_files) if (file_exists(f)) open_file(f)
   } else {
@@ -154,7 +154,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
         } else err, call. = FALSE)
       }
       if (server_ready(server$url)) break
-      if (i >= getOption('blogdown.server.timeout', 30)) {
+      if (i >= get_option('blogdown.server.timeout', 30)) {
         s = proc_kill(pid)  # if s == 0, the server must have been started successfully
         stop(if (s == 0) c(
           'Failed to launch the preview of the site. This may be a bug of blogdown. ',
@@ -181,11 +181,11 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     if (g == 'hugo') del_empty_dir('resources')
 
     # whether to watch for changes in Rmd files?
-    if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
+    if (!get_option('blogdown.knit.on_save', TRUE)) return(invisible())
 
     # rebuild specific or changed Rmd files
     rebuild = function(files) {
-      if (is.null(b <- getOption('blogdown.knit.on_save'))) {
+      if (is.null(b <- get_option('blogdown.knit.on_save'))) {
         b = !isTRUE(opts$get('knitting'))
         if (!b) {
           options(blogdown.knit.on_save = b)
@@ -213,7 +213,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
       if (watch()) try({rebuild(rmd_files); refresh_viewer()})
-      if (getOption('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
+      if (get_option('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()
 
@@ -222,13 +222,13 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 }
 
 jekyll_server_args = function(host, port) {
-  c('serve', '--port', port, '--host', host, getOption(
+  c('serve', '--port', port, '--host', host, get_option(
     'blogdown.jekyll.server', c('--watch', '--incremental', '--livereload')
   ))
 }
 
 hexo_server_args = function(host, port) {
-  c('server', '-p', port, '-i', host, getOption('blogdown.hexo.server'))
+  c('server', '-p', port, '-i', host, get_option('blogdown.hexo.server'))
 }
 
 #' @export
@@ -279,5 +279,5 @@ refresh_viewer = function() {
 }
 
 server_wait = function() {
-  Sys.sleep(getOption('blogdown.server.wait', 2))
+  Sys.sleep(get_option('blogdown.server.wait', 2))
 }

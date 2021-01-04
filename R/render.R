@@ -62,7 +62,7 @@
 build_site = function(
   local = FALSE, method = c('html', 'custom'), run_hugo = TRUE, build_rmd = FALSE
 ) {
-  if (missing(method)) method = getOption('blogdown.method', method)
+  if (missing(method)) method = get_option('blogdown.method', method)
   method = match.arg(method)
   on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (method == 'custom') return()
@@ -76,7 +76,7 @@ build_site = function(
     files = if (is.character(build_rmd)) build_rmd else {
       files = list_rmds(check = TRUE)
       if (is.function(build_rmd)) build_rmd(files) else {
-        if (length(files)) getOption('blogdown.files_filter', identity)(files)
+        if (length(files)) get_option('blogdown.files_filter', identity)(files)
       }
     }
     build_rmds(files)
@@ -166,7 +166,7 @@ build_rmds = function(files) {
       server_wait()
     }
 
-    if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
+    if (get_option('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
     if (to_md) {
       write_utf8(x, out)
     } else {
