@@ -573,8 +573,8 @@ publish_dir_tmp = function() {
 }
 
 # use RStudio to open the file if possible
-open_file = function(x, open = interactive()) {
-  if (open) tryCatch(rstudioapi::navigateToFile(x), error = function(e) file.edit(x))
+open_file = function(x, open = interactive(), line = -1L) {
+  if (open) tryCatch(rstudioapi::navigateToFile(x, line), error = function(e) file.edit(x))
 }
 
 # produce a dash-separated filename by replacing non-alnum chars with -
@@ -927,16 +927,19 @@ args_string = function(...) {
   }
 }
 
-is_rstudio_server = local({
+rstudio_mode = local({
   x = NULL
   function() {
     if (!is.null(x)) return(x)
     x <<- tryCatch(
-      tolower(rstudioapi::versionInfo()$mode) == 'server',
-      error = function(e) FALSE
+      tolower(rstudioapi::versionInfo()$mode),
+      error = function(e) ''
     )
   }
 })
+
+is_rstudio = function() rstudio_mode() != ''
+is_rstudio_server = function() rstudio_mode() == 'server'
 
 # tweak some env vars when building a site or running the hugo server
 tweak_hugo_env = function(server = TRUE) {

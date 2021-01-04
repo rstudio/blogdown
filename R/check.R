@@ -290,8 +290,9 @@ check_content = function() {
   if (length(files)) {
     check_todo(
       'Found ', n <- length(files), ' file', if (n > 1) 's',
-      ' marked as drafts:\n\n', indent_list(files), '\n\n',
-      "  To un-draft, change a file's YAML from 'draft: true' to 'draft: false'"
+      ' marked as drafts. To un-draft, run the command:\n\n',
+      action_list(files, 'blogdown::edit_draft'), '\n\n',
+      "  and change a file's YAML from 'draft: true' to 'draft: false' or delete it"
     )
   } else {
     check_success('Found 0 files marked as drafts.')
@@ -333,6 +334,29 @@ check_content = function() {
   }
   check_garbage_html()
   check_done('Content')
+}
+
+#' Open a list of draft posts
+#'
+#' If a file is opened in RStudio, this function will try to locate the
+#' \code{draft} field in YAML automatically, so you can edit this field
+#' immediately.
+#' @param files A vector of file paths.
+#' @export
+#' @keywords internal
+edit_draft = function(files) {
+  # edit Rmd source files before editing their output files to make sure
+  # modification time of Rmd is older than output
+  i = grepl(rmd_pattern, files)
+  # when in RStudio, open .md before .Rmd, so users can edit .Rmd first (they
+  # see the latterly opened files first)
+  if (is_rstudio()) i = !i
+  files = c(files[i], files[!i])
+  # open files one by one
+  for (f in files) {
+    n = grep('^draft:', read_utf8(f))
+    open_file(f, TRUE, if (length(n) == 0) -1L else n[1])
+  }
 }
 
 list_duplicates = function() in_root({
