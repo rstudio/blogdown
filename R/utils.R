@@ -264,8 +264,8 @@ indent_list = function(x, before = '', after = '', sep = '\n') {
   paste0('  ', before, x, after, collapse = sep)
 }
 
-remove_list = function(x) {
-  paste0('  file.remove(c(\n', indent_list(x, '"', '"', ',\n'), '\n  ))')
+action_list = function(x, action = 'file.remove') {
+  paste0('  ', action, '(c(\n', indent_list(x, '"', '"', ',\n'), '\n  ))')
 }
 
 # return a list of files to be opened initially in an RStudio project

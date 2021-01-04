@@ -381,7 +381,7 @@ check_garbage_html = function() {
   if (n <- length(res)) {
     check_todo(
       'Found ', n, ' incompatible .html file', if (n > 1) 's',
-      ' introduced by previous blogdown versions:\n\n', remove_list(res), '\n\n',
+      ' introduced by previous blogdown versions:\n\n', action_list(res), '\n\n',
       '  To fix, run the above command and then blogdown::build_site(build_rmd = "newfile").'
     )
   } else {
