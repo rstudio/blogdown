@@ -354,12 +354,7 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
   if (strict) {
     x2 = read_toml(x = x, strict = FALSE)  # obtain the names of top-level fields
     ok = FALSE
-    if (xfun::loadable('RcppTOML')) {
-      x = paste(x, collapse = '\n')
-      parser = getFromNamespace('parseTOML', 'RcppTOML')
-      x = parser(x, fromFile = FALSE)
-      ok = TRUE
-    } else if (hugo_available()) {
+    if (hugo_available()) {
       f2 = tempfile('toml', fileext = '.md'); on.exit(unlink(f2), add = TRUE)
       write_utf8(c('+++', x, '+++'), f2)
       # Hugo may fail to convert TOML to YAML, e.g., https://community.rstudio.com/t/86903
@@ -367,6 +362,12 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
         ok = TRUE
         yaml_load_file(f2)
       }
+    }
+    if (!ok && xfun::loadable('RcppTOML')) {
+      x = paste(x, collapse = '\n')
+      parser = getFromNamespace('parseTOML', 'RcppTOML')
+      x = parser(x, fromFile = FALSE)
+      ok = TRUE
     }
     if (missing(strict)) {
       if (!ok) return(x2)
