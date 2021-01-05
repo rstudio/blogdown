@@ -175,7 +175,7 @@ check_hugo = function() {
     check_progress('Hugo version not set in .Rprofile.')
     if (!file_exists('.Rprofile'))
       check_todo('Use blogdown::config_Rprofile() to create .Rprofile for the current project.')
-    check_todo(sprintf('Set options(blogdown.hugo.version = "%s") in .Rprofile.', cv))
+    check_todo(sprintf('Set options(blogdown.hugo.version = "%s") in .Rprofile and restart R.', cv))
   }
 
   if (file_exists('netlify.toml') && !isTRUE(opts$get('check_site'))) check_todo(
@@ -227,7 +227,8 @@ check_netlify = function() {
       )
       check_todo(
         'Option 2: Use blogdown::install_hugo("', v, '") to match Netlify version, ',
-        'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin this Hugo version.'
+        'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin ',
+        'this Hugo version (also remember to restart R).'
       )
     }
   }
