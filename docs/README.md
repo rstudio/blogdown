@@ -3,7 +3,6 @@ To compile this book, open `index.Rmd` in the RStudio IDE, install the **blogdow
 It is trickier to compile it to PDF. You need to install LaTeX. I recommend [TinyTeX](https://yihui.org/tinytex/):
 
 ```r
-devtools::install_github(c('yihui/tinytex', 'rstudio/rmarkdown'))
 tinytex::install_tinytex()
 ```
 

@@ -12,8 +12,8 @@ We assume you have already installed R (https://www.r-project.org) [@R-base] and
 ## Install from CRAN
 install.packages('blogdown') 
 ## Or, install from GitHub
-if (!requireNamespace("devtools")) install.packages('devtools')
-devtools::install_github('rstudio/blogdown')
+if (!requireNamespace("remotes")) install.packages('remotes')
+remotes::install_github('rstudio/blogdown')
 ```
 
 Since **blogdown** is based on the static site generator Hugo (https://gohugo.io), you also need to install Hugo\index{Hugo}. There is a helper function in **blogdown** to download and install it automatically on major operating systems (Windows, macOS, and Linux):
