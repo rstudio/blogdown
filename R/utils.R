@@ -366,7 +366,7 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
     if (!ok && xfun::loadable('RcppTOML')) {
       x = paste(x, collapse = '\n')
       parser = getFromNamespace('parseTOML', 'RcppTOML')
-      x = parser(x, fromFile = FALSE)
+      x = parser(x, fromFile = FALSE, escape = FALSE)
       ok = TRUE
     }
     if (missing(strict)) {
