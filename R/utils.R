@@ -485,6 +485,10 @@ sort_by_names = function(x, names) {
 #' # change the publish dir to 'docs/'
 #' blogdown::config_netlify(NULL, list(build = list(publish = 'docs')))
 config_netlify = function(output = 'netlify.toml', new_config = list()) {
+  if (xfun::is_R_CMD_check() && !hugo_available()) {
+    warning('Hugo was not found. You may install it with blogdown::install_hugo().')
+    return()
+  }
   # default config
   d = list(
     build = list(
