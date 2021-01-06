@@ -72,6 +72,10 @@ theme_flag = function(config = load_config()) {
   a
 }
 
+theme_dir = function(...) {
+  if (length(x <- theme_flag()) == 4) file.path(x[2], x[4])
+}
+
 change_config = function(name, value) {
   f = find_config()
   x = read_utf8(f)

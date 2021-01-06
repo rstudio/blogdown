@@ -5,8 +5,8 @@ sel_input = function(...) shiny::selectizeInput(
 )
 meta = blogdown:::collect_yaml()
 lang = blogdown:::check_lang()
-adir = blogdown:::theme_flag()
-adir = if (length(adir) == 4) file.path(adir[2], adir[4], 'archetypes')
+adir = blogdown:::theme_dir()
+adir = if (length(adir)) file.path(adir, 'archetypes')
 adir = c('archetypes', adir)
 suff = ifelse(utils::file_test('-d', dir(adir, full.names = TRUE)), '/', '')
 shiny::runGadget(
