@@ -66,6 +66,8 @@
 
 - For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.
 
+- The default value of the `serve` argument in `new_site()` was changed from `TRUE` to `"ask"` in an interactive R session, which means it will ask if users want to serve the site after creating it.
+
 - The default value for the `format` argument of `new_site()` was changed from `toml` to `yaml`, which means it will generate `config.yaml` instead of `config.toml` by default.
 
 - `new_site()` will create two sample scripts `R/build.R` and `R/build2.R` (they can be deleted if you don't need them). See the help page `?blogdown::build_site` for their meanings.

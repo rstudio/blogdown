@@ -32,7 +32,7 @@ new_site(
   to_yaml = TRUE,
   netlify = TRUE,
   .Rprofile = TRUE,
-  serve = interactive()
+  serve = if (interactive()) "ask" else FALSE
 )
 
 new_content(path, kind = "", open = interactive())
@@ -109,7 +109,9 @@ sample \file{.Rprofile} will be created. It contains some global options,
 such as \code{options(blogdown.hugo.version)}, which makes sure you will
 use a specific version of Hugo for this site in the future.}
 
-\item{serve}{Whether to start a local server to serve the site.}
+\item{serve}{Whether to start a local server to serve the site. By default,
+this function will ask you in an interactive R session if you want to serve
+the site.}
 
 \item{path}{The path to the new file under the \file{content} directory.}
 

@@ -126,7 +126,9 @@ change_config = function(name, value) {
 #'   sample \file{.Rprofile} will be created. It contains some global options,
 #'   such as \code{options(blogdown.hugo.version)}, which makes sure you will
 #'   use a specific version of Hugo for this site in the future.
-#' @param serve Whether to start a local server to serve the site.
+#' @param serve Whether to start a local server to serve the site. By default,
+#'   this function will ask you in an interactive R session if you want to serve
+#'   the site.
 #' @references The full list of Hugo commands: \url{https://gohugo.io/commands},
 #'   and themes: \url{https://themes.gohugo.io}.
 #' @export
@@ -138,13 +140,16 @@ new_site = function(
   dir = '.', install_hugo = TRUE, format = 'yaml', sample = TRUE,
   theme = 'yihui/hugo-lithium', hostname = 'github.com', theme_example = TRUE,
   empty_dirs = FALSE, to_yaml = TRUE, netlify = TRUE, .Rprofile = TRUE,
-  serve = interactive()
+  serve = if (interactive()) 'ask' else FALSE
 ) {
+  msg_init('Creating your new site')
   files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)
   files = setdiff(files, c('LICENSE', 'README', 'README.md'))
   force = length(files) == 0
   if (!force) warning("The directory '", dir, "' is not empty")
-  if (install_hugo && !hugo_available()) install_hugo()
+  if (install_hugo && !hugo_available()) {
+    msg_next('Installing Hugo'); install_hugo()
+  }
   if (hugo_cmd(
     c('new', 'site', shQuote(path.expand(dir)), if (force) '--force', '-f', format),
     stdout = FALSE
@@ -155,8 +160,10 @@ new_site = function(
   unlink(file.path('archetypes', 'default.md'))
   # remove empty dirs
   if (!empty_dirs) for (d in list.dirs(recursive = FALSE)) del_empty_dir(d)
-  if (is.character(theme) && length(theme) == 1 && !is.na(theme))
+  if (is.character(theme) && length(theme) == 1 && !is.na(theme)) {
+    msg_next('Installing the theme ', theme, ' from ', hostname)
     install_theme(theme, theme_example, hostname = hostname)
+  }
   # remove the .gitignore that ignores everything under static/:
   # https://github.com/rstudio/blogdown/issues/320
   if (file.exists(gitignore <- file.path('static', '.gitignore'))) {
@@ -170,6 +177,7 @@ new_site = function(
     if (use_bundle()) d = file.path(d, basename(xfun::sans_ext(f1)))
     dir_create(d)
     f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
+    msg_next('Adding the sample post to ', f2)
     file.copy(f1, f2)
     if (getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
@@ -178,19 +186,26 @@ new_site = function(
     Sys.chmod('index.Rmd', '444')
   }
 
-  if (to_yaml) hugo_convert('YAML', unsafe = TRUE)
+  if (to_yaml) {
+    msg_next('Converting all metadata to the YAML format')
+    hugo_convert('YAML', unsafe = TRUE)
+  }
   if (format == 'yaml' && file.exists(cfg <- 'config.toml')) {
     toml2yaml(cfg, 'config.yaml'); unlink(cfg)
   }
   if (netlify) {
+    msg_next('Adding netlify.toml in case you want to deploy the site to Netlify')
     if (!file.exists('netlify.toml')) config_netlify('netlify.toml') else {
-      warning(
+      msg_todo(
         "The file 'netlify.toml' exists, and I will not overwrite it. If you want ",
         "to overwrite it, you may call blogdown::config_netlify() by yourself."
       )
     }
   }
-  if (.Rprofile) config_Rprofile()
+  if (.Rprofile) {
+    msg_next('Adding .Rprofile to set options() for blogdown')
+    config_Rprofile()
+  }
   dir_create('R')
   add_build_script = function(x, f) {
     write_utf8(c(
@@ -200,7 +215,18 @@ new_site = function(
   }
   add_build_script('before', 'R/build.R')
   add_build_script('after', 'R/build2.R')
+  msg_init('The new site is ready')
+  msg_okay(
+    'To start a local preview: use blogdown::serve_site()',
+    if (is_rstudio()) ', or the RStudio add-in "Serve Site"'
+  )
+  msg_okay('To stop a local preview: use blogdown::stop_server(), or restart your R session')
+  if (identical(serve, 'ask')) serve = yes_no('\u25ba Want to serve and preview the site now?')
   if (serve) serve_site()
+  if (length(list.files('.', '[.]Rproj$')) == 0) {
+    xfun::try_silent(rstudioapi::initializeProject())
+  }
+  invisible(getwd())
 }
 
 #' Install a Hugo theme from Github
