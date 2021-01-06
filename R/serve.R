@@ -101,7 +101,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
         'start a new server, you may stop existing servers with ',
         'blogdown::stop_server(), or restart R. Normally you should not need to ',
         'serve the same site multiple times in the same R session',
-        if (servr:::is_rstudio()) c(
+        if (is_rstudio()) c(
           ', otherwise you may run into issues like ',
           'https://github.com/rstudio/blogdown/issues/404'
         ), '.'
