@@ -250,10 +250,10 @@ msg_cat = function(...) {
 msg1 = function(...) msg_cat('* ', ..., '\n')
 msg2 = function(...) msg_cat('\n==> ', ..., '\n\n')
 
-msg_init = function(...) msg_cat('\u2015 ', ..., '\n')
-msg_next = function(...) msg_cat('\u007c ', ..., '\n')
-msg_todo = function(...) msg_cat('\u25cf ', "[TODO] ", ..., '\n')
-msg_okay = function(...) msg_cat('\u25cb ', ..., '\n')
+msg_init = function(...) msg_cat('\u2015 ', ..., '\n')  # -
+msg_next = function(...) msg_cat('\u007c ', ..., '\n')  # |
+msg_todo = function(...) msg_cat('\u25cf ', "[TODO] ", ..., '\n')  # solid dot
+msg_okay = function(...) msg_cat('\u25cb ', ..., '\n')  # o
 msg_done = function(...) msg_init("Check complete: ", ..., '\n')
 
 # c(ITEM, ITEM, ITEM) ->
