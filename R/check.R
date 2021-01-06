@@ -334,6 +334,16 @@ check_content = function() {
     msg_okay('Found 0 duplicate .html output files.')
   }
   check_garbage_html()
+
+  msg_next("Checking for the unnecessary 'content/' directory in theme...")
+  if (length(d <- file.path(theme_dir(), 'content')) && dir_exists(d)) {
+    msg_todo(
+      'Found one! You may delete it unless it was created by you. Run:\n\n',
+      '  unlink("', d, '", recursive = TRUE)\n'
+    )
+  } else {
+    msg_okay('Great! Your theme does not contain the content/ directory.')
+  }
   msg_done('Content')
 }
 
