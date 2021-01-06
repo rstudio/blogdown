@@ -239,14 +239,6 @@ message2 = function(..., files = NULL) {
   for (f in files) open_file(f)
 }
 
-# TODO: use xfun::msg_cat() in xfun 0.20
-msg_cat = function(...) {
-  x = paste(c(...), collapse = '')
-  withRestarts({
-    signalCondition(simpleMessage(x))
-    cat(x)
-  }, muffleMessage = function() invisible(NULL))
-}
 msg1 = function(...) msg_cat('* ', ..., '\n')
 msg2 = function(...) msg_cat('\n==> ', ..., '\n\n')
 

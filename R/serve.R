@@ -248,22 +248,6 @@ stop_server = function() {
   opts$set(pids = NULL, served_dirs = NULL)
 }
 
-# TODO: remove the following two functions and import xfun::proc_kill() after
-# xfun 0.20 is released because 0.19 contains a bug
-proc_kill = function(pid, recursive = TRUE, ...) {
-  if (is_windows()) {
-    xfun::proc_kill(pid, recursive, ...)
-  } else {
-    system2('kill', c(pid, if (recursive) child_pids(pid)), ...)
-  }
-}
-child_pids = function(id) {
-  x = system2('sh', shQuote(c(
-    system.file('scripts', 'child_pids.sh', package = 'xfun'), id
-  )), stdout = TRUE)
-  grep('^[0-9]+$', x, value = TRUE)
-}
-
 get_config2 = function(key, default) {
   res = yaml_load_file('_config.yml')
   res[[key]] %n% default
