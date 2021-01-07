@@ -299,28 +299,9 @@ check_content = function() {
     msg_okay('Found 0 files marked as drafts.')
   }
 
-  msg_next('Checking your R Markdown content...')
-  rmds = list_rmds()
-  if (length(files <- filter_newfile(rmds))) {
-    msg_todo(
-      'Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
-      ' to render:\n\n', indent_list(files), '\n\n',
-      "  To render a file, knit or use blogdown::build_site(build_rmd = 'newfile')"
-    )
-  } else {
-    msg_okay('All R Markdown files have been knitted.')
-  }
-
-  files = setdiff(rmds, files)
-  files = files[require_rebuild(output_file(files), files)]
-  if (length(files)) {
-    msg_todo(
-      'Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
-      ' to update by re-rendering:\n\n', indent_list(files), '\n\n',
-      "  To update a file, re-knit or use blogdown::build_site(build_rmd = 'timestamp')"
-    )
-  } else {
-    msg_okay('All R Markdown output files are up to date with their source files.')
+  if (build_method() != 'custom') {
+    msg_next('Checking your R Markdown content...')
+    check_rmds()
   }
 
   msg_next('Checking for .html/.md files to clean up...')
@@ -345,6 +326,31 @@ check_content = function() {
     msg_okay('Great! Your theme does not contain the content/ directory.')
   }
   msg_done('Content')
+}
+
+check_rmds = function() {
+  rmds = list_rmds()
+  if (length(files <- filter_newfile(rmds))) {
+    msg_todo(
+      'Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
+      ' to render:\n\n', indent_list(files), '\n\n',
+      "  To render a file, knit or use blogdown::build_site(build_rmd = 'newfile')"
+    )
+  } else {
+    msg_okay('All R Markdown files have been knitted.')
+  }
+
+  files = setdiff(rmds, files)
+  files = files[require_rebuild(output_file(files), files)]
+  if (length(files)) {
+    msg_todo(
+      'Found ', n <- length(files), ' R Markdown file', if (n > 1) 's',
+      ' to update by re-rendering:\n\n', indent_list(files), '\n\n',
+      "  To update a file, re-knit or use blogdown::build_site(build_rmd = 'timestamp')"
+    )
+  } else {
+    msg_okay('All R Markdown output files are up to date with their source files.')
+  }
 }
 
 #' Open a list of draft posts
