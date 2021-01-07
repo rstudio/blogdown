@@ -594,6 +594,7 @@ post_filename = function(title, subdir, ext, date, lang = '', bundle = use_bundl
   d = gsub('/+$', '', d)
   f = date_filename(f, date)
   f = gsub('^([.]/)+', '', file.path(d, f))
+  if (lang != '') f = sub(sprintf('^%s/', lang), '', f)
   paste0(f, if (bundle) '/index', if (lang != '') '.', lang, ext)
 }
 
