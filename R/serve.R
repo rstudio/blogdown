@@ -124,7 +124,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     cmd_args = args_fun(host, port)
     if (g == 'hugo') {
       tweak_hugo_env()
-      if (length(list_rmds(pattern = '^index.R(md|markdown)$')))
+      if (length(list_rmds(pattern = bundle_regex('.R(md|markdown)$'))))
         create_shortcode('postref.html', 'blogdown/postref')
     }
     # if requested not to demonize the server, run it in the foreground process,
