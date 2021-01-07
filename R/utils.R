@@ -195,11 +195,13 @@ is_64bit = function() {
   length(grep('64', unlist(Sys.info()[c('machine', 'release')]))) > 0
 }
 
-is_rmarkdown = function(x) grepl('[.][Rr]markdown$', x)
-
-# build .Rmarkdown to .markdown, and .Rmd to .html
-output_file = function(file, md = is_rmarkdown(file)) {
-  with_ext(file, ifelse(md, 'markdown', 'html'))
+# build .Rmarkdown to .markdown, and .Rmd to .html unless the global option
+# blogdown.method = 'markdown'
+output_file = function(file) {
+  ext = if (build_method() == 'markdown') 'md' else 'html'
+  ext = rep(ext, length(file))
+  ext[grep('[.][Rr]markdown$', file)] = 'markdown'
+  with_ext(file, ext)
 }
 
 opts = knitr:::new_defaults()

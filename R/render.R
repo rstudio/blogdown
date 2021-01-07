@@ -9,22 +9,28 @@
 #' book for more information:
 #' \url{https://bookdown.org/yihui/blogdown/workflow.html}.
 #'
-#' For the \code{method} argument: \code{method = "html"} means to render Rmd
-#' files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which means
-#' Markdown is processed through Pandoc), and process the paths of external
-#' dependencies generated from R code chunks, including images and HTML
-#' dependencies.
+#' For R Markdown posts, there are a few possible rendering methods: \code{html}
+#' (the default), \code{markdown}, and \code{custom}. The method can be set in
+#' the global option \code{blogdown.method} (usually in the
+#' \file{\link{.Rprofile}} file), e.g., \code{options(blogdown.method =
+#' "custom")}.
+#'
+#' For the \code{html} method, \file{.Rmd} posts are rendered to \file{.html}
+#' via \code{rmarkdown::\link[rmarkdown]{render}()}, which means Markdown is
+#' processed through Pandoc. For the \code{markdown} method, \file{.Rmd} is
+#' rendered to \file{.md}, which will typically be rendered to HTML later by the
+#' site generator such as Hugo.
 #'
 #' For all rendering methods, a custom R script \file{R/build.R} will be
 #' executed if you have provided it under the root directory of the website
 #' (e.g. you can compile Rmd to Markdown through
-#' \code{knitr::\link[knitr]{knit}()} and build the side via
-#' \code{\link{hugo_cmd}()}). \code{method = "custom"} means it is entirely up
+#' \code{knitr::\link[knitr]{knit}()} and build the site via
+#' \code{\link{hugo_cmd}()}). The \code{custom} method means it is entirely up
 #' to this R script how a website is rendered. The script is executed via
 #' command line \command{Rscript "R/build.R"}, which means it is executed in a
 #' separate R session. The value of the argument \code{local} is passed to the
 #' command line (you can retrieve the command-line arguments via
-#' \code{\link{commandArgs}(TRUE)}). For \code{method = "html"}, the R script
+#' \code{\link{commandArgs}(TRUE)}). For other rendering methods, the R script
 #' \file{R/build2.R} (if exists) will be executed after Hugo has built the site.
 #' This can be useful if you want to post-process the site.
 #'
@@ -42,9 +48,6 @@
 #' @param local Whether to build the website locally. This argument is passed to
 #'   \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
 #'   the site locally via \code{\link{serve_site}()}.
-#' @param method Different methods to build a website (each with pros and cons).
-#'   See \sQuote{Details}. The value of this argument will be obtained from the
-#'   global option \code{getOption('blogdown.method')} when it is set.
 #' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
 #'   compiled.
 #' @param build_rmd Whether to (re)build R Markdown files. By default, they are
@@ -59,13 +62,9 @@
 #'   \code{build_rmd = blogdown::filter_timestamp}, and \code{build_rmd =
 #'   'md5sum'} is equivalent to \code{build_rmd = blogdown::filter_md5sum}.
 #' @export
-build_site = function(
-  local = FALSE, method = c('html', 'custom'), run_hugo = TRUE, build_rmd = FALSE
-) {
-  if (missing(method)) method = get_option('blogdown.method', method)
-  method = match.arg(method)
+build_site = function(local = FALSE, run_hugo = TRUE, build_rmd = FALSE) {
   on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
-  if (method == 'custom') return()
+  if (build_method() == 'custom') return()
   if (!xfun::isFALSE(build_rmd)) {
     if (is.character(build_rmd) && length(build_rmd) == 1) {
       build_rmd = switch(
@@ -84,6 +83,11 @@ build_site = function(
   if (run_hugo) on.exit(hugo_build(local), add = TRUE)
   on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
   invisible()
+}
+
+build_method = function() {
+  methods = c('html', 'markdown', 'custom')
+  match.arg(get_option('blogdown.method', methods), methods)
 }
 
 list_rmds = function(dir = content_file(), check = FALSE, pattern = rmd_pattern) {
@@ -149,7 +153,8 @@ build_rmds = function(files) {
   }
 
   for (i in seq_along(files)) {
-    f = files[i]; d = dirname(f); out = output_file(f, to_md <- is_rmarkdown(f))
+    f = files[i]; d = dirname(f); out = output_file(f)
+    to_md = file_ext(out) != 'html'
     out2 = paste0(out, '~')  # first generate a file with ~ in ext so Hugo won't watch
     copy_output_yml(d)
     message('Rendering ', f, '... ', appendLF = FALSE)

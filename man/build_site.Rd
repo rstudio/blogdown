@@ -4,21 +4,12 @@
 \alias{build_site}
 \title{Build a website}
 \usage{
-build_site(
-  local = FALSE,
-  method = c("html", "custom"),
-  run_hugo = TRUE,
-  build_rmd = FALSE
-)
+build_site(local = FALSE, run_hugo = TRUE, build_rmd = FALSE)
 }
 \arguments{
 \item{local}{Whether to build the website locally. This argument is passed to
 \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
 the site locally via \code{\link{serve_site}()}.}
-
-\item{method}{Different methods to build a website (each with pros and cons).
-See \sQuote{Details}. The value of this argument will be obtained from the
-global option \code{getOption('blogdown.method')} when it is set.}
 
 \item{run_hugo}{Whether to run \code{hugo_build()} after R Markdown files are
 compiled.}
@@ -46,22 +37,28 @@ locally, but can build it on the cloud. See Section 1.7 of the \pkg{blogdown}
 book for more information:
 \url{https://bookdown.org/yihui/blogdown/workflow.html}.
 
-For the \code{method} argument: \code{method = "html"} means to render Rmd
-files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which means
-Markdown is processed through Pandoc), and process the paths of external
-dependencies generated from R code chunks, including images and HTML
-dependencies.
+For R Markdown posts, there are a few possible rendering methods: \code{html}
+(the default), \code{markdown}, and \code{custom}. The method can be set in
+the global option \code{blogdown.method} (usually in the
+\file{\link{.Rprofile}} file), e.g., \code{options(blogdown.method =
+"custom")}.
+
+For the \code{html} method, \file{.Rmd} posts are rendered to \file{.html}
+via \code{rmarkdown::\link[rmarkdown]{render}()}, which means Markdown is
+processed through Pandoc. For the \code{markdown} method, \file{.Rmd} is
+rendered to \file{.md}, which will typically be rendered to HTML later by the
+site generator such as Hugo.
 
 For all rendering methods, a custom R script \file{R/build.R} will be
 executed if you have provided it under the root directory of the website
 (e.g. you can compile Rmd to Markdown through
-\code{knitr::\link[knitr]{knit}()} and build the side via
-\code{\link{hugo_cmd}()}). \code{method = "custom"} means it is entirely up
+\code{knitr::\link[knitr]{knit}()} and build the site via
+\code{\link{hugo_cmd}()}). The \code{custom} method means it is entirely up
 to this R script how a website is rendered. The script is executed via
 command line \command{Rscript "R/build.R"}, which means it is executed in a
 separate R session. The value of the argument \code{local} is passed to the
 command line (you can retrieve the command-line arguments via
-\code{\link{commandArgs}(TRUE)}). For \code{method = "html"}, the R script
+\code{\link{commandArgs}(TRUE)}). For other rendering methods, the R script
 \file{R/build2.R} (if exists) will be executed after Hugo has built the site.
 This can be useful if you want to post-process the site.
 

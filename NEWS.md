@@ -38,6 +38,8 @@
 
 - The default value of the global option `blogdown.serve_site.startup` was changed from `TRUE` to `FALSE`, meaning that the site will not by served by default when the RStudio project is first opened. If you want the previous behavior, you may set `options(blogdown.serve_site.startup = TRUE)` in your `.Rprofile`.
 
+- The `method` argument of `build_site()` was removed. The build method can only be specified via the global option `blogdown.method` now, e.g., you may set `options(blogdown.method = 'custom')` in `.Rprofile`. A new possible build method named `markdown` was added. When you set `options(blogdown.method = 'markdown')`, `.Rmd` posts will be compiled to `.md` (by default, they are compiled to `.html` since the default option is `blogdown.method = 'html'`). This provides another way to render R Markdown to Markdown instead of HTML. Previously, the only way to achieve this was to use the file extension `.Rmarkdown` (this way still works).
+
 - The function `update_hugo()` and the argument `force` of `install_hugo()` have been deprecated. If you want to update Hugo to a newer version, you can call `install_hugo()` and specify a desired version.
 
 - The functions `md5sum_filter` and `timestamp_filter` have been renamed to `filter_md5sum` and `filter_timestamp`, respectively.
