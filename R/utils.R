@@ -1017,6 +1017,12 @@ yes_no = function(question) {
   interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
 }
 
+source_file = function(...) sys.source(..., chdir = TRUE, keep.source = FALSE)
+
+source_profile = function(dir, ...) {
+  if (file_exists(f <- file.path(dir, '.Rprofile'))) source_file(f, ...)
+}
+
 # treat the special value I(NA) as NULL; see .onLoad()
 get_option = function(x, default = NULL) na2null(getOption(x), default)
 

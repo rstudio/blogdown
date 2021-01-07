@@ -15,6 +15,10 @@ blogdown_site = function(input, ...) {
       # set a global option
       opts$set(render_one = TRUE); on.exit(opts$set(render_one = NULL), add = TRUE)
       input_file = rel_path(input_file)
+      # when knitting a file not in the project root, RStudio starts R from the
+      # dir of the file instead of the root, hence .Rprofile is ignored (#562)
+      if (dirname(input_file) != '.') source_profile(input, globalenv())
+      # only build R Markdown files (no need to build plain .md files)
       if (grepl(rmd_pattern, input_file))
         build_site(TRUE, run_hugo = FALSE, build_rmd = input_file)
       # run serve_site() to preview the site if the server has not been started
