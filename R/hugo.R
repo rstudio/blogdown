@@ -187,7 +187,7 @@ new_site = function(
     if (length(lang <- get_lang())) {
       f2 = sub('^content/', '', f2)
       f2 = sub('^(.+[.])', paste0('\\1', lang, '.'), f2)
-      f2 = new_content(f2)
+      f2 = new_content(f2, open = FALSE)
       file.remove(f2)
     } else {
       dir_create(d)
