@@ -11,7 +11,7 @@ blogdown_site = function(input, ...) {
   render = function(input_file, output_format, envir, quiet, ...) {
     # input_file is NULL when render the whole site, and is a file path when
     # rendering a single file (by clicking the Knit button)
-    if (!is.null(input_file)) in_root({
+    if (!is.null(input_file)) xfun::in_dir(input, {
       # set a global option
       opts$set(render_one = TRUE); on.exit(opts$set(render_one = NULL), add = TRUE)
       input_file = rel_path(input_file)
