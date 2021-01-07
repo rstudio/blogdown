@@ -1,4 +1,7 @@
 blogdown_site = function(input, ...) {
+  # set the site root dir
+  opts$set(site_root = input)
+
   # start serving the site when a blogdown project is opened in RStudio
   if (interactive() && get_option('blogdown.serve_site.startup', FALSE)) try({
     if (!isTRUE(opts$get('startup'))) {
