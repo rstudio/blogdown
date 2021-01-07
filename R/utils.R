@@ -999,8 +999,10 @@ get_subdirs = function() {
 bundle_index = function(x, ext = TRUE) {
   x = basename(x)
   if (ext) x = xfun::sans_ext(x)
-  grepl('^index([.][a-z]{2})?$', x)
+  grepl(bundle_regex(), x)
 }
+
+bundle_regex = function(x = '$') paste0('^index([.][a-z]{2})?', x)
 
 xfun_session_info = function() {
   tryCatch(paste('Hugo version:', hugo_version()), error = function(e) NULL)
