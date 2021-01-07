@@ -177,8 +177,9 @@ new_site = function(
   }
 
   if (sample) {
+    lang = get_lang()
     d = file.path('content', c('blog', 'posts', 'post'))
-    d = c(file.path('content', 'en', basename(d)), d)
+    d = c(file.path('content', lang, basename(d)), d)
     for (i in d) if (dir_exists(i)) break
     d = i
     f1 = pkg_file('resources', '2020-12-01-r-rmarkdown.Rmd')
@@ -186,9 +187,9 @@ new_site = function(
     f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
     # for a multilingual site, create the sample post via new_content() because
     # the post may need to be under a language dir (#537)
-    if (length(lang <- get_lang())) {
-      f2 = sub('^content/', '', f2)
-      f2 = sub('^(.+[.])', paste0('\\1', lang, '.'), f2)
+    if (length(lang)) {
+      f2 = sub(sprintf('^content/(%s/)?', lang), '', f2)
+      f2 = sub('^(.+[.])', sprintf('\\1%s.', lang), f2)
       f2 = new_content(f2, open = FALSE)
       file.remove(f2)
     } else {
