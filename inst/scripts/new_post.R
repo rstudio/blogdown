@@ -4,7 +4,7 @@ sel_input = function(...) shiny::selectizeInput(
   ..., width = '98%', multiple = TRUE, options = list(create = TRUE)
 )
 meta = blogdown:::collect_yaml()
-lang = blogdown:::check_lang()
+lang = blogdown:::get_lang()
 adir = blogdown:::theme_dir()
 adir = if (length(adir)) file.path(adir, 'archetypes')
 adir = c('archetypes', adir)

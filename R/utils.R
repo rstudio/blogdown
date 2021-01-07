@@ -223,8 +223,8 @@ load_config = function() in_root({
 })
 
 # check if the user has configured Multilingual Mode for Hugo in config.toml
-check_lang = function(config = load_config()) {
-  if (generator() == 'hugo') get_config('DefaultContentLanguage', NULL, config)
+get_lang = function(config = load_config()) {
+  if (generator() == 'hugo') get_config('defaultContentLanguage', NULL, config)
 }
 
 # a horizontal rule
