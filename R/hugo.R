@@ -251,6 +251,7 @@ install_theme = function(
   theme, hostname = 'github.com', theme_example = FALSE, update_config = TRUE,
   force = FALSE, update_hugo = TRUE
 ) {
+  theme = trim_ws(theme)
   r = '^([^/]+/[^/@]+)(@.+)?$'
   theme_is_url = grepl('[.](zip|tar[.]gz)$', theme)
   if (!is.character(theme) || length(theme) != 1 || (!grepl(r, theme) & !theme_is_url)) {
@@ -263,6 +264,7 @@ install_theme = function(
   if (theme_is_url) {
     branch = xfun::sans_ext(basename(theme))
   } else {
+    theme = gsub('\\s*/\\s*', '/', theme)  # remove spaces, e.g., user / repo -> user/repo
     branch = sub('^@', '', gsub(r, '\\2', theme))
     theme = gsub(r, '\\1', theme)
     if (branch == '') branch = default_branch(theme, hostname)
