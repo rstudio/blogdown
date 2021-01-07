@@ -177,8 +177,10 @@ new_site = function(
   }
 
   if (sample) {
-    d = file.path('content', c('blog', 'post'))
-    d = if (dir_exists(d[1])) d[1] else d[2]
+    d = file.path('content', c('blog', 'posts', 'post'))
+    d = c(file.path('content', 'en', basename(d)), d)
+    for (i in d) if (dir_exists(i)) break
+    d = i
     f1 = pkg_file('resources', '2020-12-01-r-rmarkdown.Rmd')
     if (use_bundle()) d = file.path(d, basename(xfun::sans_ext(f1)))
     f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
