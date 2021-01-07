@@ -768,7 +768,7 @@ yaml_load = function(x) yaml::yaml.load(
       # continue coerce into vector because many places of code already assume this
       if (length(x) > 0) {
         x = unlist(x, recursive = FALSE)
-        attr(x, 'yml_type') = 'seq'
+        if (!is.null(x)) attr(x, 'yml_type') = 'seq'
       }
       x
     }
