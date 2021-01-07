@@ -159,7 +159,9 @@ new_site = function(
     stdout = FALSE
   ) != 0) return(invisible())
 
-  owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
+  owd = setwd(dir); opt = opts$get(); opts$restore()
+  on.exit({opts$restore(opt); setwd(owd)}, add = TRUE)
+
   # remove Hugo's default archetype (I think draft: true is a confusing default)
   unlink(file.path('archetypes', 'default.md'))
   # remove empty dirs
@@ -175,12 +177,21 @@ new_site = function(
   }
 
   if (sample) {
-    d = file.path('content', 'blog')
-    if (!dir_exists(d)) d = file.path('content', 'post')
+    d = file.path('content', c('blog', 'post'))
+    d = if (dir_exists(d[1])) d[1] else d[2]
     f1 = pkg_file('resources', '2020-12-01-r-rmarkdown.Rmd')
     if (use_bundle()) d = file.path(d, basename(xfun::sans_ext(f1)))
-    dir_create(d)
     f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
+    # for a multilingual site, create the sample post via new_content() because
+    # the post may need to be under a language dir (#537)
+    if (length(lang <- get_lang())) {
+      f2 = sub('^content/', '', f2)
+      f2 = sub('^(.+[.])', paste0('\\1', lang, '.'), f2)
+      f2 = new_content(f2)
+      file.remove(f2)
+    } else {
+      dir_create(d)
+    }
     msg_next('Adding the sample post to ', f2)
     file.copy(f1, f2)
     if (getOption('blogdown.open_sample', TRUE)) open_file(f2)
