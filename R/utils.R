@@ -594,7 +594,6 @@ post_filename = function(title, subdir, ext, date, lang = '', bundle = use_bundl
   d = gsub('/+$', '', d)
   f = date_filename(f, date)
   f = gsub('^([.]/)+', '', file.path(d, f))
-  if (lang != '') f = sub(sprintf('^%s/', lang), '', f)
   paste0(f, if (bundle) '/index', if (lang != '') '.', lang, ext)
 }
 
@@ -992,7 +991,12 @@ get_subdirs = function() {
     dirs = dirs[substr(dirs, 1, nchar(d)) != d]
   }
 
-  union(dirs, get_option('blogdown.subdir', 'post'))
+  # for multilingual sites, remove language prefixes from dirs
+  if (length(lang <- get_lang())) {
+    dirs = gsub(sprintf('^[a-z]{%s}(/|$)', nchar(lang)), '', dirs)
+  }
+
+  unique(dirs)
 }
 
 # is a file the index page of a leaf bundle? i.e., index.*; the filename may
