@@ -653,7 +653,7 @@ rmd_pattern = '[.][Rr](md|markdown)$'
 md_pattern  = '[.][Rr]?(md|markdown)$'
 
 # scan YAML metadata of all Rmd/md files
-scan_yaml = function(dir = 'content') {
+scan_yaml = function(dir = 'content', warn = TRUE) {
   if (missing(dir)) dir = switch(generator(),
     hugo = 'content', jekyll = '.', hexo = 'source'
   )
@@ -665,8 +665,12 @@ scan_yaml = function(dir = 'content') {
     yaml = yaml[-c(1, length(yaml))]
     if (length(yaml) == 0) return()
     tryCatch(yaml::yaml.load(paste(yaml, collapse = '\n')), error = function(e) {
-      warning("Cannot parse the YAML metadata in '", f, "'")
-      NULL
+      if (warn) {
+        warning("Cannot parse the YAML metadata in '", f, "': ", e$message)
+        NULL
+      } else {
+        structure(list(), yaml_error = e)
+      }
     })
   })
   setNames(res, files)
