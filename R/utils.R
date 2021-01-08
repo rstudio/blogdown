@@ -1029,7 +1029,7 @@ unicode_capable = local({
 })
 
 yes_no = function(question, prompt = if (unicode_capable()) '\u25ba ' else '> ') {
-  interactive() && tolower(substr(readline(paste0(prompt, question, '(y/n) ')), 1, 1)) == 'y'
+  interactive() && tolower(substr(readline(paste0(prompt, question, ' (y/n) ')), 1, 1)) == 'y'
 }
 
 source_file = function(...) sys.source(..., chdir = TRUE, keep.source = FALSE)
