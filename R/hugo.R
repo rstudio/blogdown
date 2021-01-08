@@ -239,7 +239,7 @@ new_site = function(
     if (is_rstudio()) ', or the RStudio add-in "Serve Site"'
   )
   msg_okay('To stop a local preview: use blogdown::stop_server(), or restart your R session')
-  if (identical(serve, 'ask')) serve = yes_no('\u25ba Want to serve and preview the site now?')
+  if (identical(serve, 'ask')) serve = yes_no('Want to serve and preview the site now?')
   if (serve) serve_site()
   if (length(list.files('.', '[.]Rproj$')) == 0) {
     xfun::try_silent(rstudioapi::initializeProject())

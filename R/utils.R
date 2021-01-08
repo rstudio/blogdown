@@ -1020,8 +1020,16 @@ clean_hugo_cache = function() {
     unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
 }
 
-yes_no = function(question) {
-  interactive() && tolower(substr(readline(paste(question, '(y/n) ')), 1, 1)) == 'y'
+unicode_capable = local({
+  ok = NULL; x = '\u25ba'  # a test Unicode character
+  function() {
+    if (is.null(ok)) ok <<- identical(capture.output(cat(x)), x)
+    ok
+  }
+})
+
+yes_no = function(question, prompt = if (unicode_capable()) '\u25ba ' else '> ') {
+  interactive() && tolower(substr(readline(paste0(prompt, question, '(y/n) ')), 1, 1)) == 'y'
 }
 
 source_file = function(...) sys.source(..., chdir = TRUE, keep.source = FALSE)
