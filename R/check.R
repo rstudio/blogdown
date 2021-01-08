@@ -1,7 +1,8 @@
 #' Provide diagnostics for a website project
 #'
-#' The function \code{check_site()} runs a series of checks against a website
-#' project (see \sQuote{Details}).
+#' The function \code{check_site()} runs all \code{check_*()} functions on this
+#' page against a website project. See \sQuote{Details} for what each
+#' \code{check_*()} function does.
 #' @export
 check_site = function() in_root({
   msg_init('Running a series of automated checks for your blogdown website project...')
@@ -309,7 +310,7 @@ check_content = function() {
     msg_todo(
       'Found ', n, ' duplicated plain Markdown and .html output file',
       if (n > 1) 's', ':\n\n', indent_list(files), '\n\n',
-      "  To fix, run blogdown::clean_duplicates()."
+      "  To fix, run blogdown::clean_duplicates(preview = FALSE)."
     )
   } else {
     msg_okay('Found 0 duplicate .html output files.')

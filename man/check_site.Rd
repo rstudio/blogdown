@@ -22,8 +22,9 @@ check_netlify()
 check_content()
 }
 \description{
-The function \code{check_site()} runs a series of checks against a website
-project (see \sQuote{Details}).
+The function \code{check_site()} runs all \code{check_*()} functions on this
+page against a website project. See \sQuote{Details} for what each
+\code{check_*()} function does.
 }
 \details{
 \code{check_config()} checks the configuration file
