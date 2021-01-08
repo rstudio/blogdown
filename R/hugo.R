@@ -147,8 +147,8 @@ new_site = function(
   serve = if (interactive()) 'ask' else FALSE
 ) {
   msg_init('Creating your new site')
-  files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)
-  files = setdiff(files, c('LICENSE', 'README', 'README.md'))
+  files = list_files(dir)
+  files = grep('([.]Rproj|/(LICENSE|README)([.][a-z]+)?)$', files, invert = TRUE, value = TRUE)
   force = length(files) == 0
   if (!force) warning("The directory '", dir, "' is not empty")
   if (install_hugo && !hugo_available()) {
