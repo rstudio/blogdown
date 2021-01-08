@@ -102,9 +102,11 @@ change_config = function(name, value) {
 #'
 #' Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 #' ...)}.
-#' @param dir The directory of the new site. It should be empty or only contain
-#'   hidden files, RStudio project (\file{*.Rproj}) files, \file{LICENSE},
-#'   and/or \file{README}/\file{README.md}.
+#' @param dir The directory of the new site.
+#' @param force Whether to create the site in a directory even if it is not
+#'   empty. By default, \code{force = TRUE} when the directory only contains
+#'   hidden, RStudio project (\file{*.Rproj}), \file{LICENSE}, and/or
+#'   \file{README} files.
 #' @param install_hugo Whether to install Hugo automatically if it is not found.
 #' @param format The format of the configuration file. Note that the frontmatter
 #'   of the new (R) Markdown file created by \code{new_content()} always uses
@@ -141,16 +143,26 @@ change_config = function(name, value) {
 #' @examples
 #' if (interactive()) blogdown::new_site()
 new_site = function(
-  dir = '.', install_hugo = TRUE, format = 'yaml', sample = TRUE,
+  dir = '.', force = NA, install_hugo = TRUE, format = 'yaml', sample = TRUE,
   theme = 'yihui/hugo-lithium', hostname = 'github.com', theme_example = TRUE,
   empty_dirs = FALSE, to_yaml = TRUE, netlify = TRUE, .Rprofile = TRUE,
   serve = if (interactive()) 'ask' else FALSE
 ) {
   msg_init('Creating your new site')
-  files = list_files(dir)
-  files = grep('([.]Rproj|/(LICENSE|README)([.][a-z]+)?)$', files, invert = TRUE, value = TRUE)
-  force = length(files) == 0
-  if (!force) warning("The directory '", dir, "' is not empty")
+  if (is.na(force)) {
+    files = grep(
+      '([.]Rproj|/(LICENSE|README)([.][a-z]+)?)$', list_files(dir),
+      invert = TRUE, value = TRUE
+    )
+    force = length(files) == 0
+    if (!force) {
+      force = yes_no(sprintf("The directory '%s' is not empty. Create the site anyway?", dir))
+      if (!force) stop(
+        'The dir is not empty and Hugo might override existing files. If you are ',
+        'sure the site can be created in this dir, use new_site(force = TRUE).'
+      )
+    }
+  }
   if (install_hugo && !hugo_available()) {
     msg_next('Installing Hugo'); install_hugo()
   }

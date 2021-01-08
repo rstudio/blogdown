@@ -22,6 +22,7 @@ hugo_build(local = FALSE)
 
 new_site(
   dir = ".",
+  force = NA,
   install_hugo = TRUE,
   format = "yaml",
   sample = TRUE,
@@ -70,9 +71,12 @@ exact version is available.}
 \item{local}{Whether to build the site for local preview (if \code{TRUE}, all
 drafts and future posts will also be built).}
 
-\item{dir}{The directory of the new site. It should be empty or only contain
-hidden files, RStudio project (\file{*.Rproj}) files, \file{LICENSE},
-and/or \file{README}/\file{README.md}.}
+\item{dir}{The directory of the new site.}
+
+\item{force}{Whether to create the site in a directory even if it is not
+empty. By default, \code{force = TRUE} when the directory only contains
+hidden, RStudio project (\file{*.Rproj}), \file{LICENSE}, and/or
+\file{README} files.}
 
 \item{install_hugo}{Whether to install Hugo automatically if it is not found.}
 

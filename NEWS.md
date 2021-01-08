@@ -26,6 +26,8 @@
 
 - Added a new argument `.site_dir` to `serve_site()`, so users will be able to specify the site root directory (thanks, @Bijaelo, #527).
 
+- Added a new argument `force` to `new_site()` to allow users to create a new site under a nonempty directory with `force = TRUE` if they are sure the site can be safely created under the directory (i.e., Hugo will not possibly override existing files). In an interactive R session, it will ask users if they want `force = TRUE` when the directory is not empty.
+
 ## MAJOR CHANGES
 
 - `install_hugo()` no longer installs Hugo via Homebrew by default on macOS, but just downloads binaries from Hugo's Github releases, which gives you a stable version of Hugo. The `use_brew` argument of `install_hugo()` has been deprecated. Installing Hugo via Homebrew often leads to accidental updates of Hugo, which may break your existing sites. If you must install Hugo via Homebrew and want to fix its version, you can run `brew pin hugo`, so it will not be updated by accident in the future (e.g., via `brew upgrade`).
