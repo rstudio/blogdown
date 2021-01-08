@@ -4,6 +4,7 @@
 #' @export
 #' @describeIn hugo_cmd Run an arbitrary Hugo command.
 hugo_cmd = function(...) {
+  on.exit(clean_hugo_cache(), add = TRUE)
   system2(find_hugo(), ...)
 }
 
@@ -578,7 +579,6 @@ new_post = function(
 #' @describeIn hugo_cmd A wrapper function to convert source content to
 #'   different formats via \command{hugo convert}.
 hugo_convert = function(to = c('YAML', 'TOML', 'JSON'), unsafe = FALSE, ...) {
-  on.exit(clean_hugo_cache(), add = TRUE)
   to = match.arg(to)
   hugo_cmd(c('convert', paste0('to', to), if (unsafe) '--unsafe', ...), stdout = FALSE)
 }
