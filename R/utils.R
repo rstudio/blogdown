@@ -180,16 +180,6 @@ filter_md5sum = function(files, db = 'blogdown/md5sum.txt') {
   files
 }
 
-# TODO: remove them in the future
-md5sum_filter = function(...) {
-  warning('The function md5sum_filter() has been renamed to filter_md5sum()')
-  filter_md5sum(...)
-}
-timestamp_filter = function(...) {
-  warning('The function timestamp_filter() has been renamed to filter_timestamp()')
-  filter_timestamp(...)
-}
-
 # guess if the OS is 64bit
 is_64bit = function() {
   length(grep('64', unlist(Sys.info()[c('machine', 'release')]))) > 0
