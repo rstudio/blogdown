@@ -157,14 +157,13 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       if (i >= get_option('blogdown.server.timeout', 30)) {
         s = proc_kill(pid)  # if s == 0, the server must have been started successfully
         stop(if (s == 0) c(
-          'Failed to launch the preview of the site. This may be a bug of blogdown. ',
-          'You may file a report to https://github.com/rstudio/blogdown/issues with ',
-          'a reproducible example. Thanks!'
+          'Failed to launch the site preview in ', i, ' seconds. Try to give ',
+          'it more time via the global option "blogdown.server.timeout", e.g., ',
+          'options(blogdown.server.timeout = 600).'
         ) else c(
           'It took more than ', i, ' seconds to launch the server. An error might ',
           'have occurred with ', g, '. You may run blogdown::build_site() and see ',
-          'if it gives more info. If the site is very large and needs more time to ',
-          'be built, set options(blogdown.server.timeout) to a larger value.'
+          'if it gives more info.'
         ), call. = FALSE)
       }
       i = i + 1
