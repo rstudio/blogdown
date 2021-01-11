@@ -34,7 +34,6 @@ check_config = function() {
   msg_init('Checking ', f)
   okay = TRUE
 
-
   msg_next('Checking "baseURL" setting for Hugo...')
   base = index_ci(config, 'baseurl')
   if (is_example_url(base)) {
