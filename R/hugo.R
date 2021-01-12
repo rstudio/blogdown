@@ -740,6 +740,9 @@ bundle_site = function(dir = site_root(), output) {
     )
   }
   files = list_files(file.path(output, 'content'), md_pattern)
+  # if .Rmd has .html output, also move .html
+  files2 = with_ext(files, 'html')
+  files = c(files, files2[file_exists(files2)])
   bases = xfun::sans_ext(files)
   i = !basename(bases) %in% c('index', '_index')
   files = files[i]; bases = bases[i]
