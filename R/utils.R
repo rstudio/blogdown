@@ -886,6 +886,8 @@ if (is_windows()) system2 = function(command, args = character(), stdout = '', .
   invisible(res)
 }
 
+system2_quiet = function(...) system2(..., stdout = FALSE, stderr = FALSE)
+
 # replace random HTML widgets IDs with incremental numbers
 clean_widget_html = function(x) {
   r = '(?<=id="htmlwidget-)[a-z0-9]{10,}(?=")'

@@ -117,6 +117,27 @@ check_gitignore = function() {
       )
     }
   }
+
+  if (Sys.which('git') != '' && system2_quiet('git', 'status') == 0) {
+    msg_next('Checking for files required by blogdown but not committed...')
+    # currently only one but may have more in future
+    x6 = c('layouts/shortcodes/blogdown/postref.html')
+    x7 = NULL
+    for (f in x6) {
+      if (!file_exists(f)) next
+      if (system2_quiet('git', c('ls-files', '--error-unmatch', f)) != 0)
+        x7 = c(x7, f)
+    }
+    if (n <- length(x7)) {
+      msg_todo(
+        'Found ', n, ' file', if (n > 1) 's', ' that should be committed in GIT:\n\n',
+        indent_list(x7)
+      )
+    } else {
+      msg_okay('Great! Did not find such files.')
+    }
+  }
+
   msg_done(f)
 }
 
