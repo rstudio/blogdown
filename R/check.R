@@ -324,9 +324,8 @@ check_content = function() {
   msg_next('Checking for .html/.md files to clean up...')
   if (n <- length(files <- list_duplicates())) {
     msg_todo(
-      'Found ', n, ' duplicated plain Markdown and .html output file',
-      if (n > 1) 's', ':\n\n', indent_list(files), '\n\n',
-      "  To fix, run blogdown::clean_duplicates(preview = FALSE)."
+      'Found ', n, ' duplicate output file', if (n > 1) 's', ':\n\n', indent_list(files),
+      '\n\n  To fix, run blogdown::clean_duplicates(preview = FALSE).'
     )
   } else {
     msg_okay('Found 0 duplicate .html output files.')
@@ -394,8 +393,14 @@ edit_draft = function(files) {
 }
 
 list_duplicates = function() in_root({
-  x = with_ext(list_rmds(pattern = '[.](md|markdown)$'), 'html')
-  x[file_exists(x)]
+  # .md/.markdown should not have .html output files
+  x1 = with_ext(list_rmds(pattern = '[.](md|markdown)$'), 'html')
+  # due to the bug #568, foo.html could be left behind when foo.Rmd is moved to
+  # foo/index.Rmd; the leftover foo.html should be deleted
+  x2 = paste0(dirname(list_rmds(pattern = paste0('^index', rmd_pattern))), '.html')
+  x2 = x2[!file_exists(with_ext(x2, 'Rmd'))]
+  x = c(x1, x2)
+  x = sort(x[file_exists(x)])
 })
 
 #' Clean duplicated output files
@@ -422,7 +427,7 @@ clean_duplicates = function(preview = TRUE) in_root({
   x = x[file_exists(x)]
   if (length(x)) {
     if (preview) msg_cat(
-      'Found possibly duplicated output files. Run blogdown::clean_duplicates(preview = FALSE)',
+      'Found possibly duplicate output files. Run blogdown::clean_duplicates(preview = FALSE)',
       ' if you are sure they can be deleted:\n\n', indent_list(x), '\n'
     ) else file.remove(x)
   } else {
