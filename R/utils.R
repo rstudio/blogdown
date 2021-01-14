@@ -947,7 +947,7 @@ tweak_hugo_env = function(server = TRUE) {
   c2 = get_config('relativeurls', FALSE, config)
   if (c2 || c1) {
     b = sub('^/', '', b)
-    if (server) b = paste0('https://example.org/', b)
+    if (server && c1) b = paste0('https://example.org/', b)
     Sys.setenv(HUGO_BASEURL = if (c2) '/' else b)
     do.call(
       on.exit, list(substitute(Sys.unsetenv('HUGO_BASEURL')), add = TRUE),
