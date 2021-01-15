@@ -123,7 +123,10 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
     if (g == 'hugo') {
-      tweak_hugo_env()
+      # RStudio Server uses a proxy like http://localhost:8787/p/56a946ed/ for
+      # http://localhost:4321, so we must use relativeURLs = TRUE:
+      # https://github.com/rstudio/blogdown/issues/124
+      tweak_hugo_env(server = TRUE, relativeURLs = if (is_rstudio_server()) TRUE)
       if (length(list_rmds(pattern = bundle_regex('.R(md|markdown)$'))))
         create_shortcode('postref.html', 'blogdown/postref')
     }

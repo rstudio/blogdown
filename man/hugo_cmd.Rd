@@ -18,7 +18,12 @@ hugo_version()
 
 hugo_available(version = "0.0.0", exact = FALSE)
 
-hugo_build(local = FALSE)
+hugo_build(
+  local = FALSE,
+  args = getOption("blogdown.hugo.args"),
+  baseURL = NULL,
+  relativeURLs = NULL
+)
 
 new_site(
   dir = ".",
@@ -70,6 +75,13 @@ exact version is available.}
 
 \item{local}{Whether to build the site for local preview (if \code{TRUE}, all
 drafts and future posts will also be built).}
+
+\item{args}{A character vector of command-line arguments to be passed to
+\command{hugo}, e.g., \code{c("--minify", "--quiet")}.}
+
+\item{baseURL, relativeURLs}{Custom values of \code{baseURL} and
+\code{relativeURLs} to override Hugo's default and the settings in the
+site's config file.}
 
 \item{dir}{The directory of the new site.}
 

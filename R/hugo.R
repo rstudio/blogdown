@@ -46,18 +46,26 @@ hugo_available = function(version = '0.0.0', exact = FALSE) {
 
 #' @param local Whether to build the site for local preview (if \code{TRUE}, all
 #'   drafts and future posts will also be built).
+#' @param args A character vector of command-line arguments to be passed to
+#'   \command{hugo}, e.g., \code{c("--minify", "--quiet")}.
+#' @param baseURL,relativeURLs Custom values of \code{baseURL} and
+#'   \code{relativeURLs} to override Hugo's default and the settings in the
+#'   site's config file.
 #' @export
 #' @describeIn hugo_cmd Build a plain Hugo website. Note that the function
 #'   \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
 #'   via \code{hugo_build()} to build the site.
-hugo_build = function(local = FALSE) {
+hugo_build = function(
+  local = FALSE, args = getOption('blogdown.hugo.args'),
+  baseURL = NULL, relativeURLs = NULL
+) {
   config = load_config()
   # Hugo 0.48 generates an ugly empty resources/ dir in the root dir
   on.exit(del_empty_dir('resources'), add = TRUE)
-  tweak_hugo_env(FALSE)
+  tweak_hugo_env(baseURL, relativeURLs)
+
   hugo_cmd(c(
-    if (local) c('-D', '-F'),
-    get_option('blogdown.hugo.args'),
+    if (local) c('-D', '-F'), na2null(args),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
   ))
 }

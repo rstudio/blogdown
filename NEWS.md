@@ -2,6 +2,8 @@
 
 ## NEW FEATURES
 
+- Added new arguments `args`, `baseURL`, and `relativeURLs` to the `hugo_build()` function to allow users to pass more command-line arguments to Hugo and adjust the configurations `baseURL` and `relativeURLs` temporarily when building a site.
+
 - Added a new global option `blogdown.protect.math` (defaults to `TRUE`) to control whether to protect LaTeX math expressions in a pair of backticks when the post output format is Markdown instead of HTML. The reason to protect math expressions is to avoid the Markdown renderer's treatment of the math content as normal Markdown content, which may mangle the math expressions. If the math expression is protected, it needs to be unprotected later. See https://yihui.org/en/2018/07/latex-math-markdown/ for more information. Note that this option is only relevant to those who use the source format `.Rmarkdown` or the build method `options(blogdown.method = 'markdown')` (thanks, @bensoltoff #466, @mrkaye97 #567).
 
 ## BUG FIXES
