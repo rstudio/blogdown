@@ -7,7 +7,7 @@ site_base_dir = function() {
   # baseurl is not meaningful when using relative URLs
   if (get_config('relativeurls', FALSE, config)) return('/')
   x = get_config('baseurl', '/', config)
-  x = gsub('^https?://[^/]+', '', x)
+  x = gsub('^(https?:)?//[^/]+', '', x)
   if (x == '') x = '/'
   if (!grepl('^/', x)) x = paste0('/', x)
   x
