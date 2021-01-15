@@ -29,7 +29,7 @@ The function \code{filter_newfile()} returns paths of source files that do
 not have corresponding output files, e.g., an \file{.Rmd} file that doesn't
 have the \file{.html} output file.
 
-The function \code{timestamp_filer()} compares the modification time of an
+The function \code{filter_timestamp()} compares the modification time of an
 Rmd file with that of its output file, and returns the path of a file if it
 is newer than its output file by \code{N} seconds (or if the output file does
 not exist), where \code{N} is obtained from the R global option
