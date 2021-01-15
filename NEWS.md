@@ -8,6 +8,8 @@
 
 - `bundle_site()` also moves the `.html` output files of `.Rmd` source posts to page bundles. Previously, only `.Rmd` files are moved (thanks, @llrs, #568).
 
+- Fixed a bug of `install_theme()` when the theme archive contains theme files directly instead of a theme folder (thanks, Stefan Musch, https://stackoverflow.com/q/65702805/559676).
+
 ## MINOR CHANGES
 
 - The internal functions `md5sum_filter()` and `timestamp_filter()` have been removed. They were renamed to `filter_md5sum()` and `filter_timestamp()`, respectively, and exported in **blogdown** 1.0. Please use these exported functions instead if you relied on the internal functions previously.

@@ -345,6 +345,14 @@ install_theme = function(
     newdir = sub(tmpdir, '.', zipdir, fixed = TRUE)
     newdir = gsub('-[a-f0-9]{12,40}$', '', newdir)
     newdir = gsub(sprintf('-%s$', branch), '', newdir)
+    # if tmpdir and zipdir are identical, that often means the archive was
+    # extracted to the root dir of tmpdir (i.e. the theme files are compressed
+    # directly into an archive, instead of being placed into a folder and that
+    # folder is compressed), in which case we let newdir be the theme name; one
+    # example is https://stackoverflow.com/q/65702805/559676
+    if (newdir == '.') {
+      newdir = if (theme_is_url) branch else basename(theme)
+    }
     if (!force && dir_exists(newdir)) stop(
       'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
       'after you read the help page ?blogdown::install_theme.', call. = FALSE
