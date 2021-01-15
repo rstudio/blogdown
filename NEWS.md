@@ -10,6 +10,8 @@
 
 - Fixed a bug of `install_theme()` when the theme archive contains theme files directly instead of a theme folder (thanks, Stefan Musch, https://stackoverflow.com/q/65702805/559676).
 
+- Fixed a bug that causes HTML widgets to fail to render in the Markdown output files with **htmltools** >= 0.5.1.
+
 ## MINOR CHANGES
 
 - The internal functions `md5sum_filter()` and `timestamp_filter()` have been removed. They were renamed to `filter_md5sum()` and `filter_timestamp()`, respectively, and exported in **blogdown** 1.0. Please use these exported functions instead if you relied on the internal functions previously.

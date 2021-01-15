@@ -234,8 +234,9 @@ process_markdown = function(res, x = read_utf8(res)) {
   if (get_option('blogdown.protect.math', TRUE)) x = xfun::protect_math(x)
   # remove the special comments from HTML dependencies
   x = gsub('<!--/?html_preserve-->', '', x)
-  # render citations
-  if (length(grep('^(references|bibliography):($| )', x))) {
+  # render elements that are not commonly supported by Markdown renderers other
+  # than Pandoc, e.g., citations and raw blocks
+  if (run_pandoc(x)) {
     # temporary .md files to generate citations
     mds = replicate(2, wd_tempfile('.md~', pattern = 'citation'))
     on.exit(unlink(mds), add = TRUE)
@@ -248,6 +249,12 @@ process_markdown = function(res, x = read_utf8(res)) {
     x = c(bookdown:::fetch_yaml(x), '', read_utf8(mds[2]))
   }
   x
+}
+
+run_pandoc = function(x) {
+  get_option('blogdown.process_markdown', FALSE) ||
+    length(grep('^(references|bibliography):($| )', x)) ||
+    length(grep('^[`]{3,}\\{=[[:alnum:]]+}$', x))
 }
 
 # given the content of a .html file: replace content/*_files/figure-html with
