@@ -4,7 +4,7 @@
 \alias{build_site}
 \title{Build a website}
 \usage{
-build_site(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE)
+build_site(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE, ...)
 }
 \arguments{
 \item{local}{Whether to build the website locally. This argument is passed to
@@ -28,6 +28,8 @@ functions: \code{build_rmd = 'newfile'} is equivalent to \code{build_rmd =
 blogdown::filter_newfile}, \code{build_rmd = 'timestamp'} is equivalent to
 \code{build_rmd = blogdown::filter_timestamp}, and \code{build_rmd =
 'md5sum'} is equivalent to \code{build_rmd = blogdown::filter_md5sum}.}
+
+\item{...}{Other arguments to be passed to \code{\link{hugo_build}()}.}
 }
 \description{
 Build the site through Hugo, and optionally (re)build R Markdown files.

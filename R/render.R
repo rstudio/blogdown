@@ -63,8 +63,9 @@
 #'   blogdown::filter_newfile}, \code{build_rmd = 'timestamp'} is equivalent to
 #'   \code{build_rmd = blogdown::filter_timestamp}, and \code{build_rmd =
 #'   'md5sum'} is equivalent to \code{build_rmd = blogdown::filter_md5sum}.
+#' @param ... Other arguments to be passed to \code{\link{hugo_build}()}.
 #' @export
-build_site = function(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE) {
+build_site = function(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE, ...) {
   if (!missing(method)) {
     (if (interactive()) stop else warning)(
       "The 'method' argument has been deprecated. Please set the method via ',
@@ -89,7 +90,7 @@ build_site = function(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE)
     }
     build_rmds(files)
   }
-  if (run_hugo) on.exit(hugo_build(local), add = TRUE)
+  if (run_hugo) on.exit(hugo_build(local, ...), add = TRUE)
   on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
   invisible()
 }
