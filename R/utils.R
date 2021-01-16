@@ -1046,6 +1046,12 @@ na2null = function(x, default = NULL) {
   x
 })
 
+# look up sys.calls() to see if current call is from a certain parent function
+parent_call = function(name) {
+  for (f in sys.calls()) if (f[[1]] == as.symbol(name)) return(TRUE)
+  FALSE
+}
+
 # set env vars from a named character vector, and return the old values of the
 # vars, so they could be restored later
 set_envvar = function(vars) {

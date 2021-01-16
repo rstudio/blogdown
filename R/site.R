@@ -29,7 +29,7 @@ blogdown_site = function(input, ...) {
         rstudioapi::sendToConsole('blogdown:::preview_site()', echo = FALSE)
       )
     }) else {
-      build_site()
+      build_site(relativeURLs = if (parent_call('rsconnect::deploySite')) TRUE)
       if (!quiet) message(
         "\n==> The site has been generated to the directory '", output_dir, "'.\n\n",
         "** Note that normally you cannot just open the .html files in this directory ",
