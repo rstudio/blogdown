@@ -99,8 +99,8 @@ check_gitignore = function() {
 
   msg_next('Checking for items to change...')
   # currently only one but may have more in future
-  x2 = c('blogdown')
-  y2 = c('/blogdown/')
+  x2 = c('blogdown', 'public', 'public/', 'resources')
+  y2 = c('/blogdown/', '/public/', '/public/', '/resources/')
   if (any(i <- x %in% x2)) msg_todo(
     'Change items from ', f, ': ', paste(sprintf('%s -> %s', x[i], y2[x[i] == x2]), collapse = ', ')
   ) else msg_okay('Nothing to see here - found no items to change.')
@@ -114,7 +114,7 @@ check_gitignore = function() {
 
   if (file_exists('netlify.toml')) {
     msg_next('Checking for items to ignore if you build the site on Netlify...')
-    x5 = c('public', 'resources')
+    x5 = c('/public/', '/resources/')
     if (any(i <- x %in% x5))
       msg_okay('Found! You have safely ignored: ', paste(x[i], collapse = ', '))
     x6 = setdiff(x5, x)

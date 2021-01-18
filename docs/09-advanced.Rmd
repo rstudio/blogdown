@@ -145,7 +145,7 @@ If your website source files are under version control\index{Version Control}, w
 
 ```bash
 /blogdown/
-public
+/public/
 ```
 
 The `blogdown/` directory is used to store cache files, and they are most likely to be useless to the published website. Only **knitr** may use them, and the published website will not depend on these files.
