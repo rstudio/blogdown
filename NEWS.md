@@ -16,6 +16,8 @@
 
 - Fixed a bug that causes HTML widgets to fail to render in the Markdown output files with **htmltools** >= 0.5.1.
 
+- Fixed a bug on Windows that causes `check_gitignore()` to error when it shouldn't (#571).
+
 ## MAJOR CHANGES
 
 - When the site is rendered via a call to `rsconnect::deploySite()` (e.g., when you call `rmarkdown::publish_site(render = TRUE)`), `blogdown::build_site()` will use the argument `relativeURLs = TRUE`, to make Hugo generate relative URLs that work with any base URL (note that this depends on how well a specific Hugo theme supports relative URLs).
