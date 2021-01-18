@@ -105,7 +105,7 @@ check_gitignore = function() {
   ) else msg_okay('Nothing to see here - found no items to change.')
 
   msg_next('Checking for items you can safely ignore...')
-  x3 = c('.DS_Store', 'Thumbs.db', '/blogdown/')
+  x3 = c('.DS_Store', 'Thumbs.db')
   if (any(i <- x %in% x3))
     msg_okay('Found! You have safely ignored: ', paste(x[i], collapse = ', '))
   x4 = setdiff(x3, x)
