@@ -97,23 +97,31 @@ check_gitignore = function() {
     'Remove items from ', f, ': ', paste(x[i], collapse = ', ')
   ) else msg_okay('Nothing to see here - found no items to remove.')
 
+  msg_next('Checking for items to change...')
+  # currently only one but may have more in future
+  x2 = c('blogdown')
+  y2 = c('/blogdown/')
+  if (any(i <- x %in% x2)) msg_todo(
+    'Change items from ', f, ': ', paste(sprintf('%s -> %s', x[i], y2[x[i] == x2]), collapse = ', ')
+  ) else msg_okay('Nothing to see here - found no items to change.')
+
   msg_next('Checking for items you can safely ignore...')
-  x2 = c('.DS_Store', 'Thumbs.db')
-  if (any(i <- x %in% x2))
+  x3 = c('.DS_Store', 'Thumbs.db', '/blogdown/')
+  if (any(i <- x %in% x3))
     msg_okay('Found! You have safely ignored: ', paste(x[i], collapse = ', '))
-  x3 = setdiff(x2, x)
-  if (length(x3)) msg_todo('You can safely add to ', f, ': ', paste(x3, collapse = ', '))
+  x4 = setdiff(x3, x)
+  if (length(x4)) msg_todo('You can safely add to ', f, ': ', paste(x4, collapse = ', '))
 
   if (file_exists('netlify.toml')) {
     msg_next('Checking for items to ignore if you build the site on Netlify...')
-    x4 = c('public', 'resources')
-    if (any(i <- x %in% x4))
+    x5 = c('public', 'resources')
+    if (any(i <- x %in% x5))
       msg_okay('Found! You have safely ignored: ', paste(x[i], collapse = ', '))
-    x5 = setdiff(x4, x)
-    if (length(x5)) {
+    x6 = setdiff(x5, x)
+    if (length(x6)) {
       msg_todo(
         'When Netlify builds your site, you can safely add to ', f, ': ',
-        paste(x5, collapse = ', ')
+        paste(x6, collapse = ', ')
       )
     }
   }
@@ -121,17 +129,17 @@ check_gitignore = function() {
   if (Sys.which('git') != '' && system2_quiet('git', 'status') == 0) {
     msg_next('Checking for files required by blogdown but not committed...')
     # currently only one but may have more in future
-    x6 = c('layouts/shortcodes/blogdown/postref.html')
-    x7 = NULL
-    for (f in x6) {
+    x7 = c('layouts/shortcodes/blogdown/postref.html')
+    x8 = NULL
+    for (f in x7) {
       if (!file_exists(f)) next
       if (system2_quiet('git', c('ls-files', '--error-unmatch', f)) != 0)
-        x7 = c(x7, f)
+        x8 = c(x8, f)
     }
-    if (n <- length(x7)) {
+    if (n <- length(x8)) {
       msg_todo(
         'Found ', n, ' file', if (n > 1) 's', ' that should be committed in GIT:\n\n',
-        indent_list(x7)
+        indent_list(x8)
       )
     } else {
       msg_okay('Great! Did not find such files.')
