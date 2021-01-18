@@ -852,40 +852,6 @@ sort2 = function(x, ...) {
   if (length(x) == 0) x else sort(x, ...)
 }
 
-# on Windows, try system2(), system(), and shell() in turn, and see which
-# succeeds, then remember it (https://github.com/rstudio/blogdown/issues/82)
-if (is_windows()) system2 = function(command, args = character(), stdout = '', ...) {
-  cmd = paste(c(shQuote(command), args), collapse = ' ')
-  intern = isTRUE(stdout)
-  shell2 = function() shell(cmd, mustWork = TRUE, intern = intern)
-
-  i = getOption('blogdown.windows.shell', 'system2')
-  if (i == 'shell') return(shell2())
-  if (i == 'system') return(system(cmd, intern = intern))
-
-  if (intern) return(
-    tryCatch(base::system2(command, args, stdout = stdout, ...), error = function(e) {
-      tryCatch({
-        system(cmd, intern = intern)
-        options(blogdown.windows.shell = 'system')
-      }, error = function(e) {
-        shell2()
-        options(blogdown.windows.shell = 'shell')
-      })
-    })
-  )
-
-  if ((res <- base::system2(command, args, stdout = stdout, ...)) == 0)
-    return(invisible(res))
-
-  if ((res <- system(cmd)) == 0) {
-    options(blogdown.windows.shell = 'system')
-  } else if ((res <- shell2()) == 0) {
-    options(blogdown.windows.shell = 'shell')
-  }
-  invisible(res)
-}
-
 system2_quiet = function(...) system2(..., stdout = FALSE, stderr = FALSE)
 
 # replace random HTML widgets IDs with incremental numbers
