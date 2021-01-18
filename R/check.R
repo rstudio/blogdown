@@ -98,11 +98,10 @@ check_gitignore = function() {
   ) else msg_okay('Nothing to see here - found no items to remove.')
 
   msg_next('Checking for items to change...')
-  # currently only one but may have more in future
+  # do not ignore these folders recursively (need to add a leading slash)
   x2 = c('blogdown', 'public', 'public/', 'resources')
-  y2 = c('/blogdown/', '/public/', '/public/', '/resources/')
   if (any(i <- x %in% x2)) msg_todo(
-    'Change items from ', f, ': ', paste(sprintf('%s -> %s', x[i], y2[x[i] == x2]), collapse = ', ')
+    'Change items in ', f, ': ', paste(sprintf('%s -> /%s', x[i], x[i]), collapse = ', ')
   ) else msg_okay('Nothing to see here - found no items to change.')
 
   msg_next('Checking for items you can safely ignore...')
