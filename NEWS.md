@@ -10,7 +10,7 @@
 
 ## BUG FIXES
 
-- `bundle_site()` also moves the `.html` output files of `.Rmd` source posts to page bundles. Previously, only `.Rmd` files are moved (thanks, @llrs, #568).
+- `bundle_site()` also moves the `.html` output files and the `*_files/`/`*_cache/` directories associated with `.Rmd` source posts to page bundles. Previously, only `.Rmd` files are moved (thanks, @llrs, #568).
 
 - Fixed a bug of `install_theme()` when the theme archive contains theme files directly instead of a theme folder (thanks, Stefan Musch, https://stackoverflow.com/q/65702805/559676).
 

@@ -764,12 +764,19 @@ bundle_site = function(dir = site_root(), output) {
   files = files[i]; bases = bases[i]
   for (b in unique(bases)) dir_create(b)
   files2 = file.path(bases, paste('index', xfun::file_ext(files), sep = '.'))
-  i = file.copy(files, files2)
+  # also move *_files/ under static/ and *_cache/ under blogdown/
+  f1 = paste0(sub('^(.*)?/content/', '\\1/static/', bases), '_files')
+  f2 = paste0(sub('^(.*)?/content/', '\\1/blogdown/', bases), '_cache')
+  f3 = unique(c(f1, f2))
+  f4 = file.path(bases, gsub('.*_', 'index_', f3))
+  i = dir_exists(f3)
+  files = c(files, f3[i]); files2 = c(files2, f4[i])
+  # rename foo.Rmd to foo/index.Rmd; foo_files/ to foo/index_files; etc.
+  i = file.rename(files, files2)
   if (any(i)) {
     message(
       'Moved these files into leaf bundles:\n\n',
       paste('*', files[i], '->', files2[i], collapse = '\n')
     )
-    unlink(files[i])
   }
 }
