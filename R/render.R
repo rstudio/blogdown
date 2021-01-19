@@ -66,13 +66,10 @@
 #' @param ... Other arguments to be passed to \code{\link{hugo_build}()}.
 #' @export
 build_site = function(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE, ...) {
-  if (!missing(method)) {
-    (if (interactive()) stop else warning)(
-      "The 'method' argument has been deprecated. Please set the method via ',
-      'options(blogdown.method = ). See ?blogdown::build_site for more info."
-    )
-    options(blogdown.method = method)
-  }
+  if (!missing(method)) stop(
+    "The 'method' argument has been deprecated. Please set the method via ",
+    "options(blogdown.method = ). See ?blogdown::build_site for more info."
+  )
   on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (build_method() == 'custom') return()
   if (!xfun::isFALSE(build_rmd)) {
