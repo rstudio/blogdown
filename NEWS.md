@@ -4,6 +4,8 @@
 
 - The `method` argument of `build_site()` is now defunct (it was deprecated in **blogdown** v1.0), and will be removed in  a future version. Please set the build method in the global option `options(blogdown.method = )` instead.
 
+- The `use_brew` argument of `install_hugo()` is defunct now, and will be removed in a future version.
+
 # CHANGES IN blogdown VERSION 1.1
 
 ## NEW FEATURES

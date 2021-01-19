@@ -43,7 +43,7 @@
 #' @export
 install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, ...) {
 
-  if (!missing(use_brew)) message(
+  if (!missing(use_brew)) stop(
     "The argument 'use_brew' has been deprecated in install_hugo(). If you want to ",
     "install Hugo via Homebrew, please use the command line instead: brew install hugo"
   )
@@ -56,16 +56,6 @@ install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, .
   if (version == 'latest') {
     version = xfun::github_releases('gohugoio/hugo', version)[1]
     message('The latest Hugo version is ', version)
-  } else if (use_brew) {
-    if (is.null(local_file)) warning(
-      'when use_brew = TRUE, only the latest version of Hugo can be installed'
-    ) else {
-      warning(
-        "A local installer was provided through version='", local_file, "', ",
-        'so use_brew = TRUE was ignored.'
-      )
-      use_brew = FALSE
-    }
   }
 
   if (!is.null(local_file)) version = gsub(
@@ -112,13 +102,6 @@ install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, .
   files = if (is_windows()) {
     download_zip('Windows')
   } else if (is_macos()) {
-    if (use_brew) {
-      if (brew_hugo() == 0) return()
-      warning(
-        'Failed to use Homebrew to install Hugo. ',
-        'I will try to download the Hugo binary directly and install it.'
-      )
-    }
     download_zip(
       if (version2 >= '0.18') 'macOS' else 'MacOS',
       if (version2 >= '0.20.3') 'tar.gz' else 'zip'
@@ -168,16 +151,6 @@ install_hugo_bin = function(exec, version) {
 update_hugo = function() {
   message('blogdown::update_hugo() has been deprecated. Please use blogdown::install_hugo() in future.')
   install_hugo()
-}
-
-brew_hugo = function() {
-  install = function() system('brew update && brew reinstall hugo')
-  status = 1  # reinstall Homebrew if `brew install hugo` failed
-  if (Sys.which('brew') == '' || (status <- install()) != 0) system2(
-    '/usr/bin/ruby',
-    '-e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
-  )
-  if (status == 0) status else install()
 }
 
 # possible locations of the Hugo executable
