@@ -6,6 +6,8 @@
 
 - The `use_brew` argument of `install_hugo()` is defunct now, and will be removed in a future version.
 
+- The `update_hugo()` function is defunct. Please use `install_hugo()` instead.
+
 # CHANGES IN blogdown VERSION 1.1
 
 ## NEW FEATURES

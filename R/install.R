@@ -149,8 +149,7 @@ install_hugo_bin = function(exec, version) {
 #' @export
 #' @rdname install_hugo
 update_hugo = function() {
-  message('blogdown::update_hugo() has been deprecated. Please use blogdown::install_hugo() in future.')
-  install_hugo()
+  stop('blogdown::update_hugo() is defunct. Please use blogdown::install_hugo() instead.')
 }
 
 # possible locations of the Hugo executable
