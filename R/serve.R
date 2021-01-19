@@ -134,7 +134,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     # which will block the R session
     if (!server$daemon) return(system2(cmd, cmd_args))
 
-    pid = if (getOption('blogdown.use.processx', xfun::loadable('processx'))) {
+    pid = if (server_processx()) {
       proc = processx::process$new(cmd, cmd_args, stderr = '|', cleanup_tree = TRUE)
       I(proc$get_pid())
     } else {
@@ -221,6 +221,17 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     return(invisible())
   }
+}
+
+server_processx = function() {
+  v = get_option('blogdown.server.verbose', FALSE)
+  # to see verbose output, don't use processx but xfun::bg_process() instead;
+  # TODO: we may use the polling method in #555 to have processx output, too
+  if (v) {
+    options(xfun.bg_process.verbose = TRUE)
+    return(FALSE)
+  }
+  getOption('blogdown.use.processx', xfun::loadable('processx'))
 }
 
 jekyll_server_args = function(host, port) {

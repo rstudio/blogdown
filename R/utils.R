@@ -998,7 +998,7 @@ na2null = function(x, default = NULL) {
   i = c(
     'filename.pre_processor', 'files_filter', 'generator', 'initial_files',
     'knit.on_save', 'method', 'rename_file', 'serve_site.startup', 'server.timeout',
-    'subdir_fun', 'time_diff', 'warn.future', 'widgetsID', 'yaml.empty',
+    'server.verbose', 'subdir_fun', 'time_diff', 'warn.future', 'widgetsID', 'yaml.empty',
     paste0(g, '.server'),
     if (g == 'hugo') c(
       'hugo.args', 'hugo.dir', 'hugo.version', 'new_bundle', 'server.wait'
