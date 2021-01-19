@@ -26,6 +26,8 @@
 
 ## MINOR CHANGES
 
+- `check_netlify()` and `check_config()` do not open files anymore in the IDE if no TODO items were found in them (#569).
+
 - The internal functions `md5sum_filter()` and `timestamp_filter()` have been removed. They were renamed to `filter_md5sum()` and `filter_timestamp()`, respectively, and exported in **blogdown** 1.0. Please use these exported functions instead if you relied on the internal functions previously.
 
 # CHANGES IN blogdown VERSION 1.0

@@ -32,14 +32,16 @@ check_config = function() {
   config = load_config()
   f = find_config()
   msg_init('Checking ', f)
-  open_file(f)
+  okay = TRUE
 
   msg_next('Checking "baseURL" setting for Hugo...')
   base = index_ci(config, 'baseurl')
   if (is_example_url(base)) {
     msg_todo('Set "baseURL" to "/" if you do not yet have a domain.')
+    okay = FALSE
   } else if (identical(base, '/')) {
     msg_todo('Update "baseURL" to your actual URL when ready to publish.')
+    okay = FALSE
   } else {
     msg_okay('Found baseURL = "', base, '"; nothing to do here!')
   }
@@ -48,13 +50,16 @@ check_config = function() {
   ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
   if (is.null(s <- config[['ignoreFiles']])) {
     msg_todo('Set "ignoreFiles" to ', xfun::tojson(ignore))
+    okay = FALSE
   } else if (!all(ignore %in% s)) {
     msg_todo(
       'Add these items to the "ignoreFiles" setting: ',
       gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
     )
+    okay = FALSE
   } else if ('_files$' %in% s) {
     msg_todo('Remove "_files$" from "ignoreFiles"')
+    okay = FALSE
   } else {
     msg_okay('"ignoreFiles" looks good - nothing to do here!')
   }
@@ -65,6 +70,7 @@ check_config = function() {
     if (is.null(h) || h == 'goldmark') {
       msg_next("You are using the Markdown renderer 'goldmark'.")
       config_goldmark(f)
+      okay = FALSE
     } else if (!is.null(h)) {
       msg_next("You are using the Markdown renderer '", h, "'.")
       msg_okay('No todos now. If you install a new Hugo version, re-run this check.')
@@ -72,6 +78,7 @@ check_config = function() {
   } else {
     msg_okay('All set!', if (!is.null(s)) ' Found the "unsafe" setting for goldmark.')
   }
+  open_file(f, open = interactive() && !okay)
   msg_done(f)
 }
 
@@ -229,15 +236,17 @@ check_netlify = function() {
     msg_todo(f, ' was not found. Use blogdown::config_netlify() to create file.')
   )
   cfg = find_config()
-  open_file(f)
   x = read_toml(f)
   v = x$context$production$environment$HUGO_VERSION
   v2 = as.character(hugo_version())
   if (is.null(v)) v = x$build$environment$HUGO_VERSION
 
+  okay = TRUE
+
   if (is.null(v)) {
     msg_next('HUGO_VERSION not found in ', f, '.')
     msg_todo('Set HUGO_VERSION = ', v2, ' in [build] context of ', f, '.')
+    okay = FALSE
   } else {
     msg_okay('Found HUGO_VERSION = ', v, ' in [build] context of ', f, '.')
     msg_next('Checking that Netlify & local Hugo versions match...')
@@ -259,6 +268,7 @@ check_netlify = function() {
         'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin ',
         'this Hugo version (also remember to restart R).'
       )
+      okay = FALSE
     }
   }
 
@@ -274,11 +284,12 @@ check_netlify = function() {
         '" (', if (p3) "Hugo's default" else c('as set in ', cfg), ').'
       )
       msg_todo('Open ', f, ' and under [build] set publish = "', p2, '".')
+      okay = FALSE
     } else {
       msg_okay('Good to go - blogdown and Netlify are using the same publish directory: ', p2)
     }
   }
-
+  open_file(f, interactive() && !okay)
   msg_done(f)
 }
 
