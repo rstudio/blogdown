@@ -25,9 +25,11 @@ blogdown_site = function(input, ...) {
       if (grepl(rmd_pattern, input_file))
         build_site(TRUE, run_hugo = FALSE, build_rmd = input_file)
       # run serve_site() to preview the site if the server has not been started
-      if (interactive()) preview_site() else tryCatch(
-        rstudioapi::sendToConsole('blogdown:::preview_site()', echo = FALSE)
-      )
+      if (get_option('blogdown.knit.serve_site', TRUE)) {
+        if (interactive()) preview_site() else tryCatch(
+          rstudioapi::sendToConsole('blogdown:::preview_site()', echo = FALSE)
+        )
+      }
     }) else {
       build_site(relativeURLs = if (parent_call('rsconnect::deploySite')) TRUE)
       if (!quiet) message(

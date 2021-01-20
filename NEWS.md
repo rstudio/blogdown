@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 1.2
 
+## NEW FEATURES
+
+- The new option `options(blogdown.knit.serve_site = FALSE)` can be used to prevent **blogdown** from starting the web server automatically when the Knit button is clicked in RStudio and the site has not been served yet. By default, the web server will be started (if not already started) so the page being knitted can be previewed.
+
 ## MAJOR CHANGES
 
 - The `method` argument of `build_site()` is now defunct (it was deprecated in **blogdown** v1.0), and will be removed in  a future version. Please set the build method in the global option `options(blogdown.method = )` instead.
