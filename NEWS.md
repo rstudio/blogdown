@@ -2,7 +2,7 @@
 
 ## NEW FEATURES
 
-- The new option `options(blogdown.knit.serve_site = FALSE)` can be used to prevent **blogdown** from starting the web server automatically when the Knit button is clicked in RStudio and the site has not been served yet. By default, the web server will be started (if not already started) so the page being knitted can be previewed.
+- The new option `options(blogdown.knit.serve_site = FALSE)` can be used to prevent **blogdown** from starting the web server automatically when the Knit button is clicked in RStudio and the site has not been served yet (thanks, @Athanasiamo, #572). By default, the web server will be started (if not already started) so the page being knitted can be previewed.
 
 ## MAJOR CHANGES
 
@@ -11,6 +11,10 @@
 - The `use_brew` argument of `install_hugo()` is defunct now, and will be removed in a future version.
 
 - The `update_hugo()` function is defunct. Please use `install_hugo()` instead.
+
+## MINOR CHANGES
+
+- When clicking the Knit button in RStudio to knit a post, the normal knitting process is shown (such as the progress bar) instead of being suppressed (thanks, @Athanasiamo, #572).
 
 # CHANGES IN blogdown VERSION 1.1
 

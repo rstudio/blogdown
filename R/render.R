@@ -159,14 +159,17 @@ build_rmds = function(files) {
     if (file.copy(shared_yml, copy)) copied_yaml <<- c(copied_yaml, copy)
   }
 
+  knitting = isTRUE(opts$get('render_one'))
+
   for (i in seq_along(files)) {
     f = files[i]; d = dirname(f); out = output_file(f)
     to_md = file_ext(out) != 'html'
     out2 = paste0(out, '~')  # first generate a file with ~ in ext so Hugo won't watch
     copy_output_yml(d)
-    message('Rendering ', f, '... ', appendLF = FALSE)
+    if (!knitting) message('Rendering ', f, '... ', appendLF = FALSE)
     x = xfun::Rscript_call(
-      build_one, list(f, I(basename(out2)), to_md), fail = c('Failed to render ', f)
+      build_one, list(f, I(basename(out2)), to_md, !knitting),
+      fail = c('Failed to render ', f)
     )
 
     x = encode_paths(x, lib1[2 * i - 1], d, base, to_md, out)
@@ -174,7 +177,7 @@ build_rmds = function(files) {
 
     # when serving the site, pause for a moment so Hugo server's auto navigation
     # can navigate to the output page
-    if ((length(opts$get('served_dirs')) || isTRUE(opts$get('render_one')))) {
+    if (length(opts$get('served_dirs')) || knitting) {
       server_wait()
     }
 
@@ -188,11 +191,11 @@ build_rmds = function(files) {
         append(s, 'draft: true', 1)
       })
     }
-    message('Done.')
+    if (!knitting) message('Done.')
   }
 }
 
-build_one = function(input, output, to_md = file_ext(output) != 'html') {
+build_one = function(input, output, to_md = file_ext(output) != 'html', quiet = TRUE) {
   options(htmltools.dir.version = FALSE)
   setwd(dirname(input))
   input = basename(input)
@@ -200,7 +203,7 @@ build_one = function(input, output, to_md = file_ext(output) != 'html') {
   if (to_md) options(bookdown.output.markdown = TRUE)
   res = rmarkdown::render(
     input, 'blogdown::html_page', output_file = output, envir = globalenv(),
-    quiet = TRUE, run_pandoc = !to_md, clean = !to_md
+    quiet = quiet, run_pandoc = !to_md, clean = !to_md
   )
   x = read_utf8(res)
   if (to_md) x = process_markdown(res, x)
