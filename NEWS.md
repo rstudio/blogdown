@@ -16,6 +16,8 @@
 
 - When clicking the Knit button in RStudio to knit a post, the normal knitting process is shown (such as the progress bar) instead of being suppressed (thanks, @Athanasiamo, #572).
 
+- The command `blogdown:::preview_site()` is no longer called or displayed in the R console when users click the Knit button after the server has been started (thanks, @apreshill, #543).
+
 # CHANGES IN blogdown VERSION 1.1
 
 ## NEW FEATURES

@@ -174,6 +174,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     server$browse()
     # server is correctly started so we record the directory served
     opts$append(served_dirs = root)
+    Sys.setenv(BLOGDOWN_SERVING_DIR = root)
     message(
       'Launched the ', g, ' server in the background (process ID: ', pid, '). ',
       'To stop it, call blogdown::stop_server() or restart the R session.'
@@ -258,6 +259,7 @@ stop_server = function() {
     'Failed to kill the process(es): ', paste(i, collapse = ' '),
     '. You may need to kill them manually.'
   ) else if (!quitting) message('The web server has been stopped.')
+  set_envvar(c('BLOGDOWN_SERVING_DIR' = NA))
   opts$set(pids = NULL, served_dirs = NULL)
 }
 
