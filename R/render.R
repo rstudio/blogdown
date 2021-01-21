@@ -115,11 +115,13 @@ list_mds = function() list_files(content_file(), '[.]md$')
 
 # build R Markdown posts
 build_rmds = function(files) {
+  knitting = isTRUE(opts$get('render_one'))
+
   i = xfun::is_sub_path(files, rel_path(content_file()))
   # use rmarkdown::render() when a file is outside the content/ dir
   for (f in files[!i]) {
     message('Rendering ', f, '... ', appendLF = FALSE)
-    render_new(f)
+    render_new(f, !knitting)
     message('Done.')
   }
 
@@ -158,8 +160,6 @@ build_rmds = function(files) {
     if (file.exists(copy <- file.path(to, '_output.yml'))) return()
     if (file.copy(shared_yml, copy)) copied_yaml <<- c(copied_yaml, copy)
   }
-
-  knitting = isTRUE(opts$get('render_one'))
 
   for (i in seq_along(files)) {
     f = files[i]; d = dirname(f); out = output_file(f)

@@ -114,8 +114,8 @@ build_dir = function(dir = '.', force = FALSE, ignore = '[.]Rproj$') {
 }
 
 # render Rmd in a new R session
-render_new = function(f) xfun::Rscript_call(
-  rmarkdown::render, list(f, envir = globalenv(), quiet = TRUE),
+render_new = function(f, quiet = TRUE) xfun::Rscript_call(
+  rmarkdown::render, list(f, envir = globalenv(), quiet = quiet),
   fail = c('Failed to render ', f)
 )
 
