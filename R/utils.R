@@ -1018,8 +1018,7 @@ parent_call = function(name) {
   FALSE
 }
 
-# set env vars from a named character vector, and return the old values of the
-# vars, so they could be restored later
+# TODO: import the following two functions from xfun 0.21
 set_envvar = function(vars) {
   if (is.null(nms <- names(vars)) || any(nms == '')) stop(
     "The 'vars' argument must take a named character vector."
@@ -1030,8 +1029,6 @@ set_envvar = function(vars) {
   if (length(vars <- vars[!i])) do.call(Sys.setenv, as.list(vars))
   invisible(vals)
 }
-
-# call on.exit in a parent function
 exit_call = function(fun, n = 2) {
   do.call(
     on.exit, list(substitute(fun(), list(fun = fun)), add = TRUE),
