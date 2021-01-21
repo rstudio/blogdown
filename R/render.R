@@ -116,13 +116,21 @@ list_mds = function() list_files(content_file(), '[.]md$')
 # build R Markdown posts
 build_rmds = function(files) {
   knitting = isTRUE(opts$get('render_one'))
+  # emit a message indicating that a file is being knitted when the knitting is
+  # not triggered by the Knit button
+  msg_knit = function(f, start = TRUE) {
+    if (knitting) return()
+    if (start) {
+      message('Rendering ', f, '... ', appendLF = FALSE)
+    } else message('Done.')
+  }
 
   i = xfun::is_sub_path(files, rel_path(content_file()))
   # use rmarkdown::render() when a file is outside the content/ dir
   for (f in files[!i]) {
-    message('Rendering ', f, '... ', appendLF = FALSE)
+    msg_knit(f)
     render_new(f, !knitting)
-    message('Done.')
+    msg_knit(f, FALSE)
   }
 
   if (length(files <- files[i]) == 0) return()
@@ -166,7 +174,7 @@ build_rmds = function(files) {
     to_md = file_ext(out) != 'html'
     out2 = paste0(out, '~')  # first generate a file with ~ in ext so Hugo won't watch
     copy_output_yml(d)
-    if (!knitting) message('Rendering ', f, '... ', appendLF = FALSE)
+    msg_knit(f)
     x = xfun::Rscript_call(
       build_one, list(f, I(basename(out2)), to_md, !knitting),
       fail = c('Failed to render ', f)
@@ -191,7 +199,7 @@ build_rmds = function(files) {
         append(s, 'draft: true', 1)
       })
     }
-    if (!knitting) message('Done.')
+    msg_knit(f, FALSE)
   }
 }
 
