@@ -137,10 +137,10 @@ check_gitignore = function() {
     # currently only one but may have more in future
     x7 = c('layouts/shortcodes/blogdown/postref.html')
     x8 = NULL
-    for (f in x7) {
-      if (!file_exists(f)) next
-      if (system2_quiet('git', c('ls-files', '--error-unmatch', f)) != 0)
-        x8 = c(x8, f)
+    for (i in x7) {
+      if (!file_exists(i)) next
+      if (system2_quiet('git', c('ls-files', '--error-unmatch', i)) != 0)
+        x8 = c(x8, i)
     }
     if (n <- length(x8)) {
       msg_todo(
