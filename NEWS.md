@@ -14,6 +14,8 @@
 
 - The `update_hugo()` function is defunct. Please use `install_hugo()` instead.
 
+- The scripts `R/build.R` and `R/build2.R` are no longer executed when a document is compiled via the Knit button in RStudio. They will be executed only when building the whole site via `build_site()` (e.g., `Ctrl/Cmd + Shift + B` in RStudio).
+
 ## MINOR CHANGES
 
 - When clicking the Knit button in RStudio to knit a post, the normal knitting process is shown (such as the progress bar) instead of being suppressed (thanks, @Athanasiamo, #572).

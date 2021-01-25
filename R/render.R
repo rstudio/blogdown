@@ -70,8 +70,11 @@ build_site = function(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE,
     "The 'method' argument has been deprecated. Please set the method via ",
     "options(blogdown.method = ). See ?blogdown::build_site for more info."
   )
-  on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
+
+  knitting = is_knitting()
+  if (!knitting) on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (build_method() == 'custom') return()
+
   if (!xfun::isFALSE(build_rmd)) {
     if (is.character(build_rmd) && length(build_rmd) == 1) {
       build_rmd = switch(
@@ -85,10 +88,11 @@ build_site = function(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE,
         if (length(files)) get_option('blogdown.files_filter', identity)(files)
       }
     }
-    build_rmds(files)
+    build_rmds(files, knitting)
   }
   if (run_hugo) on.exit(hugo_build(local, ...), add = TRUE)
-  on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
+  if (!knitting) on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
+
   invisible()
 }
 
@@ -113,9 +117,11 @@ list_rmds = function(dir = content_file(), check = FALSE, pattern = rmd_pattern)
 # list .md files
 list_mds = function() list_files(content_file(), '[.]md$')
 
+# whether a document is knitted via the Knit button
+is_knitting = function() isTRUE(opts$get('render_one'))
+
 # build R Markdown posts
-build_rmds = function(files) {
-  knitting = isTRUE(opts$get('render_one'))
+build_rmds = function(files, knitting = is_knitting()) {
   # emit a message indicating that a file is being knitted when the knitting is
   # not triggered by the Knit button
   msg_knit = function(f, start = TRUE) {
