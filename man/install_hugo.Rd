@@ -5,7 +5,13 @@
 \alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(version = "latest", use_brew = FALSE, extended = TRUE, ...)
+install_hugo(
+  version = "latest",
+  use_brew = FALSE,
+  extended = TRUE,
+  force = FALSE,
+  ...
+)
 
 update_hugo()
 }
@@ -23,6 +29,9 @@ latest version, which might break your existing sites.}
 
 \item{extended}{Whether to use extended version of Hugo that has SCSS/SASS
 support. You only need the extended version if you want to edit SCSS/SASS.}
+
+\item{force}{Whether to reinstall Hugo if the specified version has been
+installed.}
 
 \item{...}{Ignored.}
 }

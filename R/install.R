@@ -38,10 +38,14 @@
 #'   latest version, which might break your existing sites.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
+#' @param force Whether to reinstall Hugo if the specified version has been
+#'   installed.
 #' @param ... Ignored.
 #' @seealso \code{\link{remove_hugo}()} to remove Hugo.
 #' @export
-install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, ...) {
+install_hugo = function(
+  version = 'latest', use_brew = FALSE, extended = TRUE, force = FALSE, ...
+) {
 
   if (!missing(use_brew)) stop(
     "The argument 'use_brew' has been deprecated in install_hugo(). If you want to ",
@@ -63,6 +67,10 @@ install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, .
   )
 
   version = gsub('^[vV]', '', version)  # pure version number
+  if (!force && hugo_available(version, exact = TRUE)) return(message(
+    'Hugo ', version, ' has already been installed. To reinstall, use the ',
+    'argument force = TRUE.'
+  ))
   if (!is.null(ver <- get_option('blogdown.hugo.version')) && ver != version) message2(
     "You have set the option 'blogdown.hugo.version' to '", ver, "' (perhaps in .Rprofile), ",
     "but you are installing the Hugo version '", version, "' now. You may want to update ",

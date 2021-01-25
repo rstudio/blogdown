@@ -2,6 +2,8 @@
 
 ## NEW FEATURES
 
+- Added the argument `force` back to `install_hugo()`. If the specified version of Hugo has been installed, `install_hugo()` will not reinstall it unless `force = TRUE` (thanks, @cderv, #575).
+
 - The new option `options(blogdown.knit.serve_site = FALSE)` can be used to prevent **blogdown** from starting the web server automatically when the Knit button is clicked in RStudio and the site has not been served yet (thanks, @Athanasiamo, #572). By default, the web server will be started (if not already started) so the page being knitted can be previewed.
 
 ## MAJOR CHANGES
