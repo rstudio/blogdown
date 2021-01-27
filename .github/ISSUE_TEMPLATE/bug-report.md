@@ -20,6 +20,8 @@ When filing a _bug report_, please check the boxes below to confirm that you hav
 
 - [ ] [formatted your issue](https://yihui.org/issue/#please-format-your-issue-correctly) so it is easier for us to read?
 
+- [ ] used `blogdown::check_site()` function to verify your current project and followed all advices ?
+
 - [ ] included a minimal, self-contained, and reproducible example?
 
 - [ ] pasted the output from `xfun::session_info('blogdown')` in your issue?
