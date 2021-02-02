@@ -257,13 +257,19 @@ process_markdown = function(res, x = read_utf8(res)) {
     on.exit(unlink(mds), add = TRUE)
     write_utf8(x, mds[1])
     rmarkdown::pandoc_convert(
-      mds[1], from = 'markdown', to = 'gfm+tex_math_dollars+footnotes', output = mds[2],
+      mds[1], from = 'markdown', to = markdown_format(), output = mds[2],
       options = c(if (!rmarkdown::pandoc_available('2.11.2')) '--atx-headers', '--wrap=preserve'),
       citeproc = TRUE
     )
     x = c(bookdown:::fetch_yaml(x), '', read_utf8(mds[2]))
   }
   x
+}
+
+markdown_format = function() {
+  paste(c(
+    'gfm', 'footnotes', if (rmarkdown::pandoc_available('2.10.1')) 'tex_math_dollars'
+  ), collapse = '+')
 }
 
 run_pandoc = function(x) {

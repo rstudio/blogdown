@@ -8,13 +8,17 @@
 
 ## MAJOR CHANGES
 
-- The `method` argument of `build_site()` is now defunct (it was deprecated in **blogdown** v1.0), and will be removed in  a future version. Please set the build method in the global option `options(blogdown.method = )` instead.
+- The `method` argument of `build_site()` is now defunct (it was deprecated in **blogdown** v1.0), and will be removed in a future version. Please set the build method in the global option `options(blogdown.method = )` instead.
 
 - The `use_brew` argument of `install_hugo()` is defunct now, and will be removed in a future version.
 
 - The `update_hugo()` function is defunct. Please use `install_hugo()` instead.
 
 - The scripts `R/build.R` and `R/build2.R` are no longer executed when a document is compiled via the Knit button in RStudio. They will be executed only when building the whole site via `build_site()` (e.g., `Ctrl/Cmd + Shift + B` in RStudio).
+
+## BUG FIXES
+
+- For `.Rmarkdown` posts, the Markdown extension `tex_math_dollars` should not be used when post-processing the `.markdown` output file with Pandoc < v2.10.1 (thanks, @lz100, #578).
 
 ## MINOR CHANGES
 
