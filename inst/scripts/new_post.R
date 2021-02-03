@@ -8,7 +8,9 @@ lang = blogdown:::get_lang()
 adir = blogdown:::theme_dir()
 adir = if (length(adir)) file.path(adir, 'archetypes')
 adir = c('archetypes', adir)
-suff = ifelse(utils::file_test('-d', dir(adir, full.names = TRUE)), '/', '')
+adir = dir(adir, full.names = TRUE)
+adir = paste0(basename(adir), ifelse(utils::file_test('-d', adir), '/', ''))
+
 shiny::runGadget(
   miniUI::miniPage(miniUI::miniContentPanel(
     txt_input('title', 'Title', placeholder = 'Post Title'),
@@ -28,7 +30,7 @@ shiny::runGadget(
       sel_input('tag', 'Tags', meta$tags),
       shiny::selectInput(
         'kind', 'Archetype', width = '98%',
-        choices = unique(c('', xfun::sans_ext(paste0(dir(adir), suff))))
+        choices = unique(c('', adir))
       ),
       height = '70px'
     ),
