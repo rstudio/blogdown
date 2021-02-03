@@ -257,7 +257,7 @@ process_markdown = function(res, x = read_utf8(res)) {
     on.exit(unlink(mds), add = TRUE)
     write_utf8(x, mds[1])
     rmarkdown::pandoc_convert(
-      mds[1], from = 'markdown', to = markdown_format(), output = mds[2],
+      mds[1], from = 'markdown', to = paste(markdown_format(), collapse = ''), output = mds[2],
       options = c(if (!rmarkdown::pandoc_available('2.11.2')) '--atx-headers', '--wrap=preserve'),
       citeproc = TRUE
     )
@@ -266,14 +266,13 @@ process_markdown = function(res, x = read_utf8(res)) {
   x
 }
 
-markdown_format = function() {
-  paste(c(
-    'gfm', 'footnotes', if (rmarkdown::pandoc_available('2.10.1')) 'tex_math_dollars'
-  ), collapse = '+')
-}
+markdown_format = function() get_option(
+  'blogdown.markdown.format',
+  c('gfm', '+footnotes', if (rmarkdown::pandoc_available('2.10.1')) '+tex_math_dollars')
+)
 
 run_pandoc = function(x) {
-  get_option('blogdown.process_markdown', FALSE) ||
+  !is.null(get_option('blogdown.markdown.format')) ||
     length(grep('^(references|bibliography):($| )', x)) ||
     length(grep('^[`]{3,}\\{=[[:alnum:]]+}$', x))
 }
