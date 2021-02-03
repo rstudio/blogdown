@@ -268,7 +268,7 @@ process_markdown = function(res, x = read_utf8(res)) {
 
 markdown_format = function() get_option(
   'blogdown.markdown.format',
-  c('gfm', '+footnotes', if (rmarkdown::pandoc_available('2.10.1')) '+tex_math_dollars')
+  c('gfm', if (rmarkdown::pandoc_available('2.10.1')) c('+tex_math_dollars', '+footnotes'))
 )
 
 run_pandoc = function(x) {
