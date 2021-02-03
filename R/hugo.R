@@ -458,6 +458,9 @@ download_modules = function(mod) {
 new_content = function(path, kind = '', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
   path2 = with_ext(path, '.md')
+  # for a new content file to be created with a bundle archetype, its path
+  # should not contain index.md but only the dir name, otherwise the archetype
+  # will not be used
   if (grepl('/$', kind)) {
     path2 = dirname(path2)
     kind  = sub('/$', '', kind)
@@ -469,6 +472,7 @@ new_content = function(path, kind = '', open = interactive()) {
   )
   if (length(i <- grep(r <- ' created$', file2)) == 1) {
     file2 = sub(r, '', file2[i])
+    if (!grepl('[.]md$', file2)) file2 = file.path(file2, 'index.md')
   } else {
     # should the above method fail to identify the newly created .md, search for
     # the new file with brute force

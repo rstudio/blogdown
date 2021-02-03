@@ -24,6 +24,8 @@
 
 - For `.Rmarkdown` posts, the Markdown extension `tex_math_dollars` should not be used when post-processing the `.markdown` output file with Pandoc < v2.10.1 (thanks, @lz100, #578).
 
+- The `new_post()` function does not work with bundle archetypes (thanks, @maelle, #577).
+
 ## MINOR CHANGES
 
 - When clicking the Knit button in RStudio to knit a post, the normal knitting process is shown (such as the progress bar) instead of being suppressed (thanks, @Athanasiamo, #572).
