@@ -6,6 +6,8 @@
 
 - The new option `options(blogdown.knit.serve_site = FALSE)` can be used to prevent **blogdown** from starting the web server automatically when the Knit button is clicked in RStudio and the site has not been served yet (thanks, @Athanasiamo, #572). By default, the web server will be started (if not already started) so the page being knitted can be previewed.
 
+- Added a new global option `blogdown.site_root`, which can be used to specify the root directory of the website. This can be useful when the website source directory is not the root directory of a project but a subdirectory (thanks, @wjakethompson, #581).
+
 - Added a new global option `blogdown.markdown.format` to allow users to customize Pandoc's Markdown output format. When using the file extension `.Rmarkdown` or `options(blogdown.method = 'markdown')`, an R Markdown file is first compiled to Markdown. This Markdown file needs to go through another conversion when it contains Markdown features that are only available to Pandoc but not other Markdown renderers such as Hugo/Goldmark, such as citations or fenced Divs. The new global option controls the Pandoc output format. By default, its value is `c('gfm', '+footnotes', '+tex_math_dollars')` for Pandoc 2.10.1 and later when the Markdown document contains bibliography or fenced Divs, otherwise it is `NULL`. With earlier versions of Pandoc, it will be `c('gfm')` only. If you want the conversion to be always performed, you may set this global option to a value that is not `NULL`, e.g., `options(blogdown.markdown.format = c('gfm', '+footnotes', '+tex_math_dollars', '+smart'))`.
 
 ## MAJOR CHANGES

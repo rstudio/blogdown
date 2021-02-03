@@ -27,8 +27,9 @@
 #' @param ... Arguments passed to \code{servr::\link{server_config}()} (only
 #'   arguments \code{host}, \code{port}, \code{browser}, \code{daemon}, and
 #'   \code{interval} are supported).
-#' @param .site_dir Directory to search for site configuration file
-#' (defaults to \code{getwd()}).
+#' @param .site_dir Directory to search for site configuration file. It defaults
+#'   to \code{getwd()}, and can also be specified via the global option
+#'   \code{blogdown.site_root}.
 #' @note For the Hugo server, the argument \command{--navigateToChanged} is used
 #'   by default, which means when you edit and save a source file, Hugo will
 #'   automatically navigate the web browser to the page corresponding to this

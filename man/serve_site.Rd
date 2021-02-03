@@ -14,8 +14,9 @@ stop_server()
 arguments \code{host}, \code{port}, \code{browser}, \code{daemon}, and
 \code{interval} are supported).}
 
-\item{.site_dir}{Directory to search for site configuration file
-(defaults to \code{getwd()}).}
+\item{.site_dir}{Directory to search for site configuration file. It defaults
+to \code{getwd()}, and can also be specified via the global option
+\code{blogdown.site_root}.}
 }
 \description{
 The function \code{serve_site()} executes the server command of a static site

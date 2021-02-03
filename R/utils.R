@@ -286,7 +286,8 @@ find_config = function(files = config_files(), error = TRUE) {
 site_root = function(config = config_files(), .site_dir = NULL) {
   if (!is.null(root <- opts$get('site_root'))) return(root)
   owd = getwd(); on.exit(setwd(owd), add = TRUE)
-  # If starting point has been provided change to this directory
+  # if starting point has been provided, change to this directory
+  if (is.null(.site_dir)) .site_dir = get_option('blogdown.site_root')
   if (!is.null(.site_dir)) setwd(.site_dir)
   paths = NULL
   while (length(find_config(config, error = FALSE)) == 0) {
@@ -997,8 +998,9 @@ na2null = function(x, default = NULL) {
   g = generator()
   i = c(
     'filename.pre_processor', 'files_filter', 'generator', 'initial_files',
-    'knit.on_save', 'knit.serve_site', 'method', 'rename_file', 'serve_site.startup', 'server.timeout',
-    'server.verbose', 'subdir_fun', 'time_diff', 'warn.future', 'widgetsID', 'yaml.empty',
+    'knit.on_save', 'knit.serve_site', 'method', 'rename_file',
+    'serve_site.startup', 'server.timeout', 'server.verbose', 'site_root',
+    'subdir_fun', 'time_diff', 'warn.future', 'widgetsID', 'yaml.empty',
     paste0(g, '.server'),
     if (g == 'hugo') c(
       'hugo.args', 'hugo.dir', 'hugo.version', 'new_bundle', 'server.wait'
