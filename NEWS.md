@@ -26,6 +26,8 @@
 
 - The `new_post()` function does not work with bundle archetypes (thanks, @maelle, #577).
 
+- `install_theme()` will now remove the `.github/` folder if one exists in the theme repo as it is only useful to the theme developer.
+
 ## MINOR CHANGES
 
 - When clicking the Knit button in RStudio to knit a post, the normal knitting process is shown (such as the progress bar) instead of being suppressed (thanks, @Athanasiamo, #572).
