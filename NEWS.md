@@ -26,7 +26,7 @@
 
 - The `new_post()` function does not work with bundle archetypes (thanks, @maelle, #577).
 
-- `install_theme()` will now remove the `.github/` folder if one exists in the theme repo as it is only useful to the theme developer.
+- `install_theme()` will now remove the `.github/` folder if one exists in the theme repo as it is only useful to the theme developer (#584).
 
 ## MINOR CHANGES
 

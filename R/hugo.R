@@ -342,10 +342,8 @@ install_theme = function(
       unlink(file.path(thndir, c('tn.png', 'screenshot.png')))
       del_empty_dir(thndir)
     }
-    # delete the .Rprofile if exists, since it's unlikely to be useful
-    unlink(file.path(zipdir, '.Rprofile'))
-    # delete the .github folder if exists, since it's unlikely to be useful too
-    unlink(file.path(zipdir, '.github'), recursive = TRUE)
+    # delete the .Rprofile and .github folder if they exist, since they are unlikely to be useful
+    unlink(file.path(zipdir, c('.Rprofile', '.github')), recursive = TRUE)
     # check the minimal version of Hugo required by the theme
     if (update_hugo && is_theme) {
       if (!is.null(minver <- read_toml(theme_cfg)[['min_version']])) {
