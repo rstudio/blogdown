@@ -274,7 +274,7 @@ markdown_format = function() get_option(
 run_pandoc = function(x) {
   !is.null(get_option('blogdown.markdown.format')) ||
     length(grep('^(references|bibliography):($| )', x)) ||
-    length(grep('^[`]{3,}\\{=[[:alnum:]]+}$', x))
+    length(grep('[`]{1,}\\{=[[:alnum:]]+}', x))
 }
 
 # given the content of a .html file: replace content/*_files/figure-html with
