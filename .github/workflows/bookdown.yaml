@@ -45,7 +45,7 @@ jobs:
 
       - name: Install OS dependencies
         run: |
-          brew update
+          brew update --preinstall
           brew install --cask xquartz
           brew install --cask calibre
 
