@@ -1,0 +1,95 @@
+on:
+  push:
+    branches:
+      - build-book-gha
+
+name: Build and deploy book
+
+jobs:
+  build:
+    runs-on: macOS-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KNITR_OPTIONS: "knitr.chunk.tidy=TRUE"
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v1
+
+      - name: Install Pandoc
+        uses: r-lib/actions/setup-pandoc@v1
+        with:
+          pandoc-version: '2.11.4'
+
+      - name: Install TinyTeX
+        uses: r-lib/actions/setup-tinytex@v1
+        env:
+          # install full prebuilt version
+          TINYTEX_INSTALLER: TinyTeX
+
+      - name: Query dependencies
+        run: |
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
+      - name: Install OS dependencies
+        run: |
+          brew update
+          brew install --cask xquartz
+          brew install --cask calibre
+
+      - name: Install phamtomJS for webshot
+        run: |
+          remotes::install_cran("webshot")
+          webshot::install_phantomjs()
+        shell: Rscript {0}
+
+      - name: Install R dependencies for bookdown
+        run: |
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+
+      - name: Install blogdown package
+        run: xfun::install_dir(".")
+        shell: Rscript {0}
+
+      - name: Session info
+        run: |
+          options(width = 100)
+          remotes::install_cran("sessioninfo")
+          pkgs <- installed.packages()[, "Package"]
+          sessioninfo::session_info(pkgs, include_base = TRUE)
+          rmarkdown::find_pandoc()
+        shell: Rscript {0}
+
+      - name: Cache bookdown results
+        uses: actions/cache@v2
+        with:
+          path: docs/_bookdown_files
+          key: bookdown-1-${{ hashFiles('docs/*Rmd') }}
+          restore-keys: bookdown-1-
+
+      - name: Build and Deploy all book
+        if: github.event_name == 'push'
+        env:
+          CONNECT_API_KEY: ${{ secrets.RSC_BOOKDOWN_ORG_TOKEN }}
+          CONTENT_ID: 463
+        run: make -C docs all
+
+      - name: Upload book folder for debug
+        # if: failure()
+        uses: actions/upload-artifact@main
+        with:
+          name: book-dir
+          path: docs
