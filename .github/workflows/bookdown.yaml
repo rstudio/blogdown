@@ -48,6 +48,8 @@ jobs:
           brew update --preinstall
           brew install --cask xquartz
           brew install --cask calibre
+          # required for pkgdown install
+          brew install harfbuzz fribidi
 
       - name: Install phamtomJS for webshot
         run: |
