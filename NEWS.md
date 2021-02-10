@@ -28,6 +28,8 @@
 
 - `install_theme()` will now remove the `.github/` folder if one exists in the theme repo as it is only useful to the theme developer (#584).
 
+- Plots generated from R code chunks in posts cannot be previewed on RStudio Server (thanks, @cderv [@datawookie](https://datawookie.dev/blog/2021/02/setting-up-postref-shortcode-for-remote-blog/) #587).
+
 ## MINOR CHANGES
 
 - When clicking the Knit button in RStudio to knit a post, the normal knitting process is shown (such as the progress bar) instead of being suppressed (thanks, @Athanasiamo, #572).

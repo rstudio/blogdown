@@ -915,7 +915,10 @@ tweak_hugo_env = function(baseURL = NULL, relativeURLs = NULL, server = FALSE) {
   c2 = if (is.null(relativeURLs)) get_config('relativeurls', FALSE, config) else relativeURLs
   if (server && c1) b = paste0(if (grepl('^//', b)) 'http:' else 'http://example.org/', b)
 
-  v = set_envvar(c(HUGO_BASEURL = if (c2) '/' else b, HUGO_RELATIVEURLS = tolower(c2)))
+  v = set_envvar(c(
+    HUGO_BASEURL = if (c2) '/' else b, HUGO_RELATIVEURLS = tolower(c2),
+    BLOGDOWN_POST_RELREF = if (server) 'true' else NA
+  ))
   exit_call(function() set_envvar(v))
 }
 
