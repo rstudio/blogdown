@@ -18,13 +18,13 @@ github-repo: rstudio/blogdown
 cover-image: images/cover.png
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, tidy = FALSE}
 options(
   htmltools.dir.version = FALSE, formatR.indent = 2,
   width = 55, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE
 )
 
-lapply(c("formatR"), function(pkg) {
+lapply(c('formatR', 'htmlwidgets', 'webshot', 'servr', 'xaringan', 'animation',  'processx', 'later', 'widgetframe', 'pkgdown'), function(pkg) {
   if (system.file(package = pkg) == '') install.packages(pkg)
 })
 ```
