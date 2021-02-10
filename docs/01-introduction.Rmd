@@ -140,45 +140,88 @@ knitr::include_graphics('images/project-options.png')
 
 ## Global options\index{Global Options}
 
-Depending on your personal preferences, you can set a few global options before you work on your website. These options should be set using `options(name = value)`, and currently available options are presented in Table \@ref(tab:global-options).
+The blogdown R package uses global options, specified in a `.Rprofile` file, to help users customize how blogdown works. When you start a new site, blogdown adds a project-level `.Rprofile` file in the root directory of your website project.
 
-```{r global-options, echo=FALSE}
+Options should be set using `options(name = value)`, and those included in the new blogdown site `.Rprofile` file are presented in Table \@ref(tab:global-options-new).
+
+```{r global-options-new, echo=FALSE}
 knitr::kable(matrix(c(
-  'servr.daemon', 'interactive()', 'Use a daemonized server?',
-  'blogdown.author', '', 'The default author of new posts',
-  'blogdown.ext', '.md', 'Default extension of new posts',
-  'blogdown.subdir', 'post', 'A subdirectory under content/',
-  'blogdown.yaml.empty', TRUE, 'Preserve empty fields in YAML?',
+  'blogdown.serve_site.startup', 'FALSE', 'Do not serve the site on RStudio startup',
+  'blogdown.knit.on_save', 'TRUE', 'Knit Rmd files automatically on save; if FALSE, you will need to knit each Rmd file to render',
+  'blogdown.method', '.html', 'Knit .Rmd to .html with Pandoc; set to "markdown" to bypass Pandoc, knit to .md, and use Hugo Goldmark to render',
+  'blogdown.hugo.version', 'a valid Hugo version', 'Versions specified as a string like "0.80.0" detected using `blogdown::hugo_version()`',
   NULL
-), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
+), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options for new blogdown sites.')
 ```
 
-We recommend that you set these options in your R startup profile file. You can check out the help page `?Rprofile` for more details, and here is a simplified introduction. A startup profile file is basically an R script that is executed when your R session is started. This is a perfect place to set global options, so you do not need to type these options again every time you start a new R session. You can use a global profile file `~/.Rprofile`,^[The tilde `~` denotes your home directory in your system.] or a per-project file `.Rprofile` under the root directory of your RStudio project. The former will be applied to all R sessions that you start, unless you have provided the latter to override it. The easiest way to create such a file is to use `file.edit()` in RStudio, e.g.,
+We recommend that you set these options in your R startup profile file. If you've never used a startup profile file before, you can check out the help page `?Rprofile`. Here, we provide a brief but incomplete introduction to orient you quickly.
+
+A startup profile file is basically an R script that is executed when your R session is started. This is a perfect place to set global options, so you do not need to type these options again every time you start a new R session. 
+
+There are a few things you need to know about R's startup profile file before using: 
+
+1. You can use a global profile file `~/.Rprofile`,^[The tilde `~` denotes your home directory in your system.] or a per-project file `.Rprofile` under the root directory of your RStudio project. The former will be applied to all R sessions that you start, unless you have provided the latter to override it. 
+
+1. The name "startup profile file" means that R only executes this file when you first start your R session. This means that when you modify and save your `.Rprofile`, you must restart R for the changes to take effect. 
+
+1. [R will silently ignore the last line of your `.Rprofile`](https://yihui.org/en/2018/04/rprofile-trailing-newline/) if it does not have a trailing newline, so please make sure you add at least one newline to the end of your `.Rprofile`.
+
+If you want to add a profile file to an existing blogdown project, or you created a new website without using `blogdown::new_site()`, you can create a boilerplate version using `blogdown::config_Rprofile` in your R console:
 
 ```{r eval=FALSE}
-file.edit('~/.Rprofile')
-# or file.edit('.Rprofile')
+blogdown::config_Rprofile()
 ```
 
-Suppose you always prefer writing Rmd posts (instead of the default `*.md`), and want the author of new posts to be "John Doe" by default. You can set these options in the profile file:
+This is the easiest way to create or modify a per-project profile file.
+At the top of the file in a new blogdown website project, you'll see this:
+
+```
+# REMEMBER to restart R after you modify and save this file!
+
+# First, execute the global .Rprofile if it exists. You may configure blogdown
+# options there, too, so they apply to any blogdown projects. Feel free to
+# ignore this part if it sounds too complicated to you.
+if (file.exists("~/.Rprofile")) {
+  base::sys.source("~/.Rprofile", envir = environment())
+}
+```
+
+First, note the top message! The next section of code is necessary to execute both your project profile and global profile, if one exists. R only reads one startup profile file. For example, if you have a `.Rprofile` under the current directory and a global `~/.Rprofile`, only the former one will be executed when R starts up from the current directory. This code is provided for you so you may execute both a global and per-project profile file.
+
+Below that, you'll set your options. These can be stacked on separate lines, or you may use commas to list multiple options together:
+
+```
+# stacked options
+options(blogdown.serve_site.startup = FALSE)
+options(blogdown.knit.on_save = TRUE)
+
+# comma-separated options
+options(blogdown.serve_site.startup = FALSE,
+        blogdown.knit.on_save = TRUE)
+```
+
+It is up to you how to format your profile file- neither way is wrong, and both should work. The blogdown options provided in the boilerplate profile file are just a subset of the options available. Depending on your personal preferences and the theme you choose, you may wish to set more global options as you work on your website. For example:
+
+```{r global-options-2, echo=FALSE}
+knitr::kable(matrix(c(
+  'blogdown.author', '', 'The default author of new posts',
+  'blogdown.ext', '.md', 'The default extension of new posts; options are .md, .Rmd, and .Rmarkdown',
+  'blogdown.subdir', 'post', 'Which subdirectory under content/ should posts go? This depends on your theme',
+  'blogdown.yaml.empty', TRUE, 'Preserve empty fields in YAML?',
+  NULL
+), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Additional global options that affect the behavior of blogdown.')
+```
+
+
+Suppose you always prefer writing `.Rmd` posts (instead of the default `*.md`), and want the author of new posts to be "John Doe" by default. You can set these options in the profile file:
 
 ```{r eval=FALSE}
 options(blogdown.ext = '.Rmd', blogdown.author = 'John Doe')
 ```
 
-A nice consequence of setting these options is that when you use the RStudio addin "New Post," the fields "Author," "Subdirectory," and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
+A nice consequence of setting these options is that when you use the RStudio addin "New Post," the fields "Author," "Subdirectory," and "Format" will be automatically populated, so you do not need to manipulate them every time, unless you want to change the defaults.
 
-R only reads one startup profile file. For example, if you have a `.Rprofile` under the current directory and a global `~/.Rprofile`, only the former one will be executed when R starts up from the current directory. This may make it inconvenient for multiple authors collaborating on the same website project, since you cannot set author-specific options. In particular, it is not possible to set the `blogdown.author` option in a single `.Rprofile`, because this option should be different for different authors. One workaround is to set common options in `.Rprofile` under the root directory of the website project, and also execute the global `~/.Rprofile` if it exists. Author-specific options can be set in the global `~/.Rprofile` on each author's computer.
-
-```{r eval=FALSE}
-# in .Rprofile of the website project
-if (file.exists('~/.Rprofile')) {
-  base::sys.source('~/.Rprofile', envir = environment())
-}
-# then set options(blogdown.author = 'Your Name') in ~/.Rprofile
-```
-
-Note that [R will silently ignore the last line of your `.Rprofile`](https://yihui.org/en/2018/04/rprofile-trailing-newline/) if it does not have a trailing newline, so please make sure you add at least one newline to the end of your `.Rprofile`.
+One inconvenience when using startup profile files is the case of the team-authored blog, where multiple authors collaborate on the same website project. You cannot set author-specific options using the `blogdown.author` option in a single `.Rprofile`, because this option should be different for different authors. One workaround is to set common website options in your project `.Rprofile`, then allow each individual author to set their own author-specific options in the global `~/.Rprofile` on each author's computer. If you use the boilerplate `blogdown::config_Rprofile()`, the first chunk of code at the top will ensure that the global `~/.Rprofile` is also executed if it exists. 
 
 ## R Markdown vs. Markdown {#output-format}
 
