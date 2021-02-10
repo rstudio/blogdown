@@ -1022,21 +1022,3 @@ parent_call = function(name) {
   for (f in sys.calls()) if (f[[1]] == as.symbol(name)) return(TRUE)
   FALSE
 }
-
-# TODO: import the following two functions from xfun 0.21
-set_envvar = function(vars) {
-  if (is.null(nms <- names(vars)) || any(nms == '')) stop(
-    "The 'vars' argument must take a named character vector."
-  )
-  vals = Sys.getenv(nms, NA, names = TRUE)
-  i = is.na(vars)
-  suppressWarnings(Sys.unsetenv(nms[i]))
-  if (length(vars <- vars[!i])) do.call(Sys.setenv, as.list(vars))
-  invisible(vals)
-}
-exit_call = function(fun, n = 2) {
-  do.call(
-    on.exit, list(substitute(fun(), list(fun = fun)), add = TRUE),
-    envir = parent.frame(n)
-  )
-}
