@@ -24,7 +24,7 @@ options(
   width = 55, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE
 )
 
-lapply(c(), function(pkg) {
+lapply(c("formatR"), function(pkg) {
   if (system.file(package = pkg) == '') install.packages(pkg)
 })
 ```
