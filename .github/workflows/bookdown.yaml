@@ -88,7 +88,7 @@ jobs:
         run: make -C docs all
 
       - name: Upload book folder for debug
-        if: failure() || sucess()
+        if: failure() || success()
         uses: actions/upload-artifact@main
         with:
           name: book-dir
