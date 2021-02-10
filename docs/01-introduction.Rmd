@@ -205,7 +205,7 @@ It is up to you how to format your profile file- neither way is wrong, and both 
 ```{r global-options-2, echo=FALSE}
 knitr::kable(matrix(c(
   'blogdown.author', '', 'The default author of new posts',
-  'blogdown.ext', '.md', 'The default extension of new posts; options are .md, .Rmd, and .Rmarkdown',
+  'blogdown.ext', '.md', 'The default extension of new posts: .md, .Rmd, or .Rmarkdown',
   'blogdown.subdir', 'post', 'Which subdirectory under content/ should posts go? This depends on your theme',
   'blogdown.yaml.empty', TRUE, 'Preserve empty fields in YAML?',
   NULL
