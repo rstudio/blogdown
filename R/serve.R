@@ -129,7 +129,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       # https://github.com/rstudio/blogdown/issues/124
       tweak_hugo_env(server = TRUE, relativeURLs = if (is_rstudio_server()) TRUE)
       if (length(list_rmds(pattern = bundle_regex('.R(md|markdown)$'))))
-        create_shortcode('postref.html', 'blogdown/postref')
+        create_shortcode('postref.html', 'blogdown/postref', is_rstudio_server())
     }
     # if requested not to demonize the server, run it in the foreground process,
     # which will block the R session
