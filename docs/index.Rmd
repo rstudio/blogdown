@@ -18,14 +18,26 @@ github-repo: rstudio/blogdown
 cover-image: images/cover.png
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, tidy = FALSE}
 options(
   htmltools.dir.version = FALSE, formatR.indent = 2,
   width = 55, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE
 )
 
-lapply(c(), function(pkg) {
+# install missing packages, some of theme are for citations references
+lapply(c('formatR', 'htmlwidgets', 'servr', 'animation',  'processx', 'widgetframe', 'pkgdown'), function(pkg) {
   if (system.file(package = pkg) == '') install.packages(pkg)
+})
+
+# latex post process
+options(bookdown.post.latex = function(x) {
+
+  # only build a skeleton for the online version
+  if (Sys.getenv('BOOKDOWN_FULL_PDF', '') == 'false') return(bookdown:::strip_latex_body(
+    x, '\nThis PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.\n'
+    ))
+
+  x
 })
 ```
 
