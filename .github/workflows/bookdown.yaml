@@ -91,18 +91,18 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.repo.createCommitStatus({
+            github.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
               sha: context.sha,
-              state: 'success',
-              target_url: ${{ env.URL}},
-              description: 'Book deployed!',
-              context: 'bookdown.org'
+              state: "success",
+              target_url: "${{ env.URL}}",
+              description: "Book deployed!",
+              context: "bookdown.org"
             })
 
       - name: Upload book folder for debug
-        if: failure() || success()
+        if: failure()
         uses: actions/upload-artifact@main
         with:
           name: book-dir
