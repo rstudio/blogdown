@@ -53,13 +53,7 @@ jobs:
           # required for pkgdown install
           brew install harfbuzz fribidi
 
-      - name: Install phamtomJS for webshot
-        run: |
-          remotes::install_cran("webshot")
-          webshot::install_phantomjs()
-        shell: Rscript {0}
-
-      - name: Install R dependencies for bookdown
+      - name: Install R dependencies for blogdown
         run: |
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
