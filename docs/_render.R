@@ -20,24 +20,23 @@ for (fmt in formats) {
 
 # When several format are rendered, usually when make all is called,
 # then we publish everything to bookdown.org
-# TODO: Uncomment when building works
-# if (length(formats) > 1) {
-#   if (!is.na(Sys.getenv("CI", NA))) {
-#     # On CI connect to server, using API KEY and deploy using appId
-#     rsconnect::addConnectServer('https://bookdown.org', 'bookdown.org')
-#     rsconnect::connectApiUser(
-#       account = 'GHA', server = 'bookdown.org',
-#       apiKey = Sys.getenv('CONNECT_API_KEY')
-#     )
-#     rsconnect::deploySite(
-#       appId = Sys.getenv('CONTENT_ID'),
-#       server = 'bookdown.org',
-#       render = 'none', logLevel = 'verbose',
-#       forceUpdate = TRUE)
-#   } else if (Sys.getenv('USER') == 'yihui') {
-#     # for local deployment when rsconnect/ is available
-#     bookdown::publish_book('blogdown', server = 'bookdown.org', render = 'none')
-#   }
-# }
+if (length(formats) > 1) {
+  if (!is.na(Sys.getenv("CI", NA))) {
+    # On CI connect to server, using API KEY and deploy using appId
+    rsconnect::addConnectServer('https://bookdown.org', 'bookdown.org')
+    rsconnect::connectApiUser(
+      account = 'GHA', server = 'bookdown.org',
+      apiKey = Sys.getenv('CONNECT_API_KEY')
+    )
+    rsconnect::deploySite(
+      appId = Sys.getenv('CONTENT_ID'),
+      server = 'bookdown.org',
+      render = 'none', logLevel = 'verbose',
+      forceUpdate = TRUE)
+  } else if (Sys.getenv('USER') == 'yihui') {
+    # for local deployment when rsconnect/ is available
+    bookdown::publish_book('blogdown', server = 'bookdown.org', render = 'none')
+  }
+}
 
 setwd(owd)
