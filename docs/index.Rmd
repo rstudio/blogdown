@@ -24,8 +24,8 @@ options(
   width = 55, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE
 )
 
-# install missing packages
-lapply(c('formatR', 'htmlwidgets', 'webshot', 'servr', 'xaringan', 'animation',  'processx', 'later', 'widgetframe', 'pkgdown'), function(pkg) {
+# install missing packages, some of theme are for citations references
+lapply(c('formatR', 'htmlwidgets', 'servr', 'animation',  'processx', 'widgetframe', 'pkgdown'), function(pkg) {
   if (system.file(package = pkg) == '') install.packages(pkg)
 })
 
