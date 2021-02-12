@@ -85,6 +85,22 @@ jobs:
           CONTENT_ID: 463
         run: make -C docs all
 
+      - uses: actions/github-script@v3
+        env:
+          URL: https://bookdown.org/yihui/bookdown
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.repo.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: 'success',
+              target_url: ${{ env.URL}},
+              description: 'Book deployed!',
+              context: 'bookdown.org'
+            })
+
       - name: Upload book folder for debug
         if: failure() || success()
         uses: actions/upload-artifact@main
