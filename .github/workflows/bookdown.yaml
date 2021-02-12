@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - build-book-gha
+      - master
 
 name: Build and deploy book
 
