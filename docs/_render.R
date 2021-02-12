@@ -22,6 +22,7 @@ for (fmt in formats) {
 # then we publish everything to bookdown.org
 if (length(formats) > 1) {
   if (!is.na(Sys.getenv("CI", NA))) {
+    xfun::pkg_load2("rsconnect")
     # On CI connect to server, using API KEY and deploy using appId
     rsconnect::addConnectServer('https://bookdown.org', 'bookdown.org')
     rsconnect::connectApiUser(
