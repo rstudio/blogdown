@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - main
     paths:
       - 'docs/**'
       - '.github/workflows/bookdown.yaml'
