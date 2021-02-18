@@ -302,10 +302,11 @@ install_theme = function(
     theme = gsub('\\s*/\\s*', '/', theme)  # remove spaces, e.g., user / repo -> user/repo
     branch = sub('^@', '', gsub(r, '\\2', theme))
     theme = gsub(r, '\\1', theme)
+    # the hugo-academic theme has moved
+    if (theme == 'gcushen/hugo-academic') theme = 'wowchemy/starter-academic'
     if (branch == '') branch = default_branch(theme, hostname)
   }
-  # the hugo-academic theme has moved
-  if (theme == 'gcushen/hugo-academic') theme = 'wowchemy/starter-academic'
+
   dir_create('themes')
   is_theme = FALSE
   in_dir('themes', {

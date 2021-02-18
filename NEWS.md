@@ -30,6 +30,8 @@
 
 - Plots generated from R code chunks in posts cannot be previewed on RStudio Server (thanks, @cderv [@datawookie](https://datawookie.dev/blog/2021/02/setting-up-postref-shortcode-for-remote-blog/) #587).
 
+- The theme `gcushen/hugo-academic` is now correctly automatically redirected to `wowchemy/starter-academic` with correct default git branch when installing with `new_site()` or `install_theme()`.
+
 ## MINOR CHANGES
 
 - When clicking the Knit button in RStudio to knit a post, the normal knitting process is shown (such as the progress bar) instead of being suppressed (thanks, @Athanasiamo, #572).
