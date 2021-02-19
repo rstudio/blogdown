@@ -1,8 +1,8 @@
 ---
-title: "Get started"
+title: "Learn blogdown"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Learn bookdown}
+  %\VignetteIndexEntry{Learn blogdown}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
