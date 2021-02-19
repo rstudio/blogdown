@@ -6,3 +6,4 @@
 ^codecov\.yml$
 ^_pkgdown\.yml$
 ^pkgdown$
+^vignettes/articles$
