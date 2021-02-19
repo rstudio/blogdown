@@ -9,7 +9,7 @@ citEntry(
   author = Filter(function(p) 'aut' %in% p$role, as.person(meta$Author)),
   year = year,
   note = vers,
-  url = meta$URL,
+  url = strsplit(meta$URL, ',')[[1]][1],
   textVersion = paste('Yihui Xie (', year, '). blogdown: ', meta$Title, '. ', vers, '.', sep = '')
 )
 
@@ -21,7 +21,7 @@ citEntry(
   address = 'Boca Raton, Florida',
   year = '2017',
   note = 'ISBN 978-0815363729',
-  url = meta$URL,
+  url = 'https://bookdown.org/yihui/blogdown/',
   textVersion = paste(
     'Yihui Xie, Alison Presmanes Hill, and Amber Thomas (2017).',
     'blogdown: Creating Websites with R Markdown.',
