@@ -4,23 +4,89 @@ url: https://pkgs.rstudio.com/blogdown
 
 template:
   package: quillt
+  opengraph:
+    image:
+      src: man/figures/logo.png
+      alt: "blogdown package"
+    twitter:
+      creator: "@rstudio"
+      card: summary
 
 development:
-  mode: auto
+  version_tooltip: "Development version"
+
 
 navbar:
   title: ~
   type: default
-  left:
-  - text: Get started
-    href: articles/blogdown.html
-  - text: Examples
-    href: articles/examples.html
-  - text: Reference
-    href: reference/index.html
-  right:
-  - text: News
-    href: news/index.html
-  - icon: fab fa-github fa-lg
-    href: https://github.com/rstudio/blogdown
+  structure:
+    left:  [intro, examples, articles]
+    right: [reference, news, github]
+  components:
+    home: ~
+    examples:
+      text: Examples
+      href: articles/articles/examples.html
+    articles:
+      text: Articles
+      menu:
+        - text: "No vignettes"
+    reference:
+      text: Reference
+      href: reference/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/rstudio/blogdown
+    news:
+      text: News
+      menu:
+        - text: "Changelog"
+          href: news/index.html
+        - text: "------------------"
+        - text: "Blog posts"
+        - text: "Version 1.0"
+          href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
 
+reference:
+- title: Working with Hugo
+  desc: >
+    These functions are helpers to work with Hugo and its features.
+  contents:
+  - install_theme
+  - ends_with("hugo")
+  - starts_with("hugo")
+  - starts_with("shortcode")
+  - bundle_site
+  - find_yaml
+  - read_toml
+
+- title: Previewing and rendering websites
+  contents:
+  - build_site
+  - serve_site
+
+- title: Checking **blogdown** projects
+  contents:
+  - starts_with("check")
+
+- title: Managing configuration
+  contents:
+  - starts_with("config")
+
+- title: Helper functions
+  desc: These functions are utility functions when working with **blogdown**.
+  contents:
+  - build_dir
+  - clean_duplicates
+  - dep_path
+  - starts_with("filter")
+  - html_page
+
+- title: The rmarkdown package
+  desc: ~
+  contents:
+  - blogdown-package
+
+authors:
+  "Yihui Xie":
+    href: https://yihui.org
