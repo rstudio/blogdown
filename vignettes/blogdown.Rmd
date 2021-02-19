@@ -1,5 +1,52 @@
 ---
 title: "Get started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Learn bookdown}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-Learn more about how to start using blogdown at <https://bookdown.org/yihui/blogdown/>.
+# User Guide
+
+<a href="https://bookdown.org/yihui/blogdown/"><img src="https://bookdown.org/yihui/blogdown/images/cover.png" alt="blogdown: Creating Websites with R Markdown" width="250" style="padding: 0 15px; float: right;"/></a>
+
+Written by Yihui Xie, the package author, [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/bookdown/) introduces the R package and how to use it. The book is published by Chapman & Hall/CRC, and you can read it online for free.
+
+The book is structured into 5 parts to guide the reader into the use of the R package **blogdown** to create and manage websites: 
+
+```{r, results='asis', echo = FALSE, eval = FALSE}
+# run this to update the content below
+xfun::pkg_attach2("xml2")
+html <- read_html("https://bookdown.org/yihui/blogdown/")
+chapters <- xml_find_all(html, "//li[@class='chapter']")
+first_level <- chapters[which(purrr::map_lgl(xml_attr(chapters, 'data-level'), ~ grepl('^\\d+$', .x)))]
+titles <- xml_text(xml_find_all(first_level, "a"))
+titles <- gsub("^(\\d+)", "\\1.", titles)
+titles <- gsub("^(.*) \\([*])$", "\\1", titles)
+url <- file.path("https://bookdown.org/yihui/blogdown", xml_attr(first_level, "data-path"))
+formatted <- sprintf("* [%s](%s)", titles, url)
+cat(formatted, sep = "\n")
+```
+
+
+* [1. Get Started](https://bookdown.org/yihui/blogdown/get-started.html) introduces the package and how to get started using it. This is the chapter every user is expected to read.
+* [2. Hugo](https://bookdown.org/yihui/blogdown/hugo.html) introduces [Hugo](https://gohugo.io), the static site generator on which blogdown is based. It will act as a guide to those who are just getting started with Hugo.
+* [3. Deployment](https://bookdown.org/yihui/blogdown/deployment.html) explains different methods to deploy your static website online.
+* [4. Migration](https://bookdown.org/yihui/blogdown/migration.html) explains how to migrate from other framework to a Hugo website.
+* [5. Other Generators](https://bookdown.org/yihui/blogdown/other-generators.html) explains how to use **blogdown** with a custom build method.
+
+
+**A note from the authors**: Some of the information and instructions in this book are now out of date because of changes to Hugo and the recent  **blogdown** package. Most of the book is still valid but some chapters may have less accurate informations
+
+# About R Markdown
+
+<a href="https://bookdown.org/yihui/rmarkdown/"><img src="https://bookdown.org/yihui/rmarkdown/images/cover.png" alt="R Markdown: The Definitive Guide" width="250" style="padding: 0 15px; float: right;"/></a>
+
+If you are new to **R Markdown**, we recommend you start with [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) to get an overview. [Part I](https://bookdown.org/yihui/rmarkdown/installation.html) introduces how to install the relevant packages, and provides an overview of R Markdown, including the possible output formats, the Markdown syntax, the R code chunk syntax, and how to use other languages in R Markdown.
+
+Next, the chapter on [_Websites_](https://bookdown.org/yihui/rmarkdown/websites.html) will help orient you to how the **blogdown** package allows you to use R Markdown to create websites. 
+
+# Going further with examples
+
+Look at the [Examples](articles/articles/examples.Rmd) page.
