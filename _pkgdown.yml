@@ -65,7 +65,7 @@ reference:
   - build_site
   - serve_site
 
-- title: Checking **blogdown** projects
+- title: Checking blogdown projects
   contents:
   - starts_with("check")
 
@@ -74,7 +74,7 @@ reference:
   - starts_with("config")
 
 - title: Helper functions
-  desc: These functions are utility functions when working with **blogdown**.
+  desc: These functions are utility functions when working with blogdown.
   contents:
   - build_dir
   - clean_duplicates
