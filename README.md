@@ -2,19 +2,30 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/rstudio/blogdown/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/blogdown/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/blogdown)](https://CRAN.R-project.org/package=blogdown)
 [![Coverage status](https://codecov.io/gh/rstudio/blogdown/branch/master/graph/badge.svg)](https://codecov.io/github/rstudio/blogdown?branch=master)
-[![Downloads from the RStudio CRAN mirror](https://cranlogs.r-pkg.org/badges/blogdown)](https://cran.r-project.org/package=blogdown)
 <!-- badges: end -->
 
-An open-source (GPL-3) R package to generate static websites based on [R Markdown](https://rmarkdown.rstudio.com) and [Hugo](https://gohugo.io). You can install the package via CRAN or GitHub:
+An open-source (GPL-3) R package to generate static websites based on [R Markdown](https://rmarkdown.rstudio.com) and [Hugo](https://gohugo.io). 
+
+## Book
+
+<a href="https://bookdown.org/yihui/blogdown/"><img src="https://bookdown.org/yihui/blogdown/images/cover.png" alt = "blogdown: Creating Websites with R Markdown" height="400"></a>
+
+## Installation
+
+You can install the package via CRAN as follows:
 
 ```r
-## Install from CRAN
 install.packages('blogdown')
+```
 
-## Or, install from GitHub
+If you want to use the development version of the **blogdown** package, you can install the package from GitHub via the [**remotes** package](https://remotes.r-lib.org):
+
+```r
 remotes::install_github('rstudio/blogdown')
 ```
+## Usage
 
 You may create a new site via the function `blogdown::new_site()` under an _empty_ directory. It will create a skeleton site, download a Hugo theme from Github,  add some sample content, launch a web browser and you will see the new site. The sample blog post `hello-world.Rmd` should be opened automatically, and you can edit it. The website will be automatically rebuilt and the page will be refreshed after you save the file.
 
@@ -27,5 +38,10 @@ You may not be satisfied with the default site created from `new_site()`. There 
 1. Pick a Hugo theme that you like from https://themes.gohugo.io. All you need is its Github user and repository name, to be passed to the `theme` argument of `new_site()`.
 2. Add more content (pages or posts), or migrate your existing website.
 
-The full documentation is the **blogdown** book freely available at https://bookdown.org/yihui/blogdown/. You are expected to read at least the first chapter. 
-You are welcome to send us feedback using [Github issues](https://github.com/rstudio/blogdown/issues) or ask questions on [StackOverflow](https://stackoverflow.com/questions/tagged/blogdown) with the `blogdown` tag.
+## Getting help
+
+There are two main places to get help:
+
+1. The [RStudio community](https://community.rstudio.com/tags/c/R-Markdown/10/blogdown) is a friendly place to ask any questions about **blogdown**. Be sure to use the `blogdown` tag.
+
+1. [Stack Overflow](https://stackoverflow.com/questions/tagged/blogdown) is a great source of answers to common **blogdown** questions. Use the tags [`[r][blogdown]`](https://stackoverflow.com/questions/tagged/blogdown+r) if you ask a question.
