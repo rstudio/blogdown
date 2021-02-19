@@ -1,0 +1,1 @@
+{{ if eq (getenv "BLOGDOWN_POST_RELREF") "true" }}{{ .Page.RelPermalink }}{{ else }}{{ .Page.Permalink }}{{ end }}

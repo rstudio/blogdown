@@ -4,6 +4,7 @@
 #' @export
 #' @describeIn hugo_cmd Run an arbitrary Hugo command.
 hugo_cmd = function(...) {
+  on.exit(clean_hugo_cache(), add = TRUE)
   system2(find_hugo(), ...)
 }
 
@@ -32,28 +33,39 @@ hugo_version = local({
 }
 
 #' @param version A version number.
+#' @param exact If \code{FALSE}, check if the current Hugo version is equal to
+#'   or higher than the specified \code{version}. If \code{TRUE}, check if the
+#'   exact version is available.
 #' @export
-#' @describeIn hugo_cmd Check if Hugo with a certain version or above is
-#'   available.
+#' @describeIn hugo_cmd Check if Hugo of a certain version (or above if
+#'   \code{exact = FALSE}) is available.
 #' @examples blogdown::hugo_available('1.2.3')
-hugo_available = function(version = '0.0.0') {
-  tryCatch(hugo_version() >= version, error = function(e) FALSE)
+hugo_available = function(version = '0.0.0', exact = FALSE) {
+  tryCatch((if (exact) `==` else `>=`)(hugo_version(), version), error = function(e) FALSE)
 }
 
 #' @param local Whether to build the site for local preview (if \code{TRUE}, all
 #'   drafts and future posts will also be built).
+#' @param args A character vector of command-line arguments to be passed to
+#'   \command{hugo}, e.g., \code{c("--minify", "--quiet")}.
+#' @param baseURL,relativeURLs Custom values of \code{baseURL} and
+#'   \code{relativeURLs} to override Hugo's default and the settings in the
+#'   site's config file.
 #' @export
 #' @describeIn hugo_cmd Build a plain Hugo website. Note that the function
 #'   \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
 #'   via \code{hugo_build()} to build the site.
-hugo_build = function(local = FALSE) {
+hugo_build = function(
+  local = FALSE, args = getOption('blogdown.hugo.args'),
+  baseURL = NULL, relativeURLs = NULL
+) {
   config = load_config()
   # Hugo 0.48 generates an ugly empty resources/ dir in the root dir
   on.exit(del_empty_dir('resources'), add = TRUE)
-  tweak_hugo_env(FALSE)
+  tweak_hugo_env(baseURL, relativeURLs)
+
   hugo_cmd(c(
-    if (local) c('-D', '-F'),
-    getOption('blogdown.hugo.args'),
+    if (local) c('-D', '-F'), na2null(args),
     '-d', shQuote(publish_dir(config)), theme_flag(config)
   ))
 }
@@ -67,6 +79,10 @@ theme_flag = function(config = load_config()) {
   a = c('--themesDir', d)
   if (length(t) == 1) a = c(a, '-t', t)
   a
+}
+
+theme_dir = function(...) {
+  if (length(x <- theme_flag()) == 4) file.path(x[2], x[4])
 }
 
 change_config = function(name, value) {
@@ -95,9 +111,11 @@ change_config = function(name, value) {
 #'
 #' Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 #' ...)}.
-#' @param dir The directory of the new site. It should be empty or only contain
-#'   hidden files, RStudio project (\file{*.Rproj}) files, \file{LICENSE},
-#'   and/or \file{README}/\file{README.md}.
+#' @param dir The directory of the new site.
+#' @param force Whether to create the site in a directory even if it is not
+#'   empty. By default, \code{force = TRUE} when the directory only contains
+#'   hidden, RStudio project (\file{*.Rproj}), \file{LICENSE}, and/or
+#'   \file{README} files.
 #' @param install_hugo Whether to install Hugo automatically if it is not found.
 #' @param format The format of the configuration file. Note that the frontmatter
 #'   of the new (R) Markdown file created by \code{new_content()} always uses
@@ -123,7 +141,9 @@ change_config = function(name, value) {
 #'   sample \file{.Rprofile} will be created. It contains some global options,
 #'   such as \code{options(blogdown.hugo.version)}, which makes sure you will
 #'   use a specific version of Hugo for this site in the future.
-#' @param serve Whether to start a local server to serve the site.
+#' @param serve Whether to start a local server to serve the site. By default,
+#'   this function will ask you in an interactive R session if you want to serve
+#'   the site.
 #' @references The full list of Hugo commands: \url{https://gohugo.io/commands},
 #'   and themes: \url{https://themes.gohugo.io}.
 #' @export
@@ -132,28 +152,45 @@ change_config = function(name, value) {
 #' @examples
 #' if (interactive()) blogdown::new_site()
 new_site = function(
-  dir = '.', install_hugo = TRUE, format = 'yaml', sample = TRUE,
+  dir = '.', force = NA, install_hugo = TRUE, format = 'yaml', sample = TRUE,
   theme = 'yihui/hugo-lithium', hostname = 'github.com', theme_example = TRUE,
   empty_dirs = FALSE, to_yaml = TRUE, netlify = TRUE, .Rprofile = TRUE,
-  serve = interactive()
+  serve = if (interactive()) 'ask' else FALSE
 ) {
-  files = grep('[.]Rproj$', list.files(dir), invert = TRUE, value = TRUE)
-  files = setdiff(files, c('LICENSE', 'README', 'README.md'))
-  force = length(files) == 0
-  if (!force) warning("The directory '", dir, "' is not empty")
-  if (install_hugo && !hugo_available()) install_hugo()
+  msg_init('Creating your new site')
+  if (is.na(force)) {
+    files = grep(
+      '([.]Rproj|/(LICENSE|README)([.][a-z]+)?)$', list_files(dir),
+      invert = TRUE, value = TRUE
+    )
+    force = length(files) == 0
+    if (!force) {
+      force = yes_no(sprintf("The directory '%s' is not empty. Create the site anyway?", dir))
+      if (!force) stop(
+        'The dir is not empty and Hugo might override existing files. If you are ',
+        'sure the site can be created in this dir, use new_site(force = TRUE).'
+      )
+    }
+  }
+  if (install_hugo && !hugo_available()) {
+    msg_next('Installing Hugo'); install_hugo()
+  }
   if (hugo_cmd(
     c('new', 'site', shQuote(path.expand(dir)), if (force) '--force', '-f', format),
     stdout = FALSE
   ) != 0) return(invisible())
 
-  owd = setwd(dir); on.exit(setwd(owd), add = TRUE)
+  owd = setwd(dir); opt = opts$get(); opts$restore()
+  on.exit({opts$restore(opt); setwd(owd)}, add = TRUE)
+
   # remove Hugo's default archetype (I think draft: true is a confusing default)
   unlink(file.path('archetypes', 'default.md'))
   # remove empty dirs
   if (!empty_dirs) for (d in list.dirs(recursive = FALSE)) del_empty_dir(d)
-  if (is.character(theme) && length(theme) == 1 && !is.na(theme))
+  if (is.character(theme) && length(theme) == 1 && !is.na(theme)) {
+    msg_next('Installing the theme ', theme, ' from ', hostname)
     install_theme(theme, theme_example, hostname = hostname)
+  }
   # remove the .gitignore that ignores everything under static/:
   # https://github.com/rstudio/blogdown/issues/320
   if (file.exists(gitignore <- file.path('static', '.gitignore'))) {
@@ -161,12 +198,25 @@ new_site = function(
   }
 
   if (sample) {
-    d = file.path('content', 'blog')
-    if (!dir_exists(d)) d = file.path('content', 'post')
-    f1 = pkg_file('resources', '2015-07-23-r-rmarkdown.Rmd')
+    lang = get_lang()
+    d = file.path('content', c('blog', 'posts', 'post'))
+    d = c(file.path('content', lang, basename(d)), d)
+    for (i in d) if (dir_exists(i)) break
+    d = i
+    f1 = pkg_file('resources', '2020-12-01-r-rmarkdown.Rmd')
     if (use_bundle()) d = file.path(d, basename(xfun::sans_ext(f1)))
-    dir_create(d)
     f2 = file.path(d, if (use_bundle()) 'index.Rmd' else basename(f1))
+    # for a multilingual site, create the sample post via new_content() because
+    # the post may need to be under a language dir (#537)
+    if (length(lang)) {
+      f2 = sub(sprintf('^content/(%s/)?', lang), '', f2)
+      f2 = sub('^(.+[.])', sprintf('\\1%s.', lang), f2)
+      f2 = new_content(f2, open = FALSE)
+      file.remove(f2)
+    } else {
+      dir_create(d)
+    }
+    msg_next('Adding the sample post to ', f2)
     file.copy(f1, f2)
     if (getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
@@ -176,20 +226,25 @@ new_site = function(
   }
 
   if (to_yaml) {
+    msg_next('Converting all metadata to the YAML format')
     hugo_convert('YAML', unsafe = TRUE)
-    if (file.exists(cfg <- 'config.toml')) {
-      toml2yaml(cfg, 'config.yaml'); unlink(cfg)
-    }
+  }
+  if (format == 'yaml' && file.exists(cfg <- 'config.toml')) {
+    toml2yaml(cfg, 'config.yaml'); unlink(cfg)
   }
   if (netlify) {
+    msg_next('Adding netlify.toml in case you want to deploy the site to Netlify')
     if (!file.exists('netlify.toml')) config_netlify('netlify.toml') else {
-      warning(
+      msg_todo(
         "The file 'netlify.toml' exists, and I will not overwrite it. If you want ",
         "to overwrite it, you may call blogdown::config_netlify() by yourself."
       )
     }
   }
-  if (.Rprofile) config_Rprofile()
+  if (.Rprofile) {
+    msg_next('Adding .Rprofile to set options() for blogdown')
+    config_Rprofile()
+  }
   dir_create('R')
   add_build_script = function(x, f) {
     write_utf8(c(
@@ -199,7 +254,18 @@ new_site = function(
   }
   add_build_script('before', 'R/build.R')
   add_build_script('after', 'R/build2.R')
+  msg_init('The new site is ready')
+  msg_okay(
+    'To start a local preview: use blogdown::serve_site()',
+    if (is_rstudio()) ', or the RStudio add-in "Serve Site"'
+  )
+  msg_okay('To stop a local preview: use blogdown::stop_server(), or restart your R session')
+  if (identical(serve, 'ask')) serve = yes_no('Want to serve and preview the site now?')
   if (serve) serve_site()
+  if (length(list.files('.', '[.]Rproj$')) == 0) {
+    xfun::try_silent(rstudioapi::initializeProject())
+  }
+  invisible(getwd())
 }
 
 #' Install a Hugo theme from Github
@@ -220,6 +286,7 @@ install_theme = function(
   theme, hostname = 'github.com', theme_example = FALSE, update_config = TRUE,
   force = FALSE, update_hugo = TRUE
 ) {
+  theme = trim_ws(theme)
   r = '^([^/]+/[^/@]+)(@.+)?$'
   theme_is_url = grepl('[.](zip|tar[.]gz)$', theme)
   if (!is.character(theme) || length(theme) != 1 || (!grepl(r, theme) & !theme_is_url)) {
@@ -229,12 +296,19 @@ install_theme = function(
     )
     return(invisible())
   }
-  branch = sub('^@', '', gsub(r, '\\2', theme))
-  if (branch == '' || theme_is_url) branch = 'master'
-  theme = gsub(r, '\\1', theme)
-  # the hugo-academic theme has moved
-  if (theme == 'gcushen/hugo-academic') theme = 'wowchemy/starter-academic'
+  if (theme_is_url) {
+    branch = xfun::sans_ext(basename(theme))
+  } else {
+    theme = gsub('\\s*/\\s*', '/', theme)  # remove spaces, e.g., user / repo -> user/repo
+    branch = sub('^@', '', gsub(r, '\\2', theme))
+    theme = gsub(r, '\\1', theme)
+    # the hugo-academic theme has moved
+    if (theme == 'gcushen/hugo-academic') theme = 'wowchemy/starter-academic'
+    if (branch == '') branch = default_branch(theme, hostname)
+  }
+
   dir_create('themes')
+  is_theme = FALSE
   in_dir('themes', {
     url = if (theme_is_url) theme else {
       sprintf('https://%s/%s/archive/%s.tar.gz', hostname, theme, branch)
@@ -252,19 +326,12 @@ install_theme = function(
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
+    is_theme = file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))
     if (dir_exists(expdir)) if (theme_example) {
       # post-process go.mod so that users don't need to install Go (it sounds
       # unbelievable that a user needs to install Go just to use a Hugo theme)
       download_modules(file.path(expdir, 'go.mod'))
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
-      # themes may use config/_default/config.toml, e.g. hugo-academic; we need
-      # to move this config to the root dir, because blogdown assumes the config
-      # file is under the root dir
-      if (file.exists(cfg <- file.path('..', 'config', '_default', 'config.toml'))) {
-        file.rename(cfg, '../config.toml')
-      }
-      # remove the themesDir setting; it is unlikely that you need it
-      in_dir('..', change_config('themesDir', NA))
     } else warning(
       "The theme has provided an example site. You should read the theme's documentation ",
       'and at least take a look at the config file config.toml (or .yaml) of the example site, ',
@@ -276,10 +343,10 @@ install_theme = function(
       unlink(file.path(thndir, c('tn.png', 'screenshot.png')))
       del_empty_dir(thndir)
     }
-    # delete the .Rprofile if exists, since it's unlikely to be useful
-    unlink(file.path(zipdir, '.Rprofile'))
+    # delete the .Rprofile and .github folder if they exist, since they are unlikely to be useful
+    unlink(file.path(zipdir, c('.Rprofile', '.github')), recursive = TRUE)
     # check the minimal version of Hugo required by the theme
-    if (update_hugo && file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))) {
+    if (update_hugo && is_theme) {
       if (!is.null(minver <- read_toml(theme_cfg)[['min_version']])) {
         if (!hugo_available(minver)) install_hugo()
       }
@@ -287,6 +354,14 @@ install_theme = function(
     newdir = sub(tmpdir, '.', zipdir, fixed = TRUE)
     newdir = gsub('-[a-f0-9]{12,40}$', '', newdir)
     newdir = gsub(sprintf('-%s$', branch), '', newdir)
+    # if tmpdir and zipdir are identical, that often means the archive was
+    # extracted to the root dir of tmpdir (i.e. the theme files are compressed
+    # directly into an archive, instead of being placed into a folder and that
+    # folder is compressed), in which case we let newdir be the theme name; one
+    # example is https://stackoverflow.com/q/65702805/559676
+    if (newdir == '.') {
+      newdir = if (theme_is_url) branch else basename(theme)
+    }
     if (!force && dir_exists(newdir)) stop(
       'The theme already exists. Try install_theme("', theme, '", force = TRUE) ',
       'after you read the help page ?blogdown::install_theme.', call. = FALSE
@@ -295,12 +370,47 @@ install_theme = function(
     file.rename(zipdir, newdir)
     unlink(c(zipfile, file.path(newdir, '*.Rproj')))
     theme = gsub('^[.][\\/]+', '', newdir)
+    if (is_theme) {
+      # we don't need the content/ directory from the theme
+      unlink(file.path(theme, 'content'), recursive = TRUE)
+    } else {
+      # download modules if not a theme, and copy "theme" content to root dir
+      download_modules(file.path(theme, 'go.mod'))
+      file.copy(list.files(theme, full.names = TRUE), '../', recursive = TRUE)
+      unlink(theme, recursive = TRUE)
+    }
+    # themes may use config/_default/config.toml, e.g. hugo-academic; we need to
+    # move this config to the root dir, because blogdown assumes the config file
+    # is under the root dir
+    if (file.exists(cfg <- file.path('..', 'config', '_default', 'config.toml'))) {
+      file.rename(cfg, '../config.toml')
+      unlink('../config.yaml')
+    }
+    # remove the themesDir setting; it is unlikely that you need it
+    in_dir('..', change_config('themesDir', NA))
   })
-  if (update_config) {
+  if (is_theme) if (update_config) {
     change_config('theme', sprintf('"%s"', theme))
   } else message(
     "Do not forget to change the 'theme' option in '", find_config(), "' to \"", theme, '"'
   )
+}
+
+# obtain the default branch of a repo from the API
+default_branch = function(repo, hostname = 'github.com') {
+  fallback = function(...) {
+    message(
+      'Unable to obtain the default branch of the repo "', repo,
+      '". Trying the branch "master", which may be inaccurate. You are recommended ',
+      'to specify the branch name after the repo name, e.g., user/repo@branch.'
+    )
+    'master'
+  }
+  tryCatch({
+    x = read_utf8(sprintf('https://api.%s/repos/%s', hostname, repo))
+    x = xfun::grep_sub('.*?\\s*"default_branch":\\s*"([^"]+)",.*', '\\1', x)
+    if (length(x) > 0) x[1] else fallback()
+  }, error = fallback)
 }
 
 # download Hugo modules with R, instead of Go/GIT, so users won't need to
@@ -349,6 +459,9 @@ download_modules = function(mod) {
 new_content = function(path, kind = '', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
   path2 = with_ext(path, '.md')
+  # for a new content file to be created with a bundle archetype, its path
+  # should not contain index.md but only the dir name, otherwise the archetype
+  # will not be used
   if (grepl('/$', kind)) {
     path2 = dirname(path2)
     kind  = sub('/$', '', kind)
@@ -360,6 +473,7 @@ new_content = function(path, kind = '', open = interactive()) {
   )
   if (length(i <- grep(r <- ' created$', file2)) == 1) {
     file2 = sub(r, '', file2[i])
+    if (!grepl('[.]md$', file2)) file2 = file.path(file2, 'index.md')
   } else {
     # should the above method fail to identify the newly created .md, search for
     # the new file with brute force
@@ -425,7 +539,7 @@ content_file = function(...) file.path(
 #'   date.
 #' @param slug The slug of the post. By default (\code{NULL}), the slug is
 #'   generated from the filename by removing the date and filename extension,
-#'   e.g., if \code{file = 'post/2015-07-23-hi-there.md'}, \code{slug} will be
+#'   e.g., if \code{file = 'post/2020-07-23-hi-there.md'}, \code{slug} will be
 #'   \code{hi-there}. Set \code{slug = ''} if you do not want it.
 #' @param title_case A function to convert the title to title case. If
 #'   \code{TRUE}, the function is \code{tools::\link[tools]{toTitleCase}()}).
@@ -459,7 +573,7 @@ new_post = function(
   }
   if (isTRUE(title_case)) title_case = tools::toTitleCase
   if (is.function(title_case)) title = title_case(title)
-  if (getOption('blogdown.warn.future', TRUE)) {
+  if (get_option('blogdown.warn.future', TRUE)) {
     if (isTRUE(tryCatch(date > Sys.Date(), error = function(e) FALSE))) warning(
       'The date of the post is in the future: ', date, '. See ',
       'https://github.com/rstudio/blogdown/issues/377 for consequences, ',
@@ -486,7 +600,6 @@ new_post = function(
 #' @describeIn hugo_cmd A wrapper function to convert source content to
 #'   different formats via \command{hugo convert}.
 hugo_convert = function(to = c('YAML', 'TOML', 'JSON'), unsafe = FALSE, ...) {
-  on.exit(clean_hugo_cache(), add = TRUE)
   to = match.arg(to)
   hugo_cmd(c('convert', paste0('to', to), if (unsafe) '--unsafe', ...), stdout = FALSE)
 }
@@ -501,7 +614,7 @@ hugo_server = function(host, port) {
 
 hugo_server_args = function(host, port) {
   c(
-    'server', '--bind', host, '-p', port, theme_flag(), getOption('blogdown.hugo.server', c(
+    'server', '--bind', host, '-p', port, theme_flag(), get_option('blogdown.hugo.server', c(
       '-D', '-F', if (hugo_available('0.25')) '--navigateToChanged'
     ))
   )
@@ -648,17 +761,27 @@ bundle_site = function(dir = site_root(), output) {
     )
   }
   files = list_files(file.path(output, 'content'), md_pattern)
+  # if .Rmd has .html output, also move .html
+  files2 = with_ext(files, 'html')
+  files = c(files, files2[file_exists(files2)])
   bases = xfun::sans_ext(files)
   i = !basename(bases) %in% c('index', '_index')
   files = files[i]; bases = bases[i]
   for (b in unique(bases)) dir_create(b)
   files2 = file.path(bases, paste('index', xfun::file_ext(files), sep = '.'))
-  i = file.copy(files, files2)
+  # also move *_files/ under static/ and *_cache/ under blogdown/
+  f1 = paste0(sub('^(.*)?/content/', '\\1/static/', bases), '_files')
+  f2 = paste0(sub('^(.*)?/content/', '\\1/blogdown/', bases), '_cache')
+  f3 = unique(c(f1, f2))
+  f4 = file.path(bases, gsub('.*_', 'index_', f3))
+  i = dir_exists(f3)
+  files = c(files, f3[i]); files2 = c(files2, f4[i])
+  # rename foo.Rmd to foo/index.Rmd; foo_files/ to foo/index_files; etc.
+  i = file.rename(files, files2)
   if (any(i)) {
     message(
       'Moved these files into leaf bundles:\n\n',
       paste('*', files[i], '->', files2[i], collapse = '\n')
     )
-    unlink(files[i])
   }
 }

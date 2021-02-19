@@ -1,7 +1,7 @@
 Package: blogdown
 Type: Package
 Title: Create Blogs and Websites with R Markdown
-Version: 0.21.61
+Version: 1.1.13
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
     person("Christophe", "Dervieux", role = "aut", email = "cderv@rstudio.com", comment = c(ORCID = "0000-0003-4474-2498")),
@@ -28,6 +28,7 @@ Authors@R: c(
     person("Maëlle", "Salmon", role = "ctb"),
     person("Maria Paula", "Caldas", role = "ctb"),
     person("Nicolas", "Roelandt", role = "ctb"),
+    person("Oliver", "Madsen", role = "ctb", email = "oliver.p.madsen@gmail.com"),
     person("Raniere", "Silva", role = "ctb"),
     person("TC", "Zhang", role = "ctb"),
     person("Xianying", "Tan", role = "ctb"),
@@ -39,14 +40,14 @@ Description: Write blog posts and web pages in R Markdown. This package supports
     supports 'Jekyll' (<https://jekyllrb.com>) and 'Hexo' (<https://hexo.io>).
 License: GPL-3
 Imports:
-    rmarkdown (>= 2.5),
+    rmarkdown (>= 2.6),
     bookdown (>= 0.14),
     knitr (>= 1.25),
     htmltools,
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
     later,
-    xfun (>= 0.19),
+    xfun (>= 0.21),
     servr (>= 0.21)
 Suggests:
   testit,

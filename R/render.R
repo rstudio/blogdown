@@ -9,22 +9,28 @@
 #' book for more information:
 #' \url{https://bookdown.org/yihui/blogdown/workflow.html}.
 #'
-#' For the \code{method} argument: \code{method = "html"} means to render Rmd
-#' files to HTML via \code{rmarkdown::\link[rmarkdown]{render}()} (which means
-#' Markdown is processed through Pandoc), and process the paths of external
-#' dependencies generated from R code chunks, including images and HTML
-#' dependencies.
+#' For R Markdown posts, there are a few possible rendering methods: \code{html}
+#' (the default), \code{markdown}, and \code{custom}. The method can be set in
+#' the global option \code{blogdown.method} (usually in the
+#' \file{\link{.Rprofile}} file), e.g., \code{options(blogdown.method =
+#' "custom")}.
+#'
+#' For the \code{html} method, \file{.Rmd} posts are rendered to \file{.html}
+#' via \code{rmarkdown::\link[rmarkdown]{render}()}, which means Markdown is
+#' processed through Pandoc. For the \code{markdown} method, \file{.Rmd} is
+#' rendered to \file{.md}, which will typically be rendered to HTML later by the
+#' site generator such as Hugo.
 #'
 #' For all rendering methods, a custom R script \file{R/build.R} will be
 #' executed if you have provided it under the root directory of the website
 #' (e.g. you can compile Rmd to Markdown through
-#' \code{knitr::\link[knitr]{knit}()} and build the side via
-#' \code{\link{hugo_cmd}()}). \code{method = "custom"} means it is entirely up
+#' \code{knitr::\link[knitr]{knit}()} and build the site via
+#' \code{\link{hugo_cmd}()}). The \code{custom} method means it is entirely up
 #' to this R script how a website is rendered. The script is executed via
 #' command line \command{Rscript "R/build.R"}, which means it is executed in a
 #' separate R session. The value of the argument \code{local} is passed to the
 #' command line (you can retrieve the command-line arguments via
-#' \code{\link{commandArgs}(TRUE)}). For \code{method = "html"}, the R script
+#' \code{\link{commandArgs}(TRUE)}). For other rendering methods, the R script
 #' \file{R/build2.R} (if exists) will be executed after Hugo has built the site.
 #' This can be useful if you want to post-process the site.
 #'
@@ -42,9 +48,8 @@
 #' @param local Whether to build the website locally. This argument is passed to
 #'   \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
 #'   the site locally via \code{\link{serve_site}()}.
-#' @param method Different methods to build a website (each with pros and cons).
-#'   See \sQuote{Details}. The value of this argument will be obtained from the
-#'   global option \code{getOption('blogdown.method')} when it is set.
+#' @param method This argument has been deprecated. Please set the global option
+#'   \code{blogdown.method} instead. See \sQuote{Details}.
 #' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
 #'   compiled.
 #' @param build_rmd Whether to (re)build R Markdown files. By default, they are
@@ -58,14 +63,18 @@
 #'   blogdown::filter_newfile}, \code{build_rmd = 'timestamp'} is equivalent to
 #'   \code{build_rmd = blogdown::filter_timestamp}, and \code{build_rmd =
 #'   'md5sum'} is equivalent to \code{build_rmd = blogdown::filter_md5sum}.
+#' @param ... Other arguments to be passed to \code{\link{hugo_build}()}.
 #' @export
-build_site = function(
-  local = FALSE, method = c('html', 'custom'), run_hugo = TRUE, build_rmd = FALSE
-) {
-  if (missing(method)) method = getOption('blogdown.method', method)
-  method = match.arg(method)
-  on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
-  if (method == 'custom') return()
+build_site = function(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE, ...) {
+  if (!missing(method)) stop(
+    "The 'method' argument has been deprecated. Please set the method via ",
+    "options(blogdown.method = ). See ?blogdown::build_site for more info."
+  )
+
+  knitting = is_knitting()
+  if (!knitting) on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
+  if (build_method() == 'custom') return()
+
   if (!xfun::isFALSE(build_rmd)) {
     if (is.character(build_rmd) && length(build_rmd) == 1) {
       build_rmd = switch(
@@ -76,14 +85,20 @@ build_site = function(
     files = if (is.character(build_rmd)) build_rmd else {
       files = list_rmds(check = TRUE)
       if (is.function(build_rmd)) build_rmd(files) else {
-        if (length(files)) getOption('blogdown.files_filter', identity)(files)
+        if (length(files)) get_option('blogdown.files_filter', identity)(files)
       }
     }
-    build_rmds(files)
+    build_rmds(files, knitting)
   }
-  if (run_hugo) on.exit(hugo_build(local), add = TRUE)
-  on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
+  if (run_hugo) on.exit(hugo_build(local, ...), add = TRUE)
+  if (!knitting) on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
+
   invisible()
+}
+
+build_method = function() {
+  methods = c('html', 'markdown', 'custom')
+  match.arg(get_option('blogdown.method', methods), methods)
 }
 
 list_rmds = function(dir = content_file(), check = FALSE, pattern = rmd_pattern) {
@@ -102,14 +117,26 @@ list_rmds = function(dir = content_file(), check = FALSE, pattern = rmd_pattern)
 # list .md files
 list_mds = function() list_files(content_file(), '[.]md$')
 
+# whether a document is knitted via the Knit button
+is_knitting = function() isTRUE(opts$get('render_one'))
+
 # build R Markdown posts
-build_rmds = function(files) {
+build_rmds = function(files, knitting = is_knitting()) {
+  # emit a message indicating that a file is being knitted when the knitting is
+  # not triggered by the Knit button
+  msg_knit = function(f, start = TRUE) {
+    if (knitting) return()
+    if (start) {
+      message('Rendering ', f, '... ', appendLF = FALSE)
+    } else message('Done.')
+  }
+
   i = xfun::is_sub_path(files, rel_path(content_file()))
   # use rmarkdown::render() when a file is outside the content/ dir
   for (f in files[!i]) {
-    message('Rendering ', f, '... ', appendLF = FALSE)
-    render_new(f)
-    message('Done.')
+    msg_knit(f)
+    render_new(f, !knitting)
+    msg_knit(f, FALSE)
   }
 
   if (length(files <- files[i]) == 0) return()
@@ -149,29 +176,26 @@ build_rmds = function(files) {
   }
 
   for (i in seq_along(files)) {
-    f = files[i]; d = dirname(f)
+    f = files[i]; d = dirname(f); out = output_file(f)
+    to_md = file_ext(out) != 'html'
+    out2 = paste0(out, '~')  # first generate a file with ~ in ext so Hugo won't watch
     copy_output_yml(d)
-    message('Rendering ', f, '... ', appendLF = FALSE)
-    out = output_file(f, to_md <- is_rmarkdown(f))  # expected output file
-    res = xfun::Rscript_call(
-      build_one, list(f, to_md), fail = c('Failed to render ', f)
-    )  # actual output file
+    msg_knit(f)
+    x = xfun::Rscript_call(
+      build_one, list(f, I(basename(out2)), to_md, !knitting),
+      fail = c('Failed to render ', f)
+    )
 
-    xfun::in_dir(d, {
-      x = read_utf8(res)
-      if (res != basename(out)) unlink(res)
-      if (to_md) x = process_markdown(x, res)
-    })
     x = encode_paths(x, lib1[2 * i - 1], d, base, to_md, out)
     move_files(lib1[2 * i - 0:1], lib2[2 * i - 0:1])
 
     # when serving the site, pause for a moment so Hugo server's auto navigation
     # can navigate to the output page
-    if ((length(opts$get('served_dirs')) || isTRUE(opts$get('render_one')))) {
+    if (length(opts$get('served_dirs')) || knitting) {
       server_wait()
     }
 
-    if (getOption('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
+    if (get_option('blogdown.widgetsID', TRUE)) x = clean_widget_html(x)
     if (to_md) {
       write_utf8(x, out)
     } else {
@@ -181,23 +205,27 @@ build_rmds = function(files) {
         append(s, 'draft: true', 1)
       })
     }
-    message('Done.')
+    msg_knit(f, FALSE)
   }
 }
 
-build_one = function(input, to_md = FALSE) {
+build_one = function(input, output, to_md = file_ext(output) != 'html', quiet = TRUE) {
   options(htmltools.dir.version = FALSE)
   setwd(dirname(input))
   input = basename(input)
   # for bookdown's theorem environments generated from bookdown:::eng_theorem
   if (to_md) options(bookdown.output.markdown = TRUE)
-  rmarkdown::render(
-    input, 'blogdown::html_page', envir = globalenv(), quiet = TRUE,
-    run_pandoc = !to_md, clean = !to_md
+  res = rmarkdown::render(
+    input, 'blogdown::html_page', output_file = output, envir = globalenv(),
+    quiet = quiet, run_pandoc = !to_md, clean = !to_md
   )
+  x = read_utf8(res)
+  if (to_md) x = process_markdown(res, x)
+  unlink(res)
+  x
 }
 
-process_markdown = function(x, res) {
+process_markdown = function(res, x = read_utf8(res)) {
   unlink(xfun::attr(res, 'intermediates'))
   # write HTML dependencies to the body of Markdown
   if (length(meta <- xfun::attr(res, 'knit_meta'))) {
@@ -218,23 +246,35 @@ process_markdown = function(x, res) {
     read_utf8(f)
   })
   # protect math expressions in backticks
-  x = xfun::protect_math(x)
+  if (get_option('blogdown.protect.math', TRUE)) x = xfun::protect_math(x)
   # remove the special comments from HTML dependencies
   x = gsub('<!--/?html_preserve-->', '', x)
-  # render citations
-  if (length(grep('^(references|bibliography):($| )', x))) {
+  # render elements that are not commonly supported by Markdown renderers other
+  # than Pandoc, e.g., citations and raw blocks
+  if (run_pandoc(x)) {
     # temporary .md files to generate citations
     mds = replicate(2, wd_tempfile('.md~', pattern = 'citation'))
     on.exit(unlink(mds), add = TRUE)
     write_utf8(x, mds[1])
     rmarkdown::pandoc_convert(
-      mds[1], from = 'markdown', to = 'gfm+tex_math_dollars+footnotes', output = mds[2],
+      mds[1], from = 'markdown', to = paste(markdown_format(), collapse = ''), output = mds[2],
       options = c(if (!rmarkdown::pandoc_available('2.11.2')) '--atx-headers', '--wrap=preserve'),
       citeproc = TRUE
     )
     x = c(bookdown:::fetch_yaml(x), '', read_utf8(mds[2]))
   }
   x
+}
+
+markdown_format = function() get_option(
+  'blogdown.markdown.format',
+  c('gfm', if (rmarkdown::pandoc_available('2.10.1')) c('+tex_math_dollars', '+footnotes'))
+)
+
+run_pandoc = function(x) {
+  !is.null(get_option('blogdown.markdown.format')) ||
+    length(grep('^(references|bibliography):($| )', x)) ||
+    length(grep('[`]{1,}\\{=[[:alnum:]]+}', x))
 }
 
 # given the content of a .html file: replace content/*_files/figure-html with
@@ -259,14 +299,14 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, output) {
   # find the dependencies referenced in HTML
   r = paste0('(<img src|<script src|<link href)(=")(', deps, '/)')
 
-  # for bundle index pages, add {{< relref "output" >}} to URLs, to make sure
+  # for bundle index pages, add {{< blogdown/postref >}} to URLs, to make sure
   # the post content can be displayed anywhere (not limited to the post page,
   # e.g., image paths of a post should also work on the home page if the full
   # post is included on the home page); see the bug report at
   # https://github.com/rstudio/blogdown/issues/501
   if (bundle_index(output)) {
-    x = gsub(r, sprintf('\\1\\2{{< relref "%s" >}}\\3', sub('^content/', '', output)), x)
-    return(x)
+    create_shortcode('postref.html', ref <- 'blogdown/postref')
+    return(gsub(r, sprintf('\\1\\2{{< %s >}}\\3', ref), x))
   }
 
   # move figures to /static/path/to/post/foo_files/figure-html
@@ -291,3 +331,13 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, output) {
   dirs_rename(libs, to, clean = TRUE)
   x
 }
+
+create_shortcode = function(
+  from, to, force = getOption('blogdown.update.shortcode', FALSE)
+) in_root({
+  to = sprintf('layouts/shortcodes/%s.html', to)
+  if (!force && file_exists(to)) return()
+  dir_create(dirname(to))
+  from = pkg_file('resources', from)
+  file.copy(from, to, overwrite = TRUE)
+})

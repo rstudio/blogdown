@@ -1,3 +1,75 @@
+# CHANGES IN blogdown VERSION 1.2
+
+## NEW FEATURES
+
+- Added the argument `force` back to `install_hugo()`. If the specified version of Hugo has been installed, `install_hugo()` will not reinstall it unless `force = TRUE` (thanks, @cderv, #575).
+
+- The new option `options(blogdown.knit.serve_site = FALSE)` can be used to prevent **blogdown** from starting the web server automatically when the Knit button is clicked in RStudio and the site has not been served yet (thanks, @Athanasiamo, #572). By default, the web server will be started (if not already started) so the page being knitted can be previewed.
+
+- Added a new global option `blogdown.site_root`, which can be used to specify the root directory of the website. This can be useful when the website source directory is not the root directory of a project but a subdirectory (thanks, @wjakethompson, #581).
+
+- Added a new global option `blogdown.markdown.format` to allow users to customize Pandoc's Markdown output format. When using the file extension `.Rmarkdown` or `options(blogdown.method = 'markdown')`, an R Markdown file is first compiled to Markdown. This Markdown file needs to go through another conversion when it contains Markdown features that are only available to Pandoc but not other Markdown renderers such as Hugo/Goldmark, such as citations or fenced Divs. The new global option controls the Pandoc output format. By default, its value is `c('gfm', '+footnotes', '+tex_math_dollars')` for Pandoc 2.10.1 and later when the Markdown document contains bibliography or fenced Divs, otherwise it is `NULL`. With earlier versions of Pandoc, it will be `c('gfm')` only. If you want the conversion to be always performed, you may set this global option to a value that is not `NULL`, e.g., `options(blogdown.markdown.format = c('gfm', '+footnotes', '+tex_math_dollars', '+smart'))`.
+
+## MAJOR CHANGES
+
+- The `method` argument of `build_site()` is now defunct (it was deprecated in **blogdown** v1.0), and will be removed in a future version. Please set the build method in the global option `options(blogdown.method = )` instead.
+
+- The `use_brew` argument of `install_hugo()` is defunct now, and will be removed in a future version.
+
+- The `update_hugo()` function is defunct. Please use `install_hugo()` instead.
+
+- The scripts `R/build.R` and `R/build2.R` are no longer executed when a document is compiled via the Knit button in RStudio. They will be executed only when building the whole site via `build_site()` (e.g., `Ctrl/Cmd + Shift + B` in RStudio).
+
+## BUG FIXES
+
+- For `.Rmarkdown` posts, the Markdown extension `tex_math_dollars` should not be used when post-processing the `.markdown` output file with Pandoc < v2.10.1 (thanks, @lz100, #578).
+
+- The `new_post()` function does not work with bundle archetypes (thanks, @maelle, #577).
+
+- `install_theme()` will now remove the `.github/` folder if one exists in the theme repo as it is only useful to the theme developer (#584).
+
+- Plots generated from R code chunks in posts cannot be previewed on RStudio Server (thanks, @cderv [@datawookie](https://datawookie.dev/blog/2021/02/setting-up-postref-shortcode-for-remote-blog/) #587).
+
+- The theme `gcushen/hugo-academic` is now correctly automatically redirected to `wowchemy/starter-academic` with correct default git branch when installing with `new_site()` or `install_theme()`.
+
+## MINOR CHANGES
+
+- When clicking the Knit button in RStudio to knit a post, the normal knitting process is shown (such as the progress bar) instead of being suppressed (thanks, @Athanasiamo, #572).
+
+- The command `blogdown:::preview_site()` is no longer called or displayed in the R console when users click the Knit button after the server has been started (thanks, @apreshill, #543).
+
+# CHANGES IN blogdown VERSION 1.1
+
+## NEW FEATURES
+
+- Added new arguments `args`, `baseURL`, and `relativeURLs` to the `hugo_build()` function to allow users to pass more command-line arguments to Hugo and adjust the configurations `baseURL` and `relativeURLs` temporarily when building a site.
+
+- Added the `...` argument to `build_site()`, to pass more arguments to the `hugo_build()` function, e.g., `blogdown::build_site(relativeURLs = TRUE)`.
+
+- Added a global option `blogdown.server.verbose` to print the web server messages in real time when the server is running. Once enabled (via `options(blogdown.server.verbose = TRUE)`), you will see messages in the R console like "Change detected, rebuilding site" whenever you make changes to any files (thanks, @apreshill @cderv, #555).
+
+- Added a new global option `blogdown.protect.math` (defaults to `TRUE`) to control whether to protect LaTeX math expressions in a pair of backticks when the post output format is Markdown instead of HTML. The reason to protect math expressions is to avoid the Markdown renderer's treatment of the math content as normal Markdown content, which may mangle the math expressions. If the math expression is protected, it needs to be unprotected later. See https://yihui.org/en/2018/07/latex-math-markdown/ for more information. Note that this option is only relevant to those who use the source format `.Rmarkdown` or the build method `options(blogdown.method = 'markdown')` (thanks, @bensoltoff #466, @mrkaye97 #567).
+
+## BUG FIXES
+
+- `bundle_site()` also moves the `.html` output files and the `*_files/`/`*_cache/` directories associated with `.Rmd` source posts to page bundles. Previously, only `.Rmd` files are moved (thanks, @llrs, #568).
+
+- Fixed a bug of `install_theme()` when the theme archive contains theme files directly instead of a theme folder (thanks, Stefan Musch, https://stackoverflow.com/q/65702805/559676).
+
+- Fixed a bug that causes HTML widgets to fail to render in the Markdown output files with **htmltools** >= 0.5.1.
+
+- Fixed a bug on Windows that causes `check_gitignore()` to error when it shouldn't (#571).
+
+## MAJOR CHANGES
+
+- When the site is rendered via a call to `rsconnect::deploySite()` (e.g., when you call `rmarkdown::publish_site(render = TRUE)`), `blogdown::build_site()` will use the argument `relativeURLs = TRUE`, to make Hugo generate relative URLs that work with any base URL (note that this depends on how well a specific Hugo theme supports relative URLs).
+
+## MINOR CHANGES
+
+- `check_netlify()` and `check_config()` do not open files anymore in the IDE if no TODO items were found in them (#569).
+
+- The internal functions `md5sum_filter()` and `timestamp_filter()` have been removed. They were renamed to `filter_md5sum()` and `filter_timestamp()`, respectively, and exported in **blogdown** 1.0. Please use these exported functions instead if you relied on the internal functions previously.
+
 # CHANGES IN blogdown VERSION 1.0
 
 ## NEW FEATURES
@@ -24,6 +96,10 @@
 
 - When opening a **blogdown** website project in RStudio, you can specify a number of files to be automatically opened every time via the global option `blogdown.initial_files` in your `.Rprofile`. This option can take a vector of file paths, e.g., `options(blogdown.initial_files = c('config.yaml', '.Rprofile', 'content/post/my-first-post/index.Rmd'))` (files that do not exist will be ignored). Alternatively, this option can take a function that returns a vector of file paths, e.g., `options(blogdown.initial_files = blogdown:::initial_files)`.
 
+- Added a new argument `.site_dir` to `serve_site()`, so users will be able to specify the site root directory (thanks, @Bijaelo, #527).
+
+- Added a new argument `force` to `new_site()` to allow users to create a new site under a nonempty directory with `force = TRUE` if they are sure the site can be safely created under the directory (i.e., Hugo will not possibly override existing files). In an interactive R session, it will ask users if they want `force = TRUE` when the directory is not empty.
+
 ## MAJOR CHANGES
 
 - `install_hugo()` no longer installs Hugo via Homebrew by default on macOS, but just downloads binaries from Hugo's Github releases, which gives you a stable version of Hugo. The `use_brew` argument of `install_hugo()` has been deprecated. Installing Hugo via Homebrew often leads to accidental updates of Hugo, which may break your existing sites. If you must install Hugo via Homebrew and want to fix its version, you can run `brew pin hugo`, so it will not be updated by accident in the future (e.g., via `brew upgrade`).
@@ -35,6 +111,8 @@
 - When starting to serve the site, `serve_site()` will compile Rmd files that do not have output files initially (thanks, Hannah Wang, https://stackoverflow.com/q/64420476/559676).
 
 - The default value of the global option `blogdown.serve_site.startup` was changed from `TRUE` to `FALSE`, meaning that the site will not by served by default when the RStudio project is first opened. If you want the previous behavior, you may set `options(blogdown.serve_site.startup = TRUE)` in your `.Rprofile`.
+
+- The `method` argument of `build_site()` was deprecated. The build method can only be specified via the global option `blogdown.method` now, e.g., you may set `options(blogdown.method = 'custom')` in `.Rprofile`. A new possible build method named `markdown` was added. When you set `options(blogdown.method = 'markdown')`, `.Rmd` posts will be compiled to `.md` (by default, they are compiled to `.html` since the default option is `blogdown.method = 'html'`). This provides another way to render R Markdown to Markdown instead of HTML. Previously, the only way to achieve this was to use the file extension `.Rmarkdown` (this way still works).
 
 - The function `update_hugo()` and the argument `force` of `install_hugo()` have been deprecated. If you want to update Hugo to a newer version, you can call `install_hugo()` and specify a desired version.
 
@@ -48,7 +126,7 @@
 
 - The "Insert Image" addin works with posts that are index pages of leaf bundles now. The images are added to the `images/` folder under the post directory by default instead of the top-level `static/` directory (thanks, @amssljc, #499).
 
-- For a post that is the index page of a bundle, its images could not be displayed when the post content is displayed on other pages such as the home page (thanks, @andremrsantos, #501).
+- For a post that is the index page of a bundle, its images could not be displayed when the post content is displayed on other pages such as the home page (thanks, @andremrsantos #501, Fabio A. Cruz Sanchez https://stackoverflow.com/q/65097597/559676).
 
 - The `_files/` and `_cache/` folders are not correctly moved for index pages of leaf bundles when the filename of an index page contains a language code such as `index.en.Rmd` (thanks, @cderv, #500).
 
@@ -58,13 +136,19 @@
 
 - `new_site()` no longer shows Hugo messages on Windows (#532).
 
+- `new_site()` can figure out the default branch name of a theme repo now, instead of assuming the `master` branch is the default (thanks, @c1au6i0, #541).
+
 ## MINOR CHANGES
 
 - For `new_site(to_yaml = TRUE)`, it will also convert `config.toml` to `config.yaml`.
 
+- The default value of the `serve` argument in `new_site()` was changed from `TRUE` to `"ask"` in an interactive R session, which means it will ask if users want to serve the site after creating it.
+
 - The default value for the `format` argument of `new_site()` was changed from `toml` to `yaml`, which means it will generate `config.yaml` instead of `config.toml` by default.
 
 - `new_site()` will create two sample scripts `R/build.R` and `R/build2.R` (they can be deleted if you don't need them). See the help page `?blogdown::build_site` for their meanings.
+
+- Autocomplete is supported for the names of important global options when typing inside `options()` in RStudio, e.g., when typing `options(blogdown.au)`, RStudio will show the candidate `blogdown.author`.
 
 - `read_toml()` and `toml2yaml()` will try to preserve the original order of fields in the TOML data, instead of using the alphabetical order.
 

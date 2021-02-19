@@ -1,9 +1,8 @@
 library(testit)
 
-assert(
-  'pkg_file() returns files/dirs from the package installation directory',
-  dir_exists(pkg_file('resources'))
-)
+assert('pkg_file() returns files/dirs from the package installation directory', {
+  (dir_exists(pkg_file('resources')))
+})
 
 raw_list = function(x) {
   if (!is.list(x)) return(x)
@@ -69,5 +68,5 @@ assert('modify_yaml perserves original values properly', {
   old_content = readLines(test_rmd_file)
 
   modify_yaml(test_rmd_file, .keep_empty = TRUE)
-  readLines(test_rmd_file) %==% old_content
+  (readLines(test_rmd_file) %==% old_content)
 })

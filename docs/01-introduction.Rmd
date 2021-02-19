@@ -12,8 +12,8 @@ We assume you have already installed R (https://www.r-project.org) [@R-base] and
 ## Install from CRAN
 install.packages('blogdown') 
 ## Or, install from GitHub
-if (!requireNamespace("devtools")) install.packages('devtools')
-devtools::install_github('rstudio/blogdown')
+if (!requireNamespace("remotes")) install.packages('remotes')
+remotes::install_github('rstudio/blogdown')
 ```
 
 Since **blogdown** is based on the static site generator Hugo (https://gohugo.io), you also need to install Hugo\index{Hugo}. There is a helper function in **blogdown** to download and install it automatically on major operating systems (Windows, macOS, and Linux):
@@ -249,9 +249,9 @@ If you find it is a pain to have to remember the differences between R Markdown 
 
 In this book, we usually mean `.Rmd` files when we say "R Markdown documents," which are compiled to `.html` by default. However, there is another type of R Markdown document with the filename extension `.Rmarkdown`. Such R Markdown documents are compiled to Markdown documents with the extension `.markdown`, which will be processed by Hugo instead of Pandoc. There are two major limitations of using `.Rmarkdown` compared to `.Rmd`:
 
-- You cannot use Markdown features only supported by Pandoc, such as citations. Math expressions only work if you have installed the **xaringan** package [@R-xaringan] and applied the JavaScript solution mentioned in Section \@ref(javascript).
+- You cannot use Markdown features only supported by Pandoc, such as fenced `Div`s.
 
-- HTML widgets are not supported.
+- Math expressions only work if you apply the JavaScript solution mentioned in Section \@ref(javascript).
 
 The main advantage of using `.Rmarkdown` is that the output files are cleaner because they are Markdown files. It can be easier for you to read the output of your posts without looking at the actual web pages rendered. This can be particularly helpful when reviewing GitHub pull requests. Note that numbered tables, figures, equations, and theorems are also supported. You cannot directly use Markdown syntax in table or figure captions, but you can use text references as a workaround (see **bookdown**'s documentation).
 
@@ -302,7 +302,7 @@ blogdown::new_site(theme = 'lxndrblz/anatole')
 
 To save you some time, we list a few themes below that match our taste:
 
-- Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) [Tanka,](https://github.com/road2stat/hugo-tanka)
+- Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) [Tanka,](https://themes.gohugo.io/hugo-tanka/)
 [Cupper,](https://themes.gohugo.io/cupper-hugo-theme/)
 [simple-a,](https://themes.gohugo.io/simple-a/) and [ghostwriter.](https://themes.gohugo.io/ghostwriter/)
 

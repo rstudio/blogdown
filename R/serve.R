@@ -27,6 +27,9 @@
 #' @param ... Arguments passed to \code{servr::\link{server_config}()} (only
 #'   arguments \code{host}, \code{port}, \code{browser}, \code{daemon}, and
 #'   \code{interval} are supported).
+#' @param .site_dir Directory to search for site configuration file. It defaults
+#'   to \code{getwd()}, and can also be specified via the global option
+#'   \code{blogdown.site_root}.
 #' @note For the Hugo server, the argument \command{--navigateToChanged} is used
 #'   by default, which means when you edit and save a source file, Hugo will
 #'   automatically navigate the web browser to the page corresponding to this
@@ -36,7 +39,7 @@
 #'   manually refresh your browser. It should work reliably for pure Markdown
 #'   posts, though.
 #' @export
-serve_site = function(...) {
+serve_site = function(..., .site_dir = NULL) {
   serve = switch(
     generator(), hugo = serve_it(),
     jekyll = serve_it(
@@ -49,7 +52,7 @@ serve_site = function(...) {
     ),
     stop("Cannot recognize the site (only Hugo, Jekyll, and Hexo are supported)")
   )
-  serve(...)
+  serve(..., .site_dir = .site_dir)
 }
 
 server_ready = function(url) {
@@ -72,7 +75,7 @@ preview_site = function(..., startup = FALSE) {
     opts$set(preview = TRUE)
     on.exit(opts$set(preview = NULL), add = TRUE)
     # open some files initially if specified
-    init_files = getOption('blogdown.initial_files')
+    init_files = get_option('blogdown.initial_files')
     if (is.function(init_files)) init_files = init_files()
     for (f in init_files) if (file_exists(f)) open_file(f)
   } else {
@@ -88,8 +91,8 @@ preview_mode = function() {
 
 serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
   g = generator(); config = config_files(g)
-  function(...) {
-    root = site_root(config)
+  function(..., .site_dir = NULL) {
+    root = site_root(config, .site_dir)
     if (root %in% opts$get('served_dirs')) {
       if (preview_mode()) return()
       servr::browse_last()
@@ -99,7 +102,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
         'start a new server, you may stop existing servers with ',
         'blogdown::stop_server(), or restart R. Normally you should not need to ',
         'serve the same site multiple times in the same R session',
-        if (servr:::is_rstudio()) c(
+        if (is_rstudio()) c(
           ', otherwise you may run into issues like ',
           'https://github.com/rstudio/blogdown/issues/404'
         ), '.'
@@ -120,12 +123,19 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     )
     args_fun = match.fun(paste0(g, '_server_args'))
     cmd_args = args_fun(host, port)
-    if (g == 'hugo') tweak_hugo_env()
+    if (g == 'hugo') {
+      # RStudio Server uses a proxy like http://localhost:8787/p/56a946ed/ for
+      # http://localhost:4321, so we must use relativeURLs = TRUE:
+      # https://github.com/rstudio/blogdown/issues/124
+      tweak_hugo_env(server = TRUE, relativeURLs = if (is_rstudio_server()) TRUE)
+      if (length(list_rmds(pattern = bundle_regex('.R(md|markdown)$'))))
+        create_shortcode('postref.html', 'blogdown/postref', is_rstudio_server())
+    }
     # if requested not to demonize the server, run it in the foreground process,
     # which will block the R session
     if (!server$daemon) return(system2(cmd, cmd_args))
 
-    pid = if (getOption('blogdown.use.processx', xfun::loadable('processx'))) {
+    pid = if (server_processx()) {
       proc = processx::process$new(cmd, cmd_args, stderr = '|', cleanup_tree = TRUE)
       I(proc$get_pid())
     } else {
@@ -140,18 +150,24 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     i = 0
     repeat {
       Sys.sleep(1)
+      # for a process started with processx, check if it has died with an error
+      if (inherits(pid, 'AsIs') && !proc$is_alive()) {
+        err = paste(gsub('^Error: ', '', proc$read_error()), collapse = '\n')
+        stop(if (err == '') {
+          'Failed to serve the site; see if blogdown::build_site() gives more info.'
+        } else err, call. = FALSE)
+      }
       if (server_ready(server$url)) break
-      if (i >= getOption('blogdown.server.timeout', 30)) {
+      if (i >= get_option('blogdown.server.timeout', 30)) {
         s = proc_kill(pid)  # if s == 0, the server must have been started successfully
         stop(if (s == 0) c(
-          'Failed to launch the preview of the site. This may be a bug of blogdown. ',
-          'You may file a report to https://github.com/rstudio/blogdown/issues with ',
-          'a reproducible example. Thanks!'
+          'Failed to launch the site preview in ', i, ' seconds. Try to give ',
+          'it more time via the global option "blogdown.server.timeout", e.g., ',
+          'options(blogdown.server.timeout = 600).'
         ) else c(
           'It took more than ', i, ' seconds to launch the server. An error might ',
           'have occurred with ', g, '. You may run blogdown::build_site() and see ',
-          'if it gives more info. If the site is very large and needs more time to ',
-          'be built, set options(blogdown.server.timeout) to a larger value.'
+          'if it gives more info.'
         ), call. = FALSE)
       }
       i = i + 1
@@ -159,6 +175,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     server$browse()
     # server is correctly started so we record the directory served
     opts$append(served_dirs = root)
+    Sys.setenv(BLOGDOWN_SERVING_DIR = root)
     message(
       'Launched the ', g, ' server in the background (process ID: ', pid, '). ',
       'To stop it, call blogdown::stop_server() or restart the R session.'
@@ -168,11 +185,11 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     if (g == 'hugo') del_empty_dir('resources')
 
     # whether to watch for changes in Rmd files?
-    if (!getOption('blogdown.knit.on_save', TRUE)) return(invisible())
+    if (!get_option('blogdown.knit.on_save', TRUE)) return(invisible())
 
     # rebuild specific or changed Rmd files
     rebuild = function(files) {
-      if (is.null(b <- getOption('blogdown.knit.on_save'))) {
+      if (is.null(b <- get_option('blogdown.knit.on_save'))) {
         b = !isTRUE(opts$get('knitting'))
         if (!b) {
           options(blogdown.knit.on_save = b)
@@ -200,7 +217,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
       if (watch()) try({rebuild(rmd_files); refresh_viewer()})
-      if (getOption('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
+      if (get_option('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()
 
@@ -208,14 +225,25 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
   }
 }
 
+server_processx = function() {
+  v = get_option('blogdown.server.verbose', FALSE)
+  # to see verbose output, don't use processx but xfun::bg_process() instead;
+  # TODO: we may use the polling method in #555 to have processx output, too
+  if (v) {
+    options(xfun.bg_process.verbose = TRUE)
+    return(FALSE)
+  }
+  getOption('blogdown.use.processx', xfun::loadable('processx'))
+}
+
 jekyll_server_args = function(host, port) {
-  c('serve', '--port', port, '--host', host, getOption(
+  c('serve', '--port', port, '--host', host, get_option(
     'blogdown.jekyll.server', c('--watch', '--incremental', '--livereload')
   ))
 }
 
 hexo_server_args = function(host, port) {
-  c('server', '-p', port, '-i', host, getOption('blogdown.hexo.server'))
+  c('server', '-p', port, '-i', host, get_option('blogdown.hexo.server'))
 }
 
 #' @export
@@ -232,23 +260,8 @@ stop_server = function() {
     'Failed to kill the process(es): ', paste(i, collapse = ' '),
     '. You may need to kill them manually.'
   ) else if (!quitting) message('The web server has been stopped.')
+  set_envvar(c('BLOGDOWN_SERVING_DIR' = NA))
   opts$set(pids = NULL, served_dirs = NULL)
-}
-
-# TODO: remove the following two functions and import xfun::proc_kill() after
-# xfun 0.20 is released because 0.19 contains a bug
-proc_kill = function(pid, recursive = TRUE, ...) {
-  if (is_windows()) {
-    xfun::proc_kill(pid, recursive, ...)
-  } else {
-    system2('kill', c(pid, if (recursive) child_pids(pid)), ...)
-  }
-}
-child_pids = function(id) {
-  x = system2('sh', shQuote(c(
-    system.file('scripts', 'child_pids.sh', package = 'xfun'), id
-  )), stdout = TRUE)
-  grep('^[0-9]+$', x, value = TRUE)
 }
 
 get_config2 = function(key, default) {
@@ -266,5 +279,5 @@ refresh_viewer = function() {
 }
 
 server_wait = function() {
-  Sys.sleep(getOption('blogdown.server.wait', 2))
+  Sys.sleep(get_option('blogdown.server.wait', 2))
 }

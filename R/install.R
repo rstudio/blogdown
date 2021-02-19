@@ -38,12 +38,16 @@
 #'   latest version, which might break your existing sites.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
+#' @param force Whether to reinstall Hugo if the specified version has been
+#'   installed.
 #' @param ... Ignored.
 #' @seealso \code{\link{remove_hugo}()} to remove Hugo.
 #' @export
-install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, ...) {
+install_hugo = function(
+  version = 'latest', use_brew = FALSE, extended = TRUE, force = FALSE, ...
+) {
 
-  if (!missing(use_brew)) message(
+  if (!missing(use_brew)) stop(
     "The argument 'use_brew' has been deprecated in install_hugo(). If you want to ",
     "install Hugo via Homebrew, please use the command line instead: brew install hugo"
   )
@@ -56,16 +60,6 @@ install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, .
   if (version == 'latest') {
     version = xfun::github_releases('gohugoio/hugo', version)[1]
     message('The latest Hugo version is ', version)
-  } else if (use_brew) {
-    if (is.null(local_file)) warning(
-      'when use_brew = TRUE, only the latest version of Hugo can be installed'
-    ) else {
-      warning(
-        "A local installer was provided through version='", local_file, "', ",
-        'so use_brew = TRUE was ignored.'
-      )
-      use_brew = FALSE
-    }
   }
 
   if (!is.null(local_file)) version = gsub(
@@ -73,7 +67,11 @@ install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, .
   )
 
   version = gsub('^[vV]', '', version)  # pure version number
-  if (!is.null(ver <- getOption('blogdown.hugo.version')) && ver != version) message2(
+  if (!force && hugo_available(version, exact = TRUE)) return(message(
+    'Hugo ', version, ' has already been installed. To reinstall, use the ',
+    'argument force = TRUE.'
+  ))
+  if (!is.null(ver <- get_option('blogdown.hugo.version')) && ver != version) message2(
     "You have set the option 'blogdown.hugo.version' to '", ver, "' (perhaps in .Rprofile), ",
     "but you are installing the Hugo version '", version, "' now. You may want to update ",
     "the option 'blogdown.hugo.version' accordingly.", files = existing_files('.Rprofile')
@@ -112,13 +110,6 @@ install_hugo = function(version = 'latest', use_brew = FALSE, extended = TRUE, .
   files = if (is_windows()) {
     download_zip('Windows')
   } else if (is_macos()) {
-    if (use_brew) {
-      if (brew_hugo() == 0) return()
-      warning(
-        'Failed to use Homebrew to install Hugo. ',
-        'I will try to download the Hugo binary directly and install it.'
-      )
-    }
     download_zip(
       if (version2 >= '0.18') 'macOS' else 'MacOS',
       if (version2 >= '0.20.3') 'tar.gz' else 'zip'
@@ -155,7 +146,7 @@ install_hugo_bin = function(exec, version) {
   )
   message(
     'Hugo has been installed to "', normalizePath(destdir), '". ',
-    if (is.null(getOption('blogdown.hugo.version'))) c(
+    if (is.null(get_option('blogdown.hugo.version'))) c(
       'You are recommended to set options(blogdown.hugo.version = "', version,
       '") in the .Rprofile file in your website project. See the blogdown book ',
       'for more info on .Rprofile: https://bookdown.org/yihui/blogdown/global-options.html'
@@ -166,22 +157,11 @@ install_hugo_bin = function(exec, version) {
 #' @export
 #' @rdname install_hugo
 update_hugo = function() {
-  message('blogdown::update_hugo() has been deprecated. Please use blogdown::install_hugo() in future.')
-  install_hugo()
-}
-
-brew_hugo = function() {
-  install = function() system('brew update && brew reinstall hugo')
-  status = 1  # reinstall Homebrew if `brew install hugo` failed
-  if (Sys.which('brew') == '' || (status <- install()) != 0) system2(
-    '/usr/bin/ruby',
-    '-e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
-  )
-  if (status == 0) status else install()
+  stop('blogdown::update_hugo() is defunct. Please use blogdown::install_hugo() instead.')
 }
 
 # possible locations of the Hugo executable
-bin_paths = function(dir = 'Hugo', extra_path = getOption('blogdown.hugo.dir')) {
+bin_paths = function(dir = 'Hugo', extra_path = get_option('blogdown.hugo.dir')) {
   path = file.path(if (is_windows()) {
     Sys.getenv('APPDATA', '')
   } else if (is_macos()) {
@@ -288,7 +268,7 @@ uninstall_tip = function(p) {
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
   function(version = getOption('blogdown.hugo.version'), quiet = FALSE) {
-    i = if (is.null(version)) 'default' else as.character(version)
+    i = if (is.null(version <- na2null(version))) 'default' else as.character(version)
     p = paths[[i]]
     if (!is.null(p) && file.exists(exec_path(p))) return(p)
     # if path not found, find it again

@@ -4,11 +4,13 @@ sel_input = function(...) shiny::selectizeInput(
   ..., width = '98%', multiple = TRUE, options = list(create = TRUE)
 )
 meta = blogdown:::collect_yaml()
-lang = blogdown:::check_lang()
-adir = blogdown:::theme_flag()
-adir = if (length(adir) == 4) file.path(adir[2], adir[4], 'archetypes')
+lang = blogdown:::get_lang()
+adir = blogdown:::theme_dir()
+adir = if (length(adir)) file.path(adir, 'archetypes')
 adir = c('archetypes', adir)
-suff = ifelse(utils::file_test('-d', dir(adir, full.names = TRUE)), '/', '')
+adir = dir(adir, full.names = TRUE)
+adir = paste0(basename(adir), ifelse(utils::file_test('-d', adir), '/', ''))
+
 shiny::runGadget(
   miniUI::miniPage(miniUI::miniContentPanel(
     txt_input('title', 'Title', placeholder = 'Post Title'),
@@ -28,7 +30,7 @@ shiny::runGadget(
       sel_input('tag', 'Tags', meta$tags),
       shiny::selectInput(
         'kind', 'Archetype', width = '98%',
-        choices = unique(c('', xfun::sans_ext(paste0(dir(adir), suff))))
+        choices = unique(c('', adir))
       ),
       height = '70px'
     ),
@@ -63,11 +65,11 @@ shiny::runGadget(
         placeholder = if (empty_title()) '(optional)' else blogdown:::dash_filename(input$title)
       )
     })
+    # update subdir in according to the title
+    if (is.function(subdir_fun <- getOption('blogdown.subdir_fun'))) shiny::observe({
+      shiny::updateSelectizeInput(session, 'subdir', selected = subdir_fun(input$title))
+    })
     shiny::observe({
-      # update subdir in according to the title
-      if (is.function(subdir_fun <- getOption('blogdown.subdir_fun'))) shiny::updateSelectizeInput(
-        session, 'subdir', selected = subdir_fun(input$title)
-      )
       # calculate file path
       if (grepl('^\\s*$', slug <- input$slug)) slug = blogdown:::dash_filename(input$title)
       shiny::updateTextInput(
@@ -86,7 +88,7 @@ shiny::runGadget(
       if (grepl('^\\s*$', input$file)) return(
         warning('The filename is empty!', call. = FALSE)
       )
-      if (is.null(getOption('blogdown.author'))) options(blogdown.author = input$author)
+      options(blogdown.author = input$author)  # remember the author name
       blogdown::new_post(
         input$title, author = input$author, ext = input$format,
         categories = input$cat, tags = input$tag,
