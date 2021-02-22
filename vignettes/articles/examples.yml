@@ -1,0 +1,35 @@
+- href: https://www.robinlovelace.net/
+  source: https://github.com/rbind/robinlovelace
+  title: Robin Lovelace
+  img: images/www.robinlovelace.png
+  showcase: yes
+- href: https://shinydevseries.com/
+  source: https://github.com/shinydevseries/shinydevseries_site
+  title: Shiny Developer Series
+  img: images/shinydevseries.png
+  showcase: yes
+- href: https://r-podcast.org/
+  source: https://github.com/rbind/r-podcast
+  title: The R-Podcast
+  img: images/r-podcast.png
+  showcase: yes
+- href: https://jsta.rbind.io/
+  source: https://github.com/rbind/jsta.rbind.io
+  title: Joseph Stachelek
+  img: images/jsta.rbind.png
+  showcase: yes
+- href: https://www.datascienceblog.net/
+  source: https://github.com/rbind/data-blog
+  title: 'Data Science Blog: Understand. Implement. Succed.'
+  img: images/www.datascienceblog.png
+  showcase: yes
+- href: https://robjhyndman.com/
+  source: https://github.com/rbind/robjhyndman.com
+  title: Rob J Hyndman
+  img: images/robjhyndman.png
+  showcase: yes
+- href: https://www.brodrigues.co/
+  source: https://github.com/rbind/b-rodrigues.github.com
+  title: Econometrics and Free Software
+  img: images/www.brodrigues.png
+  showcase: yes

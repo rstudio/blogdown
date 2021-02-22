@@ -1,5 +1,60 @@
 ---
 title: "Example sites"
+resource_files:
+  - images/
 ---
 
+```{r, include = FALSE, eval=FALSE}
+# To run to update the examples
 
+library(dplyr)
+library(purrr)
+library(rvest)
+
+# list of sites
+blogs <- tribble(
+  ~ site, ~ source, 
+  "https://www.robinlovelace.net/", "https://github.com/rbind/robinlovelace",
+  "https://shinydevseries.com/", "https://github.com/shinydevseries/shinydevseries_site",
+  "https://r-podcast.org/", "https://github.com/rbind/r-podcast",
+  "https://jsta.rbind.io/", "https://github.com/rbind/jsta.rbind.io",
+  "https://www.datascienceblog.net/", "https://github.com/rbind/data-blog",
+  "https://robjhyndman.com/", "https://github.com/rbind/robjhyndman.com",
+  "https://www.brodrigues.co/", "https://github.com/rbind/b-rodrigues.github.com"
+)
+
+# get the title
+blogs <- blogs %>% 
+  mutate(
+    title = map_chr(site, ~{
+      read_html(.x) %>%
+        html_node("title") %>%
+        html_text()
+    }), 
+    title = stringr::str_trim(title)
+) 
+
+# takes screenshot
+blogs <- blogs %>%
+  mutate(
+    img = xfun::with_ext(
+      paste("images", urltools::domain(blogs$site), sep = "/"), "png")
+  )
+# pak::pak("rstudio/webshot2")
+webshot2::webshot(blogs$site, blogs$img, cliprect = "viewport")
+# optimize image
+webshot2::shrink(blogs$img)
+
+# export to YAML
+blogs %>%
+  rename(href = "site") %>%
+  mutate(showcase = TRUE) %>%
+  purrr::pmap(purrr::lift_ld(as.list)) %>%
+  yaml::write_yaml("examples.yml")
+```
+
+The examples below illustrate the use of **blogdown** for making websites and blogs. You can also find a list of examples at <https://awesome-blogdown.com/>
+
+```{r, echo=FALSE}
+quillt::examples(yml = "examples.yml")
+```
