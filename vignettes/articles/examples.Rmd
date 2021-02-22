@@ -14,13 +14,14 @@ library(rvest)
 # list of sites
 blogs <- tribble(
   ~ site, ~ source, 
-  "https://www.robinlovelace.net/", "https://github.com/rbind/robinlovelace",
+  "https://metadocencia.netlify.app/", "https://github.com/MetaDocencia/SitioWeb",
+  "https://mariadermit.netlify.app/", "https://github.com/demar01/mariadermit",
   "https://shinydevseries.com/", "https://github.com/shinydevseries/shinydevseries_site",
   "https://r-podcast.org/", "https://github.com/rbind/r-podcast",
-  "https://jsta.rbind.io/", "https://github.com/rbind/jsta.rbind.io",
-  "https://www.datascienceblog.net/", "https://github.com/rbind/data-blog",
+  "https://isabella-b.com/", "https://github.com/isabellabenabaye/isabella-b.com",
   "https://robjhyndman.com/", "https://github.com/rbind/robjhyndman.com",
-  "https://www.brodrigues.co/", "https://github.com/rbind/b-rodrigues.github.com"
+  "https://www.tidymodels.org/", "https://github.com/tidymodels/tidymodels.org",
+    "https://livefreeordichotomize.com/", "https://github.com/LFOD/real-blog"
 )
 
 # get the title
