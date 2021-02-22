@@ -6,7 +6,17 @@
 [![Coverage status](https://codecov.io/gh/rstudio/blogdown/branch/master/graph/badge.svg)](https://codecov.io/github/rstudio/blogdown?branch=master)
 <!-- badges: end -->
 
-An open-source (GPL-3) R package to generate static websites based on [R Markdown](https://rmarkdown.rstudio.com) and [Hugo](https://gohugo.io). 
+The goal of the blogdown package is to provide a powerful and customizable website output format for [R Markdown](https://rmarkdown.rstudio.com/). Use dynamic R Markdown documents to build webpages featuring:
+
++ R code (or other programming languages that [knitr](https://yihui.org/knitr/) supports),
+
++ automatically rendered output such as graphics, tables, analysis results, and HTML widgets, and
+
++ technical writing elements such as citations, footnotes, and LaTeX math, enabled by the [bookdown package](https://pkgs.rstudio.com/bookdown/).
+
+By default, blogdown uses [Hugo](https://gohugo.io), a popular open-source static website generator, which provides a fast and flexible way to build your site content to be shared online. Other website generators like Jekyll and Hexo are also supported.
+
+A useful feature of blogdown sites, compared to other R Markdown-based [websites](https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html), is that you may organize your website content (including R Markdown files) within subdirectories. This makes blogdown a good solution not just for blogging or sites about R &mdash; it can also be used to create general-purpose websites to communicate about data science, statistics, data visualization, programming, or education.
 
 ## Book
 
