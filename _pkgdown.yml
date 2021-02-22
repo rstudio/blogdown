@@ -46,6 +46,8 @@ navbar:
         - text: "Blog posts"
         - text: "Version 1.0"
           href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
+        - text: "Version 0.1"
+          href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
 
 reference:
 - title: Working with Hugo
