@@ -21,7 +21,7 @@ blogs <- tribble(
   "https://isabella-b.com/", "https://github.com/isabellabenabaye/isabella-b.com",
   "https://robjhyndman.com/", "https://github.com/rbind/robjhyndman.com",
   "https://www.tidymodels.org/", "https://github.com/tidymodels/tidymodels.org",
-    "https://livefreeordichotomize.com/", "https://github.com/LFOD/real-blog"
+  "https://livefreeordichotomize.com/", "https://github.com/LFOD/real-blog"
 )
 
 # get the title
@@ -41,9 +41,9 @@ blogs <- blogs %>%
     img = xfun::with_ext(
       paste("images", urltools::domain(blogs$site), sep = "/"), "png")
   )
-# pak::pak("rstudio/webshot2")
+# remotes::install_github("rstudio/webshot2")
 webshot2::webshot(blogs$site, blogs$img, cliprect = "viewport")
-# optimize image
+# optimize image - require optipng
 webshot2::shrink(blogs$img)
 
 # export to YAML

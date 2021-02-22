@@ -1,7 +1,12 @@
-- href: https://www.robinlovelace.net/
-  source: https://github.com/rbind/robinlovelace
-  title: Robin Lovelace
-  img: images/www.robinlovelace.png
+- href: https://metadocencia.netlify.app/
+  source: https://github.com/MetaDocencia/SitioWeb
+  title: MetaDocencia
+  img: images/metadocencia.netlify.png
+  showcase: yes
+- href: https://mariadermit.netlify.app/
+  source: https://github.com/demar01/mariadermit
+  title: English site
+  img: images/mariadermit.netlify.png
   showcase: yes
 - href: https://shinydevseries.com/
   source: https://github.com/shinydevseries/shinydevseries_site
@@ -13,23 +18,23 @@
   title: The R-Podcast
   img: images/r-podcast.png
   showcase: yes
-- href: https://jsta.rbind.io/
-  source: https://github.com/rbind/jsta.rbind.io
-  title: Joseph Stachelek
-  img: images/jsta.rbind.png
-  showcase: yes
-- href: https://www.datascienceblog.net/
-  source: https://github.com/rbind/data-blog
-  title: 'Data Science Blog: Understand. Implement. Succed.'
-  img: images/www.datascienceblog.png
+- href: https://isabella-b.com/
+  source: https://github.com/isabellabenabaye/isabella-b.com
+  title: Isabella Benabaye
+  img: images/isabella-b.png
   showcase: yes
 - href: https://robjhyndman.com/
   source: https://github.com/rbind/robjhyndman.com
   title: Rob J Hyndman
   img: images/robjhyndman.png
   showcase: yes
-- href: https://www.brodrigues.co/
-  source: https://github.com/rbind/b-rodrigues.github.com
-  title: Econometrics and Free Software
-  img: images/www.brodrigues.png
+- href: https://www.tidymodels.org/
+  source: https://github.com/tidymodels/tidymodels.org
+  title: Tidymodels
+  img: images/www.tidymodels.png
+  showcase: yes
+- href: https://livefreeordichotomize.com/
+  source: https://github.com/LFOD/real-blog
+  title: Live Free or Dichotomize - Live Free or Dichotomize
+  img: images/livefreeordichotomize.png
   showcase: yes
