@@ -211,7 +211,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     rebuild(rmd_files <- filter_newfile(list_rmds()))
 
     watch = servr:::watch_dir('.', rmd_pattern, handler = function(files) {
-      rmd_files <<- files
+      rmd_files <<- list_rmds(files = files)
     })
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs
