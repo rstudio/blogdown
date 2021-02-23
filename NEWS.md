@@ -40,6 +40,8 @@
 
 - The command `blogdown:::preview_site()` is no longer called or displayed in the R console when users click the Knit button after the server has been started (thanks, @apreshill, #543).
 
+- The config option `ignoreErrors` will be set to `"error-remote-getjson"` when running `blogdown::serve_site()`. This is to prevent Hugo errors in fetching remote resources such as Tweets (thanks, Fan Yuan https://d.cosx.org/d/422065 and dhonda https://stackoverflow.com/q/64601786/559676).
+
 # CHANGES IN blogdown VERSION 1.1
 
 ## NEW FEATURES
