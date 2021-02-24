@@ -101,8 +101,11 @@ build_method = function() {
   match.arg(get_option('blogdown.method', methods), methods)
 }
 
-list_rmds = function(dir = content_file(), check = FALSE, pattern = rmd_pattern) {
-  files = list_files(dir, pattern)
+# list and/or filter Rmd file to build
+list_rmds = function(
+  dir = content_file(), check = FALSE, pattern = rmd_pattern, files = NULL
+) {
+  if (is.null(files)) files = list_files(dir, pattern)
   # exclude Rmd that starts with _ (preserve these names for, e.g., child docs)
   # but include _index.Rmd/.md
   files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
