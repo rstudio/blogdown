@@ -50,6 +50,10 @@ jobs:
           pak::pkg_install("rstudio/webshot2") # for screenshot
         shell: Rscript {0}
 
+      - name: Install optipng
+        # required to optimize images
+        run: brew install optipng
+
       - name: Install package
         run: R CMD INSTALL .
 
