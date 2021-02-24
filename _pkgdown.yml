@@ -1,6 +1,6 @@
 destination: reference
 
-url: https://pkgs.rstudio.com/blogdown
+url: https://pkgs.rstudio.com/blogdown/
 
 template:
   package: quillt
