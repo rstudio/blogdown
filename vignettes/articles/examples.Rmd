@@ -41,10 +41,6 @@ blogs <- blogs %>%
     img = xfun::with_ext(
       paste("images", urltools::domain(blogs$site), sep = "/"), "png")
   )
-# remotes::install_github("rstudio/webshot2")
-webshot2::webshot(blogs$site, blogs$img, cliprect = "viewport")
-# optimize image - require optipng
-webshot2::shrink(blogs$img)
 
 # export to YAML
 blogs %>%
@@ -52,6 +48,19 @@ blogs %>%
   mutate(showcase = TRUE) %>%
   purrr::pmap(purrr::lift_ld(as.list)) %>%
   yaml::write_yaml("examples.yml")
+```
+
+```{r, include = FALSE}
+# we use as few new dependencies as possible 
+blogs <- rmarkdown:::yaml_load_file("examples.yml")
+blogs <- do.call(rbind, lapply(blogs, function(x) data.frame(site = x$href, img = x$img)))
+# remotes::install_github("rstudio/webshot2")
+img_exists <- file.exists(blogs$img)
+if (any(!img_exists)) {
+  res <- webshot2::webshot(blogs$site[!img_exists], blogs$img[!img_exists], cliprect = "viewport")
+  # optimize image - require optipng
+  webshot2::shrink(res)
+}
 ```
 
 The examples below illustrate the use of **blogdown** for making websites and blogs. You can also find a list of examples at <https://awesome-blogdown.com/>
