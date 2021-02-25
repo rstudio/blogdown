@@ -25,7 +25,7 @@ jobs:
       - name: Install pak and query dependencies
         run: |
           install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
-          saveRDS(pak::pkg_deps("local::.", dependencies = TRUE), ".github/r-depends.rds")
+          saveRDS(pak::pkg_deps(".", dependencies = c("soft", "Config/Needs/website")), ".github/r-depends.rds")
         shell: Rscript {0}
 
       - name: Cache R packages
@@ -44,10 +44,7 @@ jobs:
 
       - name: Install package and dependencies
         run: |
-          pak::local_install_dev_deps(upgrade = TRUE)
-          pak::pkg_install("r-lib/pkgdown")
-          pak::pkg_install("apreshill/quillt")
-          pak::pkg_install("rstudio/webshot2") # for screenshot
+          pak::local_install_dev_deps(upgrade = TRUE, dependencies = c("soft", "Config/Needs/website"))
         shell: Rscript {0}
 
       - name: Install optipng

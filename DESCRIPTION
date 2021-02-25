@@ -58,6 +58,7 @@ Suggests:
   tools,
   processx,
   whoami
+Config/Needs/website: r-lib/pkgdown,apreshill/quillt,rstudio/webshot2
 LazyData: true
 URL: https://github.com/rstudio/blogdown, https://pkgs.rstudio.com/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
