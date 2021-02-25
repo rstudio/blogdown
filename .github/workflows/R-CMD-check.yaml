@@ -9,6 +9,9 @@ on:
       - 'docs/**'
       - '.github/ISSUE_TEMPLATE'
       - '.github/workflows/bookdown.yaml'
+      - '_pkgdown.yml'
+      - 'pkgdown/**'
+      - '.github/workflows/pkgdown.yaml'
   pull_request:
     branches:
       - main
@@ -17,6 +20,9 @@ on:
       - 'docs/**'
       - '.github/ISSUE_TEMPLATE'
       - '.github/workflows/bookdown.yaml'
+      - '_pkgdown.yml'
+      - 'pkgdown/**'
+      - '.github/workflows/pkgdown.yaml'
 
 name: R-CMD-check
 
