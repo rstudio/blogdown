@@ -49,7 +49,7 @@ jobs:
         run: |
           pak::local_install_dev_deps(upgrade = TRUE)
           pak::pkg_install("r-lib/pkgdown")
-          pak::pkg_install("apreshill/quillt")
+          pak::pkg_install("rstudio/quillt")
           pak::pkg_install("rstudio/webshot2") # for screenshot
         shell: Rscript {0}
 
