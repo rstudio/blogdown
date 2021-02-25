@@ -1,0 +1,40 @@
+- href: https://metadocencia.netlify.app/
+  source: https://github.com/MetaDocencia/SitioWeb
+  title: MetaDocencia
+  img: images/metadocencia.netlify.png
+  showcase: yes
+- href: https://mariadermit.netlify.app/
+  source: https://github.com/demar01/mariadermit
+  title: English site
+  img: images/mariadermit.netlify.png
+  showcase: yes
+- href: https://shinydevseries.com/
+  source: https://github.com/shinydevseries/shinydevseries_site
+  title: Shiny Developer Series
+  img: images/shinydevseries.png
+  showcase: yes
+- href: https://r-podcast.org/
+  source: https://github.com/rbind/r-podcast
+  title: The R-Podcast
+  img: images/r-podcast.png
+  showcase: yes
+- href: https://isabella-b.com/
+  source: https://github.com/isabellabenabaye/isabella-b.com
+  title: Isabella Benabaye
+  img: images/isabella-b.png
+  showcase: yes
+- href: https://robjhyndman.com/
+  source: https://github.com/rbind/robjhyndman.com
+  title: Rob J Hyndman
+  img: images/robjhyndman.png
+  showcase: yes
+- href: https://www.tidymodels.org/
+  source: https://github.com/tidymodels/tidymodels.org
+  title: Tidymodels
+  img: images/www.tidymodels.png
+  showcase: yes
+- href: https://livefreeordichotomize.com/
+  source: https://github.com/LFOD/real-blog
+  title: Live Free or Dichotomize - Live Free or Dichotomize
+  img: images/livefreeordichotomize.png
+  showcase: yes

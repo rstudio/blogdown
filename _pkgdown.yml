@@ -1,0 +1,109 @@
+destination: reference
+
+url: https://pkgs.rstudio.com/blogdown/
+
+template:
+  package: quillt
+  opengraph:
+    image:
+      src: man/figures/logo.png
+      alt: "blogdown package"
+    twitter:
+      creator: "@rstudio"
+      card: summary
+
+development:
+  version_tooltip: "Development version"
+
+
+navbar:
+  title: ~
+  type: default
+  structure:
+    left:  [intro, examples, articles]
+    right: [reference, news, github]
+  components:
+    home: ~
+    examples:
+      text: Examples
+      href: articles/articles/examples.html
+    articles:
+      text: Articles
+      menu:
+        - text: "No vignettes"
+    reference:
+      text: Reference
+      href: reference/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/rstudio/blogdown
+    news:
+      text: News
+      menu:
+        - text: "Changelog"
+          href: news/index.html
+        - text: "------------------"
+        - text: "Blog posts"
+        - text: "Version 1.0"
+          href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
+        - text: "Version 0.1"
+          href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
+
+reference:
+- title: Output formats
+  desc: >
+    If you use files with the `.Rmd` extension, the default output format is
+    `blogdown::html_page`, which uses Pandoc to render. You may also use files with the `.Rmarkdown` file extension, which
+    may be knit to `.markdown` files to be processed by Hugo's markdown renderer.
+  contents:
+  - html_page
+
+- title: Creating new websites & content
+  contents:
+  - new_site
+  - install_theme
+  - new_post
+  - new_content
+  - -starts_with("hugo")
+
+- title: Previewing and rendering websites
+  contents:
+  - serve_site
+  - build_site
+
+- title: Managing website configurations
+  contents:
+  - starts_with("config")
+
+- title: Checking blogdown projects
+  contents:
+  - starts_with("check")
+
+- title: Working with Hugo
+  desc: >
+    These functions are helpers to work with Hugo and its features.
+  contents:
+  - ends_with("hugo")
+  - starts_with("hugo")
+  - starts_with("shortcode")
+  - bundle_site
+  - find_yaml
+  - read_toml
+  - -starts_with("check_")
+
+- title: Helper functions
+  desc: These functions are utility functions when working with blogdown.
+  contents:
+  - build_dir
+  - clean_duplicates
+  - dep_path
+  - starts_with("filter")
+
+- title: The blogdown package
+  desc: ~
+  contents:
+  - blogdown-package
+
+authors:
+  "Yihui Xie":
+    href: https://yihui.org

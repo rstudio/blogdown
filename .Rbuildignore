@@ -5,3 +5,6 @@
 ^docs$
 ^codecov\.yml$
 ^NEWS\.md$
+^_pkgdown\.yml$
+^pkgdown$
+^vignettes/articles$
