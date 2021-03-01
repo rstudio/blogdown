@@ -331,6 +331,11 @@ install_theme = function(
       # post-process go.mod so that users don't need to install Go (it sounds
       # unbelievable that a user needs to install Go just to use a Hugo theme)
       download_modules(file.path(expdir, 'go.mod'))
+      # delete figure shortcode that uses http resources on Windows:
+      # https://github.com/rstudio/blogdown/issues/546#issuecomment-788253660
+      if (is_windows()) xfun::gsub_dir(
+        '\\{\\{< figure src="https?://.+ >}}', '', dir = expdir, ext = 'md'
+      )
       file.copy(list.files(expdir, full.names = TRUE), '../', recursive = TRUE)
     } else warning(
       "The theme has provided an example site. You should read the theme's documentation ",
@@ -379,15 +384,12 @@ install_theme = function(
       file.copy(list.files(theme, full.names = TRUE), '../', recursive = TRUE)
       unlink(theme, recursive = TRUE)
     }
-    # themes may use config/_default/config.toml, e.g. hugo-academic; we need to
-    # move this config to the root dir, because blogdown assumes the config file
-    # is under the root dir
-    if (file.exists(cfg <- file.path('..', 'config', '_default', 'config.toml'))) {
-      file.rename(cfg, '../config.toml')
-      unlink('../config.yaml')
-    }
-    # remove the themesDir setting; it is unlikely that you need it
-    in_dir('..', change_config('themesDir', NA))
+    in_dir('..', {
+      # move the possible config/_default/config.toml to the root dir
+      move_config()
+      # remove the themesDir setting; it is unlikely that you need it
+      change_config('themesDir', NA)
+    })
   })
   if (is_theme) if (update_config) {
     change_config('theme', sprintf('"%s"', theme))
@@ -445,6 +447,27 @@ download_modules = function(mod) {
     file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
   })
   unlink(with_ext(mod, c('.mod', '.sum')))
+}
+
+# themes may use config/_default/config.toml, e.g. hugo-academic; we need to
+# move this config to the root dir, because blogdown assumes the config file
+# is under the root dir
+move_config = function() {
+  f1 = config_files()
+  f2 = file.path('config', '_default', f1)
+  if (!any(i <- file_exists(f2))) return()
+  file.rename(f2[i], f1[i])
+  # delete config.yaml if config.toml exists
+  if (length(f1) >= 2 && file_exists(f1[1])) unlink(f1[2])
+  # delete `disable: true` in wowchemy's config:
+  # https://github.com/rstudio/blogdown/issues/546#issuecomment-788253660
+  if (file_exists(f1[2])) {
+    x = read_utf8(f1[2])
+    if (length(i <- grep('path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy-cms', x))) {
+      i = i[1]
+      if (grepl('^\\s+disable: true', x[i + 1])) write_utf8(x[-(i + 1)], f1[2])
+    }
+  }
 }
 
 #' @param path The path to the new file under the \file{content} directory.

@@ -22,7 +22,7 @@
 
 ## BUG FIXES
 
-- `check_config()` will now correctly check for missing and unneeded values in `ignoreFiles` configuration.
+- `check_config()` will now correctly check for both missing and unneeded values in the `ignoreFiles` field in the config file.
 
 - When serving the site with `blogdown::serve_site()` with `'blogdown.knit.on_save'` option being `TRUE`, Rmd files in `renv/` or `packrat/` folder are now correctly ignored and not rebuilt (#593).
 
@@ -37,6 +37,10 @@
 - The error "RStudio is not running" should be suppressed when building the site in a non-interactive R session (thanks, @kcarnold, #596).
 
 - The theme `gcushen/hugo-academic` is now correctly automatically redirected to `wowchemy/starter-academic` with correct default git branch when installing with `new_site()` or `install_theme()`.
+
+- Also try to move `config/_default/config.yaml` to the root dir when installing a theme. Previously, only `config.toml` was moved (thanks, @andreashandel, #546).
+
+- When installing a theme, delete `figure` shortcodes that uses `http` resources because the figure paths could be mangled on Windows (thanks, @andreashandel, #546).
 
 ## MINOR CHANGES
 
