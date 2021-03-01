@@ -54,20 +54,15 @@ check_config = function() {
     okay = FALSE
   } else {
     # existing field: check
-    m <- !all(ignore %in% s) # check missing values
-    u <- '_files$' %in% s    # check unneeded values
+    m = !all(ignore %in% s) # check missing values
+    u = '_files$' %in% s    # check unneeded values
     if (m || u) {
-      if (m) {
-        msg_todo(
-          'Add these items to the "ignoreFiles" setting: ',
-          gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
-        )
-        okay = FALSE
-      }
-      if (u) {
-        msg_todo('Remove "_files$" from "ignoreFiles"')
-        okay = FALSE
-      }
+      if (m) msg_todo(
+        'Add these items to the "ignoreFiles" setting: ',
+        gsub('^\\[|\\]$', '', xfun::tojson(I(setdiff(ignore, s))))
+      )
+      if (u) msg_todo('Remove "_files$" from "ignoreFiles"')
+      okay = FALSE
     } else {
       msg_okay('"ignoreFiles" looks good - nothing to do here!')
     }
