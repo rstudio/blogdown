@@ -6,7 +6,7 @@ template:
   package: quillt
   opengraph:
     image:
-      src: man/figures/logo.png
+      src: https://bookdown.org/yihui/blogdown/images/logo.png
       alt: "blogdown package"
     twitter:
       creator: "@rstudio"
