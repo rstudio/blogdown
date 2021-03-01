@@ -49,4 +49,4 @@ Next, the chapter on [_Websites_](https://bookdown.org/yihui/rmarkdown/websites.
 
 # Going further with examples
 
-Look at the [Examples](articles/articles/examples.Rmd) page.
+Look at the [Examples](articles/examples.html) page.
