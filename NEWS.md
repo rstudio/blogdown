@@ -34,6 +34,8 @@
 
 - Plots generated from R code chunks in posts cannot be previewed on RStudio Server (thanks, @cderv [@datawookie](https://datawookie.dev/blog/2021/02/setting-up-postref-shortcode-for-remote-blog/) #587).
 
+- The error "RStudio is not running" should be suppressed when building the site in a non-interactive R session (thanks, @kcarnold, #596).
+
 - The theme `gcushen/hugo-academic` is now correctly automatically redirected to `wowchemy/starter-academic` with correct default git branch when installing with `new_site()` or `install_theme()`.
 
 ## MINOR CHANGES
