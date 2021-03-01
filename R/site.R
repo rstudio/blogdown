@@ -26,9 +26,9 @@ blogdown_site = function(input, ...) {
         build_site(TRUE, run_hugo = FALSE, build_rmd = input_file)
       # run serve_site() to preview the site if the server has not been started
       if (get_option('blogdown.knit.serve_site', Sys.getenv('BLOGDOWN_SERVING_DIR') == '')) {
-        if (interactive()) preview_site()
-        else if (rstudioapi::isAvailable()) tryCatch(
-          rstudioapi::sendToConsole('blogdown:::preview_site()', echo = FALSE)
+        if (interactive()) preview_site() else tryCatch(
+          rstudioapi::sendToConsole('blogdown:::preview_site()', echo = FALSE),
+          error = function(e) {}
         )
       }
     }) else {
