@@ -22,6 +22,8 @@
 
 ## BUG FIXES
 
+- `check_config()` will now correctly check for missing and unneeded values in `ignoreFiles` configuration.
+
 - When serving the site with `blogdown::serve_site()` with `'blogdown.knit.on_save'` option being `TRUE`, Rmd files in `renv/` or `packrat/` folder are now correctly ignored and not rebuilt (#593).
 
 - For `.Rmarkdown` posts, the Markdown extension `tex_math_dollars` should not be used when post-processing the `.markdown` output file with Pandoc < v2.10.1 (thanks, @lz100, #578).
