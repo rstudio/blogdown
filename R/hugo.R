@@ -459,15 +459,6 @@ move_config = function() {
   file.rename(f2[i], f1[i])
   # delete config.yaml if config.toml exists
   if (length(f1) >= 2 && file_exists(f1[1])) unlink(f1[2])
-  # delete `disable: true` in wowchemy's config:
-  # https://github.com/rstudio/blogdown/issues/546#issuecomment-788253660
-  if (file_exists(f1[2])) {
-    x = read_utf8(f1[2])
-    if (length(i <- grep('path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy-cms', x))) {
-      i = i[1]
-      if (grepl('^\\s+disable: true', x[i + 1])) write_utf8(x[-(i + 1)], f1[2])
-    }
-  }
 }
 
 #' @param path The path to the new file under the \file{content} directory.
