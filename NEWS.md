@@ -1,5 +1,10 @@
 # CHANGES IN blogdown VERSION 1.3
 
+## MAJOR CHANGES
+
+- The `method` argument of `build_site()` has been removed (it was defunct in **blogdown** v1.2). Please set the build method in the global option `options(blogdown.method = )` instead.
+
+- The `use_brew` argument of `install_hugo()` has been removed.
 
 # CHANGES IN blogdown VERSION 1.2
 

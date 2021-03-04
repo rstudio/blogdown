@@ -4,15 +4,12 @@
 \alias{build_site}
 \title{Build a website}
 \usage{
-build_site(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE, ...)
+build_site(local = FALSE, run_hugo = TRUE, build_rmd = FALSE, ...)
 }
 \arguments{
 \item{local}{Whether to build the website locally. This argument is passed to
 \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
 the site locally via \code{\link{serve_site}()}.}
-
-\item{method}{This argument has been deprecated. Please set the global option
-\code{blogdown.method} instead. See \sQuote{Details}.}
 
 \item{run_hugo}{Whether to run \code{hugo_build()} after R Markdown files are
 compiled.}

@@ -5,13 +5,7 @@
 \alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(
-  version = "latest",
-  use_brew = FALSE,
-  extended = TRUE,
-  force = FALSE,
-  ...
-)
+install_hugo(version = "latest", extended = TRUE, force = FALSE, ...)
 
 update_hugo()
 }
@@ -21,11 +15,6 @@ update_hugo()
 Alternatively, this argument can take a file path of the zip archive or
 tarball of the Hugo installer that has already been downloaded from Github,
 in which case it will not be downloaded again.}
-
-\item{use_brew}{Whether to use Homebrew (\url{https://brew.sh}) on macOS to
-install Hugo. This argument has been deprecated. You are not recommended to
-install Hugo via Homebrew, because you may accidentally update it to the
-latest version, which might break your existing sites.}
 
 \item{extended}{Whether to use extended version of Hugo that has SCSS/SASS
 support. You only need the extended version if you want to edit SCSS/SASS.}
@@ -64,6 +53,11 @@ Hugo for a specific website. You can set this option per project. See
 \href{https://bookdown.org/yihui/blogdown/global-options.html}{Section 1.4
 Global options} for details, or store a copy of Hugo on a USB Flash drive
 along with your website.
+}
+\note{
+For macOS users, you are not recommended to install Hugo via Homebrew,
+  because you may accidentally update it to the latest version, which might
+  break your existing sites.
 }
 \seealso{
 \code{\link{remove_hugo}()} to remove Hugo.

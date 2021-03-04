@@ -32,26 +32,17 @@
 #'   Alternatively, this argument can take a file path of the zip archive or
 #'   tarball of the Hugo installer that has already been downloaded from Github,
 #'   in which case it will not be downloaded again.
-#' @param use_brew Whether to use Homebrew (\url{https://brew.sh}) on macOS to
-#'   install Hugo. This argument has been deprecated. You are not recommended to
-#'   install Hugo via Homebrew, because you may accidentally update it to the
-#'   latest version, which might break your existing sites.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
 #' @param force Whether to reinstall Hugo if the specified version has been
 #'   installed.
 #' @param ... Ignored.
+#' @note For macOS users, you are not recommended to install Hugo via Homebrew,
+#'   because you may accidentally update it to the latest version, which might
+#'   break your existing sites.
 #' @seealso \code{\link{remove_hugo}()} to remove Hugo.
 #' @export
-install_hugo = function(
-  version = 'latest', use_brew = FALSE, extended = TRUE, force = FALSE, ...
-) {
-
-  if (!missing(use_brew)) stop(
-    "The argument 'use_brew' has been deprecated in install_hugo(). If you want to ",
-    "install Hugo via Homebrew, please use the command line instead: brew install hugo"
-  )
-
+install_hugo = function(version = 'latest', extended = TRUE, force = FALSE, ...) {
   local_file = if (grepl('[.](zip|tar[.]gz)$', version) && file.exists(version))
     normalizePath(version)
 

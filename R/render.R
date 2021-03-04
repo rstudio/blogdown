@@ -48,8 +48,6 @@
 #' @param local Whether to build the website locally. This argument is passed to
 #'   \code{\link{hugo_build}()}, and \code{local = TRUE} is mainly for serving
 #'   the site locally via \code{\link{serve_site}()}.
-#' @param method This argument has been deprecated. Please set the global option
-#'   \code{blogdown.method} instead. See \sQuote{Details}.
 #' @param run_hugo Whether to run \code{hugo_build()} after R Markdown files are
 #'   compiled.
 #' @param build_rmd Whether to (re)build R Markdown files. By default, they are
@@ -65,12 +63,7 @@
 #'   'md5sum'} is equivalent to \code{build_rmd = blogdown::filter_md5sum}.
 #' @param ... Other arguments to be passed to \code{\link{hugo_build}()}.
 #' @export
-build_site = function(local = FALSE, method, run_hugo = TRUE, build_rmd = FALSE, ...) {
-  if (!missing(method)) stop(
-    "The 'method' argument has been deprecated. Please set the method via ",
-    "options(blogdown.method = ). See ?blogdown::build_site for more info."
-  )
-
+build_site = function(local = FALSE, run_hugo = TRUE, build_rmd = FALSE, ...) {
   knitting = is_knitting()
   if (!knitting) on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (build_method() == 'custom') return()
