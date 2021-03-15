@@ -47,7 +47,10 @@ check_config = function() {
   }
 
   msg_next('Checking "ignoreFiles" setting for Hugo...')
-  ignore = c('\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$')
+  ignore = c(
+    '\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$',
+    if (length(grep('/renv$', list.dirs()))) c('(^|/)renv$', 'renv\\.lock$')
+  )
   if (is.null(s <- config[['ignoreFiles']])) {
     # missing field: add one
     msg_todo('Set "ignoreFiles" to ', xfun::tojson(ignore))

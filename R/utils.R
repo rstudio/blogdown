@@ -644,11 +644,8 @@ rmd_pattern = '[.][Rr](md|markdown)$'
 md_pattern  = '[.][Rr]?(md|markdown)$'
 
 # scan YAML metadata of all Rmd/md files
-scan_yaml = function(dir = 'content', warn = TRUE) {
-  if (missing(dir)) dir = switch(generator(),
-    hugo = 'content', jekyll = '.', hexo = 'source'
-  )
-  files = list_files(dir, md_pattern)
+scan_yaml = function(warn = TRUE) {
+  files = list_rmds(pattern = md_pattern)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
     yaml = fetch_yaml(f)
@@ -669,10 +666,10 @@ scan_yaml = function(dir = 'content', warn = TRUE) {
 
 # collect specific fields of all YAML metadata
 collect_yaml = function(
-  fields = c('categories', 'tags'), dir, uniq = TRUE, sort = TRUE
+  fields = c('categories', 'tags'), uniq = TRUE, sort = TRUE
 ) {
   res = list()
-  meta = scan_yaml(dir)
+  meta = scan_yaml()
   for (i in fields) {
     res[[i]] = unlist(lapply(meta, `[[`, i))
     if (sort) res[[i]] = sort2(res[[i]])

@@ -103,7 +103,7 @@ list_rmds = function(
   # but include _index.Rmd/.md
   files = files[!grepl('^_', basename(files)) | grepl('^_index[.]', basename(files))]
   # exclude Rmd within packrat / renv library
-  files = files[!grepl('/(?:packrat|renv)/', files)]
+  files = files[!grepl('(^|/)(?:packrat|renv)/', files)]
   # do not allow special characters in filenames so dependency names are more
   # predictable, e.g. foo_files/
   if (check) bookdown:::check_special_chars(files)

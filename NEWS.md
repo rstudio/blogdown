@@ -1,10 +1,18 @@
 # CHANGES IN blogdown VERSION 1.3
 
+## NEW FEATURES
+
+- `check_config()` will suggest ignoring the `renv` folder and the `renv.lock` file in the Hugo config if **renv** is used in the project (thanks, @solarchemist, #597).
+
 ## MAJOR CHANGES
 
 - The `method` argument of `build_site()` has been removed (it was defunct in **blogdown** v1.2). Please set the build method in the global option `options(blogdown.method = )` instead.
 
 - The `use_brew` argument of `install_hugo()` has been removed.
+
+## BUG FIXES
+
+- `check_content()` will ignore `renv` folders when looking for Rmd/md files to be checked (thanks, @solarchemist, #597).
 
 # CHANGES IN blogdown VERSION 1.2
 
