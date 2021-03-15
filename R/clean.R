@@ -3,22 +3,21 @@
 
 # a wrapper function to read a file as UTF-8, process the text, and write back
 process_file = function(f, FUN, x = read_utf8(f)) {
-  x = FUN(x)
-  if (missing(f)) x else write_utf8(x, f)
+  xfun::process_file(f, FUN, x)
 }
 
 # replace three or more \n with two, i.e. two or more empty lines with one
-remove_extra_empty_lines = function(...) process_file(..., FUN = function(x) {
+remove_extra_empty_lines = function(...) xfun::process_file(..., fun = function(x) {
   x = paste(gsub('\\s+$', '', x), collapse = '\n')
   trim_ws(gsub('\n{3,}', '\n\n', x))
 })
 
 # replace [url](url) with <url>
-process_bare_urls = function(...) process_file(..., FUN = function(x) {
+process_bare_urls = function(...) xfun::process_file(..., fun = function(x) {
   gsub('\\[([^]]+)]\\(\\1/?\\)', '<\\1>', x)
 })
 
-normalize_chars = function(...) process_file(..., FUN = function(x) {
+normalize_chars = function(...) xfun::process_file(..., fun = function(x) {
   # curly single and double quotes to straight quotes
   x = gsub(paste0('[', intToUtf8(8216:8217), ']'), "'", x)
   x = gsub(paste0('[', intToUtf8(8220:8221), ']'), '"', x)
@@ -28,7 +27,7 @@ normalize_chars = function(...) process_file(..., FUN = function(x) {
 })
 
 # clean up code blocks that have been syntax highlighted by Pandoc
-remove_highlight_tags = function(...) process_file(..., FUN = function(x) {
+remove_highlight_tags = function(...) xfun::process_file(..., fun = function(x) {
   clean = function(x) {
     # remove the <code></code> tags
     x = gsub('^(\\s+)<code( class="[^"]*")?>(.*)', '\\1\\3', x)
@@ -44,6 +43,6 @@ remove_highlight_tags = function(...) process_file(..., FUN = function(x) {
 })
 
 # <img></img> to <img />
-fix_img_tags = function(...) process_file(..., FUN = function(x) {
+fix_img_tags = function(...) xfun::process_file(..., fun = function(x) {
   gsub('></img>', ' />', x)
 })

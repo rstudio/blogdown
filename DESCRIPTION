@@ -47,7 +47,7 @@ Imports:
     yaml (>= 2.1.19),
     httpuv (>= 1.4.0),
     later,
-    xfun (>= 0.21),
+    xfun (>= 0.22),
     servr (>= 0.21)
 Suggests:
   testit,
