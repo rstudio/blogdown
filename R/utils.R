@@ -645,7 +645,8 @@ md_pattern  = '[.][Rr]?(md|markdown)$'
 
 # scan YAML metadata of all Rmd/md files
 scan_yaml = function(warn = TRUE) {
-  files = list_rmds(pattern = md_pattern)
+  # error if this function is not called inside a website directory
+  files = tryCatch(list_rmds(pattern = md_pattern), error = function(e) NULL)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
     yaml = fetch_yaml(f)
