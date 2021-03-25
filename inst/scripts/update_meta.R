@@ -28,7 +28,8 @@ shiny::runGadget(
       height = '80px'
     ),
     shiny::checkboxInput(
-      'rename', 'Rename file if the date is changed', getOption('blogdown.rename_file', FALSE)
+      'rename', 'Rename file if the date is changed',
+      blogdown:::get_option('blogdown.rename_file', FALSE)
     ),
     sel_input(
       'cat', 'Categories', blogdown:::sort2(unique(c(yml[['categories']], meta$categories))),

@@ -14,6 +14,8 @@
 
 - `check_content()` will ignore `renv` folders when looking for Rmd/md files to be checked (thanks, @solarchemist, #597).
 
+- The RStudio addin "Update Metadata" does not work when the global option `blogdown.rename_file` is not set (thanks, @brshallo, #605).
+
 # CHANGES IN blogdown VERSION 1.2
 
 ## NEW FEATURES
