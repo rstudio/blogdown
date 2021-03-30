@@ -672,7 +672,7 @@ collect_yaml = function(
   res = list()
   meta = scan_yaml()
   for (i in fields) {
-    res[[i]] = unlist(lapply(meta, `[[`, i))
+    res[[i]] = unlist(lapply(meta, function(m) if (is.list(m)) m[[i]]))
     if (sort) res[[i]] = sort2(res[[i]])
     if (uniq) res[[i]] = unique(res[[i]])
   }

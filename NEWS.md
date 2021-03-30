@@ -16,6 +16,8 @@
 
 - The RStudio addin "Update Metadata" does not work when the global option `blogdown.rename_file` is not set (thanks, @brshallo, #605).
 
+- The RStudio addin "New Post" does not work when the YAML metadata of a post only contains a string. Normally the metadata should be a list (thanks, msmielak, https://stackoverflow.com/q/66857582/559676).
+
 # CHANGES IN blogdown VERSION 1.2
 
 ## NEW FEATURES
