@@ -4,6 +4,8 @@
 
 - `check_config()` will suggest ignoring the `renv` folder and the `renv.lock` file in the Hugo config if **renv** is used in the project (thanks, @solarchemist, #597).
 
+- `check_content()` will also discover problematic YAML metadata of posts that is not a list (thanks, msmielak, https://stackoverflow.com/q/66857582/559676).
+
 ## MAJOR CHANGES
 
 - The `method` argument of `build_site()` has been removed (it was defunct in **blogdown** v1.2). Please set the build method in the global option `options(blogdown.method = )` instead.

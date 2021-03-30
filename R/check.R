@@ -319,7 +319,8 @@ check_content = function() {
   msg_next('Checking for validity of YAML metadata in posts...')
   meta = scan_yaml(warn = FALSE)
   files = unlist(lapply(meta, function(m) {
-    attr(m, 'yaml_error')$message
+    if (!is.null(s <- attr(m, 'yaml_error')$message)) return(s)
+    if (length(m) && !is.list(m)) return('YAML metadata is not a list')
   }))
   if (length(files)) {
     msg_todo(
@@ -332,7 +333,7 @@ check_content = function() {
   }
 
   detect = function(field, fun) names(unlist(lapply(
-    meta, function(m) fun(m[[field]])
+    meta, function(m) if (is.list(m)) fun(m[[field]])
   )))
 
   msg_next('Checking for previewed content that will not be published...')
