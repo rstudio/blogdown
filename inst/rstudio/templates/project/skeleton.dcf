@@ -11,7 +11,7 @@ Default: yihui/hugo-lithium
 
 Parameter: format
 Widget: CheckboxInput
-Label: Use YAML as the config file format
+Label: Convert the site config file to YAML
 Default: On
 
 Parameter: to_yaml
