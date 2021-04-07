@@ -92,9 +92,11 @@ hidden, RStudio project (\file{*.Rproj}), \file{LICENSE}, and/or
 
 \item{install_hugo}{Whether to install Hugo automatically if it is not found.}
 
-\item{format}{The format of the configuration file. Note that the frontmatter
-of the new (R) Markdown file created by \code{new_content()} always uses
-YAML instead of TOML or JSON.}
+\item{format}{The format of the configuration file, e.g., \code{'yaml'} or
+\code{'toml'} (the value \code{TRUE} will be treated as \code{'yaml'}, and
+\code{FALSE} means \code{'toml'}). Note that the frontmatter of the new (R)
+Markdown file created by \code{new_content()} always uses YAML instead of
+TOML or JSON.}
 
 \item{sample}{Whether to add sample content. Hugo creates an empty site by
 default, but this function adds sample content by default.}

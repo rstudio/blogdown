@@ -117,9 +117,11 @@ change_config = function(name, value) {
 #'   hidden, RStudio project (\file{*.Rproj}), \file{LICENSE}, and/or
 #'   \file{README} files.
 #' @param install_hugo Whether to install Hugo automatically if it is not found.
-#' @param format The format of the configuration file. Note that the frontmatter
-#'   of the new (R) Markdown file created by \code{new_content()} always uses
-#'   YAML instead of TOML or JSON.
+#' @param format The format of the configuration file, e.g., \code{'yaml'} or
+#'   \code{'toml'} (the value \code{TRUE} will be treated as \code{'yaml'}, and
+#'   \code{FALSE} means \code{'toml'}). Note that the frontmatter of the new (R)
+#'   Markdown file created by \code{new_content()} always uses YAML instead of
+#'   TOML or JSON.
 #' @param sample Whether to add sample content. Hugo creates an empty site by
 #'   default, but this function adds sample content by default.
 #' @param theme A Hugo theme on Github (a character string of the form
@@ -175,6 +177,7 @@ new_site = function(
   if (install_hugo && !hugo_available()) {
     msg_next('Installing Hugo'); install_hugo()
   }
+  if (is.logical(format)) format = if (format) 'yaml' else 'toml'
   if (hugo_cmd(
     c('new', 'site', shQuote(path.expand(dir)), if (force) '--force', '-f', format),
     stdout = FALSE
