@@ -30,9 +30,16 @@ Label: Keep empty directories
 Default: Off
 Position: right
 
+Parameter: format
+Widget: SelectInput
+Label: Config file format
+Fields: yaml, toml
+Defaults: yaml
+Position: right
+
 Parameter: to_yaml
 Widget: CheckboxInput
-Label: Convert all metadata to YAML
+Label: Convert all post metadata to YAML
 Default: On
 Position: right
 

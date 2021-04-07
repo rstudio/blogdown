@@ -6,6 +6,8 @@
 
 - `check_content()` will also discover problematic YAML metadata of posts that is not a list (thanks, msmielak, https://stackoverflow.com/q/66857582/559676).
 
+- New project menu in RStudio IDE now allows to select for keeping `config.toml` (thanks, @ogansser, #606).
+
 ## MAJOR CHANGES
 
 - The `method` argument of `build_site()` has been removed (it was defunct in **blogdown** v1.2). Please set the build method in the global option `options(blogdown.method = )` instead.
