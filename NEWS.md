@@ -6,7 +6,7 @@
 
 - `check_content()` will also discover problematic YAML metadata of posts that is not a list (thanks, msmielak, https://stackoverflow.com/q/66857582/559676).
 
-- New Blogdown project menu in RStudio IDE now allows to select for keeping `config.toml` (thanks, @ogansser, #606).
+- New project menu in RStudio IDE now allows to select for keeping `config.toml` (thanks, @ogansser, #606).
 
 ## MAJOR CHANGES
 
