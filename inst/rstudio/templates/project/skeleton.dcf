@@ -4,9 +4,19 @@ Subtitle: Create a new website using Hugo and blogdown
 Caption: Create a new website using Hugo and blogdown
 Icon: hugo-logo.png
 
-Parameter: install_hugo
+Parameter: theme
+Widget: TextInput
+Label: Hugo theme
+Default: yihui/hugo-lithium
+
+Parameter: format
 Widget: CheckboxInput
-Label: Install Hugo automatically
+Label: Use YAML as the config file format
+Default: On
+
+Parameter: to_yaml
+Widget: CheckboxInput
+Label: Convert all post metadata to YAML
 Default: On
 
 Parameter: sample
@@ -14,33 +24,15 @@ Widget: CheckboxInput
 Label: Add sample blog posts
 Default: On
 
-Parameter: theme
-Widget: TextInput
-Label: Hugo theme
-Default: yihui/hugo-lithium
-
 Parameter: theme_example
 Widget: CheckboxInput
-Label: Add the example site of the theme
+Label: Add the example site from the theme
 Default: On
 
 Parameter: empty_dirs
 Widget: CheckboxInput
 Label: Keep empty directories
 Default: Off
-Position: right
-
-Parameter: format
-Widget: SelectInput
-Label: Config file format
-Fields: yaml, toml
-Defaults: yaml
-Position: right
-
-Parameter: to_yaml
-Widget: CheckboxInput
-Label: Convert all post metadata to YAML
-Default: On
 Position: right
 
 Parameter: netlify
@@ -52,5 +44,11 @@ Position: right
 Parameter: .Rprofile
 Widget: CheckboxInput
 Label: Create .Rprofile
+Default: On
+Position: right
+
+Parameter: install_hugo
+Widget: CheckboxInput
+Label: Install Hugo if not installed
 Default: On
 Position: right
