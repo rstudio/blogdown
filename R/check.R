@@ -483,18 +483,34 @@ clean_duplicates = function(preview = TRUE) in_root({
 })
 
 check_garbage_html = function() {
-  res = unlist(lapply(list_files(content_file(), '[.]html$'), function(f) {
+  res = unlist(lapply(list_files('.', '[.]html$'), function(f) {
     if (file.size(f) < 200000) return()
     x = readLines(f, n = 15)
     if (any(x == '<meta name="generator" content="pandoc" />')) return(f)
   }))
-  if (n <- length(res)) {
+  res = sub('^[.]/', '', res)
+  ok = TRUE
+  i = xfun::is_sub_path(res, content_file())
+  if (n <- sum(i)) {
     msg_todo(
       'Found ', n, ' incompatible .html file', if (n > 1) 's',
-      ' introduced by previous blogdown versions:\n\n', action_list(res), '\n\n',
+      ' in the content directory:\n\n', action_list(res[i]), '\n\n',
       '  To fix, run the above command and then blogdown::build_site(build_rmd = "newfile").'
     )
-  } else {
-    msg_okay('Found 0 incompatible .html files to clean up.')
+    ok = FALSE
   }
+  i = xfun::is_sub_path(res, p <- publish_dir())
+  if (n <- sum(i) && any(i1 <- file_exists(f1 <- with_ext(res[i], 'Rmd')))) {
+    i2 = file_exists(f2 <- content_file(substr(f1[i1], nchar(p) + 1, nchar(f1))))
+    if (n <- sum(i2)) {
+      msg_todo(
+        'Found ', n, ' incompatible .html file', if (n > 1) 's',
+        ' in the publish directory:\n\n', action_list(c(res[i][i1][i2], f1[i1])), '\n\n',
+        '  To fix, restart R, run the above command, fix other issues identified ',
+        'by blogdown::check_site(), and then run blogdown::build_site().'
+      )
+      ok = FALSE
+    }
+  }
+  if (ok) msg_okay('Found 0 incompatible .html files to clean up.')
 }

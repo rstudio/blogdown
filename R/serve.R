@@ -211,7 +211,12 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     rebuild(rmd_files <- filter_newfile(list_rmds()))
 
     watch = servr:::watch_dir('.', rmd_pattern, handler = function(files) {
-      rmd_files <<- list_rmds(files = files)
+      files = list_rmds(files = files)
+      # ignore Rmd files in the public/ directory, in case users forgot to set
+      # ignoreFiles in config.yaml and Rmd files would be copied to public/
+      # (they should not be): https://github.com/rstudio/blogdown/issues/610
+      i = if (g == 'hugo') !xfun::is_sub_path(files, rel_path(publish_dir())) else TRUE
+      rmd_files <<- files[i]
     })
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs

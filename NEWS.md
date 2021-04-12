@@ -22,6 +22,8 @@
 
 - The RStudio addin "New Post" does not work when the YAML metadata of a post only contains a string. Normally the metadata should be a list (thanks, msmielak, https://stackoverflow.com/q/66857582/559676).
 
+- When `.Rmd` is not ignored in the `ignoreFiles` field in the site config file (this can be detected by `blogdown::check_site()` and you should fix it), `.Rmd` files may be copied to the `public/` directory when building the site via `blogdown::build_site()`, which can cause problems when `blogdown::serve_site()` is running, i.e., `.Rmd` files will be rendered to the `rmarkdown::html_document()` format by `rmarkdown::render()`. As a result, the corresponding web pages will not be rendered by Hugo but only Pandoc, and they will lose the site style or shortcodes (thanks, @ogansser, #610 #608). Now `blogdown::check_site()` should detect this problem and recommend fixes.
+
 # CHANGES IN blogdown VERSION 1.2
 
 ## NEW FEATURES
