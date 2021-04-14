@@ -1,10 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.travis\.yml$
 ^\.github$
 ^docs$
 ^codecov\.yml$
 ^NEWS\.md$
+^README\.md$
 ^_pkgdown\.yml$
 ^pkgdown$
 ^vignettes$
