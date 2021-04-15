@@ -7,5 +7,5 @@ contact_links:
     url: https://community.rstudio.com/tags/c/R-Markdown/10/blogdown
     about: Please ask and answer questions here.
   - name: Ask a question on Stack Overflow
-    url: https://stackoverflow.com/questions/tagged/blogdown
+    url: https://stackoverflow.com/questions/tagged/r+blogdown
     about: Please ask and answer questions here.

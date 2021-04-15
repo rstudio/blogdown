@@ -18,7 +18,7 @@ If the feature has not yet been filed, follow these advice to write good feature
 
 - Provide a clear and concise description of the problem this proposed feature would address? For example, I struggle to do `[...]` with blogdown.
 
-- Try to details what you want to happen ?
+- Try to detail what you want to happen.
 
 - Have you thought of alternative solutions or workarounds you've considered ? We'll be glad to know about them!
 

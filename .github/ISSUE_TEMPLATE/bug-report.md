@@ -9,12 +9,13 @@ assignees: ''
 <!--
 Welcome to the blogdown GitHub repo !
 
-We are always welcome to hear feedback from our users. 
+We are always happy to hear feedback from our users. 
 
 To file a _bug report_, please follow these instructions carefully: <https://yihui.org/issue/#bug-reports>
 
 Also, please complete and keep the checklist below in your issue. This helps you know what to check for opening a good issue report. It also helps know that you've have done the common steps that can solve your potential issue.
 
+At last, if you have posted the same issue elsewhere, please mentioned it (with a link to the other issue).
 
 ## Checklist
 
