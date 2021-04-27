@@ -580,16 +580,6 @@ Another thing to keep in mind is that the more effort you make in a complicated 
 >
 > --- Liyun Chen^[Translated from her Chinese Weibo.]
 
-## Install and maintain Hugo
-
-Since **blogdown** is based on the static site generator Hugo (https://gohugo.io), you also need to install Hugo\index{Hugo}. There is a helper function in **blogdown** to download and install it automatically on major operating systems (Windows, macOS, and Linux):
-
-```{r eval=FALSE}
-blogdown::install_hugo()
-```
-
-By default, it installs the latest version of Hugo, but you can choose a specific version through the `version` argument if you prefer.
-
 ## A recommended workflow {#workflow}
 
 There are a lot of ways to start building a website and deploy it. Because of the sheer number of technologies that you need to learn to fully understand how a website works, we'd like to recommend one workflow to beginners, so that hopefully they do not need to digest the rest of this book. This is definitely not the most optimal workflow, but requires you to know the fewest technical details.
