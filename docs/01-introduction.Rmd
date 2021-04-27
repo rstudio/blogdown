@@ -22,13 +22,13 @@ The **blogdown** package is available on CRAN and you can install it with:
 install.packages('blogdown') 
 ```
 
-To follow along with this book, we recommend using **blogdown** `r packageVersion("blogdown")`. 
+To follow along with this book, we recommend using **blogdown** `r packageVersion("blogdown")` or higher. 
 
 ### Installation troubleshooting
 
 Do you have an old version of **blogdown**? Compare your version against ours and upgrade if necessary.
 
-```{r}
+```{r collapse=TRUE}
 packageVersion("blogdown")
 ```
 
@@ -42,7 +42,7 @@ install.packages('blogdown')
 
 Do you have an old version of **rmarkdown**? The updated version of the **blogdown** package imports the **rmarkdown** package version 2.5. If your **rmarkdown** version is out of date, it will be updated using the RStudio IDE. However, if you are experiencing problems or are not using RStudio, compare your version against ours and upgrade if necessary.
 
-```{r eval = FALSE}
+```{r collapse=TRUE}
 packageVersion('rmarkdown')
 ```
 
@@ -91,7 +91,7 @@ Click "Create Project". The project wizard then runs a function that creates a n
 1. Creates a `netlify.toml` file to help you deploy your site to [Netlify](https://www.netlify.com/), and
 1. Creates an `.Rprofile` file to set your blogdown options (some are setup for you).
 
-If you are not using RStudio, you can also create a new project under a new directory in the RStudio IDE (`File` -> `New Project`) and call this function in the R console of the new project: 
+If you are not using RStudio, you can also create a new project under a new directory in the RStudio IDE (`File` -> `New Project`) and call the `new_site()` function in the R console of the new project: 
 
 ```{r, eval=FALSE, echo=TRUE}
 blogdown::new_site()
@@ -103,8 +103,8 @@ The project will include the following files:
 | File          | Description                                                    |
 |---------------|----------------------------------------------------------------|
 | `config.yaml` | Hugo and theme configuration file.                             |
-| `.Rprofile`   | File to setup your blogdown options.                           |
-| `netlify.toml`| File to setup your [Netlify](https://www.netlify.com/) options.|
+| `.Rprofile`   | File to set up your blogdown options.                           |
+| `netlify.toml`| File to set up your [Netlify](https://www.netlify.com/) options.|
 | `content/`    | Website source files to edit and add, like blog posts.         |
 | `themes/`     | Hugo theme assets like layout files, CSS, etc. Do not edit!    |
 
@@ -115,7 +115,7 @@ After all this, your new site is ready!
 
 Before we explain these new directories and files, let's use our first **blogdown** function. It's an important one, and it is often the first one you use when you open up a **blogdown** project to start a local preview of your website.
 
-You can use run `blogdown::serve_site()` from the console or use the addin^[To stop a local preview, use `blogdown::stop_server()` or restart your R Session.]:
+You can use run [`blogdown::serve_site()`](https://pkgs.rstudio.com/blogdown/reference/serve_site.html) from the console or use the addin^[To stop a local preview, use `blogdown::stop_server()` or restart your R Session.]:
 
 ```{r addin, echo=FALSE, fig.cap='Use the blogdown addin to serve the site.', out.width='80%', fig.align='center'}
 knitr::include_graphics('images/add-in.png')
@@ -290,7 +290,7 @@ You have now learned three of the most basic concepts for a Hugo-based website:
 
 1. How to edit the Hugo configuration file `config.yaml`\index{config.toml} to specify global settings for your site and your theme. 
 
-1. The contents of the `content/` directory, where you write the R Markdown or Markdown source files for your posts and pages. Under `content/` of the default site, you can see `about.md` and a `post/` directory containing a few posts. The organization of the content directory is up to you. You can have arbitrary files and directories there, depending on the website structure you want.
+1. How to edit contents inside the `content/` directory, where you write the R Markdown or Markdown source files for your posts and pages. Under `content/` of the default site, you can see `about.md` and a `post/` directory containing a few posts. The organization of the content directory is up to you. You can have arbitrary files and directories there, depending on the website structure you want.
 
 
 ### What is next?
