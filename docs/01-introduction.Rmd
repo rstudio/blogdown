@@ -340,12 +340,11 @@ With these addins, you should rarely need to run any R commands manually after y
 If your RStudio version is at least v1.1.383,^[You may download all RStudio official releases including v1.1.383 from <https://www.rstudio.com/products/rstudio/download/>.] you can actually create a website project directly from the menu `File -> New Project -> New Directory` (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
 
 ```{r new-project, echo=FALSE, fig.cap='Create a new website project in RStudio.', out.width='80%', fig.align='center'}
-knitr::include_graphics('images/new-project.png')
 ```
 
 ```{r blogdown-project, echo=FALSE, fig.cap='Create a website project based on blogdown.', out.width='80%', fig.align='center'}
-knitr::include_graphics('images/blogdown-project.png')
 ```
+
 
 If your website was created using the function `blogdown::new_site()` instead of the RStudio menu for the first time, you can quit RStudio and open the project again. If you go to the menu `Tools -> Project Options`, your project type should be "Website" like what you can see in Figure \@ref(fig:project-options).
 
