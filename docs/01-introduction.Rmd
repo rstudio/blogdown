@@ -261,7 +261,7 @@ url: https://github.com/rstudio/blogdown
 url: https://twitter.com/rstudio
 ```
 
-You can change the website title, e.g., `title = "My own cool website"`, and update the GitHub and Twitter URLs.\index{Directories}
+You can change the website title, e.g., `title: "My own cool website"`, and update the GitHub and Twitter URLs.\index{Directories}
 
 Again, you may want to get in the habit of using a **blogdown** checking function to help you identify problems with your config file:
 
