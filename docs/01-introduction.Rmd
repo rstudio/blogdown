@@ -590,24 +590,6 @@ blogdown::install_hugo()
 
 By default, it installs the latest version of Hugo, but you can choose a specific version through the `version` argument if you prefer.
 
-## Quick start with version control
-
-To start, create a new project under a new directory in the RStudio IDE (`File -> New Project`), and call the function in the R console of the new project\index{blogdown::new\_site()}:
-
-```{r eval=FALSE}
-blogdown::new_site()
-```
-
-If you do not use the RStudio IDE, you need to make sure you are currently in an empty directory,^[Check the output of `list.files('.')` in R, and make sure it does not include files other than `LICENSE`, the RStudio project file (`*.Rproj`), `README` or `README.md`.] in which case `new_site()` will do the same thing, but the website will be launched in your web browser instead of the RStudio Viewer.
-
-### Update
-
-To upgrade or reinstall Hugo, you may call `blogdown::install_hugo()` again. You can check the installed Hugo version via `blogdown::hugo_version()`, and find the available or latest version(s) of Hugo at <https://github.com/gohugoio/hugo/releases>.
-
-<!--
-To update **blogdown**, use `update.packages()` or `install.packages('blogdown')`.
--->
-
 ## A recommended workflow {#workflow}
 
 There are a lot of ways to start building a website and deploy it. Because of the sheer number of technologies that you need to learn to fully understand how a website works, we'd like to recommend one workflow to beginners, so that hopefully they do not need to digest the rest of this book. This is definitely not the most optimal workflow, but requires you to know the fewest technical details.
