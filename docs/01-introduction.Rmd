@@ -2,7 +2,9 @@
 
 # Get Started
 
-In this chapter, we show how to create a simple website from scratch. The website will contain a home page, an "About" page, one R Markdown post, and two plain Markdown posts. You will learn the basic concepts for creating websites with **blogdown**. For beginners, we recommend that you get started with the RStudio IDE, but it is not required. The RStudio IDE can make a few things easier, but you are free to use any editor if you do not care about the extra benefits in RStudio.
+In this chapter, we show how to create a simple website from scratch using **blogdown**. The website will contain a home page, an "About" page, one R Markdown post, and two plain Markdown posts. You will learn the basic concepts for creating websites with **blogdown**. 
+
+We recommend using the RStudio IDE with **blogdown** because there are a number of features built-in to the R package that RStudio users can take advantage of, but it is not required. Using the RStudio IDE will make some steps in this workflow easier, but you are free to use any editor.
 
 ## Installation
 
@@ -11,7 +13,7 @@ We assume you have already installed:
 + R (https://www.r-project.org) [@R-base] and 
 + the RStudio IDE (https://rstudio.com/products/rstudio/download/). 
 
-If you are not using the RStudio IDE, please install Pandoc\index{Pandoc} (http://pandoc.org). 
+If you are not using the RStudio IDE, please install Pandoc\index{Pandoc} (http://pandoc.org). Instructions are available on the reference site (https://pandoc.org/getting-started.html).
 
 The **blogdown** package is available on CRAN and you can install it with:
 
@@ -38,17 +40,17 @@ update.packages('blogdown')
 install.packages('blogdown')
 ```
 
-Do you have an old version of **rmarkdown**? The updated version of the **blogdown** package imports the **rmarkdown** package version 2.5. If your **rmarkdown** version is out of date, it will be updated using the RStudio IDE. However, if you are experiencing problems, compare your version against ours and upgrade if necessary.
+Do you have an old version of **rmarkdown**? The updated version of the **blogdown** package imports the **rmarkdown** package version 2.5. If your **rmarkdown** version is out of date, it will be updated using the RStudio IDE. However, if you are experiencing problems or are not using RStudio, compare your version against ours and upgrade if necessary.
 
 ```{r eval = FALSE}
 packageVersion('rmarkdown')
 ```
 
-Update using the same code provided above, replacing **blogdown** with **rmarkdown**.
+Update the **rmarkdown** package using the same code provided above, replacing **blogdown**.
 
 If you are still experiencing issues with **blogdown**, you may try installing the development version from GitHub:
 
-```{r}
+```{r eval=FALSE}
 ## Or, install from GitHub
 if (!requireNamespace("devtools")) install.packages('devtools')
 devtools::install_github('rstudio/blogdown')
@@ -57,11 +59,21 @@ devtools::install_github('rstudio/blogdown')
 
 ## A quick example
 
-In this section, we aim to take you from no website to a simple **blogdown** website with minimal time and friction. We will briefly run through the development of a simple toy website with the default Hugo theme used by the **blogdown** package. This section is meant to paint the Big Picture and suggest a workflow, before we dive deeper into **blogdown**, Hugo, version control, and deployment options. 
+### What to expect
 
-To keep the pace brisk, we assume that you are using the RStudio IDE and will rely on some of the built-in features that make life easier for **blogdown** users.^[The instructions here rely on a recent RStudio IDE version; v1.1.383 You may download all RStudio official releases including v1.1.383 from <https://www.rstudio.com/products/rstudio/download/>.]
+In this section, we aim to take you from no website to a basic **blogdown** website, with minimal time and friction. We will briefly run through the development of a working but simple website using the default theme used by the **blogdown** package. 
 
-The easiest way to get started is to use the RStudio New Project Wizard (`File -> New Project -> New Directory`) (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
+This section is designed to provide a beginner-friendly workflow. In later sections, we will present different workflows and dive deeper into details like advanced **blogdown** features, Hugo themes and the Hugo static site generator, version control, and deployment options. 
+
+### Prerequisites
+
+To keep this example *actually* quick, we will assume that you are using the RStudio IDE and will rely on some of the built-in features that help **blogdown** users.^[The instructions here rely on a recent RStudio IDE version; v1.1.383 You may download all RStudio official releases including v1.1.383 from <https://www.rstudio.com/products/rstudio/download/>.]
+
+We also assume that you have followed the [installation instructions](#installation) in the previous section.
+
+### Create project 
+
+The best home for your new **blogdown** website project is inside an RStudio project. A quick way to create one is to use the RStudio New Project Wizard (`File -> New Project -> New Directory`) (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
 
 ```{r new-project, echo=FALSE, fig.cap='Create a new website project in RStudio.', out.width='80%', fig.align='center'}
 knitr::include_graphics('images/new-project.png')
@@ -71,53 +83,168 @@ knitr::include_graphics('images/new-project.png')
 knitr::include_graphics('images/blogdown-project.png')
 ```
 
-Click "Create Project". The project wizard then runs a function that does the following:
+Click "Create Project". The project wizard then runs a function that creates a new site for you by doing the following steps:
 
-1. Creates a new site, 
-1. Downloads the default theme, 
-1. Adds some sample posts, 
-1. Build the sites, and 
-1. Launched it in the RStudio Viewer so you can immediately preview it. 
+1. Creates and opens a new [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) for the website.
+1. Downloads and installs the default theme (called `hugo-lithium`^[You can find its source on GitHub: https://github.com/yihui/hugo-lithium. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.]) with an example site, 
+1. Adds a sample `.Rmd` post,
+1. Creates a `netlify.toml` file to help you deploy your site to [Netlify](https://www.netlify.com/), and
+1. Creates an `.Rprofile` file to set your blogdown options (some are setup for you).
 
-Now you should see a bunch of directories and files under the RStudio project. You'll spend most of your time inside the `content/` folder, which happens to be where all your site's content lives. However, when you are first setting your site, you'll want to open up the site's `config.yaml` file first.
+If you are not using RStudio you can also call the `blogdown::new_site()` function:
+
+```{r, eval=FALSE, echo=TRUE}
+library(blogdown)
+new_site()
+```
 
 
-Before we explain these new directories and files, let's introduce an important and helpful technology first: _LiveReload._\index{LiveReload} This means your website^[Until you set up your website to be deployed, LiveReload only updates the *local* version of your website. This version is only visible to you. In order to make your website searchable, discoverable, and live on the internet you will need to upload your website's files to a site builder. See Chapter \@ref(deployment) for details.] will be automatically rebuilt and reloaded in your web browser^[You can also think of the RStudio Viewer as a web browser.] when you modify any source file of your website and save it. Basically, once you launch the website in a web browser, you do not need to rebuild it explicitly anymore. All you need to do is edit the source files, such as R Markdown documents, and save them. There is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()`\index{blogdown::serve\_site()}, which is based on the R package **servr** [@R-servr] by default.^[Hugo has its own LiveReload implementation. If you want to take advantage of it, you may set the global option `options(blogdown.generator.server = TRUE)`. See Section \@ref(livereload) for more information.]
+You should now see a bunch of directories and files under the RStudio project. 
+The project will include the following files:
 
-The `new_site()` function has several arguments, and you may check out its R help page (`?blogdown::new_site`) for details. A minimal default theme named "hugo-lithium" is provided as the default theme of the new site,^[You can find its source on GitHub: https://github.com/yihui/hugo-lithium. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.] and you can see what it looks like in Figure \@ref(fig:lithium).
+| File          | Description                                                    |
+|---------------|----------------------------------------------------------------|
+| `config.yaml` | Hugo and theme configuration file.                             |
+| `.Rprofile`   | File to setup your blogdown options.                           |
+| `netlify.toml`| File to setup your [Netlify](https://www.netlify.com/) options.|
+| `content/`    | Website source files to edit and add, like blog posts.         |
+| `themes /`    | Hugo theme assets like layout files, CSS, etc. Do not edit!    |
+
+
+After all this, your new site is ready! 
+
+### Serve site
+
+Before we explain these new directories and files, let's use our first **blogdown** function. It's an important one, and it is often the first one you use when you open up a **blogdown** project to start a local preview of your website.
+
+You can use run `blogdown::serve_site()` from the console or use the addin^[To stop a local preview, use `blogdown::stop_server()` or restart your R Session.]:
+
+```{r addin, echo=FALSE, fig.cap='Use the blogdown addin to serve the site.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/add-in.png')
+```
+
+After clicking on "Serve Site" from the addins menu in RStudio, you should see something that looks like this:
+
+```{r serve-site, echo=FALSE, fig.cap='Serving the site in RStudio.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/serve-site.png')
+```
+
+Serving the site did the following:
+
+1. Started a local Hugo server to help you preview your website, and 
+1. Knitted a sample `.Rmd` post to an `.html` page. You can see this from the progress message that printed to your console: `Rendering content/post/2020-12-01-r-rmarkdown/index.Rmd... Done.`
+
+If you want to preview your site locally in your web browser, you may click on the "Show in new window" icon at the top of your RStudio viewer pane (to the right of the broom icon). You can see what it looks like in Figure \@ref(fig:lithium).
 
 ```{r lithium, fig.cap='The homepage of the default new site.', echo=FALSE, fig.align='center', out.width='90%'}
 knitr::include_graphics('images/lithium-theme.png')
 ```
 
-You have to know three most basic concepts for a Hugo-based website:
+Let's introduce an important and helpful technology that you just used: _LiveReload._\index{LiveReload} Serving your site uses LiveReload, which means your website^[Until you set up your website to be deployed, LiveReload only updates the *local* version of your website. This version is only visible to you. In order to make your website searchable, discoverable, and live on the internet you will need to upload your website's files to a site builder. See Chapter \@ref(deployment) for details.] will be automatically rebuilt and reloaded in your web browser^[You can also think of the RStudio Viewer as a web browser.] when you modify any source file of your website and save it. Basically, once you launch the website in a web browser, you do not need to rebuild it explicitly anymore. All you need to do is edit the source files, such as R Markdown documents, and save them. There is no need to click any buttons or run any commands. LiveReload is implemented via this Addin that calls `blogdown::serve_site()`\index{blogdown::serve\_site()}, and you'll only need to use it once per work session.
 
-1. The configuration file `config.toml`\index{config.toml}, in which you can specify some global settings for your site. Even if you do not know what TOML is at this point (it will be introduced in Chapter \@ref(hugo)), you may still be able to change some obvious settings. For example, you may see configurations like these in `config.toml`:
+### Use R Markdown
 
-    ```js
-    baseurl = "/"
-    languageCode = "en-us"
-    title = "A Hugo website"
-    theme = "hugo-lithium"
+Now let's see LiveReload *in action*. In your files pane, navigate inside the `content/` folder. This folder is where all your site's content lives. Find and open the file `content/post/2020-12-01-r-rmarkdown/index.Rmd`. This is a sample R Markdown post that is added by **blogdown** by default when you set up a new site. 
 
-    [[menu.main]]
-        name = "About"
-        url = "/about/"
-    [[menu.main]]
-        name = "GitHub"
-        url = "https://github.com/rstudio/blogdown"
-    [[menu.main]]
-        name = "Twitter"
-        url = "https://twitter.com/rstudio"
-    ```
+When you open that file, you'll notice a YAML block at the top with familiar metadata like `title` and `author`, then code chunks and narrative text below the YAML as with your typical R Markdown file.
 
-    You can change the website title, e.g., `title = "My own cool website"`, and update the GitHub and Twitter URLs.\index{Directories}
+Let's edit this `index.Rmd` post. This post is a Hugo [page bundle](https://gohugo.io/content-management/page-bundles/). Each post gets its own bundle, or folder. Inside the post bundle is where your static post-specific files like images and `.csv` files should go. 
 
-1. The content directory (by default, `content/`). This is where you write the R Markdown or Markdown source files for your posts and pages. Under `content/` of the default site, you can see `about.md` and a `post/` directory containing a few posts. The organization of the content directory is up to you. You can have arbitrary files and directories there, depending on the website structure you want.
+```
+content/
+├── post
+│   ├── 2020-12-01-r-rmarkdown
+│   │   ├── index.html <- blogdown knitted this for you
+│   │   └── index.Rmd
+│   ├── 2015-01-01-lorem-ipsum
+│   └── 2016-12-30-hello-markdown
+```
 
-1. The publishing directory (by default, `public/`). Your website will be generated to this directory, meaning that you do not need to manually add any files to this directory.^[By running either `serve_site()` or `build_site()`, files will be generated and published in your publishing directory automatically.] Typically it contains a lot of `*.html` files and dependencies like `*.css`, `*.js`, and images. You can upload everything under `public/` to any web server that can serve static websites, and your website will be up and running. There are many options for publishing static websites, and we will talk more about them in Chapter \@ref(deployment) if you are not familiar with deploying websites.
+The default behavior of **blogdown** is to knit posts for you automatically when you serve your site, so this file has already been knitted- that is why you can see it in your local preview. 
 
-If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! We will show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technologies like the Hugo templating language, HTML, CSS, and JavaScript.
+Go ahead and add an R code chunk to this file, like:
+
+````
+```{r}`r ''`
+summary(Orange)
+```
+````
+
+If you save the file with this edit, **blogdown** will re-knit the file on save, and your website preview should update after a few seconds once LiveReload kicks in.
+
+Try it again! Add another R code chunk like:
+
+````
+```{r echo=FALSE}`r ''`
+library(ggplot2)
+oplot <- ggplot(Orange, aes(x = age, 
+                   y = circumference, 
+                   colour = Tree)) +
+  geom_point() +
+  geom_line() +
+  guides(colour = FALSE) +
+  theme_bw()
+oplot
+```
+````
+
+You should see a blog post that looks like this:
+
+```{r edit-content, fig.cap='Adding new R code to an .Rmd post.', echo=FALSE, fig.align='center', out.width='80%'}
+knitr::include_graphics('images/edit-content.png')
+```
+
+
+### Configure site
+
+We've just shown you how you can start adding `.Rmd` content to your website. However, when you are first setting up your site, you'll want to edit a few other files to personalize your site. The `config.yaml` file stores your website configurations for Hugo and for your Hugo theme. You'll usually only edit this file during the initial site setup.
+
+For example, you may see configurations like these in `config.yaml`:
+
+```yaml
+baseurl: /
+languageCode: en-us
+title: A Hugo website
+theme: hugo-lithium
+googleAnalytics: ''
+disqusShortname: ''
+ignoreFiles:
+- \.Rmd$
+- \.Rmarkdown$
+- _cache$
+- \.knit\.md$
+- \.utf8\.md$
+permalinks:
+post: /:year/:month/:day/:slug/
+menu:
+main:
+- name: About
+url: /about/
+- name: GitHub
+url: https://github.com/rstudio/blogdown
+- name: Twitter
+url: https://twitter.com/rstudio
+```
+
+You can change the website title, e.g., `title = "My own cool website"`, and update the GitHub and Twitter URLs.\index{Directories}
+
+
+### Summary
+
+You have now learned three of the most basic concepts for a Hugo-based website:
+
+1. How to preview your Hugo site locally using `blogdown::serve_site()` or the RStudio addin "Serve Site".
+
+1. How to edit the Hugo configuration file `config.yaml`\index{config.toml} to specify global settings for your site and your theme. 
+
+1. The contents of the `content/` directory, where you write the R Markdown or Markdown source files for your posts and pages. Under `content/` of the default site, you can see `about.md` and a `post/` directory containing a few posts. The organization of the content directory is up to you. You can have arbitrary files and directories there, depending on the website structure you want.
+
+
+### What is next?
+
+If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! There are many options for publishing static websites like this one, and we will talk more about them in Chapter \@ref(deployment) if you are not familiar with deploying websites. 
+
+We will also show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technologies like the Hugo templating language, HTML, CSS, and JavaScript.
 
 ## RStudio IDE
 
@@ -171,45 +298,95 @@ knitr::include_graphics('images/project-options.png')
 
 ## Global options\index{Global Options}
 
-Depending on your personal preferences, you can set a few global options before you work on your website. These options should be set using `options(name = value)`, and currently available options are presented in Table \@ref(tab:global-options).
+The **blogdown** package uses global options, specified in a `.Rprofile` file, to help users customize how **blogdown** works. When you create a new site, **blogdown** adds a project-level `.Rprofile` file in the root directory of your website project.
 
-```{r global-options, echo=FALSE}
+Options should be set using the syntax `options(name = value)`, and those included in a new **blogdown** site's `.Rprofile` file are presented in Table \@ref(tab:global-options-new).
+
+```{r global-options-new, echo=FALSE}
 knitr::kable(matrix(c(
-  'servr.daemon', 'interactive()', 'Use a daemonized server?',
+  'blogdown.hugo.version', 'A valid Hugo version', 'A Hugo version number',
+  'blogdown.knit.on_save', 'TRUE', 'Knit Rmd files automatically on save?',
+  'blogdown.method', 'html', 'The output format of .Rmd posts',
+  'blogdown.serve_site.startup', 'FALSE', 'Serve the site on RStudio startup?',
+  NULL
+), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options for configured for new blogdown sites.')
+```
+
+Three of these options are worth further explanations:
+
+- `blogdown.hugo.version`: You can find available Hugo versions at <https://github.com/gohugoio/hugo/releases/>, and find all locally installed Hugo versions via `blogdown::find_hugo('all')`. A common mistake when specifying this option is to omit the version number `0` at the end. For example, only Hugo v0.55.0 exists, but not v0.55, so `options(blogdown.hugo.version = '0.55')` will not work, and you must set it to `0.55.0` precisely.
+
+- `blogdown.knit.on_save`: By default, the Rmd file is automatically knitted when it is saved. If you prefer clicking the `Knit` button in RStudio to manually knit the file, you may set this option to `FALSE`. If this option is unset, **blogdown** will set it to `TRUE` for the current R session (with a reminder message) when you click the `Knit` button.
+
+- `blogdown.method`: By default, an `Rmd` post is compiled to `.html` via **rmarkdown** and Pandoc. You may set this option to `"markdown"` to bypass Pandoc, knit to `.md` (plain Markdown), and use Hugo's Markdown renderer (e.g., Goldmark) to render `.md` to `.html`. Basically, this option decides whether you want to use Pandoc or Hugo's Markdown renderer to render Markdown to HTML.
+
+We recommend that you set these options in your R startup profile file. If you have never used a startup profile file before, you can check out the help page `?Rprofile`. Here, we provide a brief but incomplete introduction to orient you quickly.
+
+A startup profile file is basically an R script that is executed when your R session is started. This is a perfect place to set global options, so you do not need to type these options again every time you start a new R session. 
+
+There are a few things you need to know about R's startup profile file before using: 
+
+1. You can use a global profile file `~/.Rprofile`,^[The tilde `~` denotes your home directory in your system.] or a per-project file `.Rprofile` under the root directory of your RStudio project. The former will be applied to all R sessions that you start, unless you have provided the latter to override it. 
+
+1. The name "startup profile file" means that R only executes this file when you first start your R session. This means that when you modify and save your `.Rprofile`, you must restart R for the changes to take effect. 
+
+1. [R will silently ignore the last line of your `.Rprofile`](https://yihui.org/en/2018/04/rprofile-trailing-newline/) if it does not have a trailing newline, so please make sure you add at least one newline to the end of your `.Rprofile`.
+
+If you want to add a profile file to an existing **blogdown** project, or you created a new website without using `blogdown::new_site()`, you can create a boilerplate version with this command in your R console:
+
+```{r eval=FALSE}
+blogdown::config_Rprofile()
+```
+
+This is the easiest way to create or modify a per-project profile file. At the top of the file in a new **blogdown** website project, you will see this:
+
+```r
+# REMEMBER to restart R after you modify and save this file!
+
+# First, execute the global .Rprofile if it exists. You may
+# configure blogdown options there, too, so they apply to any
+# blogdown projects. Feel free to ignore this part if it sounds
+# too complicated to you.
+if (file.exists("~/.Rprofile")) {
+  base::sys.source("~/.Rprofile", envir = environment())
+}
+```
+
+First, note the top message! The next section of code is necessary to execute both your project profile as well as the global profile if one exists. R only reads one startup profile file. For example, if you have a `.Rprofile` under the current directory and a global `~/.Rprofile`, only the former one will be executed when R starts up from the current directory. This code is provided for you so you may execute both a global and per-project profile file. Note that this code should only live in the project profile, and you _must not_ add it to your global `~/.Rprofile`, otherwise it will trigger an infinite recursion.
+
+Below that, you will set your options. These can be stacked on separate lines, or you may use commas to list multiple options together:
+
+```r
+# stacked options
+options(blogdown.serve_site.startup = FALSE)
+options(blogdown.knit.on_save = TRUE)
+
+# comma-separated options
+options(blogdown.serve_site.startup = FALSE,
+        blogdown.knit.on_save = TRUE)
+```
+
+It is up to you how to format your profile file---either way works. The **blogdown** options provided in the boilerplate profile file are just a subset of the options available. Depending on your personal preferences and the theme you choose, you may wish to set more global options as you work on your website. For example:
+
+```{r global-options-2, echo=FALSE}
+knitr::kable(matrix(c(
   'blogdown.author', '', 'The default author of new posts',
-  'blogdown.ext', '.md', 'Default extension of new posts',
-  'blogdown.subdir', 'post', 'A subdirectory under content/',
+  'blogdown.ext', '.md', 'Default extension of new posts: .md / .Rmd / .Rmarkdown',
+  'blogdown.subdir', 'post', 'Default subdirectory under content/ for new posts',
   'blogdown.yaml.empty', TRUE, 'Preserve empty fields in YAML?',
   NULL
-), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options that affect the behavior of blogdown.')
+), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Additional global options that affect the behavior of blogdown.')
 ```
 
-We recommend that you set these options in your R startup profile file. You can check out the help page `?Rprofile` for more details, and here is a simplified introduction. A startup profile file is basically an R script that is executed when your R session is started. This is a perfect place to set global options, so you do not need to type these options again every time you start a new R session. You can use a global profile file `~/.Rprofile`,^[The tilde `~` denotes your home directory in your system.] or a per-project file `.Rprofile` under the root directory of your RStudio project. The former will be applied to all R sessions that you start, unless you have provided the latter to override it. The easiest way to create such a file is to use `file.edit()` in RStudio, e.g.,
+Suppose you always prefer writing `.Rmd` posts (instead of the default `.md`), and want the author of new posts to be "John Doe" by default. You can set these options in the profile file:
 
 ```{r eval=FALSE}
-file.edit('~/.Rprofile')
-# or file.edit('.Rprofile')
+options(blogdown.ext = '.Rmd', blogdown.author = 'John Doe', blogdown.subdir = 'blog')
 ```
 
-Suppose you always prefer writing Rmd posts (instead of the default `*.md`), and want the author of new posts to be "John Doe" by default. You can set these options in the profile file:
+A nice consequence of setting these options is that when you use the RStudio addin "New Post," the fields "Author," "Subdirectory," and "Format" will be automatically populated, so you do not need to manipulate them every time, unless you want to change the defaults.
 
-```{r eval=FALSE}
-options(blogdown.ext = '.Rmd', blogdown.author = 'John Doe')
-```
-
-A nice consequence of setting these options is that when you use the RStudio addin "New Post," the fields "Author," "Subdirectory," and "Format" will be automatically populated, so you do not need to manipulate them every time unless you want to change the defaults (occasionally).
-
-R only reads one startup profile file. For example, if you have a `.Rprofile` under the current directory and a global `~/.Rprofile`, only the former one will be executed when R starts up from the current directory. This may make it inconvenient for multiple authors collaborating on the same website project, since you cannot set author-specific options. In particular, it is not possible to set the `blogdown.author` option in a single `.Rprofile`, because this option should be different for different authors. One workaround is to set common options in `.Rprofile` under the root directory of the website project, and also execute the global `~/.Rprofile` if it exists. Author-specific options can be set in the global `~/.Rprofile` on each author's computer.
-
-```{r eval=FALSE}
-# in .Rprofile of the website project
-if (file.exists('~/.Rprofile')) {
-  base::sys.source('~/.Rprofile', envir = environment())
-}
-# then set options(blogdown.author = 'Your Name') in ~/.Rprofile
-```
-
-Note that [R will silently ignore the last line of your `.Rprofile`](https://yihui.org/en/2018/04/rprofile-trailing-newline/) if it does not have a trailing newline, so please make sure you add at least one newline to the end of your `.Rprofile`.
+One inconvenience when using startup profile files is the case of the team-authored blog, where multiple authors collaborate on the same website project. You cannot set author-specific options using the `blogdown.author` option in a single `.Rprofile`, because this option should be different for different authors. One workaround is to set common website options in your project `.Rprofile`, then allow each individual author to set their own author-specific options in the global `~/.Rprofile` on each author's computer. If you use the boilerplate `blogdown::config_Rprofile()`, the first chunk of code at the top will ensure that the global `~/.Rprofile` is also executed if it exists. 
 
 ## R Markdown vs. Markdown {#output-format}
 
@@ -280,9 +457,9 @@ If you find it is a pain to have to remember the differences between R Markdown 
 
 In this book, we usually mean `.Rmd` files when we say "R Markdown documents," which are compiled to `.html` by default. However, there is another type of R Markdown document with the filename extension `.Rmarkdown`. Such R Markdown documents are compiled to Markdown documents with the extension `.markdown`, which will be processed by Hugo instead of Pandoc. There are two major limitations of using `.Rmarkdown` compared to `.Rmd`:
 
-- You cannot use Markdown features only supported by Pandoc, such as citations. Math expressions only work if you have installed the **xaringan** package [@R-xaringan] and applied the JavaScript solution mentioned in Section \@ref(javascript).
+- You cannot use Markdown features only supported by Pandoc, such as fenced `Div`s.
 
-- HTML widgets are not supported.
+- Math expressions only work if you apply the JavaScript solution mentioned in Section \@ref(javascript).
 
 The main advantage of using `.Rmarkdown` is that the output files are cleaner because they are Markdown files. It can be easier for you to read the output of your posts without looking at the actual web pages rendered. This can be particularly helpful when reviewing GitHub pull requests. Note that numbered tables, figures, equations, and theorems are also supported. You cannot directly use Markdown syntax in table or figure captions, but you can use text references as a workaround (see **bookdown**'s documentation).
 
@@ -333,7 +510,7 @@ blogdown::new_site(theme = 'lxndrblz/anatole')
 
 To save you some time, we list a few themes below that match our taste:
 
-- Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) [Tanka,](https://github.com/road2stat/hugo-tanka)
+- Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) [Tanka,](https://themes.gohugo.io/hugo-tanka/)
 [Cupper,](https://themes.gohugo.io/cupper-hugo-theme/)
 [simple-a,](https://themes.gohugo.io/simple-a/) and [ghostwriter.](https://themes.gohugo.io/ghostwriter/)
 
