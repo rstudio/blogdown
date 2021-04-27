@@ -91,13 +91,11 @@ Click "Create Project". The project wizard then runs a function that creates a n
 1. Creates a `netlify.toml` file to help you deploy your site to [Netlify](https://www.netlify.com/), and
 1. Creates an `.Rprofile` file to set your blogdown options (some are setup for you).
 
-If you are not using RStudio you can also call the `blogdown::new_site()` function:
+If you are not using RStudio, you can also create a new project under a new directory in the RStudio IDE (`File` -> `New Project`) and call this function in the R console of the new project: 
 
 ```{r, eval=FALSE, echo=TRUE}
-library(blogdown)
-new_site()
+blogdown::new_site()
 ```
-
 
 You should now see a bunch of directories and files under the RStudio project. 
 The project will include the following files:
@@ -108,7 +106,7 @@ The project will include the following files:
 | `.Rprofile`   | File to setup your blogdown options.                           |
 | `netlify.toml`| File to setup your [Netlify](https://www.netlify.com/) options.|
 | `content/`    | Website source files to edit and add, like blog posts.         |
-| `themes /`    | Hugo theme assets like layout files, CSS, etc. Do not edit!    |
+| `themes/`     | Hugo theme assets like layout files, CSS, etc. Do not edit!    |
 
 
 After all this, your new site is ready! 
@@ -142,7 +140,7 @@ knitr::include_graphics('images/lithium-theme.png')
 
 Let's introduce an important and helpful technology that you just used: _LiveReload._\index{LiveReload} Serving your site uses LiveReload, which means your website^[Until you set up your website to be deployed, LiveReload only updates the *local* version of your website. This version is only visible to you. In order to make your website searchable, discoverable, and live on the internet you will need to upload your website's files to a site builder. See Chapter \@ref(deployment) for details.] will be automatically rebuilt and reloaded in your web browser^[You can also think of the RStudio Viewer as a web browser.] when you modify any source file of your website and save it. Basically, once you launch the website in a web browser, you do not need to rebuild it explicitly anymore. All you need to do is edit the source files, such as R Markdown documents, and save them. There is no need to click any buttons or run any commands. LiveReload is implemented via this Addin that calls `blogdown::serve_site()`\index{blogdown::serve\_site()}, and you'll only need to use it once per work session.
 
-### Use R Markdown
+### Edit content
 
 Now let's see LiveReload *in action*. In your files pane, navigate inside the `content/` folder. This folder is where all your site's content lives. Find and open the file `content/post/2020-12-01-r-rmarkdown/index.Rmd`. This is a sample R Markdown post that is added by **blogdown** by default when you set up a new site. 
 
@@ -195,6 +193,43 @@ knitr::include_graphics('images/edit-content.png')
 ```
 
 
+Any time you edit your website content, you may want to get in the habit of using one of the **blogdown** checking functions, which can help you identify problems with your content files:
+
+```{r eval=FALSE}
+blogdown::check_content()
+```
+
+These functions are meant to be used during your interactive work sessions. You'll see what files were checked, which checks were successful, and **blogdown** will offer `[TODO]` items when a check needs your attention, like this:
+
+```
+--------------------------------------------------------------------
+○ A successful check looks like this.
+● [TODO] A check that needs your attention looks like this.
+| Let's check out your blogdown site!
+--------------------------------------------------------------------
+```
+
+Checking the content of our example site should print output like this:
+
+```
+― Checking content files
+| Checking for validity of YAML metadata in posts...
+○ All YAML metadata appears to be syntactically valid.
+| Checking for previewed content that will not be published...
+○ Found 0 files with future publish dates.
+○ Found 0 files marked as drafts.
+| Checking your R Markdown content...
+○ All R Markdown files have been knitted.
+○ All R Markdown output files are up to date with their source files.
+| Checking for .html/.md files to clean up...
+○ Found 0 duplicate .html output files.
+○ Found 0 incompatible .html files to clean up.
+| Checking for the unnecessary 'content/' directory in theme...
+○ Great! Your theme does not contain the content/ directory.
+― Check complete: Content
+```
+
+
 ### Configure site
 
 We've just shown you how you can start adding `.Rmd` content to your website. However, when you are first setting up your site, you'll want to edit a few other files to personalize your site. The `config.yaml` file stores your website configurations for Hugo and for your Hugo theme. You'll usually only edit this file during the initial site setup.
@@ -228,6 +263,24 @@ url: https://twitter.com/rstudio
 
 You can change the website title, e.g., `title = "My own cool website"`, and update the GitHub and Twitter URLs.\index{Directories}
 
+Again, you may want to get in the habit of using a **blogdown** checking function to help you identify problems with your config file:
+
+```{r eval=FALSE}
+blogdown::check_config()
+```
+
+You'll see output that looks like this, which gives you a future `[TODO]` item, to update your site's `baseURL` when you are ready to publish.
+
+```
+― Checking config.yaml
+| Checking "baseURL" setting for Hugo...
+● [TODO] Update "baseURL" to your actual URL when ready to publish.
+| Checking "ignoreFiles" setting for Hugo...
+○ "ignoreFiles" looks good - nothing to do here!
+| Checking setting for Hugo's Markdown renderer...
+○ All set! Found the "unsafe" setting for goldmark.
+― Check complete: config.yaml
+```
 
 ### Summary
 
