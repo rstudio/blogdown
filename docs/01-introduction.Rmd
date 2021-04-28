@@ -22,7 +22,7 @@ The **blogdown** package is available on CRAN and you can install it with:
 install.packages('blogdown') 
 ```
 
-To follow along with this book, we recommend using **blogdown** `r packageVersion("blogdown")` or higher. 
+To follow along with this book, we recommend using **blogdown** `r packageVersion("blogdown")[, 1:2]` or higher. 
 
 ### Installation troubleshooting
 
