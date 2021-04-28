@@ -28,9 +28,14 @@ To follow along with this book, we recommend using **blogdown** `r packageVersio
 
 Do you have an old version of **blogdown**? Compare your version against ours and upgrade if necessary.
 
-```{r collapse=TRUE}
+```{r eval=FALSE}
 packageVersion("blogdown")
 ```
+
+```{r echo=FALSE}
+packageVersion("blogdown")[, 1:2]
+```
+
 
 To update **blogdown**:
 
@@ -40,11 +45,22 @@ update.packages('blogdown')
 install.packages('blogdown')
 ```
 
-Do you have an old version of **rmarkdown**? The updated version of the **blogdown** package imports the **rmarkdown** package version 2.5. If your **rmarkdown** version is out of date, it will be updated using the RStudio IDE. However, if you are experiencing problems or are not using RStudio, compare your version against ours and upgrade if necessary.
+```{r include=FALSE}
+deps <- desc::desc(package = "blogdown")$get_deps()
+rmd_version <- strsplit(deps[deps$package == "rmarkdown", 3], " ")[[1]][2]
+```
 
-```{r collapse=TRUE}
+
+Do you have an old version of **rmarkdown**? The updated version of the **blogdown** package imports the **rmarkdown** package version `r rmd_version`. If your **rmarkdown** version is out of date, it will be updated using the RStudio IDE. However, if you are experiencing problems or are not using RStudio, compare your version against ours and upgrade if necessary.
+
+```{r eval=FALSE}
 packageVersion('rmarkdown')
 ```
+
+```{r echo=FALSE}
+rmd_version
+```
+
 
 Update the **rmarkdown** package using the same code provided above, replacing **blogdown**.
 
@@ -52,8 +68,8 @@ If you are still experiencing issues with **blogdown**, you may try installing t
 
 ```{r eval=FALSE}
 ## Or, install from GitHub
-if (!requireNamespace("devtools")) install.packages('devtools')
-devtools::install_github('rstudio/blogdown')
+if (!requireNamespace("remotes")) install.packages('remotes')
+remotes::install_github('rstudio/blogdown')
 ```
 
 
