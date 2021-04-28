@@ -59,8 +59,6 @@ devtools::install_github('rstudio/blogdown')
 
 ## A quick example
 
-### What to expect
-
 In this section, we aim to take you from no website to a basic **blogdown** website, with minimal time and friction. We will briefly run through the development of a working but simple website using the default theme used by the **blogdown** package. 
 
 This section is designed to provide a beginner-friendly workflow. In later sections, we will present different workflows and dive deeper into details like advanced **blogdown** features, Hugo themes and the Hugo static site generator, version control, and deployment options. 
