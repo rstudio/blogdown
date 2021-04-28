@@ -13,7 +13,7 @@ We assume you have already installed:
 + R (https://www.r-project.org) [@R-base] and 
 + the RStudio IDE (https://rstudio.com/products/rstudio/download/). 
 
-If you are not using the RStudio IDE, please install Pandoc\index{Pandoc} (http://pandoc.org). Instructions are available on the reference site (https://pandoc.org/getting-started.html).
+If you are not using the RStudio IDE, please install Pandoc\index{Pandoc} (http://pandoc.org). Instructions are available on the reference site (https://pandoc.org/installing.html).
 
 The **blogdown** package is available on CRAN and you can install it with:
 
