@@ -91,14 +91,14 @@ If you followed along with Chapter \@ref(a-quick-example), you should now have:
 1. With knitted `.Rmd` content for one post...
 1. Served locally using **blogdown**. 
 
-In this section, we'll walk you through a quick deploy to publish your website using a drag-and-drop tool from [Netlify](https://www.netlify.com/). This drag-and-drop method is a good workflow to start with if you are not familiar with GIT or GitHub, and if you are not familiar with deploying websites. There are many options for publishing static websites, and we will talk more about them plus advanced workflows involving version control and continuous deployment in Chapter \@ref(deployment).
+In this section, we'll walk you through a quick deploy to publish your website using a drag-and-drop tool from \index{Netlify} https://www.netlify.com. This drag-and-drop method is a good workflow to start with if you are not familiar with GIT or GitHub, and if you are not familiar with deploying websites. There are many options for publishing static websites, and we will talk more about them plus advanced workflows involving version control and continuous deployment in Chapter \@ref(deployment).
 
 
 ### Sign up for Netlify
 
 Netlify is a platform that offers cloud hosting and serverless backend services for static websites. Lucky for us, that is exactly what we need- since **blogdown** helps us create static websites using Hugo. Netlify has a free plan with plenty of useful features. To sign up:
 
-1. Go online to [Netlify.com](https://www.netlify.com/).
+1. Go online to \index{Netlify} https://www.netlify.com.
 
 1. Click on the "Sign Up" button. 
 
@@ -106,7 +106,7 @@ Netlify is a platform that offers cloud hosting and serverless backend services 
     knitr::include_graphics('images/netlify-signup.png')
     ```
 
-1. If you have a [GitHub account](https://github.com/), we recommend signing up using your existing GitHub account (no need to create another account), so select "GitHub" (you may need to sign in), and click to "Authorize Netlify."
+1. If you have a GitHub account (https://github.com/), we recommend signing up using your existing GitHub account (no need to create another account), so select "GitHub" (you may need to sign in), and click to "Authorize Netlify."
     
     ```{r netlify-github, fig.cap='Sign into Netlify using an existing GitHub account.', echo=FALSE,   fig.align='center', out.width='90%'}
     knitr::include_graphics('images/netlify-github.png')
@@ -121,13 +121,27 @@ The publishing directory of a Hugo site is `public/` by default. Your *built* we
 
 Serving your Hugo site locally does not generate the `public/` directory. To follow this drag-and-drop method, you'll need to build your site locally first.
 
-1. Restart the R session, and run `blogdown::hugo_build()`. Alternatively, if you use RStudio, you may use the "Build Website" button in the Build pane, or press `Ctrl + Shift + B` or `Cmd + Shift + B` to build the website.
+Restart the R session, and run:
 
-1. You should see a new `public/` directory under the root directory of your project. Never edit files in this directory, as your changes will always be overwritten whenever you re-build your site.
+```{r eval=FALSE}
+blogdown::build_site()
+```
 
-1. Log into\index{Netlify} https://www.netlify.com. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag a folder with a static site here." If this is the first time you have published this website, you can create a new site, otherwise you may update the existing site you created last time. 
+Alternatively, if you use RStudio, you may use the "Build Website" button in the Build pane, or press `Ctrl + Shift + B` or `Cmd + Shift + B` to build the website.
 
-1. Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.com` to you. You can (and should) change this random subdomain to a more meaningful one if it is still available.
+You should see a new `public/` directory under the root directory of your project. Never edit files in this directory, as your changes will always be overwritten whenever you re-build your site.
+
+Note that this function does not rerender R Markdown files by default, because it may be expensive and often undesirable to render `.Rmd` files that have been rendered before. Given that R package upgrades have a tendency to break older code, continuously re-rendering old content is nearly impossible to do without errors, especially over longer periods of time. 
+
+### Drag-and-drop to deploy
+
+Next, log into\index{Netlify} https://www.netlify.com. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag a folder with a static site here." 
+
+If this is the first time you have published this website, you can create a new site, otherwise you may update the existing site you created last time. 
+
+Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.com` to you. 
+
+You can (and should) change this random subdomain to a more meaningful one if it is still available. You may read the docs for changing a site's default Netlify subdomain here: https://docs.netlify.com/domains-https/custom-domains/#assign-a-domain-to-a-site
 
 ### What is next?
 
