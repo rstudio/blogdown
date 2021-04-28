@@ -339,7 +339,7 @@ It is not recommended to change the **knitr** chunk options `fig.path` or `cache
 
 If you are working on an R Markdown post, but do not want **blogdown** to compile it, you can temporarily change its filename extension from `.Rmd` to another unknown extension such as `.Rmkd`.
 
-## Hugo themes
+## Other themes
 
 In Hugo, themes\index{Themes} control the entire appearance and functionality of your site. A Hugo theme is made with the following elements:
 
