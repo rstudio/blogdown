@@ -149,7 +149,11 @@ Netlify has a free plan with plenty of useful features, so we recommend signing 
 
 ### What is next?
 
-The workflow described above can be cumbersome the more you work on your website. It can be much easier to publish a website if you are familiar with GIT and GitHub. We recommend that you create a new site on Netlify from your GitHub repository that contains the source files of your website, so that you can enjoy the benefits of continuous deployment instead of manually uploading the `public/` folder every time. With this workflow, you do not need to run `blogdown::hugo_build()` locally, because the website can be built on Netlify via Hugo. Instead, you would rely on `blogdown::serve_site()` locally to preview your site before pushing your changes to GitHub. See Chapter \@ref(deployment) for more information.
+The workflow described above can be cumbersome the more you work on your website. It can be much easier to publish a website if you are familiar with GIT and GitHub. 
+
+We recommend that you create a new site on Netlify from your GitHub repository that contains the source files of your website, so that you can enjoy the benefits of continuous deployment instead of manually uploading the `public/` folder every time. 
+
+With this advanced workflow, you do not need to run `blogdown::hugo_build()` locally, because the website can be built on Netlify via Hugo. Instead, you would rely on `blogdown::serve_site()` locally to preview your site before pushing your changes to GitHub. See Chapter \@ref(deployment) for more information.
 
 ## RStudio IDE
 
