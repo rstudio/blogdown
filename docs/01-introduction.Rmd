@@ -117,22 +117,21 @@ You should see a new `public/` directory under the root directory of your projec
 
 Note that this function does not rerender R Markdown files by default, because it may be expensive and often undesirable to render `.Rmd` files that have been rendered before. Given that R package upgrades have a tendency to break older code, continuously re-rendering old content is nearly impossible to do without errors, especially over longer periods of time. 
 
-### use Netlify Drop
+### Use Netlify Drop
 
-Next, go online to\index{Netlify} Drop https://app.netlify.com/drop. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag a folder with a static site here." 
+Next, go online to\index{Netlify} Netlify Drop https://app.netlify.com/drop. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag and drop your site folder here." 
 
 ```{r netlify-drop, fig.cap='Drag and drop deploy via Netlify.', echo=FALSE, fig.align='center', out.width='90%'}
 knitr::include_graphics('images/netlify-drop.png')
 ```
 
-If this is the first time you have published this website, you can create a new site, otherwise you may update the existing site you created last time. 
+Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.com` to you. After your site is live, you'll have a shareable link to your new blogdown site. 
 
-Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.com` to you. 
-
+You'll notice a disclaimer that this site will be deleted after 24 hours. You'll need to create an account to save this link and keep your site online. 
 
 ### Sign up for Netlify
 
-Netlify has a free plan with plenty of useful features. To sign up:
+Netlify has a free plan with plenty of useful features, so we recommend signing up for an account. To sign up:
 
 1. Go online to \index{Netlify} https://www.netlify.com.
 
@@ -140,15 +139,17 @@ Netlify has a free plan with plenty of useful features. To sign up:
 
 1. If you have a GitHub account (https://github.com/), we recommend signing up using your existing GitHub account (no need to create another account), so select "GitHub" (you may need to sign in), and click to "Authorize Netlify."
     
-    ```{r netlify-github, fig.cap='Sign into Netlify using an existing GitHub account.', echo=FALSE,   fig.align='center', out.width='90%'}
+    ```{r netlify-github, fig.cap='Sign up for Netlify using an existing GitHub account.', echo=FALSE,   fig.align='center', out.width='90%'}
     knitr::include_graphics('images/netlify-github.png')
     ```
     
-1. If you used Netlify Drop, with an account, you can (and should) change your random subdomain to a more meaningful one. You may read the docs for changing a site's default Netlify subdomain here: https://docs.netlify.com/domains-https/custom-domains/#assign-a-domain-to-a-site
+1. From your account, if you used Netlify Drop, you can (and should) change your random subdomain to a more meaningful one. You may read the docs for changing a site's default Netlify subdomain here: https://docs.netlify.com/domains-https/custom-domains/#assign-a-domain-to-a-site
+
+1. Also from your account, you may update your existing site by making changes locally, reknitting if necessary, then rebuilding your site with `blogdown::build_site()`. In the "Deploys" tab on Netlify, scroll down to where you see "Need to update your site? Drag and drop your site output folder here". Drop your updated `public/` folder there to update the deployed website.
 
 ### What is next?
 
-It can be much easier to publish a website if you are familiar with GIT and GitHub. We recommend that you create a new site on Netlify from your GitHub repository that contains the source files of your website, so that you can enjoy the benefits of continuous deployment instead of manually uploading the `public/` folder every time. With this workflow, you do not need to run `blogdown::hugo_build()` locally, because the website can be built on Netlify via Hugo. Instead, you would rely on `blogdown::serve_site()` locally to preview your site before pushing your changes to GitHub. See Chapter \@ref(deployment) for more information.
+The workflow described above can be cumbersome the more you work on your website. It can be much easier to publish a website if you are familiar with GIT and GitHub. We recommend that you create a new site on Netlify from your GitHub repository that contains the source files of your website, so that you can enjoy the benefits of continuous deployment instead of manually uploading the `public/` folder every time. With this workflow, you do not need to run `blogdown::hugo_build()` locally, because the website can be built on Netlify via Hugo. Instead, you would rely on `blogdown::serve_site()` locally to preview your site before pushing your changes to GitHub. See Chapter \@ref(deployment) for more information.
 
 ## RStudio IDE
 
