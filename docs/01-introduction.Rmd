@@ -351,7 +351,7 @@ In Hugo, themes\index{Themes} control the entire appearance and functionality of
 
 1. HTML dependencies like JavaScript files. 
 
-All of these files are contained in the `themes/` folder, and are kept separate from your website `content/`.
+All of these files are contained in the `themes/` folder, and are kept separate from your website `content/`. However, all Hugo themes rely on specific `content/` and YAML frontmatter, so don't be fooled into thinking that themes and content are not dependent on each other. They are! In this section, we provide some opinionated advice on choosing themes and recommended workflows for working with Hugo themes using **blogdown**.
 
 ### Choosing themes
 
