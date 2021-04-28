@@ -99,7 +99,7 @@ knitr::include_graphics('images/blogdown-project.png')
 
 Click "Create Project". The project wizard then runs a function that creates a new site for you by doing the following steps:
 
-1. Creates and opens a new [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) for the website.
+1. Creates and opens a new [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) for the website,
 1. Downloads and installs the default theme (called `hugo-lithium`^[You can find its source on GitHub: https://github.com/yihui/hugo-lithium. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.]) with an example site, 
 1. Adds a sample `.Rmd` post,
 1. Creates a `netlify.toml` file to help you deploy your site to [Netlify](https://www.netlify.com/), and
@@ -120,7 +120,7 @@ The project will include the following files:
 | `.Rprofile`   | File to set up your blogdown options.                           |
 | `netlify.toml`| File to set up your [Netlify](https://www.netlify.com/) options.|
 | `content/`    | Website source files to edit and add, like blog posts.         |
-| `themes/`     | Hugo theme assets like layout files, CSS, etc. Do not edit!    |
+| `themes/`     | Hugo theme assets like HTML layout files, CSS, etc. Do not edit!    |
 
 
 After all this, your new site is ready! 
