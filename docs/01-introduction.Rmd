@@ -115,7 +115,17 @@ Alternatively, if you use RStudio, you may use:
 
 You should see a new `public/` directory under the root directory of your project. Never edit files in this directory, as your changes will always be overwritten whenever you re-build your site.
 
-Note that this function does not rerender R Markdown files by default, because it may be expensive and often undesirable to render `.Rmd` files that have been rendered before. Given that R package upgrades have a tendency to break older code, continuously re-rendering old content is nearly impossible to do without errors, especially over longer periods of time. 
+Note that this function does not re-knit R Markdown files by default, because it may be expensive and often undesirable to render `.Rmd` files that have been knitted before. Given that R package upgrades have a tendency to break older code, continuously re-knitting old content is nearly impossible to do without errors, especially over longer periods of time. 
+
+We recommend always using `blogdown::serve_site()` first to preview your site before building it. That function will knit your unknitted R Markdown content by default. As mentioned earlier, we also recommend running `blogdown::check_content()`. Among other things, we check if you have content that needs to be re-knit:
+
+```
+| Checking your R Markdown content...
+○ All R Markdown files have been knitted.
+○ All R Markdown output files are up to date with their source files.
+```
+
+
 
 ### Use Netlify Drop
 
