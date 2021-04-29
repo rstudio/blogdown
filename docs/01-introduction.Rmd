@@ -85,7 +85,7 @@ If you are satisfied with this default theme, you are basically ready to start w
 
 At this point, we've provided a quick example to get you up and running with the default Hugo theme, and we have shown you how to deploy that site using a simple drag-and-drop method. These are great beginner-friendly workflows for folks who are new to GIT, GitHub, and publishing static websites. 
 
-In this section, we present a complete workflow that is *also* suitable for **blogdown** beginners, but is oriented toward users who are comfortable using GIT and GitHub for version control. 
+In this section, we present a complete workflow that is *also* suitable for **blogdown** beginners, but is oriented toward users who are ready for an end-to-end example that starts with GitHub and ends with publishing to Netlify. The result is a continuously deployed site that works by connecting a GitHub repository to a Netlify site, and keeping the two in sync. This means that every commit to the `main` branch will trigger your Hugo site to be built and deployed again via Netlify.
 
 ### Prerequisites
 
