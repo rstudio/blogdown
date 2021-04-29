@@ -587,7 +587,7 @@ blogdown::check_site()
 
 #### We made it!
 
-At this point, you should be up and running with **blogdown**, GitHub, and Netlify. You now have the scaffold up and ready for your ideas, your style, and your voice. The rest of this book will dive deeper into details about each of these elements. The devil is often in the details, so we hope you are motivated to go forth and learn more. it will improve your quality of life as a **new** website owner and maintainer.
+At this point, you should be up and running with **blogdown**, GitHub, and Netlify. You now have the scaffold up and ready for your ideas, your style, and your voice. The rest of this book will dive deeper into details about each of these elements. The devil is often in the details, so we hope you are motivated to go forth and learn more. It will improve your quality of life as a **new** website owner and maintainer.
 
 
 ## RStudio IDE
