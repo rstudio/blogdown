@@ -343,7 +343,7 @@ If you are working on an R Markdown post, but do not want **blogdown** to compil
 
 In Hugo, themes\index{Themes} control the entire appearance and functionality of your site. A Hugo theme is made with the following elements:
 
-1. Configuration files. This may be a single `config.yaml` or `config.toml` file, or some themes use a configuration directory also located in `config/_default/`. Read more about these files in Chapter \@ref(configuration).
+1. Configuration files. This may be a single `config.yaml` or `config.toml` file in the root of your website project. Some themes also use a configuration directory, located in `config/_default/`. Read more about these files in Chapter \@ref(configuration).
 
 1. Layout files, located for example in `themes/hugo-lithium/layouts/`. Hugo is a templating system, so layout files are `*.html` files, with a specific file and naming structure. Read more about these files in Chapter \@ref(templates).
 
