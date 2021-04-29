@@ -56,3 +56,18 @@ h1.title {
   background-color: #e6f3fc80;
   background-image: url("../images/caution.png");
 }
+
+.note{
+  border: 4px #FEDB00;
+  border-style: dashed solid;
+  padding: 1em;
+  margin: 1em 0;
+  padding-left: 100px;
+  background-size: 70px;
+  background-repeat: no-repeat;
+  background-position: 15px center;
+  min-height: 120px;
+  color: #1773B5;
+  background-color: #FFE68280;
+  background-image: url("../images/lightbulb.png");
+}
