@@ -80,6 +80,516 @@ You have to know three most basic concepts for a Hugo-based website:
 
 If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! We will show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technologies like the Hugo templating language, HTML, CSS, and JavaScript.
 
+
+## A complete example
+
+At this point, we've provided a quick example to get you up and running with the default Hugo theme, and we have shown you how to deploy that site using a simple drag-and-drop method. These are great beginner-friendly workflows for folks who are new to GIT, GitHub, and publishing static websites. 
+
+In this section, we present a complete workflow that is *also* suitable for **blogdown** beginners, but is oriented toward users who are comfortable using GIT and GitHub for version control. 
+
+### Prerequisites
+
+#### Installations
+
+Please follow our installation instructions from Chapter \@ref(installation).
+
+#### Set up Netlify
+
+Please follow our Netlify sign up instructions from Chapter \@ref(sign-up-for-netlify).
+
+#### Set up GitHub
+
+We will use GitHub for version control and publishing. Sign up for a free GitHub.com account at <https://github.com/join> if you don't already have one. Also:
+
++ Complete these installation instructions from the "Happy Git with R" https://happygitwithr.com/install-intro.html.
+    
++ Test your connection between GitHub and RStudio following steps from "Happy Git with R" https://happygitwithr.com/connect-intro.html.
+
++ **NOTE:** We *strongly recommend* that:
+    + you choose HTTPS over SSH (see https://happygitwithr.com/credential-caching.html), and
+    + you setup a GitHub Personal Access Token, following these steps: https://happygitwithr.com/credential-caching.html#get-a-pat.
+
++ Check your new repository settings. As of October 1, 2020, GitHub will set `main` as the default branch for all new repositories, instead of `master`. To check this for your account, go to: <https://github.com/settings/repositories>
+    
+
+### tl;dr
+
+If you already know what you are doing, this entire section can be condensed into just a few lines of code if you install the **usethis** package:
+
+```{r eval=FALSE}
+# install.packages("usethis")
+usethis::create_project()
+blogdown::new_site(theme = "wowchemy/starter-academic")
+blogdown::serve_site()
+blogdown::new_post(title = "Hi Hugo", 
+                   ext = '.Rmarkdown', 
+                   subdir = "post")
+usethis::use_git()
+usethis::use_github() # requires a GitHub PAT
+```
+
+If you'd rather follow along step-by-step, read on.
+
+### Step 1: Create repo
+
+![](images/01-blogdown-2021.png)
+
+
+1. Go online to your https://github.com account and create a new repository.
+
+1. Since we will use Netlify to publish, you may name this repository *anything you want*^[Using GitHub Pages for publishing can be more restrictive on repository names.] 
+
+1. Check the box to initialize with a `README` but don't add `.gitignore`- this will be taken care of later. 
+
+1. Go to the main page of your new repository, and under the repository name, click the green **Clone or download** button.
+
+1. Choose either SSH or HTTPS (if you don't know which, choose HTTPS). Choose by clicking on the clipboard icon to copy the remote URL for your new repository. You'll paste this text into RStudio in the next section.
+    
+### Step 2: Create project
+
+![](images/02-blogdown-2021.png)
+
+We just created the remote repository on GitHub. To make a local copy on our computer that we can actually work in, we'll clone that repository into a new RStudio project. This will allow us to sync between the two locations: your remote (the one you see on github.com) and your local desktop.
+
+Open up RStudio to create a new project where your website's files will live.
+    
+1. Click `File > New Project > Version Control > Git`.
+
+1. Paste the copied URL from the previous step.
+
+1. Be intentional about where you tell RStudio to create this new Project on your workstation.
+
+1. Click **Create Project**.
+
+    
+### Step 3: Create site
+
+![](images/03-blogdown-2021.png)
+
+1. Let's use our first blogdown function to create a website with the Hugo Wowchemy "starter-academic" project:
+
+    ```r
+    library(blogdown)
+    new_site(theme = "wowchemy/starter-academic")
+    ```
+
+1. You should now see something like this. Take a moment to read through these messages - importantly, it tells you how to start and stop the server so you can preview your site. Importantly, when you come back to your project, note that you can use `blogdown::serve_site()` or the "Serve Site" addin to preview it locally. 
+
+    ![](images/new_hugo_start.png)
+
+     Let's select `y` to let blogdown start a server for us.
+    
+    Click to "Show in new window" (to the right of the broom icon) to preview it in a normal browser window. When you do that, you'll be re-directed to the site's main homepage. Let's find our way back to the R Markdown post. Click on `Posts > Hello R Markdown` to read it:
+    
+    ![](images/sample_post.png)
+
+    This is what blogdown gives you- everything else in the site is given to you by Hugo and your Wowchemy Hugo theme. But this post, and your ability to see output and plots knitted with R Markdown is what blogdown adds.
+
+### Step 4: Create content
+
+![](images/04-blogdown-2021.png)
+
+Let's use more R Markdown.
+
+Blogdown allows you to create new two kinds of R Markdown posts that are knittable:
+
++ `.Rmd` to `.html` or 
+
++ `.Rmarkdown` to `.markdown`
+
+Once knitted, both are then previewable in your Hugo site.
+
+Use the console to author a new `.Rmarkdown` post; I'll name my post "Hi Hugo":
+
+```r
+blogdown::new_post(title = "Hi Hugo", 
+                   ext = '.Rmarkdown', 
+                  subdir = "post")
+```
+
+This takes the path to where you want your post to live, relative to the `content/` folder (so that piece of the path is assumed, rightly so!). In the Wowchemy theme, the example site organizes blog posts into the `content/post/` folder, but the name of this folder varies across Hugo themes. 
+
+::: {.note}
+A rule that is true 90% of the time: folders in `content/` are singular, not plural--- so `post`; not `posts` is the name of the folder.
+:::
+
+You can add an option to your `.Rprofile` to save these settings so you don't have to remember them:
+
+```{r eval=FALSE}
+# if exists, opens; if not, creates new
+blogdown::config_Rprofile() 
+```
+
+Then add the blogdown options to that file, save, and **RESTART YOUR R SESSION** for changes to take effect:
+
+```
+options(
+  # to automatically serve the site on RStudio startup, set this option to TRUE
+  blogdown.serve_site.startup = FALSE,
+  # to disable knitting Rmd files on save, set this option to FALSE
+  blogdown.knit.on_save = FALSE     <- change
+  blogdown.author = "Alison Hill",  <- add
+  blogdown.ext = ".Rmarkdown",      <- add
+  blogdown.subdir = "post"          <- add
+)
+```
+
+::: {.caution}
+Always restart your R session after editing your `.Rprofile` for changes to take effect. Don't forget to run `blogdown::serve_site()` after a restart.
+:::
+
+If you look in your **Files** pane, you can see that this creates a folder with the date and the ["slug"](https://en.wikipedia.org/wiki/Clean_URL#Slug) name of my post (`"hi-hugo"`). The actual R Markdown file is named `index.Rmarkdown`. 
+
+![](images/new_post.png)
+
+This is a Hugo page bundle. Each post gets its own bundle, or folder. Inside the post bundle is where all your static images, static data files like `.csv` files should go. 
+
+```
+content/
+├── posts
+│   ├── 2021-01-01-hi-hugo
+│   │   ├── bakers.csv
+│   │   ├── image1.jpg
+│   │   ├── image2.png
+│   │   └── index.Rmarkdown
+```
+
+In the post itself, use the relative file path like:
+
+```
+![my-first-image](image1.jpg)
+```
+
+Let's look at the `index.Rmarkdown`. We'll knit this `.Rmarkdown` to a `.markdown` file. To knit an `.Rmarkdown` post, you can either:
+
+1. Use the Knit button to knit to the correct output format, or
+
+1. Use the keyboard shortcut `Cmd+Shift+K` (Mac) or `Ctrl+Shift+K` (Windows/Linux).
+
+After knitting, you should now see:
+
+```
+content/
+├── posts
+│   ├── hi-hugo
+│   │   ├── bakers.csv
+│   │   ├── image1.jpg
+│   │   ├── image2.png
+│   │   ├── index.Rmarkdown
+│   │   └── index.markdown   <- new!
+```
+
+Go ahead and add an R code chunk like:
+
+````
+```{r}`r ''`
+summary(Orange)
+```
+````
+
+After you edit your `.Rmarkdown` post, knit. Note that knitting automatically saves the file for you. You also can just save the file without knitting- this is good for when your code still needs work and won't run as is.
+
+::: {.note}
+The most important thing here is to realize that the act of knitting creates an `index.markdown` file in the same post bundle as `index.Rmarkdown`. Because Hugo doesn't know R or R Markdown, The `index.markdown` version is what then feeds into the Hugo static site generator.
+:::
+
+Try it again! Add another R code chunk like:
+
+````
+```{r echo=FALSE}`r ''`
+library(ggplot2)
+oplot <- ggplot(Orange, aes(x = age, 
+                   y = circumference, 
+                   colour = Tree)) +
+  geom_point() +
+  geom_line() +
+  guides(colour = FALSE) +
+  theme_bw()
+oplot
+```
+````
+
+Knit, and you should see something like:
+
+![](images/post-plot.png)
+
+
+::: {.caution}
+Many R Markdown output options for HTML documents are not going to be possible here, like tabbed sections, floating table of contents, the `code_download` button, etc. Also, HTML widgets are a little dicey currently.
+:::
+
+This is a single page. It is made with R Markdown, and happens to be a blog post, although you can use R Markdown to create content for any other content section too. 
+
+The Wowchemy theme has a neat built-in ability to find featured images for individual posts based on a special filenaming system, if found inside a post's page bundle. To include a featured image to accompany your post and show up on your listing page (the clickable list of all your posts), add an image file with the word `featured` in the filename:
+
+```
+content/
+├── posts
+│   ├── hi-hugo
+│   │   ├── bakers.csv
+│   │   ├── image1.jpg
+│   │   ├── image2.png
+│   │   ├── index.Rmarkdown
+│   │   ├── index.markdown   
+│   │   └── featured-bakers.jpg   <- `r emo::ji("plus")`
+```
+
+#### Workflow {#complete-workflow}
+
+Our workflow in RStudio at this point (again, just viewing locally because we haven't deployed yet) works best like this:
+
+1. Open the RStudio project for the site.
+
+1. Start the Hugo server using `blogdown::serve_site()` (only once due to the magic of *LiveReload*).
+
+1. View site in the RStudio viewer pane, and open in a new browser window while you work.
+
+1. Select existing files to edit using the file pane in RStudio.
+
+1. After making changes, save if a plain `.md` file, or if working with an `.Rmd` or an `.Rmarkdown` document, `knit` to preview! You can use the "Knit" button to knit to the correct output format. You can also use the keyboard shortcut `Cmd+Shift+K` (Mac) or `Ctrl+Shift+K` (Windows/Linux).
+
+1. The console will detect the change, the viewer pane will update, and (in a few seconds) your local view in your browser will also refresh. Try to avoid hitting the refresh button in your browser.
+
+1. When happy with changes, add/commit/push changes to GitHub.
+
+
+#### Using GitHub
+
+Let's go ahead and push our changes to GitHub. First, let's make a `.gitignore` file:
+
+```{r eval=FALSE}
+file.edit(".gitignore")
+```
+
+Add this content:
+
+```
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+Thumbs.db
+```
+
+Let's use blogdown to check this file before we do our first commit:
+
+```{r eval=FALSE}
+blogdown::check_gitignore()
+```
+
+You should see something like:
+```
+― Checking .gitignore
+| Checking for items to remove...
+○ Nothing to see here - found no items to remove.
+| Checking for items you can safely ignore...
+○ Found! You have safely ignored: .DS_Store, Thumbs.db
+| Checking for items to ignore if you build the site on Netlify...
+● [TODO] When Netlify builds your site, you can safely add to .gitignore: public, resources
+― Check complete: .gitignore
+```
+
+We have a `[TODO]` item- go ahead and add `public` and `resources` on their own lines in your `.gitignore` file. We'll be configuring Netlify to build our site shortly, so go right ahead while the file is open. 
+
+While we are at it, let's check out our content too:
+
+```{r eval=FALSE}
+blogdown::check_content()
+```
+
+You may notice a few pieces of content are flagged as `draft`. This is good to know! Read up on drafts in Hugo [here](https://bookdown.org/yihui/blogdown/content.html#yaml-metadata).
+
+Our checks are pretty clean, so you can freely add/commit your project files to GitHub. You now should have the basic mechanics of your site working.
+
+### Step 5: Publish site
+
+![](images/05-blogdown-2021.png)
+
+Thus far, we've only been previewing our site locally, then pushing the source files (but not the built site) to GitHub. Let's now add Netlify to our workflow:
+
+1. Log in to https://www.netlify.com.
+
+1. Select: `New site from Git > Continuous Deployment: GitHub`.
+
+1. From there, Netlify will allow you to select from your existing GitHub repositories. You'll pick the repo you've been working from with `blogdown`. Leave all settings as they are and select **Deploy Site**.
+
+You should see something like this:
+
+![](images/new_netlify.png)
+
+When it is done, you can click on the link to your new site! And the most magical thing of all, every time you push any changes to your site to GitHub, Netlify will detect the push, re-build, then update your published site. This is called continuous deployment, and it is the main reason to use Netlify for a blogdown site.
+
+With a new site, Netlify will deploy your site and assign you a random subdomain name of the form `random-word-12345.netlify.app` This can be changed. Do this by navigating to your site on Netlify, then click on **Settings**. Under **Site information**, click on the *Change site name* button.
+
+![](images/netlify-site-name.png)
+
+Whether you change your Netlify site name or use the random one, go back to your configuration file and change the `baseURL` there to match where Netlify is publishing your site:
+
+```{r eval=FALSE}
+rstudioapi::navigateToFile("config.yaml", line = 3)
+```
+
+You actually have most of the necessary wiring laid out for you already in your repo, which is why this worked. Our site has a `netlify.toml` file, which sets us the necessary settings for letting Netlify build our site for us and then publish it. 
+
+You may also check it out using:
+
+```{r eval=FALSE}
+# if exists, opens; if not, creates new
+blogdown::config_netlify()
+```
+
+
+Now, back in your local blogdown project, let's check this file with `blogdown::check_netlify()`:
+
+```
+― Checking netlify.toml...
+○ Found HUGO_VERSION = 0.79.1 in [build] context of netlify.toml.
+| Checking that Netlify & local Hugo versions match...
+| Mismatch found:
+  blogdown is using Hugo version (0.79.0) to build site locally.
+  Netlify is using Hugo version (0.79.1) to build site.
+● [TODO] Option 1: Change HUGO_VERSION = "0.79.0" in netlify.toml to match local version.
+● [TODO] Option 2: Use blogdown::install_hugo("0.79.1") to match Netlify version, and set options(blogdown.hugo.version = "0.79.1") in .Rprofile to pin this Hugo version.
+| Checking that Netlify & local Hugo publish directories match...
+○ Good to go - blogdown and Netlify are using the same publish directory: public
+― Check complete: netlify.toml
+```
+
+We recommend going with `Option 1` here, so follow that `[TODO]` and then run this function again to get a clean check.
+
+When you are ready to deploy, commit your changes and push to GitHub! Watch as your site rebuilds.
+
+### Step 6: Sculpt site
+
+![](images/06-blogdown-2021.png)
+
+Now, we'll leave blogdown and R Markdown behind. We'll just be using Hugo and Wowchemy to build your personal website.
+
+Let's start by running another blogdown check to `check_hugo()`:
+
+```
+> blogdown::check_hugo()
+― Checking Hugo
+| Checking Hugo version...
+○ Found 4 versions of Hugo. You are using Hugo 0.79.0.
+| Checking .Rprofile for Hugo version used by blogdown...
+○ blogdown is using Hugo 0.79.0 to build site locally.
+● [TODO] Also run blogdown::check_netlify() to check for possible problems with Hugo and Netlify.
+― Check complete: Hugo
+```
+
+All set! We've already checked out our Netlify setup. If you wish to clean up your local Hugo installations, you may run `blogdown::remove_hugo()`.
+
+
+#### Configure your site
+
+Open up the following configuration files to personalize your site:
+
++ `config.yaml` (site title, description, etc.) 
+
++ `config/_default/params.toml` (especially fonts/themes) 
+
++ `config/_default/menus.toml` (includes your upper navbar)
+
+Let's run `blogdown::check_config()` on the main `config.yaml` file before we leave:
+
+```
+― Checking config.yaml
+| Checking "baseURL" setting for Hugo...
+○ Found baseURL = "https://silly-dubinsky-de5482.netlify.app"; nothing to do here!
+| Checking "ignoreFiles" setting for Hugo...
+● [TODO] Add these items to the "ignoreFiles" setting: "\\.Rmd$", "\\.Rmarkdown$", "\\.knit\\.md$", "\\.utf8\\.md$"
+| Checking setting for Hugo's Markdown renderer...
+○ All set! Found the "unsafe" setting for goldmark.
+― Check complete: config.yaml
+```
+
+Looks like we have a few `[TODO]` items left to add to our `config.yaml` file.
+
+
+
+#### Goodbye Nelson B.
+
+Let's say goodbye to [Nelson Bighetti](https://themes.gohugo.io/theme/academic/#about). Everything in this single markdown file populates what is called the `about` widget; a customized one looks like this:
+
+![](images/about.png)
+
+
+Find and open the file `content/authors/admin/_index.md`. Edit the YAML metadata to change:
+
++ The icons and where they link to (see https://wowchemy.com/docs/page-builder/#icons)
+
++ Your current role and organization
+
++ Your interests
+
++ Your education
+
+The text under the YAML is your bio; you can use markdown here. Add an `avatar.jpg` file too (it *must* be named this) to the same folder.
+
+
+#### Prune widgets
+
+Recall that on the Academic demo site (https://academic-demo.netlify.app/), the entire home page is filled with widgets. The default example site is the exact same as the demo. It sets almost every available widget to **active** to show you the range of what you could do. 
+
+Deactivating the widgets you don't need and only activating the ones you want will help you personalize your site.
+
+A helpful analogy here is to think of Mr. Potato Head (https://en.wikipedia.org/wiki/Mr._Potato_Head). The home page is your most prominent potato, and the widgets are all the pieces you could use. 
+
+Each widget you see is a `*.md` file in the `content/home/` folder. The metadata at the top helps you configure each widget; namely whether it is `active` (true or false) and the widgets `weight` (ordering, actual numbers doesn't matter- only relative to the other weights).
+
+For example, to turn off the hero widget, open the file `content/home/hero.md` and set `active = false`.
+
+Take a few minutes about try out turning widgets off and on, and changing their order to see what you like! 
+
+
+#### Transplant widgets
+
+If you opted for a more streamlined home page with fewer widgets, you may experience *widget pruning regret*. Many are very useful, and you may wish to use widgets on *other* pages that are not the home page. In this theme, this is possible! Even if you turn off a widget on the home page, you can create what is called a widget page and add or even combine widgets there. Here are the steps^[Following the Wowchemy docs at https://sourcethemes.com/academic/docs/managing-content/#create-a-widget-page]:
+
+1. Create a new folder in `content/`; let's call it `resume`
+
+2. Inside `content/resume/`, add a file named `index.md`
+
+3. Populate `content/resume/index.md` with a YAML, like this:
+
+    ```yaml
+    ---
+    summary: More about my work experience
+    title: "Resume"
+    type: widget_page
+    ---
+    ```
+    
+::: {.caution}
+The very critical line here is the `type: widget_page`---this sets you up to now copy over widgets from `content/home/` in this new folder. 
+:::
+
+4. Copy the widget `*.md` files you'd like to use into this `content/resume/` folder. Edit their metadata (weights, other info), and be sure to set `active = true`. For my own resume, I copied the *experience* and *accomplishments* widgets over.
+
+5. If you want to access this new widget page from your top navbar, open up your `config/_default/menus.toml` and add it there, like:
+
+    ```toml
+    [[main]]
+      name = "Resume"
+      url = "/resume"
+      weight = 50
+    ```
+
+
+Let's run one final check, which wraps all 5 checking functions we've used so far into a single final checklist:
+
+```r
+blogdown::check_site()
+```
+
+
+#### We made it!
+
+At this point, you should be up and running with **blogdown**, GitHub, and Netlify. You now have the scaffold up and ready for your ideas, your style, and your voice. The rest of this book will dive deeper into details about each of these elements. The devil is often in the details, so we hope you are motivated to go forth and learn more. it will improve your quality of life as a **new** website owner and maintainer.
+
+
 ## RStudio IDE
 
 There are a few essential RStudio addins\index{RStudio addins} to make it easy to edit and preview your website, and you can find them in the menu "Addins" on the RStudio toolbar:
