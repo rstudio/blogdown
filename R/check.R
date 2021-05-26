@@ -468,9 +468,13 @@ clean_duplicates = function(preview = TRUE) in_root({
   x = list_duplicates()
   x1 = with_ext(x, 'Rmd');       i1 = file_exists(x1)
   x2 = with_ext(x, 'Rmarkdown'); i2 = file_exists(x2)
-  # if .Rmd exists, delete .md; if .Rmd does not exist or .Rmarkdown exists,
-  # delete .html
-  x = c(with_ext(x[i1], 'md'), x[i2 | !i1])
+  x = c(
+    # if .Rmd exists using 'html' method then delete '.md'
+    # if .Rmd exists using using 'markdown' method, deletes html
+    with_ext(x[i1], if (build_method() == 'markdown') 'html' else 'md'),
+    # if .Rmd does not exist or .Rmarkdown exists, delete html
+    x[i2 | !i1]
+  )
   x = x[file_exists(x)]
   if (length(x)) {
     if (preview) msg_cat(
