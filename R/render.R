@@ -234,12 +234,10 @@ process_markdown = function(res, x = read_utf8(res)) {
     )
   }
   # resolve bookdown references (figures, tables, sections, ...)
-  # TODO: use bookdown >= 0.21.2 to avoid the unnecessary file I/O
   x = local({
     f = wd_tempfile('.md~', pattern = 'post'); on.exit(unlink(f), add = TRUE)
     write_utf8(x, f)
-    bookdown:::process_markdown(f, 'markdown', NULL, TRUE, TRUE)
-    read_utf8(f)
+    bookdown:::process_markdown(f, 'markdown', NULL, TRUE, TRUE, x, NULL)
   })
   # protect math expressions in backticks
   if (get_option('blogdown.protect.math', TRUE)) x = xfun::protect_math(x)
