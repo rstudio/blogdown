@@ -31,7 +31,7 @@
 #'   full details: \url{https://bookdown.org/yihui/blogdown}.
 #' @export
 html_page = function(
-  ..., knitr = NULL, number_sections = FALSE, self_contained = FALSE, highlight = NULL,
+  ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
   template = NULL, pandoc_args = NULL, keep_md = FALSE,
   pre_knit = NULL, post_processor = NULL
 ) {
@@ -45,8 +45,9 @@ html_page = function(
     pre_knit <- eval(parse(text = pre_knit))
   if (is.character(post_processor))
     post_processor <- eval(parse(text = post_processor))
+  knitr_options <- list(knit_hooks = distill:::knit_hooks(downlit = TRUE))
   rmarkdown::output_format(
-    knitr = knitr,
+    knitr = knitr_options,
     pandoc = NULL,
     clean_supporting = self_contained,
     keep_md = keep_md,
