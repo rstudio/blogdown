@@ -161,7 +161,9 @@ html_page = function(
   
   rmarkdown::output_format(
     knitr = knitr_options,
-    pandoc = args,
+    pandoc = rmarkdown::pandoc_options(to = "html5",
+               from = rmarkdown::from_rmarkdown(),
+               args = args),
     clean_supporting = self_contained,
     keep_md = keep_md,
     pre_knit = pre_knit,
