@@ -45,7 +45,24 @@ html_page = function(
     pre_knit <- eval(parse(text = pre_knit))
   if (is.character(post_processor))
     post_processor <- eval(parse(text = post_processor))
-  knitr_options <- list(knit_hooks = distill:::knit_hooks(downlit = TRUE))
+  knitr_options <- list(knit_hooks = c(
+    distill:::knit_hooks(downlit = TRUE),
+    list(sol = function(before, options, envir){
+           if (isTRUE(options$sol)) {
+              if (before) {
+                paste0('<div class="solution">')
+              } else paste0('</div>')
+            }
+          },
+          copy = function(before, options, envir){
+            if (isTRUE(options$copy)) {
+              if (before) {
+                paste0('<div class="copy">')
+              } else paste0('</div>')
+            }
+          }
+        )
+  ))
   rmarkdown::output_format(
     knitr = knitr_options,
     pandoc = NULL,
