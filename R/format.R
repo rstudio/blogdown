@@ -134,11 +134,11 @@ html_page = function(
   }
 
   # table of contents
-  args <- pandoc_toc_args(toc, toc_depth)
+  args <- rmarkdown::pandoc_toc_args(toc, toc_depth)
 
   # toc_float
   if (toc_float) {
-    args <- c(args, pandoc_variable_arg("toc-float", "1"))
+    args <- c(args, rmarkdown::pandoc_variable_arg("toc-float", "1"))
   }
   
   pre_knit <- function(input, ...) {
