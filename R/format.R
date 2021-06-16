@@ -99,6 +99,18 @@ html_page = function(
     }
     options
   }
+  knitr_options$opts_hooks$quiz <- function(options) {
+      if (isTRUE(options$quiz)) {
+        options$sol = FALSE
+        options$eval = TRUE
+        options$echo = FALSE
+        options$results = 'asis'
+        options$layout = "quiz-wrapper"
+        options
+      }
+    }
+  knitr_options$knit_hooks <- distill:::knit_hooks(downlit = highlight_downlit)
+  
   knitr_options$knit_hooks$sol <- function(before, options, envir){
     if (isTRUE(options$sol)) {
       if (before) {
@@ -120,18 +132,6 @@ html_page = function(
       } else paste0('</div>')
     }
   }
-  knitr_options$opts_hooks$quiz <- function(options) {
-      if (isTRUE(options$quiz)) {
-        options$sol = FALSE
-        options$eval = TRUE
-        options$echo = FALSE
-        options$results = 'asis'
-        options$layout = "quiz-wrapper"
-        options
-      }
-    }
-  knitr_options$knit_hooks <- distill:::knit_hooks(downlit = highlight_downlit)
-  
 
   
   pre_knit <- function(input, ...) {
