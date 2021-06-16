@@ -109,7 +109,7 @@ html_page = function(
         options
       }
     }
-  knitr_options$knit_hooks <- distill:::knit_hooks(downlit = highlight_downlit)
+  # knitr_options$knit_hooks <- distill:::knit_hooks(downlit = highlight_downlit)
   
   knitr_options$knit_hooks$sol <- function(before, options, envir){
     if (isTRUE(options$sol)) {
