@@ -45,26 +45,46 @@ html_page = function(
     pre_knit <- eval(parse(text = pre_knit))
   if (is.character(post_processor))
     post_processor <- eval(parse(text = post_processor))
-  knitr_options <- list(knit_hooks = c(
-    distill:::knit_hooks(downlit = TRUE),
-    list(sol = function(before, options, envir){
-           if (isTRUE(options$sol)) {
-              if (before) {
-                paste0('<div class="solution">')
-              } else paste0('</div>')
-            }
-          },
-          copy = function(before, options, envir){
-            if (isTRUE(options$copy)) {
-              if (before) {
-                paste0('<div class="copy">')
-              } else paste0('</div>')
-            }
-          }
-        )
-  ))
+  
+  file_with_meta_ext <- function(file, meta_ext, ext = tools::file_ext(file)) {
+    paste(tools::file_path_sans_ext(file),
+          ".", meta_ext, ".", ext,
+          sep = ""
+    )
+  }
+  
+  get_parent_env_with <- function(var_names) {
+    for (frame in rev(sys.frames())[-1]) {
+      present <- all(vapply(
+        var_names, exists, logical(1),
+        envir = frame, inherits = FALSE
+      ))
+      if (present) return(frame)
+    }
+    stop(
+      "No parent environment found with ",
+      paste(var_names, collapse = ", ")
+    )
+  }
+  
+  pre_knit <- function(input, ...) {
+    render_env <- get_parent_env_with("knit_input")
+    pre_knit_input <- get("knit_input", envir = render_env)
+    intermediates_loc <- get("intermediates_loc", envir = render_env)
+    
+    rmd_text <- readChar(input, file.info(input)$size)
+    rmd_text <- gsub("\r\n", "\n", rmd_text)
+    rmd_text <- sub("```\n", "source(here::here('themes/teachR/static/R/pre_processing_code.R'))\n```\n", rmd_text, fixed = T)
+    preprocessed_rmd_file <- intermediates_loc(
+      file_with_meta_ext(pre_knit_input, "preprocessed")
+    )
+    cat(rmd_text, file = preprocessed_rmd_file)
+    assign("knit_input", preprocessed_rmd_file, envir = render_env)
+  }
+  on.exit(file.remove(list.files(pattern = "preprocessed\\.[Rr]md")))
+  
   rmarkdown::output_format(
-    knitr = knitr_options,
+    knitr = NULL,
     pandoc = NULL,
     clean_supporting = self_contained,
     keep_md = keep_md,
