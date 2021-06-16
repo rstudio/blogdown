@@ -74,7 +74,7 @@ html_page = function(
     
     rmd_text <- readChar(input, file.info(input)$size)
     rmd_text <- gsub("\r\n", "\n", rmd_text)
-    rmd_text <- sub("```\n", "source(sub('content.*', 'themes/teachR/R/pre_processing_code.R', here::here()))\n```\n", rmd_text, fixed = T)
+    rmd_text <- sub("```\n", "source(sub('content.*', 'themes/teachR/static/R/pre_processing_code.R', here::here()))\n```\n", rmd_text, fixed = T)
     preprocessed_rmd_file <- intermediates_loc(
       file_with_meta_ext(pre_knit_input, "preprocessed")
     )
