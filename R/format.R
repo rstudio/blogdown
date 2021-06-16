@@ -45,7 +45,7 @@ html_page = function(
   self_contained = FALSE,
   highlight = "default",
   highlight_downlit = TRUE, number_sections = FALSE,
-  template = NULL, pandoc_args = NULL, keep_md = FALSE,
+  template = NULL, pandoc_args = NULL, keep_md = TRUE,
   pre_knit = NULL, post_processor = NULL
 ) {
   if (identical(template, 'default')) stop(
@@ -111,27 +111,7 @@ html_page = function(
     }
   # knitr_options$knit_hooks <- distill:::knit_hooks(downlit = highlight_downlit)
   
-  knitr_options$knit_hooks$sol <- function(before, options, envir){
-    if (isTRUE(options$sol)) {
-      if (before) {
-        paste0('<div class="solution">')
-      } else paste0('</div>')
-     }
-   }
-   knitr_options$knit_hooks$copy <- function(before, options, envir){
-            if (isTRUE(options$copy)) {
-              if (before) {
-                paste0('<div class="copy">')
-              } else paste0('</div>')
-            }
-          }
-    knitr_options$knit_hooks$quiz <- function(before, options, envir){
-            if (isTRUE(options$quiz)) {
-              if (before) {
-                paste0('<div class="quiz">')
-            } else paste0('</div>')
-          }
-        }
+
   
   pre_knit <- function(input, ...) {
     render_env <- get_parent_env_with("knit_input")
