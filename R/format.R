@@ -42,7 +42,7 @@ html_page = function(
   dev = "png",
   smart = TRUE,
   code_folding = FALSE,
-  self_contained = TRUE,
+  self_contained = FALSE,
   highlight = "default",
   highlight_downlit = TRUE, number_sections = FALSE,
   template = NULL, pandoc_args = NULL, keep_md = FALSE,
