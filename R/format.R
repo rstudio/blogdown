@@ -31,7 +31,19 @@
 #'   full details: \url{https://bookdown.org/yihui/blogdown}.
 #' @export
 html_page = function(
-  ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
+  ..., toc = FALSE,
+                          toc_depth = 3,
+                          toc_float = TRUE,
+                          fig_width = 6.5,
+                          fig_height = 4,
+                          fig_retina = 2,
+                          fig_caption = TRUE,
+                          dev = "png",
+                          smart = TRUE,
+                          code_folding = FALSE,
+                          self_contained = TRUE,
+                          highlight = "default",
+                          highlight_downlit = TRUE, number_sections = FALSE, self_contained = FALSE,
   template = NULL, pandoc_args = NULL, keep_md = FALSE,
   pre_knit = NULL, post_processor = NULL
 ) {
@@ -67,32 +79,26 @@ html_page = function(
     )
   }
   
-  knitr_options <- list(knit_hooks = c(
-    distill:::knit_hooks(downlit = TRUE),
-    list(sol = function(before, options, envir){
-           if (isTRUE(options$sol)) {
-              if (before) {
-                paste0('<div class="solution">')
-              } else paste0('</div>')
-            }
-          },
-          copy = function(before, options, envir){
-            if (isTRUE(options$copy)) {
-              if (before) {
-                paste0('<div class="copy">')
-              } else paste0('</div>')
-            }
-          },
-          quiz = function(before, options, envir){
-            if (isTRUE(options$quiz)) {
-              if (before) {
-                paste0('<div class="quiz">')
-            } else paste0('</div>')
-          }
-        }
-      )
-    ),
-    opts_hooks = list(quiz = function(options) {
+  knitr_options <- knitr_options_html(fig_width = fig_width,
+                                      fig_height = fig_height,
+                                      fig_retina = fig_retina,
+                                      keep_md = keep_md,
+                                      dev = dev)
+  knitr_options$opts_chunk$echo <- identical(code_folding, FALSE)
+  knitr_options$opts_chunk$warning <- FALSE
+  knitr_options$opts_chunk$message <- FALSE
+  knitr_options$opts_chunk$comment <- NA
+  knitr_options$opts_chunk$R.options <- list(width = 70)
+  knitr_options$opts_chunk$code_folding <- code_folding
+  knitr_options$opts_knit$bookdown.internal.label <- TRUE
+  knitr_options$opts_hooks <- list()
+  knitr_options$opts_hooks$code_folding <- function(options) {
+    if (!identical(code_folding, FALSE)) {
+      options[["echo"]] <- TRUE
+    }
+    options
+  }
+  knitr_options$opts_hooks$quiz <- function(options) {
       if (isTRUE(options$quiz)) {
         options$sol = FALSE
         options$eval = TRUE
@@ -101,8 +107,30 @@ html_page = function(
         options$layout = "quiz-wrapper"
         options
       }
-    })
-  )
+    }
+  knitr_options$knit_hooks <- distill:::knit_hooks(downlit = highlight_downlit)
+  
+  knitr_options$knit_hooks$sol <- function(before, options, envir){
+    if (isTRUE(options$sol)) {
+      if (before) {
+        paste0('<div class="solution">')
+      } else paste0('</div>')
+     }
+   }
+   knitr_options$knit_hooks$copy <- function(before, options, envir){
+            if (isTRUE(options$copy)) {
+              if (before) {
+                paste0('<div class="copy">')
+              } else paste0('</div>')
+            }
+          }
+    knitr_options$knit_hooks$quiz <- function(before, options, envir){
+            if (isTRUE(options$quiz)) {
+              if (before) {
+                paste0('<div class="quiz">')
+            } else paste0('</div>')
+          }
+        }
   
   pre_knit <- function(input, ...) {
     render_env <- get_parent_env_with("knit_input")
