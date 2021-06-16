@@ -146,7 +146,9 @@ html_page = function(
     cat(rmd_text, file = preprocessed_rmd_file)
     assign("knit_input", preprocessed_rmd_file, envir = render_env)
   }
-  # on.exit(file.remove(list.files(pattern = "preprocessed\\.[Rr]md")))
+  cleanup <- function() {
+    file.remove(list.files(pattern = "preprocessed\\.[Rr]md"))
+  }
   
   rmarkdown::output_format(
     knitr = knitr_options,
@@ -154,6 +156,7 @@ html_page = function(
     clean_supporting = self_contained,
     keep_md = keep_md,
     pre_knit = pre_knit,
+    on_exit = cleanup,
     post_processor = post_processor,
     base_format = bookdown::html_document2(
       ..., number_sections = number_sections, theme = NULL,
