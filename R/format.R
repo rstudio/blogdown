@@ -81,7 +81,7 @@ html_page = function(
     cat(rmd_text, file = preprocessed_rmd_file)
     assign("knit_input", preprocessed_rmd_file, envir = render_env)
   }
-  on.exit(file.remove(list.files(pattern = "preprocessed\\.[Rr]md")))
+  # on.exit(file.remove(list.files(pattern = "preprocessed\\.[Rr]md")))
   
   rmarkdown::output_format(
     knitr = NULL,
