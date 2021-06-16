@@ -67,6 +67,43 @@ html_page = function(
     )
   }
   
+  knitr_options <- list(knit_hooks = c(
+    distill:::knit_hooks(downlit = TRUE),
+    list(sol = function(before, options, envir){
+           if (isTRUE(options$sol)) {
+              if (before) {
+                paste0('<div class="solution">')
+              } else paste0('</div>')
+            }
+          },
+          copy = function(before, options, envir){
+            if (isTRUE(options$copy)) {
+              if (before) {
+                paste0('<div class="copy">')
+              } else paste0('</div>')
+            }
+          },
+          quiz = function(before, options, envir){
+            if (isTRUE(options$quiz)) {
+              if (before) {
+                paste0('<div class="quiz">')
+            } else paste0('</div>')
+          }
+        }
+      )
+    ),
+    opts_hooks = list(quiz = function(options) {
+      if (isTRUE(options$quiz)) {
+        options$sol = FALSE
+        options$eval = TRUE
+        options$echo = FALSE
+        options$results = 'asis'
+        options$layout = "quiz-wrapper"
+        options
+      }
+    })
+  )
+  
   pre_knit <- function(input, ...) {
     render_env <- get_parent_env_with("knit_input")
     pre_knit_input <- get("knit_input", envir = render_env)
@@ -84,7 +121,7 @@ html_page = function(
   # on.exit(file.remove(list.files(pattern = "preprocessed\\.[Rr]md")))
   
   rmarkdown::output_format(
-    knitr = NULL,
+    knitr = knitr_options,
     pandoc = NULL,
     clean_supporting = self_contained,
     keep_md = keep_md,
