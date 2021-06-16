@@ -80,7 +80,7 @@ html_page = function(
     )
   }
   
-  knitr_options <- knitr_options_html(fig_width = fig_width,
+  knitr_options <- rmarkdown::knitr_options_html(fig_width = fig_width,
                                       fig_height = fig_height,
                                       fig_retina = fig_retina,
                                       keep_md = keep_md,
