@@ -45,7 +45,7 @@ html_page = function(
   self_contained = FALSE,
   highlight = "default",
   highlight_downlit = TRUE, number_sections = FALSE,
-  template = NULL, pandoc_args = NULL, keep_md = TRUE,
+  template = NULL, pandoc_args = NULL, keep_md = FALSE,
   pre_knit = NULL, post_processor = NULL
 ) {
   if (identical(template, 'default')) stop(
@@ -99,6 +99,27 @@ html_page = function(
     }
     options
   }
+  knitr_options$knit_hooks$sol <- function(before, options, envir){
+    if (isTRUE(options$sol)) {
+      if (before) {
+        paste0('<div class="sol-chunk">')
+      } else paste0('</div>')
+    }
+  }
+  knitr_options$knit_hooks$copy <- function(before, options, envir){
+    if (isTRUE(options$copy)) {
+      if (before) {
+        paste0('<div class="copy">')
+      } else paste0('</div>')
+    }
+  }
+  knitr_options$knit_hooks$quiz <- function(before, options, envir){
+    if (isTRUE(options$quiz)) {
+      if (before) {
+        paste0('<div class="quiz">')
+      } else paste0('</div>')
+    }
+  }
   knitr_options$opts_hooks$quiz <- function(options) {
       if (isTRUE(options$quiz)) {
         options$sol = FALSE
@@ -109,7 +130,7 @@ html_page = function(
         options
       }
     }
-  # knitr_options$knit_hooks <- distill:::knit_hooks(downlit = highlight_downlit)
+  knitr_options$knit_hooks <- distill:::knit_hooks(downlit = highlight_downlit)
   
 
   
