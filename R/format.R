@@ -31,19 +31,20 @@
 #'   full details: \url{https://bookdown.org/yihui/blogdown}.
 #' @export
 html_page = function(
-  ..., toc = FALSE,
-                          toc_depth = 3,
-                          toc_float = TRUE,
-                          fig_width = 6.5,
-                          fig_height = 4,
-                          fig_retina = 2,
-                          fig_caption = TRUE,
-                          dev = "png",
-                          smart = TRUE,
-                          code_folding = FALSE,
-                          self_contained = TRUE,
-                          highlight = "default",
-                          highlight_downlit = TRUE, number_sections = FALSE, self_contained = FALSE,
+  ...,
+  toc = FALSE,
+  toc_depth = 3,
+  toc_float = TRUE,
+  fig_width = 6.5,
+  fig_height = 4,
+  fig_retina = 2,
+  fig_caption = TRUE,
+  dev = "png",
+  smart = TRUE,
+  code_folding = FALSE,
+  self_contained = TRUE,
+  highlight = "default",
+  highlight_downlit = TRUE, number_sections = FALSE,
   template = NULL, pandoc_args = NULL, keep_md = FALSE,
   pre_knit = NULL, post_processor = NULL
 ) {
