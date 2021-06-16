@@ -32,7 +32,7 @@
 #' @export
 html_page = function(
   ...,
-  toc = FALSE,
+  toc = TRUE,
   toc_depth = 3,
   toc_float = TRUE,
   fig_width = 6.5,
@@ -133,6 +133,13 @@ html_page = function(
     }
   }
 
+  # table of contents
+  args <- pandoc_toc_args(toc, toc_depth)
+
+  # toc_float
+  if (toc_float) {
+    args <- c(args, pandoc_variable_arg("toc-float", "1"))
+  }
   
   pre_knit <- function(input, ...) {
     render_env <- get_parent_env_with("knit_input")
@@ -154,7 +161,7 @@ html_page = function(
   
   rmarkdown::output_format(
     knitr = knitr_options,
-    pandoc = NULL,
+    pandoc = args,
     clean_supporting = self_contained,
     keep_md = keep_md,
     pre_knit = pre_knit,
