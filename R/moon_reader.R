@@ -216,7 +216,7 @@ moon_reader = function(
       res$body = xfun::protect_math(res$body)
       setup_chunk_start <- grep("^\\s*```\\s*\\{\\s*r,*\\s*setup", res$body)
       res$body = c(
-        res$body[1:setup_chunk_start,
+        res$body[1:setup_chunk_start],
         "source(here::here('themes/teachR/static/R/slides_setup.R'))",
         res$body[(setup_chunk_start + 1):length(res$body)]
       )
