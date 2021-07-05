@@ -172,6 +172,7 @@ moon_reader = function(
 
   xfun::write_utf8(as.character(htmltools::tagList(
     htmltools::tags$style(`data-target` = 'print-only', '@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}'),
+    htmltools::tags$script(src = "/js/slides.js"),
     htmltools::tags$script(src = chakra),
     if (is.character(before)) if (self_contained) {
       htmltools::tags$script(htmltools::HTML(file_content(before)))
@@ -255,7 +256,7 @@ moon_reader = function(
         xaringan:::clean_env_images()
         res$body = xaringan:::encode_images(res$body)
         cat(sprintf(
-          "<script>(%s)(%s, '%s');</script>", pkg_file('js/data-uri.js'),
+          "<script>(%s)(%s, '%s');</script>", xaringan:::pkg_file('js/data-uri.js'),
           xfun::tojson(as.list(env_images, all.names = TRUE)), xaringan:::url_token
         ), file = tmp_js, append = TRUE)
       }
