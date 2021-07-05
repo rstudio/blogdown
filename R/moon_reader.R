@@ -99,6 +99,28 @@ moon_reader = function(
   chakra = 'https://remarkjs.com/downloads/remark-latest.min.js', nature = list(),
   anchor_sections = FALSE, ...
 ) {
+  
+  file_with_meta_ext <- function(file, meta_ext, ext = tools::file_ext(file)) {
+    paste(tools::file_path_sans_ext(file),
+          ".", meta_ext, ".", ext,
+          sep = ""
+    )
+  }
+  
+  get_parent_env_with <- function(var_names) {
+    for (frame in rev(sys.frames())[-1]) {
+      present <- all(vapply(
+        var_names, exists, logical(1),
+        envir = frame, inherits = FALSE
+      ))
+      if (present) return(frame)
+    }
+    stop(
+      "No parent environment found with ",
+      paste(var_names, collapse = ", ")
+    )
+  }
+  
   theme = grep('[.](?:sa|sc|c)ss$', css, value = TRUE, invert = TRUE)
   deps = if (length(theme)) {
     css = setdiff(css, theme)
