@@ -219,6 +219,7 @@ moon_reader = function(
         res$body[1:setup_chunk_start,
         "source(here::here('themes/teachR/static/R/slides_setup.R'))",
         res$body[(setup_chunk_start + 1):length(res$body)]
+      )
       if (self_contained) {
         xaringan:::clean_env_images()
         res$body = xaringan:::encode_images(res$body)
