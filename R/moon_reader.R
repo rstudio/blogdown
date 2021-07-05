@@ -148,15 +148,15 @@ moon_reader = function(
   before = nature[['beforeInit']]
   for (i in c('countdown', 'autoplay', 'beforeInit', 'titleSlideClass')) nature[[i]] = NULL
 
-  write_utf8(as.character(tagList(
-    tags$style(`data-target` = 'print-only', '@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}'),
-    tags$script(src = chakra),
+  xfun::write_utf8(as.character(htmltools::tagList(
+    htmltools::tags$style(`data-target` = 'print-only', '@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}'),
+    htmltools::tags$script(src = chakra),
     if (is.character(before)) if (self_contained) {
-      tags$script(HTML(file_content(before)))
+      htmltools::tags$script(htmltools::HTML(file_content(before)))
     } else {
-      lapply(before, function(s) tags$script(src = s))
+      lapply(before, function(s) htmltools::tags$script(src = s))
     },
-    tags$script(HTML(paste(c(sprintf(
+    htmltools::tags$script(htmltools::HTML(paste(c(sprintf(
       'var slideshow = remark.create(%s);', if (length(nature)) xfun::tojson(nature) else ''
     ), xaringan:::pkg_file(sprintf('js/%s.js', c(
       'show-widgets', 'print-css', 'after', 'script-tags', 'target-blank'
@@ -212,8 +212,8 @@ moon_reader = function(
       metadata, input_file, runtime, knit_meta, files_dir, output_dir
     ) {
       res = xaringan:::split_yaml_body(input_file)
-      write_utf8(res$yaml, input_file)
-      res$body = protect_math(res$body)
+      xfun::write_utf8(res$yaml, input_file)
+      res$body = xfun::protect_math(res$body)
       if (self_contained) {
         xaringan:::clean_env_images()
         res$body = xaringan:::encode_images(res$body)
@@ -224,7 +224,7 @@ moon_reader = function(
       }
       content = htmltools:::htmlEscape(xaringan:::yolofy(res$body, yolo))
       Encoding(content) = 'UTF-8'
-      write_utf8(content, tmp_md)
+      xfun::write_utf8(content, tmp_md)
       c(
         if (seal) c('--variable', 'title-slide=true'),
         if (!identical(body, res$body)) c('--variable', 'math=true')
