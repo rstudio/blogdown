@@ -102,8 +102,8 @@ moon_reader = function(
   theme = grep('[.](?:sa|sc|c)ss$', css, value = TRUE, invert = TRUE)
   deps = if (length(theme)) {
     css = setdiff(css, theme)
-    check_builtin_css(theme)
-    list(css_deps(theme))
+    xaringan:::check_builtin_css(theme)
+    list(xaringan:::css_deps(theme))
   }
   tmp_js = tempfile('xaringan', fileext = '.js')  # write JS config to this file
   tmp_md = tempfile('xaringan', fileext = '.md')  # store md content here (bypass Pandoc)
@@ -135,7 +135,7 @@ moon_reader = function(
 
   if (isTRUE(countdown <- nature[['countdown']])) countdown = autoplay
   countdown_js = if (is.numeric(countdown) && countdown > 0) sprintf(
-    '(%s)(%d);', pkg_file('js/countdown.js'), countdown
+    '(%s)(%d);', xaringan:::pkg_file('js/countdown.js'), countdown
   )
 
   hl_pre_js = if (isTRUE(nature$highlightLines))
@@ -158,7 +158,7 @@ moon_reader = function(
     },
     tags$script(HTML(paste(c(sprintf(
       'var slideshow = remark.create(%s);', if (length(nature)) xfun::tojson(nature) else ''
-    ), pkg_file(sprintf('js/%s.js', c(
+    ), xaringan:::pkg_file(sprintf('js/%s.js', c(
       'show-widgets', 'print-css', 'after', 'script-tags', 'target-blank'
     ))),
     play_js, countdown_js, hl_pre_js), collapse = '\n')))
