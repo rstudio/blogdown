@@ -214,6 +214,11 @@ moon_reader = function(
       res = xaringan:::split_yaml_body(input_file)
       xfun::write_utf8(res$yaml, input_file)
       res$body = xfun::protect_math(res$body)
+      setup_chunk_start <- grep("^\\s*```\\s*\\{\\s*r,*\\s*setup", res$body)
+      res$body = c(
+        res$body[1:setup_chunk_start,
+        "source(here::here('themes/teachR/static/R/slides_setup.R'))",
+        res$body[(setup_chunk_start + 1):length(res$body]
       if (self_contained) {
         xaringan:::clean_env_images()
         res$body = xaringan:::encode_images(res$body)
