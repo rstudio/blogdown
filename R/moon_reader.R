@@ -205,6 +205,21 @@ moon_reader = function(
   # don't use Pandoc raw blocks ```{=} (#293)
   opts = options(htmltools.preserve.raw = FALSE)
 
+  pre_knit <- function(input, ...) {
+    render_env <- get_parent_env_with("knit_input")
+    pre_knit_input <- get("knit_input", envir = render_env)
+    intermediates_loc <- get("intermediates_loc", envir = render_env)
+    
+    rmd_text <- readChar(input, file.info(input)$size)
+    rmd_text <- gsub("\r\n", "\n", rmd_text)
+    rmd_text <- sub("(```\\s*\\{\\s*r.*?setup.*?\\})", "\\1\nsource(here::here('themes/teachR/static/R/slides_setup.R'))", rmd_text, fixed = T)
+    preprocessed_rmd_file <- intermediates_loc(
+      file_with_meta_ext(pre_knit_input, "preproc")
+    )
+    cat(rmd_text, file = preprocessed_rmd_file)
+    assign("knit_input", preprocessed_rmd_file, envir = render_env)
+  }
+      
   rmarkdown::output_format(
     rmarkdown::knitr_options(knit_hooks = highlight_hooks),
     NULL, clean_supporting = self_contained,
@@ -214,12 +229,6 @@ moon_reader = function(
       res = xaringan:::split_yaml_body(input_file)
       xfun::write_utf8(res$yaml, input_file)
       res$body = xfun::protect_math(res$body)
-      setup_chunk_start <- grep("^\\s*```\\s*\\{\\s*r,*\\s*setup", res$body)
-      res$body = c(
-        res$body[1:setup_chunk_start],
-        "source(here::here('themes/teachR/static/R/slides_setup.R'))",
-        res$body[(setup_chunk_start + 1):length(res$body)]
-      )
       if (self_contained) {
         xaringan:::clean_env_images()
         res$body = xaringan:::encode_images(res$body)
@@ -236,7 +245,9 @@ moon_reader = function(
         if (!identical(body, res$body)) c('--variable', 'math=true')
       )
     },
+    pre_knit = pre_knit,
     on_exit = function() {
+      file.remove(list.files(pattern = "preproc\\.[Rr]md"))
       unlink(c(tmp_md, tmp_js))
       options(opts)
     },
