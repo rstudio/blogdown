@@ -172,8 +172,8 @@ moon_reader = function(
 
   xfun::write_utf8(as.character(htmltools::tagList(
     htmltools::tags$style(`data-target` = 'print-only', '@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}'),
-    htmltools::tags$script(src = "/js/slides.js"),
     htmltools::tags$script(src = chakra),
+    htmltools::tags$script(src = "/js/slides.js"),
     if (is.character(before)) if (self_contained) {
       htmltools::tags$script(htmltools::HTML(file_content(before)))
     } else {
