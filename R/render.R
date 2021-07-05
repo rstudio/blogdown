@@ -212,7 +212,9 @@ build_one = function(input, output, to_md = file_ext(output) != 'html', quiet = 
   # for bookdown's theorem environments generated from bookdown:::eng_theorem
   if (to_md) options(bookdown.output.markdown = TRUE)
   res = rmarkdown::render(
-    input, 'blogdown::html_page', output_file = output, envir = globalenv(),
+    input, ifelse(isTRUE(rmarkdown::yaml_front_matter(input)$type == "slides") || grepl("slide", input),
+                  'blogdown::moon_reader',
+                  'blogdown::html_page'), output_file = output, envir = globalenv(),
     quiet = quiet, run_pandoc = !to_md, clean = !to_md
   )
   x = read_utf8(res)
