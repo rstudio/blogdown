@@ -234,7 +234,7 @@ moon_reader = function(
       options(opts)
     },
     base_format = html_document2(
-      css = css, self_contained = self_contained, theme = NULL, highlight = NULL,
+      self_contained = self_contained, theme = NULL, highlight = NULL,
       template = system.file('resources', 'template-slides.html', package = 'blogdown', mustWork = TRUE),
       anchor_sections = anchor_sections, ...
     )
