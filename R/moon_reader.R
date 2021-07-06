@@ -96,7 +96,7 @@
 #' # rmarkdown::render('foo.Rmd', 'xaringan::moon_reader')
 moon_reader = function(
   css = c('default', 'default-fonts'), self_contained = FALSE, seal = TRUE, yolo = FALSE,
-  chakra = 'https://remarkjs.com/downloads/remark-latest.min.js', nature = list(),
+  chakra = 'https://remarkjs.com/downloads/remark-latest.min.js', nature = list(highlightStyle = "github", highlightLines = TRUE, countIncrementalSlides = FALSE),
   anchor_sections = FALSE, ...
 ) {
   
@@ -170,13 +170,11 @@ moon_reader = function(
   before = nature[['beforeInit']]
   for (i in c('countdown', 'autoplay', 'beforeInit', 'titleSlideClass')) nature[[i]] = NULL
 
-cat(getwd())
-cat(here::here())
   xfun::write_utf8(as.character(htmltools::tagList(
     htmltools::tags$style(`data-target` = 'print-only', '@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}'),
     htmltools::tags$script(src = chakra),
     if (self_contained) {
-      htmltools::tags$script(htmltools::HTML(xaringan:::file_content("themes/teachR/static/js/slides.js")))      
+      htmltools::tags$script(htmltools::HTML(xaringan:::file_content(here::here("themes/teachR/static/js/slides.js"))))      
     } else {
       htmltools::tags$script(src = "/js/slides.js")
     },
