@@ -257,7 +257,7 @@ moon_reader = function(
         res$body = xaringan:::encode_images(res$body)
         cat(sprintf(
           "<script>(%s)(%s, '%s');</script>", xaringan:::pkg_file('js/data-uri.js'),
-          xfun::tojson(as.list(env_images, all.names = TRUE)), xaringan:::url_token
+          xfun::tojson(as.list(xaringan:::env_images, all.names = TRUE)), xaringan:::url_token
         ), file = tmp_js, append = TRUE)
       }
       content = htmltools:::htmlEscape(xaringan:::yolofy(res$body, yolo))
