@@ -95,7 +95,7 @@
 #' @examples
 #' # rmarkdown::render('foo.Rmd', 'xaringan::moon_reader')
 moon_reader = function(
-  css = c('default', 'default-fonts'), self_contained = FALSE, seal = TRUE, yolo = FALSE,
+  self_contained = TRUE, seal = TRUE, yolo = FALSE,
   chakra = 'https://remarkjs.com/downloads/remark-latest.min.js', nature = list(highlightStyle = "github", highlightLines = TRUE, countIncrementalSlides = FALSE),
   anchor_sections = FALSE, ...
 ) {
@@ -121,29 +121,8 @@ moon_reader = function(
     )
   }
   
-  theme = grep('[.](?:sa|sc|c)ss$', css, value = TRUE, invert = TRUE)
-  deps = if (length(theme)) {
-    css = setdiff(css, theme)
-    xaringan:::check_builtin_css(theme)
-    list(xaringan:::css_deps(theme))
-  }
-  tmp_js = tempfile('xaringan', fileext = '.js')  # write JS config to this file
   tmp_md = tempfile('xaringan', fileext = '.md')  # store md content here (bypass Pandoc)
   options(xaringan.page_number.offset = if (seal) 0L else -1L)
-  if (self_contained && isTRUE(getOption('xaringan.inf_mr.running'))) {
-    if (interactive()) xfun::do_once({
-      message(
-        'You are currently using xaringan::inf_mr() to preview your slides, and ',
-        'you have turned on the self_contained option in xaringan::moon_reader. ',
-        'To make it faster for you to preview slides, I have temporarily turned ',
-        'this option off. If you need self-contained slides at the end, you may ',
-        'click the Knit button in RStudio, or call rmarkdown::render() to render ',
-        'this document.'
-      )
-      readline('Press Enter to continue...')
-    }, 'xaringan.self_contained.message')
-    self_contained = FALSE
-  }
 
   if (is.numeric(autoplay <- nature[['autoplay']])) {
     autoplay = list(interval = autoplay, loop = FALSE)
@@ -160,43 +139,19 @@ moon_reader = function(
     '(%s)(%d);', xaringan:::pkg_file('js/countdown.js'), countdown
   )
 
-  hl_pre_js = if (isTRUE(nature$highlightLines))
-    xaringan:::pkg_file('js/highlight-pre-parent.js')
-
   if (is.null(title_cls <- nature[['titleSlideClass']]))
-    title_cls = c('center', 'middle', 'inverse')
+    title_cls = c('middle', 'inverse')
   title_cls = paste(c(title_cls, 'title-slide'), collapse = ', ')
 
   before = nature[['beforeInit']]
   for (i in c('countdown', 'autoplay', 'beforeInit', 'titleSlideClass')) nature[[i]] = NULL
 
-  xfun::write_utf8(as.character(htmltools::tagList(
-    htmltools::tags$style(`data-target` = 'print-only', '@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}'),
-    htmltools::tags$script(src = chakra),
-    if (self_contained) {
-      htmltools::tags$script(htmltools::HTML(xaringan:::file_content(here::here("themes/teachR/static/js/slides.js"))))      
-    } else {
-      htmltools::tags$script(src = "/js/slides.js")
-    },
-    if (is.character(before)) if (self_contained) {
-      htmltools::tags$script(htmltools::HTML(xaringan:::file_content(before)))
-    } else {
-      lapply(before, function(s) htmltools::tags$script(src = s))
-    },
-    htmltools::tags$script(htmltools::HTML(paste(c(sprintf(
-      'var slideshow = remark.create(%s);', if (length(nature)) xfun::tojson(nature) else ''
-    ), xaringan:::pkg_file(sprintf('js/%s.js', c(
-      'show-widgets', 'print-css', 'after', 'script-tags', 'target-blank'
-    ))),
-    play_js, countdown_js, hl_pre_js), collapse = '\n')))
-  )), tmp_js)
 
   html_document2 = function(
     ..., includes = list(), mathjax = 'default', pandoc_args = NULL
   ) {
     if (length(includes) == 0) includes = list()
     includes$before_body = c(includes$before_body, tmp_md)
-    includes$after_body = c(tmp_js, includes$after_body)
     if (identical(mathjax, 'local'))
       stop("mathjax = 'local' does not work for moon_reader()")
     if (!is.null(mathjax)) {
@@ -239,7 +194,7 @@ moon_reader = function(
     
     rmd_text <- readChar(input, file.info(input)$size)
     rmd_text <- gsub("\r\n", "\n", rmd_text)
-    rmd_text <- sub("(```\\s*\\{\\s*r.*?setup.*?\\})", "\\1\nsource(here::here('themes/teachR/static/R/slides_setup.R'))\nxaringanExtra::use_panelset()", rmd_text)
+    rmd_text <- sub("(```\\s*\\{\\s*r.*?setup.*?\\})", "\\1\nsource(here::here('themes/teachR/static/R/slides_setup.R'))\nxaringanExtra:::register_panelset_knitr_hooks()", rmd_text)
     preprocessed_rmd_file <- intermediates_loc(
       file_with_meta_ext(pre_knit_input, "preproc")
     )
