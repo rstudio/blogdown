@@ -121,6 +121,7 @@ moon_reader = function(
     )
   }
   
+  tmp_js = tempfile('xaringan', fileext = '.js')  # write JS config to this file
   tmp_md = tempfile('xaringan', fileext = '.md')  # store md content here (bypass Pandoc)
   options(xaringan.page_number.offset = if (seal) 0L else -1L)
 
@@ -152,6 +153,7 @@ moon_reader = function(
   ) {
     if (length(includes) == 0) includes = list()
     includes$before_body = c(includes$before_body, tmp_md)
+    includes$after_body = c(tmp_js, includes$after_body)
     if (identical(mathjax, 'local'))
       stop("mathjax = 'local' does not work for moon_reader()")
     if (!is.null(mathjax)) {
@@ -230,7 +232,7 @@ moon_reader = function(
     pre_knit = pre_knit,
     on_exit = function() {
       file.remove(list.files(pattern = "preproc\\.[Rr]md"))
-      unlink(tmp_md)
+      unlink(c(tmp_md, tmp_js))
       options(opts)
     },
     base_format = html_document2(
