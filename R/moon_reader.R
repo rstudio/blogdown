@@ -230,7 +230,7 @@ moon_reader = function(
     pre_knit = pre_knit,
     on_exit = function() {
       file.remove(list.files(pattern = "preproc\\.[Rr]md"))
-      unlink(c(tmp_md, tmp_js))
+      unlink(tmp_md)
       options(opts)
     },
     base_format = html_document2(
