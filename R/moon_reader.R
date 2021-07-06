@@ -170,12 +170,18 @@ moon_reader = function(
   before = nature[['beforeInit']]
   for (i in c('countdown', 'autoplay', 'beforeInit', 'titleSlideClass')) nature[[i]] = NULL
 
+cat(getwd())
+cat(here::here())
   xfun::write_utf8(as.character(htmltools::tagList(
     htmltools::tags$style(`data-target` = 'print-only', '@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}'),
     htmltools::tags$script(src = chakra),
-    htmltools::tags$script(src = "/js/slides.js"),
+    if (self_contained) {
+      htmltools::tags$script(htmltools::HTML(xaringan:::file_content("themes/teachR/static/js/slides.js")))      
+    } else {
+      htmltools::tags$script(src = "/js/slides.js")
+    },
     if (is.character(before)) if (self_contained) {
-      htmltools::tags$script(htmltools::HTML(file_content(before)))
+      htmltools::tags$script(htmltools::HTML(xaringan:::file_content(before)))
     } else {
       lapply(before, function(s) htmltools::tags$script(src = s))
     },
