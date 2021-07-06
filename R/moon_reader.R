@@ -235,7 +235,7 @@ moon_reader = function(
     
     rmd_text <- readChar(input, file.info(input)$size)
     rmd_text <- gsub("\r\n", "\n", rmd_text)
-    rmd_text <- sub("(```\\s*\\{\\s*r.*?setup.*?\\})", "\\1\nsource(here::here('themes/teachR/static/R/slides_setup.R'))", rmd_text)
+    rmd_text <- sub("(```\\s*\\{\\s*r.*?setup.*?\\})", "\\1\nsource(here::here('themes/teachR/static/R/slides_setup.R'))\nxaringanExtra::use_panelset()", rmd_text)
     preprocessed_rmd_file <- intermediates_loc(
       file_with_meta_ext(pre_knit_input, "preproc")
     )
