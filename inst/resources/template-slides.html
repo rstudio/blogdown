@@ -1,9 +1,3 @@
-$for(header-includes)$
-    $header-includes$
-$endfor$
-$for(css)$
-    <link rel="stylesheet" href="$css$" type="text/css" />
-$endfor$
 <textarea id="source">
 $if(title-slide)$
 $if(title)$
@@ -36,36 +30,3 @@ $endfor$
 $for(include-after)$
 $include-after$
 $endfor$
-
-$if(mathjax-url)$
-<script>
-slideshow._releaseMath = function(el) {
-  var i, text, code, codes = el.getElementsByTagName('code');
-  for (i = 0; i < codes.length;) {
-    code = codes[i];
-    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
-      text = code.textContent;
-      if (/^\\\((.|\s)+\\\)$$/.test(text) || /^\\\[(.|\s)+\\\]$$/.test(text) ||
-          /^\$$\$$(.|\s)+\$$\$$$$/.test(text) ||
-          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$$/.test(text)) {
-        code.outerHTML = code.innerHTML;  // remove <code></code>
-        continue;
-      }
-    }
-    i++;
-  }
-};
-slideshow._releaseMath(document);
-</script>
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-(function () {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src  = '$mathjax-url$';
-  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
-    script.src  = script.src.replace(/^https?:/, '');
-  document.getElementsByTagName('head')[0].appendChild(script);
-})();
-</script>
-$endif$
