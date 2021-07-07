@@ -193,6 +193,7 @@ moon_reader = function(
     render_env <- get_parent_env_with("knit_input")
     pre_knit_input <- get("knit_input", envir = render_env)
     intermediates_loc <- get("intermediates_loc", envir = render_env)
+    cat(input)
     yaml_header = rmarkdown:::parse_yaml_front_matter(input)
       if (is.null(yaml_header$type)) {
         res$yaml = c(rev(rev(res$yaml)[-1]), "type: slides", "---")
