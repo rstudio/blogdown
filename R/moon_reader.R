@@ -211,7 +211,12 @@ moon_reader = function(
       metadata, input_file, runtime, knit_meta, files_dir, output_dir
     ) {
       res = xaringan:::split_yaml_body(input_file)
-      if (!any(grepl("type:\\s*slides", res$yaml))) res$yaml = c(rev(rev(res$yaml)[-1]), "type: slides", "---")
+      yaml_header = rmarkdown:::parse_yaml_front_matter(res$yaml)
+      if (is.null(yaml_header$type)) {
+        res$yaml = c(rev(rev(res$yaml)[-1]), "type: slides", "---")
+      } else if (yaml_header$type != "slides") {
+        stop("File name suggest these are slides but type is set as '", yaml_header$type, "' instead of 'slides'.\nPlease fix this and try again.", call. = FALSE)
+      }
       xfun::write_utf8(res$yaml, input_file)
       res$body = xfun::protect_math(res$body)
       if (self_contained) {
