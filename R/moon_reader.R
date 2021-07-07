@@ -193,15 +193,15 @@ moon_reader = function(
     render_env <- get_parent_env_with("knit_input")
     pre_knit_input <- get("knit_input", envir = render_env)
     intermediates_loc <- get("intermediates_loc", envir = render_env)
-    yaml_header = rmarkdown:::parse_yaml_front_matter(input)
-    cat(yaml_header)
-      if (is.null(yaml_header$type)) {
-        res$yaml = c(rev(rev(res$yaml)[-1]), "type: slides", "---")
-      } else if (yaml_header$type != "slides") {
-        stop("File name suggest these are slides but type is set as '", yaml_header$type, "' instead of 'slides'.\nPlease fix this and try again.", call. = FALSE)
-      }
+    yaml_header = rmarkdown:::yaml_front_matter(input)
+    if (is.null(yaml_header$type)) {
+      add_type <- TRUE
+    } else if (yaml_header$type != "slides") {
+      stop("File name suggest these are slides but type is set as '", yaml_header$type, "' instead of 'slides'.\nPlease fix this and try again.", call. = FALSE)
+    }
     rmd_text <- readChar(input, file.info(input)$size)
     rmd_text <- gsub("\r\n", "\n", rmd_text)
+    if (add_type) rmd_text <- sub(".*?(---.*?)---(.*)", "\\1type: slides\n---\\2", rmd_text)
     rmd_text <- sub("(```\\s*\\{\\s*r.*?setup.*?\\})", "\\1\nsource(here::here('themes/teachR/static/R/slides_setup.R'))\nxaringanExtra:::register_panelset_knitr_hooks()", rmd_text)
     preprocessed_rmd_file <- intermediates_loc(
       file_with_meta_ext(pre_knit_input, "preproc")
