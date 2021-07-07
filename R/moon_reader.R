@@ -217,7 +217,7 @@ moon_reader = function(
         xaringan:::clean_env_images()
         res$body = xaringan:::encode_images(res$body)
         cat(sprintf(
-          "<script>(%s)(%s, '%s');</script>", xaringan:::pkg_file('js/data-uri.js'),
+          "<script id='self-contained'>(%s)(%s, '%s');</script>", xaringan:::pkg_file('js/data-uri.js'),
           xfun::tojson(as.list(xaringan:::env_images, all.names = TRUE)), xaringan:::url_token
         ), file = tmp_js, append = TRUE)
       }
