@@ -211,6 +211,7 @@ moon_reader = function(
       metadata, input_file, runtime, knit_meta, files_dir, output_dir
     ) {
       res = xaringan:::split_yaml_body(input_file)
+      if (!any(grepl("type:\\s*slides", res$yaml))) res$yaml = c(rev(rev(res$yaml)[-1]), "type: slides", "---")
       xfun::write_utf8(res$yaml, input_file)
       res$body = xfun::protect_math(res$body)
       if (self_contained) {
