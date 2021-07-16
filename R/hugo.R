@@ -442,12 +442,22 @@ download_modules = function(mod) {
     tmps <<- c(tmps, tmp <- wd_tempfile())
     utils::untar(gz, exdir = tmp)
     root = file.path(tmp, files[1])
-    if (v[4] != '') {
-      root = file.path(root, v[4])
-      v[2] = file.path(v[2], v[4])
+    # see if a module contains a replace directive
+    r2 = '^replace\\s+(github[.]com/[^[:space:]]+)\\s+=>\\s+(.+?)\\s*$'
+    if (file_exists(f <- file.path(root, 'go.mod')) && length(grep(r2, x2 <- read_utf8(f)))) {
+      lapply(regmatches(x2, regexec(r2, x2)), function(v2) {
+        if (length(v2) < 3) return()
+        dir_create(v2[2])
+        file.copy(list.files(file.path(root, v2[3]), full.names = TRUE), v2[2], recursive = TRUE)
+      })
+    } else {
+      if (v[4] != '') {
+        root = file.path(root, v[4])
+        v[2] = file.path(v[2], v[4])
+      }
+      dir_create(v[2])
+      file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
     }
-    dir_create(v[2])
-    file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
   })
   unlink(with_ext(mod, c('.mod', '.sum')))
 }
