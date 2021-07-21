@@ -10,6 +10,8 @@
 
 - `clean_duplicates()` now correctly deletes duplicated `.html` file instead of `.md` when `blogdown.method` option is set to `markdown` (thanks, @apreshill, #628).
 
+- `clean_duplicates()` also correctly deletes unused directories like `*_files/header-attrs` associated with `.html` output files (thanks, @apreshill, #632).
+
 # CHANGES IN blogdown VERSION 1.3
 
 ## NEW FEATURES

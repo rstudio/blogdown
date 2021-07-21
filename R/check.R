@@ -489,11 +489,24 @@ clean_duplicates = function(preview = TRUE) in_root({
     if (preview) msg_cat(
       'Found possibly duplicate output files. Run blogdown::clean_duplicates(preview = FALSE)',
       ' if you are sure they can be deleted:\n\n', indent_list(x), '\n'
-    ) else file.remove(x)
+    ) else {
+      file.remove(x)
+      clean_html_deps(x)
+    }
   } else {
     msg_cat('No duplicated output files were found.\n')
   }
 })
+
+# delete unused HTML dependencies like header-attrs (#632)
+clean_html_deps = function(x) {
+  x = grep('[.]html$', x, value = TRUE)
+  if (length(x) == 0) return()
+  x = file.path(paste0(xfun::sans_ext(x), '_files'), 'header-attrs')
+  unlink(x, recursive = TRUE)
+  # delete empty *_files directories
+  for (d in dirname(x)) del_empty_dir(d)
+}
 
 check_garbage_html = function() {
   res = unlist(lapply(list_files('.', '[.]html$'), function(f) {
