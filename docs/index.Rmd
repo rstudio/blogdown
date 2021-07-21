@@ -18,6 +18,11 @@ github-repo: rstudio/blogdown
 cover-image: images/cover.png
 ---
 
+<!--
+The maximum line width for PDF output is 69. Please make sure that verbatim code
+blocks contain less than 70 characters per line.
+-->
+
 ```{r setup, include=FALSE, tidy = FALSE}
 options(
   htmltools.dir.version = FALSE, formatR.indent = 2,
