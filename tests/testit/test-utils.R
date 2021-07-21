@@ -70,3 +70,13 @@ assert('modify_yaml perserves original values properly', {
   modify_yaml(test_rmd_file, .keep_empty = TRUE)
   (readLines(test_rmd_file) %==% old_content)
 })
+
+assert('is_example_url() detects example URLs', {
+  '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?'
+  (!is_example_url(NULL))
+  (!is_example_url('https://www.rstudio.com'))
+  (is_example_url('http://www.example.com'))
+  (is_example_url('https://www.example.org'))
+  (is_example_url('http://replace-this-with-your-hugo-site.com/'))
+  (is_example_url('https://www.replace-this-with-your-hugo-site.com/'))
+})
