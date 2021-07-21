@@ -42,6 +42,9 @@ check_config = function() {
   } else if (identical(base, '/')) {
     msg_todo('Update "baseURL" to your actual URL when ready to publish.')
     okay = FALSE
+  } else if (is_domain_url(base)) {
+    msg_todo('It seems you need to add a protocol (e.g., https://) to your "baseURL".')
+    okay = FALSE
   } else {
     msg_okay('Found baseURL = "', base, '"; nothing to do here!')
   }
@@ -93,6 +96,12 @@ is_example_url = function(url) {
   is.character(url) && grepl(
     '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
   )
+}
+
+# a URL without the http protocol
+is_domain_url = function(url) {
+  is.character(url) && !grepl('(^https?:)?//', url) &&
+    grepl('^((?!-)[A-Za-z0-9-]{1,63}(?<!-)[.])+[A-Za-z]{2,6}(/?|/.*)$', url, perl = TRUE)
 }
 
 #' @details \code{check_gitignore()} checks if necessary files are incorrectly

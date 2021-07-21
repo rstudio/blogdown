@@ -1,5 +1,11 @@
 # CHANGES IN blogdown VERSION 1.4
 
+## NEW FEATURES
+
+- `check_config()` now checks for `baseURL` that only provides a domain name but lacks the `https` (or `http`) protocol, e.g., `baseURL: example.com/` is typically not a valid URL, but should be `https://example.com/` instead (thanks, @apreshill, #616).
+
+## BUG FIXES
+
 - Fixed a new issue with `blogdown::new_site(theme = "wowchemy/starter-hugo-academic")` (#638). To avoid similar issues with the academic theme in the future, we recommend that you consider using the [`hugo-apero/hugo-apero`](https://hugo-apero-docs.netlify.app) theme instead.
 
 - `clean_duplicates()` now correctly deletes duplicated `.html` file instead of `.md` when `blogdown.method` option is set to `markdown` (thanks, @apreshill, #628).

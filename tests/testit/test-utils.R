@@ -80,3 +80,16 @@ assert('is_example_url() detects example URLs', {
   (is_example_url('http://replace-this-with-your-hugo-site.com/'))
   (is_example_url('https://www.replace-this-with-your-hugo-site.com/'))
 })
+
+assert('is_domain_url() detects URLs that look like domain names', {
+  (!is_domain_url(NULL))
+  (!is_domain_url('https://example.org'))
+  (!is_domain_url('/'))
+  (!is_domain_url('foo/'))
+  (is_domain_url('example.com'))
+  (is_domain_url('www.example.com'))
+  (is_domain_url('www.example.com/'))
+  (is_domain_url('www.example.com/foo'))
+  (!is_domain_url('-example.com'))
+  (!is_domain_url('example-.com'))
+})
