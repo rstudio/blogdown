@@ -185,7 +185,7 @@ detect_arch = function() {
   info = Sys.info()
   m = info['machine']
   if (grepl('^(aarch|arm)', m)) {
-    if (grepl('^(aarch|arm)64')) 'arm64' else 'arm'
+    if (grepl('^(aarch|arm)64', m)) 'arm64' else 'arm'
   } else if (length(grep('64', unlist(info[c('machine', 'release')]))) > 0)
     '64bit' else '32bit'
 }
