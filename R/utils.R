@@ -180,9 +180,14 @@ filter_md5sum = function(files, db = 'blogdown/md5sum.txt') {
   files
 }
 
-# guess if the OS is 64bit
-is_64bit = function() {
-  length(grep('64', unlist(Sys.info()[c('machine', 'release')]))) > 0
+# detect architecture of the system
+detect_arch = function() {
+  info = Sys.info()
+  m = info['machine']
+  if (grepl('^(aarch|arm)', m)) {
+    if (grepl('^(aarch|arm)64')) 'arm64' else 'arm'
+  } else if (length(grep('64', unlist(info[c('machine', 'release')]))) > 0)
+    '64bit' else '32bit'
 }
 
 # build .Rmarkdown to .markdown, and .Rmd to .html unless the global option

@@ -8,6 +8,8 @@
 
 - Fixed a new issue with `blogdown::new_site(theme = "wowchemy/starter-hugo-academic")` (#638). To avoid similar issues with the academic theme in the future, we recommend that you consider using the [`hugo-apero/hugo-apero`](https://hugo-apero-docs.netlify.app) theme instead.
 
+- `install_hugo()` can install the correct version of Hugo on a machine with an ARM processor now (thanks, @r-saikat, #636).
+
 - `clean_duplicates()` now correctly deletes duplicated `.html` file instead of `.md` when `blogdown.method` option is set to `markdown` (thanks, @apreshill, #628).
 
 - `clean_duplicates()` also correctly deletes unused directories like `*_files/header-attrs` associated with `.html` output files (thanks, @apreshill, #632).

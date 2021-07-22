@@ -34,6 +34,9 @@
 #'   in which case it will not be downloaded again.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
+#'   Note that this feature is not available to Hugo version lower than v0.43.
+#'   It also requires a 64-bit system; if the system is based on the ARM
+#'   architecture, only macOS is supported at the moment.
 #' @param force Whether to reinstall Hugo if the specified version has been
 #'   installed.
 #' @param ... Ignored.
@@ -68,14 +71,12 @@ install_hugo = function(version = 'latest', extended = TRUE, force = FALSE, ...)
     "the option 'blogdown.hugo.version' accordingly.", files = existing_files('.Rprofile')
   )
   version2 = as.numeric_version(version)
-  bit = if (is_64bit()) '64bit' else '32bit'
-  if (extended) {
-    if (bit != '64bit') stop('The extended version of Hugo is only available on 64-bit platforms')
-    if (version2 < '0.43') {
-      if (!missing(extended)) stop('Only Hugo >= v0.43 provides the extended version')
-      extended = FALSE
-    }
-  }
+  # TODO: we may want to let users specify the architecture and OS in the future
+  # instead of guessing, although the guess should be good most of the time
+  arch = detect_arch()
+  # the extended version is only available for Hugo >= 0.43 and (64bit OS or arm64 macOS)
+  if (missing(extended)) extended = (version2 >= '0.43') &&
+    (arch == '64bit' || (is_macos() && arch == 'arm64'))
   base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
@@ -83,8 +84,9 @@ install_hugo = function(version = 'latest', extended = TRUE, force = FALSE, ...)
 
   download_zip = function(OS, type = 'zip') {
     if (is.null(local_file)) {
+      if (grepl('^arm', arch)) arch = toupper(arch)  # arm(64) -> ARM(64)
       zipfile = sprintf(
-        'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''), version, OS, bit, type
+        'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''), version, OS, arch, type
       )
       xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb')
     } else {

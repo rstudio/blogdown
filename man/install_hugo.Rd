@@ -17,7 +17,10 @@ tarball of the Hugo installer that has already been downloaded from Github,
 in which case it will not be downloaded again.}
 
 \item{extended}{Whether to use extended version of Hugo that has SCSS/SASS
-support. You only need the extended version if you want to edit SCSS/SASS.}
+support. You only need the extended version if you want to edit SCSS/SASS.
+Note that this feature is not available to Hugo version lower than v0.43.
+It also requires a 64-bit system; if the system is based on the ARM
+architecture, only macOS is supported at the moment.}
 
 \item{force}{Whether to reinstall Hugo if the specified version has been
 installed.}
