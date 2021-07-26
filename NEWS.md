@@ -1,5 +1,8 @@
 # CHANGES IN blogdown VERSION 1.5
 
+## BUG FIXES
+
+- The duplicated `config/` directory is deleted from the theme now (thanks, @shirdekel, #644).
 
 # CHANGES IN blogdown VERSION 1.4
 

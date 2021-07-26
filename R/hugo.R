@@ -379,8 +379,12 @@ install_theme = function(
     unlink(c(zipfile, file.path(newdir, '*.Rproj')))
     theme = gsub('^[.][\\/]+', '', newdir)
     if (is_theme) {
-      # we don't need the content/ directory from the theme
-      unlink(file.path(theme, 'content'), recursive = TRUE)
+      # we don't need the content/ directory from the theme or config/ if it
+      # already exists in root dir
+      unlink(
+        file.path(theme, c('content', if (dir_exists('../config')) 'config')),
+        recursive = TRUE
+      )
     } else {
       # download modules if not a theme, and copy "theme" content to root dir
       download_modules(file.path(theme, 'go.mod'))
