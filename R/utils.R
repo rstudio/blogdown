@@ -516,6 +516,23 @@ config_netlify = function(output = 'netlify.toml', new_config = list()) {
   }
 }
 
+#' Create the configuration file for Vercel
+#'
+#' Create \file{vercel.json} that contains the Hugo version currently used.
+#' @param output Path to the output file, or \code{NULL} to print the config.
+#' @references Vercel: \url{https://vercel.com}
+#' @export
+config_vercel = function(output = 'vercel.json') {
+  d = list(build = list(env = list(HUGO_VERSION = as.character(hugo_version()))))
+  d = jsonlite::toJSON(d, pretty = TRUE, auto_unbox = TRUE)
+  if (is.null(output)) return(d)
+  if (file.exists(output)) {
+    warning("The output file '", output, "' exists and will not be overwritten.")
+    return(d)
+  }
+  write_utf8(d, output)
+}
+
 #' Create or modify the \file{.Rprofile} file for a website project
 #'
 #' If the file \file{.Rprofile} does not exist in the current directory, copy

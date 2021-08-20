@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 1.5
 
+## NEW FEATURES
+
+- Added a new function `check_vercel()` to check the Vercel config `vercel.json`, and a new function `config_vercel()` to create `vercel.json` that contains the Hugo version (thanks, @chuxinyuan, #648). Vercel (https://vercel.com) is service similar to Netlify.
+
 ## BUG FIXES
 
 - The duplicated `config/` directory is deleted from the theme now (thanks, @shirdekel, #644).

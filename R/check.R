@@ -19,6 +19,7 @@ check_site = function() in_root({
   check_gitignore()
   check_hugo()
   check_netlify()
+  check_vercel()
   check_content()
 })
 
@@ -249,44 +250,18 @@ check_hugo = function() {
 check_netlify = function() {
   msg_init('Checking netlify.toml...')
   if (!file.exists(f <- 'netlify.toml')) return(
-    msg_todo(f, ' was not found. Use blogdown::config_netlify() to create file.')
+    if (file.exists('vercel.json')) msg_okay(
+      'Found vercel.json. You are assumed to be using Vercel instead of Netlify.'
+    ) else msg_todo(
+      f, ' was not found. Use blogdown::config_netlify() to create file.'
+    )
   )
   cfg = find_config()
   x = read_toml(f)
   v = x$context$production$environment$HUGO_VERSION
-  v2 = as.character(hugo_version())
   if (is.null(v)) v = x$build$environment$HUGO_VERSION
 
-  okay = TRUE
-
-  if (is.null(v)) {
-    msg_next('HUGO_VERSION not found in ', f, '.')
-    msg_todo('Set HUGO_VERSION = ', v2, ' in [build] context of ', f, '.')
-    okay = FALSE
-  } else {
-    msg_okay('Found HUGO_VERSION = ', v, ' in [build] context of ', f, '.')
-    msg_next('Checking that Netlify & local Hugo versions match...')
-    if (v2 == v) {
-      msg_okay(
-        "It's a match! Blogdown and Netlify are using the same Hugo version (", v2, ")."
-      )
-    } else {
-      msg_next(
-        'Mismatch found:\n',
-        '  blogdown is using Hugo version (', v2, ') to build site locally.\n',
-        '  Netlify is using Hugo version (', v, ') to build site.'
-      )
-      msg_todo(
-        'Option 1: Change HUGO_VERSION = "', v2, '" in ', f, ' to match local version.'
-      )
-      msg_todo(
-        'Option 2: Use blogdown::install_hugo("', v, '") to match Netlify version, ',
-        'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin ',
-        'this Hugo version (also remember to restart R).'
-      )
-      okay = FALSE
-    }
-  }
+  okay = check_versions(f, v)
 
   msg_next('Checking that Netlify & local Hugo publish directories match...')
   if (!is.null(p1 <- x$build$publish)) {
@@ -305,6 +280,56 @@ check_netlify = function() {
       msg_okay('Good to go - blogdown and Netlify are using the same publish directory: ', p2)
     }
   }
+  open_file(f, interactive() && !okay)
+  msg_done(f)
+}
+
+# check if hugo versions in config file and system match
+check_versions = function(f, v, v2 = as.character(hugo_version())) {
+  if (is.null(v)) {
+    msg_next('HUGO_VERSION not found in ', f, '.')
+    nm = switch(f, 'netlify.toml' = 'netlify', 'vercel.json' = 'vercel')
+    msg_todo(
+      'Set HUGO_VERSION = ', v2, ' in [build] context of ', f, '.',
+      if (length(nm)) c(' See blogdown::config_', nm, '(NULL) for example.')
+    )
+    return(FALSE)
+  }
+  msg_okay('Found HUGO_VERSION = ', v, ' in [build] context of ', f, '.')
+  msg_next('Checking that remote & local Hugo versions match...')
+  if (v2 == v) {
+    msg_okay(
+      "It's a match! Local and remote Hugo versions are identical (", v2, ")."
+    )
+    return(TRUE)
+  }
+  msg_next(
+    'Mismatch found:\n',
+    '  blogdown is using Hugo version (', v2, ') to build site locally.\n',
+    '  ', f, ' is using Hugo version (', v, ') to build site.'
+  )
+  msg_todo(
+    'Option 1: Change HUGO_VERSION = "', v2, '" in ', f, ' to match local version.'
+  )
+  msg_todo(
+    'Option 2: Use blogdown::install_hugo("', v, '") to match the version in ', f, ', ',
+    'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin ',
+    'this Hugo version (also remember to restart R).'
+  )
+  FALSE
+}
+
+#' @details \code{check_vercel()} checks if the Hugo version specified in
+#'   \file{vercel.json} (if it exists) matches the Hugo version used in the
+#'   current system.
+#' @rdname check_site
+#' @export
+check_vercel = function() {
+  if (!file.exists(f <- 'vercel.json')) return()
+  msg_init('Checking ', f, '...')
+  x = jsonlite::fromJSON(f, simplifyVector = FALSE)
+  v = x$build$env$HUGO_VERSION
+  okay = check_versions(f, v)
   open_file(f, interactive() && !okay)
   msg_done(f)
 }
