@@ -235,6 +235,9 @@ new_site = function(
   if (format == 'yaml' && file.exists(cfg <- 'config.toml')) {
     toml2yaml(cfg, 'config.yaml'); unlink(cfg)
   }
+  if (format == 'toml' && file.exists(cfg <- 'config.yaml')) {
+    yaml2toml(cfg, 'config.toml'); unlink(cfg)
+  }
   if (netlify) {
     msg_next('Adding netlify.toml in case you want to deploy the site to Netlify')
     if (!file.exists('netlify.toml')) config_netlify('netlify.toml') else {
