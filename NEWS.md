@@ -8,6 +8,8 @@
 
 - The duplicated `config/` directory is deleted from the theme now (thanks, @shirdekel, #644).
 
+- The `categories` and `tags` fields in archetypes were not respected when creating new posts (thanks, Conor Neilson, https://stackoverflow.com/q/68879106/559676).
+
 # CHANGES IN blogdown VERSION 1.4
 
 ## NEW FEATURES

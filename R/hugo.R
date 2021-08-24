@@ -617,10 +617,19 @@ new_post = function(
     )
   }
 
+  # for categories/tags, use new values if they are not empty, otherwise use old
+  # values in the post if they are non-empty (respect archetypes)
+  modify_field = function(val) {
+    val
+    function(old, yaml) {
+      as.list(if (length(val) > 0) val else if (length(old) > 0) old)
+    }
+  }
+
   do.call(modify_yaml, c(list(
     file, title = title, author = author, date = format(date), slug = slug,
-    categories = as.list(categories), tags = as.list(tags)
-  ), if (!file.exists('archetypes/default.md')) list(draft = NULL)
+    categories = modify_field(categories), tags = modify_field(tags)
+  ), if (kind == '' && !file.exists('archetypes/default.md')) list(draft = NULL)
   ))
   open_file(file, open)
   file
