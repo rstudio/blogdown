@@ -94,7 +94,7 @@ shiny::runGadget(
         categories = input$cat, tags = input$tag,
         file = gsub('[-[:space:]]+', '-', input$file),
         slug = if (input$slug != '') input$slug, subdir = input$subdir,
-        date = input$date, kind = input$kind
+        date = input$date, kind = xfun::sans_ext(input$kind)
       )
       shiny::stopApp()
     })
