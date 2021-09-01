@@ -993,6 +993,15 @@ clean_hugo_cache = function() {
     unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
 }
 
+# add the time of now to a date
+format_datetime = function(date, time = TRUE) {
+  if (inherits(date, c('Date', 'POSIXct', 'POSIXlt'))) date = format(date, '%Y-%m-%d')
+  if (is.logical(time)) {
+    time = if (isTRUE(time)) format(Sys.time(), 'T%T%z') else ''
+  }
+  paste0(date, time)
+}
+
 unicode_capable = local({
   ok = NULL; x = '\u25ba'  # a test Unicode character
   function() {
@@ -1034,7 +1043,9 @@ na2null = function(x, default = NULL) {
   )
   # default them to I(NA) instead of NULL for reasons explained in .onLoad()
   x = setNames(rep(list(na_null), length(i)), i)
-  x = c(x, list(author = get_author(), subdir = 'post', title_case = FALSE, ext = '.md'))
+  x = c(x, list(
+    author = get_author(), subdir = 'post', title_case = FALSE, ext = '.md', time = FALSE
+  ))
   names(x) = paste0('blogdown.', names(x))
   x = x[sort(names(x))]
   x

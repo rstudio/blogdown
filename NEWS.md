@@ -4,6 +4,8 @@
 
 - Added a new function `check_vercel()` to check the Vercel config `vercel.json`, and a new function `config_vercel()` to create `vercel.json` that contains the Hugo version (thanks, @chuxinyuan, #648). Vercel (https://vercel.com) is service similar to Netlify.
 
+- Added an argument `time` to `new_post()` to optionally include the local time in the `date` field of the new post with `new_post(time = TRUE)`. The value of this argument can also be set via the global option in `.Rprofile`, e.g., `options(blogdown.time = TRUE)` (it is `FALSE` by default). See the help page `?blogdown::new_post` for more information (thanks, @earfanfan, #625).
+
 ## BUG FIXES
 
 - The duplicated `config/` directory is deleted from the theme now (thanks, @shirdekel, #644).

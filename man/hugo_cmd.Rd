@@ -51,6 +51,7 @@ new_post(
   categories = NULL,
   tags = NULL,
   date = Sys.Date(),
+  time = getOption("blogdown.time", FALSE),
   file = NULL,
   slug = NULL,
   title_case = getOption("blogdown.title_case"),
@@ -149,6 +150,16 @@ opened in an interactive R session.}
 \item{tags}{A character vector of tag names.}
 
 \item{date}{The date of the post.}
+
+\item{time}{Whether to include the time of the day in the \code{date} field
+of the post. If \code{TRUE}, the \code{date} will be of the format
+\samp{\%Y-\%m-\%dT\%H:\%M:\%S\%z} (e.g., \samp{2001-02-03T04:05:06-0700}).
+Alternatively, it can take a character string to be appended to the
+\code{date}. It can be important and helpful to include the time in the
+date of a post. For example, if your website is built on a server (such as
+Netlify or Vercel) and your local timezone is ahead of UTC, your local date
+may be a \emph{future} date on the server, and Hugo will not build future
+posts by default (unless you use the \command{-F} flag).}
 
 \item{file}{The filename of the post. By default, the filename will be
 automatically generated from the title by replacing non-alphanumeric
