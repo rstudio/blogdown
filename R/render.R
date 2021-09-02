@@ -206,7 +206,7 @@ build_rmds = function(files, knitting = is_knitting()) {
 }
 
 build_one = function(input, output, to_md = file_ext(output) != 'html', quiet = TRUE) {
-  options(htmltools.dir.version = FALSE)
+  options(htmltools.dir.version = FALSE, rmarkdown.knit.ext = 'md~')
   setwd(dirname(input))
   input = basename(input)
   # for bookdown's theorem environments generated from bookdown:::eng_theorem

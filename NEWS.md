@@ -1,3 +1,9 @@
+# CHANGES IN blogdown VERSION 1.6
+
+## MINOR CHANGES
+
+- The intermediate files `.knit.md$` and `.utf8.md$` no longer need to be ignored in `ignoreFiles` in the Hugo config file now. There is no harm to ignore them anyway. If you have ignored them, you do not need to update your config (#609).
+
 # CHANGES IN blogdown VERSION 1.5
 
 ## NEW FEATURES

@@ -52,7 +52,7 @@ check_config = function() {
 
   msg_next('Checking "ignoreFiles" setting for Hugo...')
   ignore = c(
-    '\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$',
+    '\\.Rmd$', '\\.Rmarkdown$', '_cache$',
     if (length(grep('/renv$', list.dirs()))) c('(^|/)renv$', 'renv\\.lock$')
   )
   if (is.null(s <- config[['ignoreFiles']])) {
