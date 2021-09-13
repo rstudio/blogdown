@@ -207,7 +207,7 @@ build_rmds = function(files, knitting = is_knitting(), renders) {
 }
 
 build_one = function(input, output, to_md = file_ext(output) != 'html', quiet = TRUE, renders) {
-  options(htmltools.dir.version = FALSE)
+  options(htmltools.dir.version = FALSE, rmarkdown.knit.ext = 'md~')
   setwd(dirname(input))
   input = basename(input)
   # for bookdown's theorem environments generated from bookdown:::eng_theorem
@@ -238,12 +238,10 @@ process_markdown = function(res, x = read_utf8(res)) {
     )
   }
   # resolve bookdown references (figures, tables, sections, ...)
-  # TODO: use bookdown >= 0.21.2 to avoid the unnecessary file I/O
   x = local({
     f = wd_tempfile('.md~', pattern = 'post'); on.exit(unlink(f), add = TRUE)
     write_utf8(x, f)
-    bookdown:::process_markdown(f, 'markdown', NULL, TRUE, TRUE)
-    read_utf8(f)
+    bookdown:::process_markdown(f, 'markdown', NULL, TRUE, TRUE, x, NULL)
   })
   # protect math expressions in backticks
   if (get_option('blogdown.protect.math', TRUE)) x = xfun::protect_math(x)

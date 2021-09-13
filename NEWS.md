@@ -1,6 +1,38 @@
+# CHANGES IN blogdown VERSION 1.6
+
+## MINOR CHANGES
+
+- The intermediate files `.knit.md$` and `.utf8.md$` no longer need to be ignored in `ignoreFiles` in the Hugo config file now. There is no harm to ignore them anyway. If you have ignored them, you do not need to update your config (#609).
+
+# CHANGES IN blogdown VERSION 1.5
+
+## NEW FEATURES
+
+- Added a new function `check_vercel()` to check the Vercel config `vercel.json`, and a new function `config_vercel()` to create `vercel.json` that contains the Hugo version (thanks, @chuxinyuan, #648). Vercel (https://vercel.com) is service similar to Netlify.
+
+- Added an argument `time` to `new_post()` to optionally include the local time in the `date` field of the new post with `new_post(time = TRUE)`. The value of this argument can also be set via the global option in `.Rprofile`, e.g., `options(blogdown.time = TRUE)` (it is `FALSE` by default). See the help page `?blogdown::new_post` for more information (thanks, @earfanfan, #625).
+
+## BUG FIXES
+
+- The duplicated `config/` directory is deleted from the theme now (thanks, @shirdekel, #644).
+
+- The `categories` and `tags` fields in archetypes were not respected when creating new posts (thanks, Conor Neilson, https://stackoverflow.com/q/68879106/559676).
+
 # CHANGES IN blogdown VERSION 1.4
 
+## NEW FEATURES
+
+- `check_config()` now checks for `baseURL` that only provides a domain name but lacks the `https` (or `http`) protocol, e.g., `baseURL: example.com/` is typically not a valid URL, but should be `https://example.com/` instead (thanks, @apreshill, #616).
+
+## BUG FIXES
+
+- Fixed a new issue with `blogdown::new_site(theme = "wowchemy/starter-hugo-academic")` (#638). To avoid similar issues with the academic theme in the future, we recommend that you consider using the [`hugo-apero/hugo-apero`](https://hugo-apero-docs.netlify.app) theme instead.
+
+- `install_hugo()` can install the correct version of Hugo on a machine with an ARM processor now (thanks, @r-saikat, #636).
+
 - `clean_duplicates()` now correctly deletes duplicated `.html` file instead of `.md` when `blogdown.method` option is set to `markdown` (thanks, @apreshill, #628).
+
+- `clean_duplicates()` also correctly deletes unused directories like `*_files/header-attrs` associated with `.html` output files (thanks, @apreshill, #632).
 
 # CHANGES IN blogdown VERSION 1.3
 

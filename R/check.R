@@ -19,6 +19,7 @@ check_site = function() in_root({
   check_gitignore()
   check_hugo()
   check_netlify()
+  check_vercel()
   check_content()
 })
 
@@ -42,13 +43,16 @@ check_config = function() {
   } else if (identical(base, '/')) {
     msg_todo('Update "baseURL" to your actual URL when ready to publish.')
     okay = FALSE
+  } else if (is_domain_url(base)) {
+    msg_todo('It seems you need to add a protocol (e.g., https://) to your "baseURL".')
+    okay = FALSE
   } else {
     msg_okay('Found baseURL = "', base, '"; nothing to do here!')
   }
 
   msg_next('Checking "ignoreFiles" setting for Hugo...')
   ignore = c(
-    '\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$',
+    '\\.Rmd$', '\\.Rmarkdown$', '_cache$',
     if (length(grep('/renv$', list.dirs()))) c('(^|/)renv$', 'renv\\.lock$')
   )
   if (is.null(s <- config[['ignoreFiles']])) {
@@ -93,6 +97,12 @@ is_example_url = function(url) {
   is.character(url) && grepl(
     '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
   )
+}
+
+# a URL without the http protocol
+is_domain_url = function(url) {
+  is.character(url) && !grepl('(^https?:)?//', url) &&
+    grepl('^((?!-)[A-Za-z0-9-]{1,63}(?<!-)[.])+[A-Za-z]{2,6}(/?|/.*)$', url, perl = TRUE)
 }
 
 #' @details \code{check_gitignore()} checks if necessary files are incorrectly
@@ -240,44 +250,18 @@ check_hugo = function() {
 check_netlify = function() {
   msg_init('Checking netlify.toml...')
   if (!file.exists(f <- 'netlify.toml')) return(
-    msg_todo(f, ' was not found. Use blogdown::config_netlify() to create file.')
+    if (file.exists('vercel.json')) msg_okay(
+      'Found vercel.json. You are assumed to be using Vercel instead of Netlify.'
+    ) else msg_todo(
+      f, ' was not found. Use blogdown::config_netlify() to create file.'
+    )
   )
   cfg = find_config()
   x = read_toml(f)
   v = x$context$production$environment$HUGO_VERSION
-  v2 = as.character(hugo_version())
   if (is.null(v)) v = x$build$environment$HUGO_VERSION
 
-  okay = TRUE
-
-  if (is.null(v)) {
-    msg_next('HUGO_VERSION not found in ', f, '.')
-    msg_todo('Set HUGO_VERSION = ', v2, ' in [build] context of ', f, '.')
-    okay = FALSE
-  } else {
-    msg_okay('Found HUGO_VERSION = ', v, ' in [build] context of ', f, '.')
-    msg_next('Checking that Netlify & local Hugo versions match...')
-    if (v2 == v) {
-      msg_okay(
-        "It's a match! Blogdown and Netlify are using the same Hugo version (", v2, ")."
-      )
-    } else {
-      msg_next(
-        'Mismatch found:\n',
-        '  blogdown is using Hugo version (', v2, ') to build site locally.\n',
-        '  Netlify is using Hugo version (', v, ') to build site.'
-      )
-      msg_todo(
-        'Option 1: Change HUGO_VERSION = "', v2, '" in ', f, ' to match local version.'
-      )
-      msg_todo(
-        'Option 2: Use blogdown::install_hugo("', v, '") to match Netlify version, ',
-        'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin ',
-        'this Hugo version (also remember to restart R).'
-      )
-      okay = FALSE
-    }
-  }
+  okay = check_versions(f, v)
 
   msg_next('Checking that Netlify & local Hugo publish directories match...')
   if (!is.null(p1 <- x$build$publish)) {
@@ -296,6 +280,56 @@ check_netlify = function() {
       msg_okay('Good to go - blogdown and Netlify are using the same publish directory: ', p2)
     }
   }
+  open_file(f, interactive() && !okay)
+  msg_done(f)
+}
+
+# check if hugo versions in config file and system match
+check_versions = function(f, v, v2 = as.character(hugo_version())) {
+  if (is.null(v)) {
+    msg_next('HUGO_VERSION not found in ', f, '.')
+    nm = switch(f, 'netlify.toml' = 'netlify', 'vercel.json' = 'vercel')
+    msg_todo(
+      'Set HUGO_VERSION = ', v2, ' in [build] context of ', f, '.',
+      if (length(nm)) c(' See blogdown::config_', nm, '(NULL) for example.')
+    )
+    return(FALSE)
+  }
+  msg_okay('Found HUGO_VERSION = ', v, ' in [build] context of ', f, '.')
+  msg_next('Checking that remote & local Hugo versions match...')
+  if (v2 == v) {
+    msg_okay(
+      "It's a match! Local and remote Hugo versions are identical (", v2, ")."
+    )
+    return(TRUE)
+  }
+  msg_next(
+    'Mismatch found:\n',
+    '  blogdown is using Hugo version (', v2, ') to build site locally.\n',
+    '  ', f, ' is using Hugo version (', v, ') to build site.'
+  )
+  msg_todo(
+    'Option 1: Change HUGO_VERSION = "', v2, '" in ', f, ' to match local version.'
+  )
+  msg_todo(
+    'Option 2: Use blogdown::install_hugo("', v, '") to match the version in ', f, ', ',
+    'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin ',
+    'this Hugo version (also remember to restart R).'
+  )
+  FALSE
+}
+
+#' @details \code{check_vercel()} checks if the Hugo version specified in
+#'   \file{vercel.json} (if it exists) matches the Hugo version used in the
+#'   current system.
+#' @rdname check_site
+#' @export
+check_vercel = function() {
+  if (!file.exists(f <- 'vercel.json')) return()
+  msg_init('Checking ', f, '...')
+  x = jsonlite::fromJSON(f, simplifyVector = FALSE)
+  v = x$build$env$HUGO_VERSION
+  okay = check_versions(f, v)
   open_file(f, interactive() && !okay)
   msg_done(f)
 }
@@ -480,11 +514,24 @@ clean_duplicates = function(preview = TRUE) in_root({
     if (preview) msg_cat(
       'Found possibly duplicate output files. Run blogdown::clean_duplicates(preview = FALSE)',
       ' if you are sure they can be deleted:\n\n', indent_list(x), '\n'
-    ) else file.remove(x)
+    ) else {
+      file.remove(x)
+      clean_html_deps(x)
+    }
   } else {
     msg_cat('No duplicated output files were found.\n')
   }
 })
+
+# delete unused HTML dependencies like header-attrs (#632)
+clean_html_deps = function(x) {
+  x = grep('[.]html$', x, value = TRUE)
+  if (length(x) == 0) return()
+  x = file.path(paste0(xfun::sans_ext(x), '_files'), 'header-attrs')
+  unlink(x, recursive = TRUE)
+  # delete empty *_files directories
+  for (d in dirname(x)) del_empty_dir(d)
+}
 
 check_garbage_html = function() {
   res = unlist(lapply(list_files('.', '[.]html$'), function(f) {

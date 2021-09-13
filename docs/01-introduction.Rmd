@@ -185,30 +185,56 @@ There are many possible reasons why a website does not work as expected. For exa
 Fortunately, the function `blogdown::check_site()` can run a series of checks in your website project to help you identify common problems. It also provides tips on how to fix these problems. It is meant to be used during your interactive work sessions. You will see what files were checked, which checks were successful, and **blogdown** will offer `[TODO]` items when a check needs your attention, like this:
 
 ```text
---------------------------------------------------------------------
+-----------------------------------------------------------
 ○ A successful check looks like this.
 ● [TODO] A check that needs your attention looks like this.
 | Let's check out your blogdown site!
---------------------------------------------------------------------
-```
+-----------------------------------------------------------
+― Checking config.yaml
+| Checking "baseURL" setting for Hugo...
+○ Found baseURL = "https://yihui.org/"; nothing to do here!
+....
+― Check complete: config.yaml
 
-For example, checking the content of our example site should print output like this:
+― Checking .gitignore
+| Checking for items to remove...
+○ Nothing to see here - found no items to remove.
+| Checking for items to change...
+● [TODO] Change items in .gitignore: public -> /public,
+  blogdown -> /blogdown
+| Checking for items you can safely ignore...
+● [TODO] You can safely add to .gitignore: .DS_Store, Thumbs.db
+....
+― Check complete: .gitignore
 
-```text
+― Checking Hugo
+| Checking Hugo version...
+○ Found 8 versions of Hugo. You are using Hugo 0.82.1.
+| Checking .Rprofile for Hugo version used by blogdown...
+| Hugo version not set in .Rprofile.
+● [TODO] Set options(blogdown.hugo.version = "0.82.1") in .Rprofile
+  and restart R.
+― Check complete: Hugo
+
+― Checking netlify.toml...
+○ Found HUGO_VERSION = 0.25.1 in [build] context of netlify.toml.
+....
+― Check complete: netlify.toml
+
 ― Checking content files
 | Checking for validity of YAML metadata in posts...
 ○ All YAML metadata appears to be syntactically valid.
 | Checking for previewed content that will not be published...
 ○ Found 0 files with future publish dates.
-○ Found 0 files marked as drafts.
-| Checking your R Markdown content...
-○ All R Markdown files have been knitted.
-○ All R Markdown output files are up to date with their source files.
-| Checking for .html/.md files to clean up...
-○ Found 0 duplicate .html output files.
-○ Found 0 incompatible .html files to clean up.
-| Checking for the unnecessary 'content/' directory in theme...
-○ Great! Your theme does not contain the content/ directory.
+● [TODO] Found 2 files marked as drafts. To un-draft, run:
+
+  blogdown::edit_draft(c(
+  "content/foo.md",
+  "content/bar.md"
+  ))
+
+  and change a file's YAML from 'draft: true' to 'draft: false'.
+....
 ― Check complete: Content
 ```
 

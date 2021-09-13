@@ -235,6 +235,9 @@ new_site = function(
   if (format == 'yaml' && file.exists(cfg <- 'config.toml')) {
     toml2yaml(cfg, 'config.yaml'); unlink(cfg)
   }
+  if (format == 'toml' && file.exists(cfg <- 'config.yaml')) {
+    yaml2toml(cfg, 'config.toml'); unlink(cfg)
+  }
   if (netlify) {
     msg_next('Adding netlify.toml in case you want to deploy the site to Netlify')
     if (!file.exists('netlify.toml')) config_netlify('netlify.toml') else {
@@ -379,8 +382,12 @@ install_theme = function(
     unlink(c(zipfile, file.path(newdir, '*.Rproj')))
     theme = gsub('^[.][\\/]+', '', newdir)
     if (is_theme) {
-      # we don't need the content/ directory from the theme
-      unlink(file.path(theme, 'content'), recursive = TRUE)
+      # we don't need the content/ directory from the theme or config/ if it
+      # already exists in root dir
+      unlink(
+        file.path(theme, c('content', if (dir_exists('../config')) 'config')),
+        recursive = TRUE
+      )
     } else {
       # download modules if not a theme, and copy "theme" content to root dir
       download_modules(file.path(theme, 'go.mod'))
@@ -442,12 +449,22 @@ download_modules = function(mod) {
     tmps <<- c(tmps, tmp <- wd_tempfile())
     utils::untar(gz, exdir = tmp)
     root = file.path(tmp, files[1])
-    if (v[4] != '') {
-      root = file.path(root, v[4])
-      v[2] = file.path(v[2], v[4])
+    # see if a module contains a replace directive
+    r2 = '^replace\\s+(github[.]com/[^[:space:]]+)\\s+=>\\s+(.+?)\\s*$'
+    if (file_exists(f <- file.path(root, 'go.mod')) && length(grep(r2, x2 <- read_utf8(f)))) {
+      lapply(regmatches(x2, regexec(r2, x2)), function(v2) {
+        if (length(v2) < 3) return()
+        dir_create(v2[2])
+        file.copy(list.files(file.path(root, v2[3]), full.names = TRUE), v2[2], recursive = TRUE)
+      })
+    } else {
+      if (v[4] != '') {
+        root = file.path(root, v[4])
+        v[2] = file.path(v[2], v[4])
+      }
+      dir_create(v[2])
+      file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
     }
-    dir_create(v[2])
-    file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
   })
   unlink(with_ext(mod, c('.mod', '.sum')))
 }
@@ -548,6 +565,15 @@ content_file = function(...) file.path(
 #' @param categories A character vector of category names.
 #' @param tags A character vector of tag names.
 #' @param date The date of the post.
+#' @param time Whether to include the time of the day in the \code{date} field
+#'   of the post. If \code{TRUE}, the \code{date} will be of the format
+#'   \samp{\%Y-\%m-\%dT\%H:\%M:\%S\%z} (e.g., \samp{2001-02-03T04:05:06-0700}).
+#'   Alternatively, it can take a character string to be appended to the
+#'   \code{date}. It can be important and helpful to include the time in the
+#'   date of a post. For example, if your website is built on a server (such as
+#'   Netlify or Vercel) and your local timezone is ahead of UTC, your local date
+#'   may be a \emph{future} date on the server, and Hugo will not build future
+#'   posts by default (unless you use the \command{-F} flag).
 #' @param file The filename of the post. By default, the filename will be
 #'   automatically generated from the title by replacing non-alphanumeric
 #'   characters with dashes, e.g. \code{title = 'Hello World'} may create a file
@@ -576,8 +602,8 @@ content_file = function(...) file.path(
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = '', open = interactive(), author = getOption('blogdown.author'),
-  categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = NULL,
-  title_case = getOption('blogdown.title_case'),
+  categories = NULL, tags = NULL, date = Sys.Date(), time = getOption('blogdown.time', FALSE),
+  file = NULL, slug = NULL, title_case = getOption('blogdown.title_case'),
   subdir = getOption('blogdown.subdir', 'post'), ext = getOption('blogdown.ext', '.md')
 ) {
   if (is.null(file)) file = post_filename(title, subdir, ext, date)
@@ -600,10 +626,19 @@ new_post = function(
     )
   }
 
+  # for categories/tags, use new values if they are not empty, otherwise use old
+  # values in the post if they are non-empty (respect archetypes)
+  modify_field = function(val) {
+    val
+    function(old, yaml) {
+      as.list(if (length(val) > 0) val else if (length(old) > 0) old)
+    }
+  }
+
   do.call(modify_yaml, c(list(
-    file, title = title, author = author, date = format(date), slug = slug,
-    categories = as.list(categories), tags = as.list(tags)
-  ), if (!file.exists('archetypes/default.md')) list(draft = NULL)
+    file, title = title, author = author, date = format_datetime(date, time),
+    slug = slug, categories = modify_field(categories), tags = modify_field(tags)
+  ), if (kind == '' && !file.exists('archetypes/default.md')) list(draft = NULL)
   ))
   open_file(file, open)
   file

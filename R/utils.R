@@ -180,9 +180,14 @@ filter_md5sum = function(files, db = 'blogdown/md5sum.txt') {
   files
 }
 
-# guess if the OS is 64bit
-is_64bit = function() {
-  length(grep('64', unlist(Sys.info()[c('machine', 'release')]))) > 0
+# detect architecture of the system
+detect_arch = function() {
+  info = Sys.info()
+  m = info['machine']
+  if (grepl('^(aarch|arm)', m)) {
+    if (grepl('^(aarch|arm)64', m)) 'arm64' else 'arm'
+  } else if (length(grep('64', unlist(info[c('machine', 'release')]))) > 0)
+    '64bit' else '32bit'
 }
 
 # build .Rmarkdown to .markdown, and .Rmd to .html unless the global option
@@ -509,6 +514,23 @@ config_netlify = function(output = 'netlify.toml', new_config = list()) {
     file.copy(f, output, overwrite = TRUE)
     invisible(output)
   }
+}
+
+#' Create the configuration file for Vercel
+#'
+#' Create \file{vercel.json} that contains the Hugo version currently used.
+#' @param output Path to the output file, or \code{NULL} to print the config.
+#' @references Vercel: \url{https://vercel.com}
+#' @export
+config_vercel = function(output = 'vercel.json') {
+  d = list(build = list(env = list(HUGO_VERSION = as.character(hugo_version()))))
+  d = jsonlite::toJSON(d, pretty = TRUE, auto_unbox = TRUE)
+  if (is.null(output)) return(d)
+  if (file.exists(output)) {
+    warning("The output file '", output, "' exists and will not be overwritten.")
+    return(d)
+  }
+  write_utf8(d, output)
 }
 
 #' Create or modify the \file{.Rprofile} file for a website project
@@ -971,6 +993,15 @@ clean_hugo_cache = function() {
     unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
 }
 
+# add the time of now to a date
+format_datetime = function(date, time = TRUE) {
+  if (inherits(date, c('Date', 'POSIXct', 'POSIXlt'))) date = format(date, '%Y-%m-%d')
+  if (is.logical(time)) {
+    time = if (isTRUE(time)) format(Sys.time(), 'T%T%z') else ''
+  }
+  paste0(date, time)
+}
+
 unicode_capable = local({
   ok = NULL; x = '\u25ba'  # a test Unicode character
   function() {
@@ -1012,7 +1043,9 @@ na2null = function(x, default = NULL) {
   )
   # default them to I(NA) instead of NULL for reasons explained in .onLoad()
   x = setNames(rep(list(na_null), length(i)), i)
-  x = c(x, list(author = get_author(), subdir = 'post', title_case = FALSE, ext = '.md'))
+  x = c(x, list(
+    author = get_author(), subdir = 'post', title_case = FALSE, ext = '.md', time = FALSE
+  ))
   names(x) = paste0('blogdown.', names(x))
   x = x[sort(names(x))]
   x
