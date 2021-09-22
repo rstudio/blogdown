@@ -62,5 +62,5 @@ Suggests:
 URL: https://github.com/rstudio/blogdown, https://pkgs.rstudio.com/blogdown
 BugReports: https://github.com/rstudio/blogdown/issues
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<https://pandoc.org>)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8
