@@ -612,7 +612,8 @@ post_filename = function(title, subdir, ext, date, lang = '', bundle = use_bundl
 
 date_filename = function(path, date, replace = FALSE) {
   if (length(date) == 0 || is.na(date)) date = ''
-  date = format(date)
+  date_format = get_option('blogdown.filename.date_format', '%Y-%m-%d')
+  date = format(date, date_format)
   if (date == '') return(path)
   # FIXME: this \\d{4} will be problematic in about 8000 years
   m = grepl(r <- '(^|[\\/])\\d{4}-\\d{2}-\\d{2}-', path)
