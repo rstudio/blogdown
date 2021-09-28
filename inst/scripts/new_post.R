@@ -67,7 +67,10 @@ shiny::runGadget(
     })
     # update subdir in according to the title
     if (is.function(subdir_fun <- getOption('blogdown.subdir_fun'))) shiny::observe({
-      shiny::updateSelectizeInput(session, 'subdir', selected = subdir_fun(input$title))
+      sub2 = subdir_fun(input$title)
+      shiny::updateSelectizeInput(session, 'subdir', selected = sub2, choices = unique(c(
+        sub2, blogdown:::get_subdirs()
+      )))
     })
     shiny::observe({
       # calculate file path

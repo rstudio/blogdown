@@ -4,6 +4,10 @@
 
 - The intermediate files `.knit.md$` and `.utf8.md$` no longer need to be ignored in `ignoreFiles` in the Hugo config file now. There is no harm to ignore them anyway. If you have ignored them, you do not need to update your config (#609).
 
+## BUG FIXES
+
+- The global option `blogdown.subdir_fun` can be a function that takes the post title as the input and returns a path of subdirectory under which the new post is to be created via the "New Post" addin in RStudio. The "New Post" addin failed to add the subdirectory defined by this function to the choices of the "Subdirectory" select input if the subdirectory does not exist in the choices, therefore it could not really be used. Now the subdirectory is corrected added, and can be used (thanks, @datawookie, #656).
+
 # CHANGES IN blogdown VERSION 1.5
 
 ## NEW FEATURES
