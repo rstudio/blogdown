@@ -112,7 +112,7 @@ All built-in options\index{options} that you may set for Hugo are listed at http
         post = "/:year/:month/:day/:slug/"
     ```
     
-    This is because your post title may change, and you probably do not want the link to the post to change, otherwise you have to redirect the old link to the new link, and there will other types of trouble like Disqus comments. The `:slug` variable falls back to `:title` if a field named `slug` is not set in the YAML metadata of the post. You can set a fixed slug so that the link to the post is always fixed and you will have the freedom to update the title of your post.
+    This is because your post title may change, and you probably do not want the link to the post to change, otherwise you have to redirect the old link to the new link, and there will be other types of trouble like Disqus comments. The `:slug` variable falls back to `:title` if a field named `slug` is not set in the YAML metadata of the post. You can set a fixed slug so that the link to the post is always fixed and you will have the freedom to update the title of your post.
     
     You may find a list of all possible variables that you can use in the `permalinks` option at https://gohugo.io/extras/permalinks/. 
 
