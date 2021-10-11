@@ -20,7 +20,7 @@ A useful feature of blogdown sites, compared to other R Markdown-based [websites
 
 ## Book
 
-<a href="https://bookdown.org/yihui/blogdown/"><img src="https://bookdown.org/yihui/blogdown/images/cover.png" alt = "blogdown: Creating Websites with R Markdown" height="400"></a>
+<a href="https://bookdown.org/yihui/blogdown/"><img class="book" src="https://bookdown.org/yihui/blogdown/images/cover.png" alt = "blogdown: Creating Websites with R Markdown" height="400"></a>
 
 ## Installation
 
