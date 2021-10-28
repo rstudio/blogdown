@@ -38,3 +38,8 @@
   title: Live Free or Dichotomize - Live Free or Dichotomize
   img: images/livefreeordichotomize.png
   showcase: yes
+- href: https://hugo-apero-docs.netlify.app/
+  source: https://github.com/hugo-apero/hugo-apero-docs
+  title: Hugo Apéro
+  img: images/hugo-apero-docs.netlify.png
+  showcase: yes

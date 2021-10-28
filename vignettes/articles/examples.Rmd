@@ -21,7 +21,8 @@ blogs <- tribble(
   "https://isabella-b.com/", "https://github.com/isabellabenabaye/isabella-b.com",
   "https://robjhyndman.com/", "https://github.com/rbind/robjhyndman.com",
   "https://www.tidymodels.org/", "https://github.com/tidymodels/tidymodels.org",
-  "https://livefreeordichotomize.com/", "https://github.com/LFOD/real-blog"
+  "https://livefreeordichotomize.com/", "https://github.com/LFOD/real-blog",
+  "https://hugo-apero-docs.netlify.app/", "https://github.com/hugo-apero/hugo-apero-docs"
 )
 
 # get the title
