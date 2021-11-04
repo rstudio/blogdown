@@ -12,6 +12,8 @@
 
 - The global option `blogdown.subdir_fun` can be a function that takes the post title as the input and returns a path of subdirectory under which the new post is to be created via the "New Post" addin in RStudio. The "New Post" addin failed to add the subdirectory defined by this function to the choices of the "Subdirectory" select input if the subdirectory does not exist in the choices, therefore it could not really be used. Now the subdirectory is corrected added, and can be used (thanks, @datawookie, #656).
 
+- `install_hugo()` stopped working with Hugo v0.89.0 (thanks, @martinolmos, #664).
+
 # CHANGES IN blogdown VERSION 1.5
 
 ## NEW FEATURES

@@ -74,6 +74,8 @@ install_hugo = function(version = 'latest', extended = TRUE, force = FALSE, ...)
   # TODO: we may want to let users specify the architecture and OS in the future
   # instead of guessing, although the guess should be good most of the time
   arch = detect_arch()
+  # hugo merged ARM64 and 64bit in the 0.89.0 release for macOS (#664)
+  if (version2 >= '0.89.0' && is_macos()) arch = 'all'
   # the extended version is only available for Hugo >= 0.43 and (64bit OS or arm64 macOS)
   if (missing(extended)) extended = (version2 >= '0.43') &&
     (arch == '64bit' || (is_macos() && arch == 'arm64'))
