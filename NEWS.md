@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 1.6
 
+## NEW FEATURES
+
+- Added a global option `blogdown.server.first`, which can be specified as a function to run before serving the site. For example, you can sync a JS file to the `static/` directory with `options(blogdown.server.first = function() { file.copy('../foo/bar.js', './static/js/', overwrite = TRUE) })` each time before you serve the site.
+
 ## MINOR CHANGES
 
 - The intermediate files `.knit.md$` and `.utf8.md$` no longer need to be ignored in `ignoreFiles` in the Hugo config file now. There is no harm to ignore them anyway. If you have ignored them, you do not need to update your config (#609).

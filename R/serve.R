@@ -131,6 +131,10 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       if (length(list_rmds(pattern = bundle_regex('.R(md|markdown)$'))))
         create_shortcode('postref.html', 'blogdown/postref', is_rstudio_server())
     }
+
+    # run a function (if configured) before starting the server
+    if (is.function(serve_first <- getOption('blogdown.server.first'))) serve_first()
+
     # if requested not to demonize the server, run it in the foreground process,
     # which will block the R session
     if (!server$daemon) return(system2(cmd, cmd_args))
