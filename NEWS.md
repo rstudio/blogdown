@@ -20,6 +20,8 @@
 
 - `install_hugo()` stopped working with Hugo v0.89.0 (thanks, @martinolmos, #664).
 
+- On Windows, `new_post()` may fail to open the new post if the filename contains multibyte characters (thanks, yingjie, https://d.cosx.org/d/422702).
+
 # CHANGES IN blogdown VERSION 1.5
 
 ## NEW FEATURES
