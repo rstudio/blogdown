@@ -594,7 +594,7 @@ dash_filename = function(
   string, pattern = '[^[:alnum:]]+',
   pre = get_option('blogdown.filename.pre_processor', identity)
 ) {
-  tolower(gsub('^-+|-+$', '', gsub(pattern, '-', pre(string))))
+  tolower(gsub('^-+|-+$', '', gsub(pattern, '-', pre(string), perl = TRUE)))
 }
 
 # return a filename for a post based on title, date, etc
