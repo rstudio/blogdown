@@ -37,6 +37,13 @@
 #'   Note that this feature is not available to Hugo version lower than v0.43.
 #'   It also requires a 64-bit system; if the system is based on the ARM
 #'   architecture, only macOS is supported at the moment.
+#' @param arch,os The architecture and operating system name. These arguments,
+#'   along with \code{version} and \code{extended}, determines the filename of
+#'   the Hugo installer. See \url{https://github.com/gohugoio/hugo/releases} for
+#'   all of Hugo's installers. By default, the argument values are automatically
+#'   detected. In case the detection should fail, you can provide the values
+#'   manually, e.g., \code{extended = FALSE}, \code{arch = 'ARM64'}, and
+#'   \code{os = 'FreeBSD'} would install \file{hugo_*_FreeBSD-ARM.tar.gz}.
 #' @param force Whether to reinstall Hugo if the specified version has been
 #'   installed.
 #' @param ... Ignored.
@@ -45,7 +52,9 @@
 #'   break your existing sites.
 #' @seealso \code{\link{remove_hugo}()} to remove Hugo.
 #' @export
-install_hugo = function(version = 'latest', extended = TRUE, force = FALSE, ...) {
+install_hugo = function(
+  version = 'latest', extended = TRUE, arch = 'auto', os = 'auto', force = FALSE, ...
+) {
   local_file = if (grepl('[.](zip|tar[.]gz)$', version) && file.exists(version))
     normalizePath(version)
 
@@ -71,20 +80,19 @@ install_hugo = function(version = 'latest', extended = TRUE, force = FALSE, ...)
     "the option 'blogdown.hugo.version' accordingly.", files = existing_files('.Rprofile')
   )
   version2 = as.numeric_version(version)
-  # TODO: we may want to let users specify the architecture and OS in the future
-  # instead of guessing, although the guess should be good most of the time
-  arch = detect_arch()
-  # hugo merged ARM64 and 64bit in the 0.89.0 release for macOS (#664)
-  if (version2 >= '0.89.0' && is_macos()) arch = 'all'
+  if (arch == 'auto') arch = detect_arch()
   # the extended version is only available for Hugo >= 0.43 and (64bit OS or arm64 macOS)
   if (missing(extended)) extended = (version2 >= '0.43') &&
     (arch == '64bit' || (is_macos() && arch == 'arm64'))
+  # hugo merged ARM64 and 64bit in the 0.89.0 release for macOS (#664)
+  if (version2 >= '0.89.0' && is_macos()) arch = 'all'
   base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
   unlink(sprintf('hugo_%s*', version), recursive = TRUE)
 
   download_zip = function(OS, type = 'zip') {
+    if (os != 'auto') OS = os  # if user has provided the OS name, use that one
     if (is.null(local_file)) {
       if (grepl('^arm', arch)) arch = toupper(arch)  # arm(64) -> ARM(64)
       zipfile = sprintf(

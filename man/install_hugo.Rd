@@ -5,7 +5,14 @@
 \alias{update_hugo}
 \title{Install Hugo}
 \usage{
-install_hugo(version = "latest", extended = TRUE, force = FALSE, ...)
+install_hugo(
+  version = "latest",
+  extended = TRUE,
+  arch = "auto",
+  os = "auto",
+  force = FALSE,
+  ...
+)
 
 update_hugo()
 }
@@ -21,6 +28,14 @@ support. You only need the extended version if you want to edit SCSS/SASS.
 Note that this feature is not available to Hugo version lower than v0.43.
 It also requires a 64-bit system; if the system is based on the ARM
 architecture, only macOS is supported at the moment.}
+
+\item{arch, os}{The architecture and operating system name. These arguments,
+along with \code{version} and \code{extended}, determines the filename of
+the Hugo installer. See \url{https://github.com/gohugoio/hugo/releases} for
+all of Hugo's installers. By default, the argument values are automatically
+detected. In case the detection should fail, you can provide the values
+manually, e.g., \code{extended = FALSE}, \code{arch = 'ARM64'}, and
+\code{os = 'FreeBSD'} would install \file{hugo_*_FreeBSD-ARM.tar.gz}.}
 
 \item{force}{Whether to reinstall Hugo if the specified version has been
 installed.}
