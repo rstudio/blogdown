@@ -85,7 +85,7 @@ install_hugo = function(
   if (missing(extended)) extended = (version2 >= '0.43') &&
     (arch == '64bit' || (is_macos() && arch == 'arm64'))
   # hugo merged ARM64 and 64bit in the 0.89.0 release for macOS (#664)
-  if (version2 >= '0.89.0' && is_macos()) arch = 'all'
+  if (version2 == '0.89.0' && is_macos()) arch = 'all'
   base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
