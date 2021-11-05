@@ -88,10 +88,11 @@ theme_dir = function(...) {
 change_config = function(name, value) {
   f = find_config()
   x = read_utf8(f)
-  if (f == 'config.toml') {
+  b = basename(f)
+  if (b == 'config.toml') {
     r = sprintf('^%s\\s*=.+', name)
     v = if (!is.na(value)) paste(name, value, sep = ' = ')
-  } else if (f == 'config.yaml') {
+  } else if (b == 'config.yaml') {
     r = sprintf('^%s\\s*:.+', name)
     v = if (!is.na(value)) paste(name, value, sep = ': ')
   }
@@ -232,11 +233,10 @@ new_site = function(
     msg_next('Converting all metadata to the YAML format')
     hugo_convert('YAML', unsafe = TRUE)
   }
-  if (format == 'yaml' && file.exists(cfg <- 'config.toml')) {
-    toml2yaml(cfg, 'config.yaml'); unlink(cfg)
-  }
-  if (format == 'toml' && file.exists(cfg <- 'config.yaml')) {
-    yaml2toml(cfg, 'config.toml'); unlink(cfg)
+  # convert config.[toml|yaml] to config.[yaml|toml] if necessary
+  if (length(cfg <- find_config(error = FALSE)) == 1 && file_ext(cfg) != format) {
+    (if (format == 'yaml') toml2yaml else yaml2toml)(cfg, with_ext(cfg, format))
+    unlink(cfg)
   }
   if (netlify) {
     msg_next('Adding netlify.toml in case you want to deploy the site to Netlify')
@@ -398,8 +398,8 @@ install_theme = function(
       unlink(theme, recursive = TRUE)
     }
     in_dir('..', {
-      # move the possible config/_default/config.toml to the root dir
-      move_config()
+      # remove config.toml if config/_default/config.toml exists
+      remove_config()
       # remove the themesDir setting; it is unlikely that you need it
       change_config('themesDir', NA)
     })
@@ -472,16 +472,14 @@ download_modules = function(mod) {
   unlink(with_ext(mod, c('.mod', '.sum')))
 }
 
-# themes may use config/_default/config.toml, e.g. hugo-academic; we need to
-# move this config to the root dir, because blogdown assumes the config file
-# is under the root dir
-move_config = function() {
-  f1 = config_files()
-  f2 = file.path('config', '_default', f1)
-  if (!any(i <- file_exists(f2))) return()
-  file.rename(f2[i], f1[i])
+# themes may use config/_default/config.toml, e.g. hugo-academic; in that case,
+# we remove the config file under the root dir
+remove_config = function() {
+  f1 = config_files(); f1 = f1[dirname(f1) == '.']
   # delete config.yaml if config.toml exists
   if (length(f1) >= 2 && file_exists(f1[1])) unlink(f1[2])
+  f2 = file.path('config', '_default', f1)
+  if (any(file_exists(f2))) unlink(f1)
 }
 
 #' @param path The path to the new file under the \file{content} directory.

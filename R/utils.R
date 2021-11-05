@@ -210,7 +210,9 @@ load_config = function() in_root({
   f = find_config(); m = file.info(f)[, 'mtime']
   # read config only if it has been updated
   if (identical(attr(config, 'config_time'), m)) return(config)
-  parser = switch(f, 'config.toml' = read_toml, 'config.yaml' = yaml_load_file)
+  parser = switch(
+    basename(f), 'config.toml' = read_toml, 'config.yaml' = yaml_load_file
+  )
   config = parser(f)
   attr(config, 'config_time') = m
   opts$set(config = config)
@@ -276,6 +278,7 @@ config_files = function(which = generator()) {
     jekyll = '_config.yml',
     hexo = '_config.yml'
   )
+  all$hugo = c(all$hugo, file.path('config', '_default', all$hugo))
   if (is.null(which)) all else all[[which]]
 }
 
