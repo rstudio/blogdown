@@ -332,6 +332,9 @@ install_theme = function(
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
+    if (length(expdir) == 0) stop(
+      'Failed to download or extract the theme from ', url, call. = FALSE
+    )
     is_theme = file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))
     if (dir_exists(expdir)) if (theme_example) {
       # post-process go.mod so that users don't need to install Go (it sounds
