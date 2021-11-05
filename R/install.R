@@ -58,8 +58,7 @@ install_hugo = function(
   local_file = if (grepl('[.](zip|tar[.]gz)$', version) && file.exists(version))
     normalizePath(version)
 
-  # in theory, should access the Github API using httr/jsonlite but this
-  # poor-man's version may work as well
+  # get the latest version of Hugo
   if (version == 'latest') {
     version = xfun::github_releases('gohugoio/hugo', version)[1]
     message('The latest Hugo version is ', version)
@@ -74,6 +73,14 @@ install_hugo = function(
     'Hugo ', version, ' has already been installed. To reinstall, use the ',
     'argument force = TRUE.'
   ))
+  if (grepl('^\\d+\\.\\d+$', version) && as.numeric_version(version) >= '0.54') {
+    # Hugo started to to use version number x.y.0 instead of x.y since 0.54.0
+    version3 = paste0(version, '.0')
+    xfun::try_silent(if (length(xfun::github_releases('gohugoio/hugo', version3))) {
+      message('The version ', version, ' was automatically corrected to ', version3, '.')
+      version = version3
+    })
+  }
   if (!is.null(ver <- get_option('blogdown.hugo.version')) && ver != version) message2(
     "You have set the option 'blogdown.hugo.version' to '", ver, "' (perhaps in .Rprofile), ",
     "but you are installing the Hugo version '", version, "' now. You may want to update ",

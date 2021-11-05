@@ -4,6 +4,8 @@
 
 - The config file `config/_default/config.yaml` (or `.toml`) is supported now; **blogdown** no longer requires that `config.yaml` (or `.toml`) is under the root directory of the website project. Note that if `config.yaml` is present under both the root directory and the `config/_default/` directory, **blogdown** will only recognize the former, and you may want to delete the former if you actually intend to use the latter (thanks, @Athanasiamo maelle #611, @diegouriarte #598).
 
+- `install_hugo()` can automatically correct the version number `X.Y` to `X.Y.0` when `X.Y` does not exist but `X.Y.0` does. For example, `install_hugo('0.87')` will actually install the version `0.87.0`.
+
 - Added a global option `blogdown.server.first`, which can be specified as a function to run before serving the site. For example, you can sync a JS file to the `static/` directory with `options(blogdown.server.first = function() { file.copy('../foo/bar.js', './static/js/', overwrite = TRUE) })` each time before you serve the site.
 
 - Added arguments `arch` and `os` to `install_hugo()` so that users can choose the architecture and operating system names manually. For example, `blogdown::install_hugo(extended = FALSE, arch = 'ARM64', os = 'FreeBSD')` would install `hugo_*_FreeBSD-ARM.tar.gz` (`*` denotes a version number) from https://github.com/gohugoio/hugo/releases.
