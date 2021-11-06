@@ -80,7 +80,7 @@ check_config = function() {
     h = config$markup$defaultMarkdownHandler
     if (is.null(h) || h == 'goldmark') {
       msg_next("You are using the Markdown renderer 'goldmark'.")
-      config_goldmark(f)
+      config_goldmark(f, config)
       okay = FALSE
     } else if (!is.null(h)) {
       msg_next("You are using the Markdown renderer '", h, "'.")
@@ -172,9 +172,9 @@ check_gitignore = function() {
   msg_done(f)
 }
 
-config_goldmark = function(f, silent = FALSE) {
+config_goldmark = function(f, cfg = list(), silent = FALSE) {
   x = switch(
-    xfun::file_ext(f),
+    ext <- xfun::file_ext(f),
     yaml = '
 markup:
   goldmark:
@@ -189,11 +189,17 @@ markup:
 '
   )
   if (is.null(x)) return()
+  m = ext == 'yaml' && 'markup' %in% names(cfg)  # merge or append?
   if (!silent) msg_todo(
     'Allow goldmark to render raw HTML by adding this setting to ', f,
-    ' (see https://github.com/rstudio/blogdown/issues/447 for more info):\n', x
+    ' (see https://github.com/rstudio/blogdown/issues/447 for more info):\n', x,
+    if (m) c(
+      '\nNote that the "markup" key already exists, so you have to merge the ',
+      'above goldmark setting into the existing "markup" key instead of appending ',
+      'it to the end of the file.'
+    )
   )
-  if (silent || yes_no("Do you want blogdown to set this for you?")) {
+  if (!m && (silent || yes_no("Do you want blogdown to set this for you?"))) {
     cat(x, file = f, append = TRUE)
   }
 }
