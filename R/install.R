@@ -164,6 +164,46 @@ install_hugo_bin = function(exec, version) {
   )
 }
 
+#' Available Hugo installers of a version
+#'
+#' Given a version number, return the information of available installers. If
+#' \code{\link{install_hugo}()} fails, you may run this function to check the
+#' available installers and obtain their \code{os}/\code{arch} info.
+#' @param version A version number. The default is to automatically detect the
+#'   latest version. Versions before v0.17 are not supported.
+#' @return A data frame containing columns \code{os} (operating system),
+#'   \code{arch} (architecture), and \code{extended} (extended version or not).
+#' @export
+#' @examplesIf interactive()
+#' blogdown::hugo_installers()
+#' blogdown::hugo_installers('0.89.0')
+#' blogdown::hugo_installers('0.7')
+hugo_installers = function(version = 'latest') {
+  repo = 'gohugoio/hugo'
+  if (version == 'latest') version = xfun::github_releases(repo, 'latest')
+  version = sub('^[vV]?', 'v', version)
+  u = sprintf('https://api.github.com/repos/%s/releases/tags/%s', repo, version)
+  res = if (xfun::loadable('jsonlite')) {
+    res = jsonlite::fromJSON(u, FALSE)
+    lapply(res$assets, `[[`, 'browser_download_url')
+  } else {
+    res = xfun::read_utf8(u)
+    m = gregexec('"browser_download_url":"([^"]+)"', res)
+    lapply(regmatches(res, m), function(x) if (NROW(x) >= 2) x[2, ])
+  }
+  res = grep('[.](zip|tar[.]gz)$', unlist(res), value = TRUE)
+  res = basename(res)
+  m = gregexec('^hugo_(extended_)?([^_]+)_([^-]+)-([^.]+)[.](zip|tar[.]gz)$', res)
+  res = lapply(regmatches(res, m), function(x) if (length(x) >= 6) x[c(1, 3, 4, 5, 2)])
+  res = do.call(rbind, res)
+  colnames(res) = c('installer', 'version', 'os', 'arch', 'extended')
+  res = as.data.frame(res)
+  res$extended = res$extended == 'extended_'
+  rownames(res) = res$installer
+  res = res[, -1]
+  res
+}
+
 #' @export
 #' @rdname install_hugo
 update_hugo = function() {

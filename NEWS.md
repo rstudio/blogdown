@@ -10,6 +10,8 @@
 
 - Added arguments `arch` and `os` to `install_hugo()` so that users can choose the architecture and operating system names manually. For example, `blogdown::install_hugo(extended = FALSE, arch = 'ARM64', os = 'FreeBSD')` would install `hugo_*_FreeBSD-ARM.tar.gz` (`*` denotes a version number) from https://github.com/gohugoio/hugo/releases.
 
+- Added a new function `hugo_installers()` to print out the information about available Hugo installers of a certain version. This can be helpful when `install_hugo()` fails, e.g., the installer for a certain `os` or `arch` is not available.
+
 ## MAJOR CHANGES
 
 - When creating new posts (either with `new_post()` or the RStudio addin "New Post"), the default post filename will be generated from the post title but it will exclude all non-alphanumeric characters. Previously the exclusion of these characters failed under certain locales (e.g., UTF-8 or a locale that has native support for multibyte characters). Now the default filename will no longer contain non-alphanumeric characters except dashes (thanks, yingjie, https://d.cosx.org/d/422702).
