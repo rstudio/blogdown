@@ -62,11 +62,11 @@ install_hugo = function(
   if (version == 'latest') {
     version = xfun::github_releases('gohugoio/hugo', version)[1]
     message('The latest Hugo version is ', version)
+  } else {
+    if (!is.null(local_file)) version = gsub(
+      '^hugo(_extended)?_([0-9.]+)_.*', '\\2', basename(local_file)
+    )
   }
-
-  if (!is.null(local_file)) version = gsub(
-    '^hugo(_extended)?_([0-9.]+)_.*', '\\2', basename(local_file)
-  )
 
   version = gsub('^[vV]', '', version)  # pure version number
   if (!force && hugo_available(version, exact = TRUE)) return(message(
