@@ -13,6 +13,8 @@ latest version. Versions before v0.17 are not supported.}
 \value{
 A data frame containing columns \code{os} (operating system),
   \code{arch} (architecture), and \code{extended} (extended version or not).
+  If your R version is lower than 4.1.0, a character vector of the installer
+  filenames will be returned instead.
 }
 \description{
 Given a version number, return the information of available installers. If

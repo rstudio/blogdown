@@ -187,6 +187,8 @@ install_hugo_bin = function(exec, version) {
 #'   latest version. Versions before v0.17 are not supported.
 #' @return A data frame containing columns \code{os} (operating system),
 #'   \code{arch} (architecture), and \code{extended} (extended version or not).
+#'   If your R version is lower than 4.1.0, a character vector of the installer
+#'   filenames will be returned instead.
 #' @export
 #' @examplesIf interactive()
 #' blogdown::hugo_installers()
@@ -207,6 +209,11 @@ hugo_installers = function(version = 'latest') {
   }
   res = grep('[.](zip|tar[.]gz)$', unlist(res), value = TRUE)
   res = basename(res)
+  if (!'gregexec' %in% ls(baseenv())) {
+    warning('Your R version is too low (< 4.1.0) and does not have gregexec().')
+    return(res)
+    gregexec = regexec  # a hack to pass R CMD check without NOTE
+  }
   m = gregexec('^hugo_(extended_)?([^_]+)_([^-]+)-([^.]+)[.](zip|tar[.]gz)$', res)
   res = lapply(regmatches(res, m), function(x) if (length(x) >= 6) x[c(1, 3, 4, 5, 2)])
   res = do.call(rbind, res)
