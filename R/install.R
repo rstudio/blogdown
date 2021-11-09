@@ -202,8 +202,8 @@ hugo_installers = function(version = 'latest') {
     lapply(res$assets, `[[`, 'browser_download_url')
   } else {
     res = xfun::read_utf8(u)
-    m = gregexec('"browser_download_url":"([^"]+)"', res)
-    lapply(regmatches(res, m), function(x) if (NROW(x) >= 2) x[2, ])
+    res = strsplit(res, '"browser_download_url":"')
+    xfun::grep_sub('^(https://[^"]+)".*', '\\1', unlist(res))
   }
   res = grep('[.](zip|tar[.]gz)$', unlist(res), value = TRUE)
   res = basename(res)
