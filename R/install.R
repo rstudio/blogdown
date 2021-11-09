@@ -73,13 +73,20 @@ install_hugo = function(
     'Hugo ', version, ' has already been installed. To reinstall, use the ',
     'argument force = TRUE.'
   ))
-  if (grepl('^\\d+\\.\\d+$', version) && as.numeric_version(version) >= '0.54') {
-    # Hugo started to to use version number x.y.0 instead of x.y since 0.54.0
-    version3 = paste0(version, '.0')
-    xfun::try_silent(if (length(xfun::github_releases('gohugoio/hugo', version3))) {
-      message('The version ', version, ' was automatically corrected to ', version3, '.')
-      version = version3
-    })
+  if (is.null(local_file)) {
+    if (grepl('^\\d+\\.\\d+$', version) && as.numeric_version(version) >= '0.54') {
+      # Hugo started to to use version number x.y.0 instead of x.y since 0.54.0
+      version3 = paste0(version, '.0')
+      xfun::try_silent(if (length(xfun::github_releases('gohugoio/hugo', paste0('v', version3)))) {
+        message('The version ', version, ' was automatically corrected to ', version3, '.')
+        version = version3
+      })
+    }
+    ver = tryCatch(
+      xfun::github_releases('gohugoio/hugo', sub('^[vV]?', 'v', version)),
+      error = function(e) NULL
+    )
+    if (length(ver) == 0) stop('The Hugo version ', version, ' does not seem to exist.')
   }
   if (!is.null(ver <- get_option('blogdown.hugo.version')) && ver != version) message2(
     "You have set the option 'blogdown.hugo.version' to '", ver, "' (perhaps in .Rprofile), ",
