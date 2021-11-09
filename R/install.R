@@ -105,7 +105,14 @@ install_hugo = function(
       zipfile = sprintf(
         'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''), version, OS, arch, type
       )
-      xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb')
+      # TODO: use the .error argument in xfun 0.29
+      xfun::try_silent(xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb'))
+      # zipfile may be a plain-text file "Not Found" (9 bytes) in case of 404
+      if (!file_exists(zipfile) || file.size(zipfile) <= 9) stop(
+        'Failed to download ', zipfile, ' from https://github.com/gohugoio/hugo/releases/tag/v',
+        version, '. Please check blogdown::hugo_installers("', version, '") for ',
+        'available Hugo installers.', call. = FALSE
+      )
     } else {
       zipfile = local_file
       type = xfun::file_ext(local_file)
