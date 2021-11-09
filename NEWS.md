@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.7
+
+
 # CHANGES IN blogdown VERSION 1.6
 
 ## NEW FEATURES
