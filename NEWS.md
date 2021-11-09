@@ -11,7 +11,7 @@
 
 - Added a global option `blogdown.server.first`, which can be specified as a function to run before serving the site. For example, you can sync a JS file to the `static/` directory with `options(blogdown.server.first = function() { file.copy('../foo/bar.js', './static/js/', overwrite = TRUE) })` each time before you serve the site.
 
-- Added arguments `arch` and `os` to `install_hugo()` so that users can choose the architecture and operating system names manually. For example, `blogdown::install_hugo(extended = FALSE, arch = 'ARM64', os = 'FreeBSD')` would install `hugo_*_FreeBSD-ARM.tar.gz` (`*` denotes a version number) from https://github.com/gohugoio/hugo/releases.
+- Added arguments `arch` and `os` to `install_hugo()` so that users can choose the architecture and operating system names manually. For example, `blogdown::install_hugo(extended = FALSE, arch = '64bit', os = 'FreeBSD')` would install `hugo_*_FreeBSD-64bit.tar.gz` (`*` denotes a version number) from https://github.com/gohugoio/hugo/releases.
 
 - Added a new function `hugo_installers()` to print out the information about available Hugo installers of a certain version. This can be helpful when `install_hugo()` fails, e.g., the installer for a certain `os` or `arch` is not available.
 
