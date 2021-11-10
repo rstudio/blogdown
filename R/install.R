@@ -190,17 +190,16 @@ install_hugo_bin = function(exec, version) {
 #' @examplesIf interactive()
 #' blogdown::hugo_installers()
 #' blogdown::hugo_installers('0.89.0')
-#' blogdown::hugo_installers('0.7')
+#' blogdown::hugo_installers('0.17')
 hugo_installers = function(version = 'latest') {
   repo = 'gohugoio/hugo'
   if (version == 'latest') version = xfun::github_releases(repo, 'latest')
   version = sub('^[vV]?', 'v', version)
-  u = sprintf('https://api.github.com/repos/%s/releases/tags/%s', repo, version)
-  res = if (xfun::loadable('jsonlite')) {
-    res = jsonlite::fromJSON(u, FALSE)
+  json = xfun::loadable('jsonlite')
+  res = xfun::github_api(sprintf('/repos/%s/releases/tags/%s', repo, version), raw = !json)
+  res = if (json) {
     lapply(res$assets, `[[`, 'browser_download_url')
   } else {
-    res = xfun::read_utf8(u)
     res = strsplit(res, '"browser_download_url":"')
     xfun::grep_sub('^(https://[^"]+)".*', '\\1', unlist(res))
   }

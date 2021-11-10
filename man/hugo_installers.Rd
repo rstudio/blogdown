@@ -21,10 +21,9 @@ Given a version number, return the information of available installers. If
 \code{\link{install_hugo}()} fails, you may run this function to check the
 available installers and obtain their \code{os}/\code{arch} info.
 }
-\examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\examples{\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 blogdown::hugo_installers()
 blogdown::hugo_installers("0.89.0")
-blogdown::hugo_installers("0.7")
+blogdown::hugo_installers("0.17")
 \dontshow{\}) # examplesIf}
 }
