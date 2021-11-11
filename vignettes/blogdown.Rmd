@@ -11,7 +11,7 @@ vignette: >
 
 <a href="https://bookdown.org/yihui/blogdown/"><img src="https://bookdown.org/yihui/blogdown/images/cover.png" alt="blogdown: Creating Websites with R Markdown" width="250" style="padding: 0 15px; float: right;"/></a>
 
-Written by Yihui Xie, the package author, [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/bookdown/) introduces the R package and how to use it. The book is published by Chapman & Hall/CRC, and you can read it online for free.
+Written by Yihui Xie, the package author, [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/blogdown/) introduces the R package and how to use it. The book is published by Chapman & Hall/CRC, and you can read it online for free.
 
 The book is structured into 5 parts to guide the reader into the use of the R package **blogdown** to create and manage websites: 
 
