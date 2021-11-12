@@ -109,8 +109,10 @@ install_hugo = function(
     if (os != 'auto') OS = os  # if user has provided the OS name, use that one
     if (is.null(local_file)) {
       if (grepl('^arm', arch)) arch = toupper(arch)  # arm(64) -> ARM(64)
+      # v0.20.3 is a special case: it has 'v' in the filename
       zipfile = sprintf(
-        'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''), version, OS, arch, type
+        'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''),
+        paste0(if (version == '0.20.3') 'v', version), OS, arch, type
       )
       xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb', .error = c(
         'Failed to download ', zipfile, ' from https://github.com/gohugoio/hugo/releases/tag/v',
