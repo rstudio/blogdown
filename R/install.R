@@ -335,7 +335,10 @@ uninstall_tip = function(p) {
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
   function(version = getOption('blogdown.hugo.version'), quiet = FALSE) {
-    i = if (is.null(version <- na2null(version))) 'default' else as.character(version)
+    i = if (is.null(version <- na2null(version))) 'default' else {
+      # in case the version number starts with v, remove it
+      version = sub('^[vV]([0-9.]+)$', '\\1', as.character(version))
+    }
     p = paths[[i]]
     if (!is.null(p) && file.exists(exec_path(p))) return(p)
     # if path not found, find it again

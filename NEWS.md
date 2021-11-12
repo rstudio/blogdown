@@ -1,5 +1,8 @@
 # CHANGES IN blogdown VERSION 1.7
 
+## MINOR CHANGES
+
+- The `version` argument of `find_hugo()` allows for the prefix `v` in the version number now, e.g., `find_hugo('v0.89.2')` is equivalent to `find_hugo('0.89.2')`. This is also true to other functions that use `find_hugo()`, such as `remove_hugo()`.
 
 # CHANGES IN blogdown VERSION 1.6
 
