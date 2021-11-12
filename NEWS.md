@@ -4,6 +4,8 @@
 
 - The `version` argument of `find_hugo()` allows for the prefix `v` in the version number now, e.g., `find_hugo('v0.89.2')` is equivalent to `find_hugo('0.89.2')`. This is also true to other functions that use `find_hugo()`, such as `remove_hugo()`.
 
+- Clarified `write_toml()`'s error message that Hugo >= 0.37 is required to run this function (thanks, @pssguy, #665).
+
 ## BUG FIXES
 
 - `install_hugo()` did not work for Hugo `v0.20.3`.

@@ -413,7 +413,9 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
 #' @export
 #' @rdname read_toml
 write_toml = function(x, output = NULL) {
-  if (!hugo_available()) stop('Hugo is required but not found.')
+  if (!hugo_available('0.37')) stop(
+    'Hugo >= 0.37 is required but not found. Run blogdown::install_hugo()?'
+  )
   f = tempfile('yaml', fileext = '.md'); on.exit(unlink(f), add = TRUE)
   write_utf8(c('---', as.yaml(x), '---'), f)
   hugo_convert_one(f, 'TOML')
