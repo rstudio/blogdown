@@ -3,7 +3,7 @@
 on:
   push:
     branches: main
-    paths_ignore:
+    paths-ignore:
       - 'docs/**'
       - '.github/ISSUE_TEMPLATE'
       - '.github/workflows/bookdown.yaml'
@@ -12,7 +12,7 @@ on:
       - '.github/workflows/pkgdown.yaml'
   pull_request:
     branches: main
-    paths_ignore:
+    paths-ignore:
       - 'docs/**'
       - '.github/ISSUE_TEMPLATE'
       - '.github/workflows/bookdown.yaml'
