@@ -44,6 +44,8 @@ navbar:
           href: news/index.html
         - text: "------------------"
         - text: "Blog posts"
+        - text: "Version 1.6"
+          href: https://yihui.org/en/2021/11/blogdown-v1-6/
         - text: "Version 1.0"
           href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
         - text: "Version 0.1"
