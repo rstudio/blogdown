@@ -10,6 +10,8 @@
 
 - `install_hugo()` did not work for Hugo `v0.20.3`.
 
+- `new_post()` failed to correctly detect the path of the new post with Hugo >= 0.89.3 (thanks, @rcarboni, #667).
+
 # CHANGES IN blogdown VERSION 1.6
 
 ## NEW FEATURES
