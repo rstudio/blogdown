@@ -506,8 +506,8 @@ new_content = function(path, kind = '', open = interactive()) {
     c('new', shQuote(path2), if (kind != '') c('-k', kind), theme_flag()),
     stdout = TRUE
   )
-  if (length(i <- grep(r <- ' created$', file2)) == 1) {
-    file2 = sub(r, '', file2[i])
+  if (length(i <- grep(r <- '^Content | created$', file2)) == 1) {
+    file2 = gsub(r, '', file2[i])
     if (!grepl('[.]md$', file2)) file2 = file.path(file2, 'index.md')
   } else {
     # should the above method fail to identify the newly created .md, search for
