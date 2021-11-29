@@ -225,7 +225,10 @@ new_site = function(
     if (getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
   if (!file.exists('index.Rmd')) {
-    writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
+    writeLines(c(
+      '---', 'site: blogdown:::blogdown_site', '---', '',
+      '<!-- This file is for blogdown only. Please do not edit it. -->'
+    ), 'index.Rmd')
     Sys.chmod('index.Rmd', '444')
   }
 
