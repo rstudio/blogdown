@@ -326,11 +326,8 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, output) {
   x
 }
 
-create_shortcode = function(
-  from, to, force = getOption('blogdown.update.shortcode', FALSE)
-) in_root({
+create_shortcode = function(from, to) in_root({
   to = sprintf('layouts/shortcodes/%s.html', to)
-  if (!force && file_exists(to)) return()
   dir_create(dirname(to))
   from = pkg_file('resources', from)
   file.copy(from, to, overwrite = TRUE)

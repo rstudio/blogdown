@@ -12,6 +12,8 @@
 
 - `new_post()` failed to correctly detect the path of the new post with Hugo >= 0.89.3 (thanks, @rcarboni, #667).
 
+- Deal with the new security policy in Hugo 0.91.0 by renaming the internal environment variable `BLOGDOWN_POST_RELREF` (in the shortcode `layouts/shortcodes/blogdown/postref.html`) to `HUGO_BLOGDOWN_POST_RELREF` (thanks, @Nitheshnirmal #672, @gergiu #673).
+
 # CHANGES IN blogdown VERSION 1.6
 
 ## NEW FEATURES

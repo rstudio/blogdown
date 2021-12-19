@@ -942,7 +942,7 @@ tweak_hugo_env = function(baseURL = NULL, relativeURLs = NULL, server = FALSE) {
 
   vars = c(HUGO_BASEURL = if (c2) '/' else b, HUGO_RELATIVEURLS = tolower(c2))
   if (server) {
-    vars = c(vars, BLOGDOWN_POST_RELREF = 'true')
+    vars = c(vars, HUGO_BLOGDOWN_POST_RELREF = 'true')
     c3 = get_config('ignoreErrors', NA, config)
     # should also ignore error-missing-instagram-accesstoken, but I don't know
     # how to configure ignoreErrors to be an array through the env var
