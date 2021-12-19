@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.8
+
+
 # CHANGES IN blogdown VERSION 1.7
 
 ## MINOR CHANGES
