@@ -8,3 +8,4 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 ^vignettes$
+^reference$
