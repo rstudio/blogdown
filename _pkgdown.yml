@@ -3,7 +3,12 @@ destination: reference
 url: https://pkgs.rstudio.com/blogdown/
 
 template:
-  package: quillt
+  package: tidytemplate
+  bootstrap: 5
+  bslib:
+    primary: "#096B72"
+    navbar-background: "#e6f3fc"
+  trailingslash_redirect: true
   opengraph:
     image:
       src: https://bookdown.org/yihui/blogdown/images/logo.png
@@ -13,43 +18,56 @@ template:
       card: summary
 
 development:
-  version_tooltip: "Development version"
+  mode: devel
+  destination: "."
 
+home:
+  links:
+  - text: Learn more about R Markdown
+    href: "https://rmarkdown.rstudio.com"
 
-navbar:
-  title: ~
-  type: default
+# custom footer for rmarkdown ecosystem
+footer:
   structure:
-    left:  [intro, examples, articles]
-    right: [reference, news, github]
+    left: [rmd]
+    right: [developed_by, p, built_with]
   components:
-    home: ~
+      p: "\n\n"
+      rmd: |
+        **blogdown** is a part of the **R Markdown** ecosystem of packages for creating
+        computational documents in R.<br>Learn more at
+        [rmarkdown.rstudio.com](https://rmarkdown.rstudio.com/).
+
+# structure of website themed for R Markdown ecosystem
+navbar:
+  structure:
+    left:  [intro, examples, articles, reference, news]
+  components:
     examples:
       text: Examples
-      href: articles/articles/examples.html
-    articles:
-      text: Articles
-      menu:
-        - text: "No vignettes"
-    reference:
-      text: Reference
-      href: reference/index.html
-    github:
-      icon: fab fa-github fa-lg
-      href: https://github.com/rstudio/blogdown
-    news:
-      text: News
-      menu:
-        - text: "Changelog"
-          href: news/index.html
-        - text: "------------------"
-        - text: "Blog posts"
-        - text: "Version 1.6"
-          href: https://yihui.org/en/2021/11/blogdown-v1-6/
-        - text: "Version 1.0"
-          href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
-        - text: "Version 0.1"
-          href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
+      href: articles/examples.html
+
+# Add articles menu using
+# https://pkgdown.r-lib.org/dev/reference/build_articles.html#index-and-navbar
+articles:
+- title: Get Started
+  desc: |
+    Start here to know how to learn **blogdown**
+  contents:
+    - blogdown
+- title: Example
+  desc: Gallery of examples
+  contents:
+    - articles/examples
+
+news:
+  releases:
+  - text: "Version 1.6"
+    href: https://yihui.org/en/2021/11/blogdown-v1-6/
+  - text: "Version 1.0"
+    href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
+  - text: "Version 0.1"
+    href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
 
 reference:
 - title: Output formats
