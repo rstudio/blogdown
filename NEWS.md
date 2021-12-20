@@ -1,5 +1,6 @@
 # CHANGES IN blogdown VERSION 1.8
 
+- The internal function `scan_yaml()` uses cache in the current R session now. Other functions (e.g., `find_yaml()`, `count_yaml()`, and the "New Post"" addin in RStudio) based on this function should be much faster when there are a lot of files to scan for more than once.
 
 # CHANGES IN blogdown VERSION 1.7
 

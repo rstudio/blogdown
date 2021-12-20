@@ -676,7 +676,7 @@ scan_yaml = function(warn = TRUE) {
   files = tryCatch(list_rmds(pattern = md_pattern), error = function(e) NULL)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
-    yaml = fetch_yaml(f)
+    yaml = mtime_cache(f, fetch_yaml(f), 'scan_yaml')
     if (length(yaml) == 0) return()
     yaml = yaml[-c(1, length(yaml))]
     if (length(yaml) == 0) return()
@@ -691,6 +691,20 @@ scan_yaml = function(warn = TRUE) {
   })
   setNames(res, files)
 }
+
+# cache a value computed from a file (if mtime has not changed, use the cache)
+mtime_cache = local({
+  global = list()
+  cached = function(file, db) {
+    (file %in% names(db)) && identical(db[[file]][['mtime']], file.mtime(file))
+  }
+  function(file, value, key) {
+    db = global[[key]]
+    if (cached(file, db)) return(db[[file]][['value']])
+    global[[key]][[file]] <<- list(mtime = file.mtime(file), value = value)
+    value
+  }
+})
 
 # collect specific fields of all YAML metadata
 collect_yaml = function(
