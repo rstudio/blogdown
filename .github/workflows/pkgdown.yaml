@@ -30,6 +30,7 @@ jobs:
       - name: install webshot2
         run: |
           pak::pak("rstudio/webshot2")
+        shell: Rscript {0}
 
       - name: Install optipng
         # required to optimize images
