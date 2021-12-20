@@ -63,8 +63,7 @@ Suggests:
     testit,
     tools,
     whoami
-Config/Needs/website: pkgdown, tidyverse/tidytemplate, rstudio/quillt,
-    rstudio/webshot2
+Config/Needs/website: pkgdown, tidyverse/tidytemplate, rstudio/quillt
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<https://pandoc.org>)

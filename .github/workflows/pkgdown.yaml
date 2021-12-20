@@ -26,6 +26,11 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
+      # TODO : remove when https://github.com/r-lib/pak/issues/347 is fixed
+      - name: install webshot2
+        run: |
+          pak::pak("rstudio/webshot2")
+
       - name: Install optipng
         # required to optimize images
         run: brew install optipng
