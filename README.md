@@ -1,4 +1,4 @@
-# blogdown <a href="https://pkgs.rstudio.com/blogdown"><img src="https://bookdown.org/yihui/blogdown/images/logo.png" align="right" height="139" /></a>
+# blogdown
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/rstudio/blogdown/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/blogdown/actions)
