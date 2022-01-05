@@ -41,7 +41,7 @@ Description: Write blog posts and web pages in R Markdown. This package
     (<https://hexo.io>).
 License: GPL-3
 URL: https://github.com/rstudio/blogdown,
-    https://pkgs.rstudio.com/blogdown
+    https://pkgs.rstudio.com/blogdown/
 BugReports: https://github.com/rstudio/blogdown/issues
 Imports:
     bookdown (>= 0.22),
