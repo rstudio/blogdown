@@ -162,13 +162,14 @@ build_rmds = function(files, knitting = is_knitting()) {
   on.exit(move_files(lib1, lib2), add = TRUE)
 
   base = site_base_dir()
-  shared_yml = '_output.yml'
-  copied_yaml = character(); on.exit(unlink(copied_yaml), add = TRUE)
+  shared_yml = c('_output.yml', '_bookdown.yml')
+  copied_yml = character(); on.exit(unlink(copied_yml), add = TRUE)
 
   copy_output_yml = function(to) {
-    if (!file.exists(shared_yml)) return()
-    if (file.exists(copy <- file.path(to, '_output.yml'))) return()
-    if (file.copy(shared_yml, copy)) copied_yaml <<- c(copied_yaml, copy)
+    to = file.path(to, shared_yml)
+    i = file.copy(shared_yml, to)
+    # delete successfully copied .yml files later
+    copied_yml <<- c(copied_yml, to[i])
   }
 
   for (i in seq_along(files)) {

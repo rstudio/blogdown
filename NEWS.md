@@ -1,5 +1,7 @@
 # CHANGES IN blogdown VERSION 1.8
 
+- The **bookdown** config file `_bookdown.yml` under the site root directory is recognized now. For example, you can [customize the figure label in `_bookdown.yml`](https://bookdown.org/yihui/bookdown/internationalization.html) (thanks, @luofeicq, rbind/yihui#167).
+
 - The internal function `scan_yaml()` uses cache in the current R session now. Other functions (e.g., `find_yaml()`, `count_yaml()`, and the "New Post"" addin in RStudio) based on this function should be much faster when there are a lot of files to scan for more than once.
 
 # CHANGES IN blogdown VERSION 1.7
