@@ -497,7 +497,7 @@ remove_config = function() {
 new_content = function(path, kind = '', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
   path2 = with_ext(path, '.md')
-  target_md <- path2
+  target_md = path2
   # for a new content file to be created with a bundle archetype, its path
   # should not contain index.md but only the dir name, otherwise the archetype
   # will not be used
