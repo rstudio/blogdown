@@ -496,7 +496,7 @@ remove_config = function() {
 #'   (e.g. a post or a page).
 new_content = function(path, kind = '', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
-  path2 = with_ext(path, '.md')
+  path2 = path3 = with_ext(path, '.md')
   # for a new content file to be created with a bundle archetype, its path
   # should not contain index.md but only the dir name, otherwise the archetype
   # will not be used
@@ -516,7 +516,7 @@ new_content = function(path, kind = '', open = interactive()) {
     # should the above method fail to identify the newly created .md, search for
     # the new file with brute force
     files = setdiff(list_mds(), files)  # new file(s) created
-    file2 = files[basename(files) == basename(path2)]
+    file2 = files[basename(files) == basename(path3)]
   }
   if (length(file2) != 1) stop("Failed to create the file '", path, "'.")
   hugo_convert_one(file2)
