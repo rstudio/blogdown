@@ -1,8 +1,14 @@
 # CHANGES IN blogdown VERSION 1.8
 
+## NEW FEATURES
+
 - The **bookdown** config file `_bookdown.yml` under the site root directory is recognized now. For example, you can [customize the figure label in `_bookdown.yml`](https://bookdown.org/yihui/bookdown/internationalization.html) (thanks, @luofeicq, rbind/yihui#167).
 
 - The internal function `scan_yaml()` uses cache in the current R session now. Other functions (e.g., `find_yaml()`, `count_yaml()`, and the "New Post"" addin in RStudio) based on this function should be much faster when there are a lot of files to scan for more than once.
+
+## BUG FIXES
+
+- For Hugo versions from 0.89.0 to 0.89.2, `new_content()` failed to identify new content files if they were created with archetypes (thanks, @maelle, #685).
 
 # CHANGES IN blogdown VERSION 1.7
 
