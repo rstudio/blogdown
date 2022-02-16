@@ -800,13 +800,23 @@ yaml_load = function(x) yaml::yaml.load(
     seq = function(x) {
       # continue coerce into vector because many places of code already assume this
       if (length(x) > 0) {
-        x = unlist(x, recursive = FALSE)
+        x = flatten_seq(x)
         if (!is.null(x)) attr(x, 'yml_type') = 'seq'
       }
       x
     }
   )
 )
+
+# flatten the list only if all elements are of length 1 and unnamed (e.g., post
+# categories and tags); should not flatten in other cases, e.g.,
+# https://github.com/rstudio/blogdown/issues/684
+flatten_seq = function(x) {
+  vec = is.list(x) && all(vapply(x, function(v) {
+    length(v) == 1 && is.null(names(v))
+  }, logical(1)))
+  if (vec) unlist(x, recursive = FALSE) else x
+}
 
 yaml_load_file = function(...) yaml::yaml.load_file(...)
 

@@ -10,6 +10,8 @@
 
 - For Hugo versions from 0.89.0 to 0.89.2, `new_content()` failed to identify new content files if they were created with archetypes (thanks, @maelle, #685).
 
+- When creating new posts, YAML metadata inherited from Hugo archetypes could be mangled (thanks, @llrs, #684).
+
 # CHANGES IN blogdown VERSION 1.7
 
 ## MINOR CHANGES
