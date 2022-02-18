@@ -42,9 +42,21 @@ html_page = function(
     'blogdown::html_page() does not support highlight = "textmate"'
   )
   if (is.character(pre_knit))
-    pre_knit <- eval(parse(text = pre_knit))
-  if (is.character(post_processor))
-    post_processor <- eval(parse(text = post_processor))
+    pre_knit = eval(parse(text = pre_knit))
+  if (is.character(post <- post_processor))
+    post = eval(parse(text = post_processor))
+  post_processor = function(metadata, input, output, ...) {
+    if (is.function(post)) output = post(metadata, input, output, ...)
+    # the output .html file contains no YAML metadata; need to prepend from .md
+    if (grepl('[.]html~', output) && file_exists(f <- with_ext(output, '.knit.md~'))) {
+      prepend_yaml(f, output, callback = function(s) {
+        if (!getOption('blogdown.draft.output', FALSE)) return(s)
+        if (length(s) < 2 || length(grep('^draft: ', s)) > 0) return(s)
+        append(s, 'draft: true', 1)
+      })
+    }
+    output
+  }
   rmarkdown::output_format(
     knitr = NULL,
     pandoc = NULL,

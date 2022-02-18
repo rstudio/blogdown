@@ -1,5 +1,8 @@
 # CHANGES IN blogdown VERSION 1.9
 
+## BUG FIXES
+
+- `knitr::current_input()` doesn't work in inline R expressions in YAML metadata of Rmd posts (thanks, @brshallo, #647).
 
 # CHANGES IN blogdown VERSION 1.8
 

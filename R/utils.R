@@ -820,19 +820,6 @@ flatten_seq = function(x) {
 
 yaml_load_file = function(...) yaml::yaml.load_file(...)
 
-# if YAML contains inline code, evaluate it and return the YAML
-fetch_yaml2 = function(f) {
-  yaml = fetch_yaml(f)
-  n = length(yaml)
-  if (n < 2) return()
-  if (n == 2 || !any(stringr::str_detect(yaml, knitr::all_patterns$md$inline.code)))
-    return(yaml)
-  res = local({
-    knitr::knit(text = yaml[-c(1, n)], quiet = TRUE)
-  })
-  c('---', res, '---')
-}
-
 # a wrapper of yaml::as.yaml() to indent sublists by default and trim white spaces
 as.yaml = function(..., .trim_ws = TRUE) {
   res = yaml::as.yaml(..., indent.mapping.sequence = TRUE)
@@ -884,7 +871,7 @@ modify_yaml = function(
 
 # prepend YAML of one file to another file
 prepend_yaml = function(from, to, body = read_utf8(to), callback = identity) {
-  x = c(callback(fetch_yaml2(from)), '', body)
+  x = c(callback(fetch_yaml(from)), '', body)
   write_utf8(x, to)
 }
 
