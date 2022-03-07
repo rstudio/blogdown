@@ -1,15 +1,21 @@
 on:
   push:
     branches: [main, master]
-    tags: ['*']
   pull_request:
     branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
+
 name: pkgdown
 
 jobs:
   pkgdown:
     if: ${{ github.event_name == 'push' || startsWith(github.head_ref, 'pkgdown/') }}
     runs-on: ubuntu-latest
+    # Only restrict concurrency for non-PR jobs
+    concurrency:
+      group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
