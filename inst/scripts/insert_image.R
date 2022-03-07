@@ -11,7 +11,10 @@ ctx_ext = tolower(xfun::file_ext(ctx$path))
 path = xfun::normalize_path(ctx$path)
 path = xfun::relative_path(path)
 
-imgdir = if (bundle <- blogdown:::bundle_index(path)) {
+# is this addin running inside a site or not?
+is_site = !identical(blogdown:::site_root(), I('.'))
+
+imgdir = if ((bundle <- blogdown:::bundle_index(path)) || !is_site) {
   file.path(dirname(path), 'images')
 } else {
   file.path(
@@ -57,7 +60,7 @@ shiny::runGadget(
     shiny::observeEvent(input$done, {
       if (is.null(input$newimg)) return(warning2('You have to choose an image!'))
       target = input$target
-      if (bundle) {
+      if (is_site) if (bundle) {
         if (!startsWith(target, dirname(path))) return(warning2(
           "The target file path must be under the directory '", dirname(path), "'."
         ))
@@ -87,7 +90,9 @@ shiny::runGadget(
         })
       }
       image_code = function() {
-        s = if (bundle) substring(target, nchar(dirname(path)) + 2) else paste0(
+        s = if (!is_site) {
+          xfun::relative_path(target, dirname(path), error = FALSE)
+        } else if (bundle) substring(target, nchar(dirname(path)) + 2) else paste0(
           ifelse(getOption('blogdown.insertimage.usebaseurl', FALSE),
             blogdown:::load_config()$baseurl, '/'),
           gsub('^static/', '', target)

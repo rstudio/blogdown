@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 1.9
 
+## NEW FEATURES
+
+- The RStudio addin "Insert Image" also works when the current document in RStudio does not belong to any site projects. Previously, it would throw an error if it is not used inside a site project. Now it works in any document in RStudio (thanks, @yufree, rstudio/rmarkdown#2280).
+
 ## BUG FIXES
 
 - `knitr::current_input()` doesn't work in inline R expressions in YAML metadata of Rmd posts (thanks, @brshallo, #647).
