@@ -1,5 +1,7 @@
 destination: reference
 
+# website will be referenced on https://pkgs.rstudio.com/
+# Open a PR in https://github.com/rstudio/pkgs.rstudio.com
 url: https://pkgs.rstudio.com/blogdown/
 
 template:
@@ -123,7 +125,3 @@ reference:
   desc: ~
   contents:
   - blogdown-package
-
-authors:
-  "Yihui Xie":
-    href: https://yihui.org
