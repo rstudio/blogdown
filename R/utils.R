@@ -283,7 +283,7 @@ config_files = function(which = generator()) {
 }
 
 find_config = function(files = config_files(), error = TRUE) {
-  f = head(existing_files(files), 1)  # TODO: use existing_files(error = ...)
+  f = head(existing_files(files), 1)
   if (length(f) == 0 && error) stop(
     'Cannot find the configuration file ', paste(files, collapse = ' | '), ' of the website'
   )
