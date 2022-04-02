@@ -38,6 +38,7 @@ new_site(
   to_yaml = TRUE,
   netlify = TRUE,
   .Rprofile = TRUE,
+  repo = "",
   serve = if (interactive()) "ask" else FALSE
 )
 
@@ -127,6 +128,12 @@ directory if it exists in the theme. Not all themes provide example sites.}
 sample \file{.Rprofile} will be created. It contains some global options,
 such as \code{options(blogdown.hugo.version)}, which makes sure you will
 use a specific version of Hugo for this site in the future.}
+
+\item{repo}{The Git repository URL of the site (e.g., a fresh repo created on
+Github). If provided, this function will attempt to initialize a Git repo
+via \command{git init} in the site directory, add the URL via \command{git
+remote add origin}, and run \command{git pull}, so that you can commit
+files and push to the repo later.}
 
 \item{serve}{Whether to start a local server to serve the site. By default,
 this function will ask you in an interactive R session if you want to serve

@@ -144,6 +144,11 @@ change_config = function(name, value) {
 #'   sample \file{.Rprofile} will be created. It contains some global options,
 #'   such as \code{options(blogdown.hugo.version)}, which makes sure you will
 #'   use a specific version of Hugo for this site in the future.
+#' @param repo The Git repository URL of the site (e.g., a fresh repo created on
+#'   Github). If provided, this function will attempt to initialize a Git repo
+#'   via \command{git init} in the site directory, add the URL via \command{git
+#'   remote add origin}, and run \command{git pull}, so that you can commit
+#'   files and push to the repo later.
 #' @param serve Whether to start a local server to serve the site. By default,
 #'   this function will ask you in an interactive R session if you want to serve
 #'   the site.
@@ -158,7 +163,7 @@ new_site = function(
   dir = '.', force = NA, install_hugo = TRUE, format = 'yaml', sample = TRUE,
   theme = 'yihui/hugo-lithium', hostname = 'github.com', theme_example = TRUE,
   empty_dirs = FALSE, to_yaml = TRUE, netlify = TRUE, .Rprofile = TRUE,
-  serve = if (interactive()) 'ask' else FALSE
+  repo = '', serve = if (interactive()) 'ask' else FALSE
 ) {
   msg_init('Creating your new site')
   if (is.na(force)) {
@@ -273,6 +278,16 @@ new_site = function(
   if (serve) serve_site()
   if (length(list.files('.', '[.]Rproj$')) == 0) {
     xfun::try_silent(rstudioapi::initializeProject())
+  }
+  if (repo != '') {
+    msg_init('Initializing the Git repository')
+    system2('git', c('init', '-b', 'main'))
+    if (system2_quiet('git', c('remote', 'add', 'origin', repo)) == 0) {
+      msg_okay('Git repo successfully created and configured')
+      system2_quiet('git', c('pull', 'origin', 'main'))
+    } else {
+      msg_todo('Failed to create the Git repo', if (Sys.which('git') == '') ' (Git not found)')
+    }
   }
   invisible(getwd())
 }

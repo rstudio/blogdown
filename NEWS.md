@@ -1,5 +1,6 @@
 # CHANGES IN blogdown VERSION 1.10
 
+- Added a `repo` argument to `new_site()` so that users can provide a Git repo URL, and `new_site()` will pull the repo into the new site. It saves a bit effort of running `git init` and `git remote add origin` manually. This argument is also supported in the RStudio new project wizard for creating **blogdown** sites.
 
 # CHANGES IN blogdown VERSION 1.9
 

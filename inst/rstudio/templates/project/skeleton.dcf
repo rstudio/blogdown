@@ -6,7 +6,7 @@ Icon: hugo-logo.png
 
 Parameter: theme
 Widget: TextInput
-Label: Hugo theme
+Label: Theme
 Default: yihui/hugo-lithium
 
 Parameter: format
@@ -28,6 +28,11 @@ Parameter: theme_example
 Widget: CheckboxInput
 Label: Add the example site from the theme
 Default: On
+
+Parameter: repo
+Widget: TextInput
+Label: Git repo
+Position: right
 
 Parameter: empty_dirs
 Widget: CheckboxInput
