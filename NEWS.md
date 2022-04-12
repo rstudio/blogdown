@@ -2,6 +2,8 @@
 
 - Added a `repo` argument to `new_site()` so that users can provide a Git repo URL, and `new_site()` will pull the repo into the new site. It saves a bit effort of running `git init` and `git remote add origin` manually. This argument is also supported in the RStudio new project wizard for creating **blogdown** sites.
 
+- For Jekyll sites, a new global option can be used to determine whether to run `jekyll` directly or use the `bundler` gem to run `jekyll` (i.e., `bundle exec jekyll`). If you prefer the latter way, you may set `options(blogdown.jekyll.bundler = TRUE)` before running `blogdown::serve_site()` (thanks, @pat-s, #695).
+
 # CHANGES IN blogdown VERSION 1.9
 
 ## NEW FEATURES
