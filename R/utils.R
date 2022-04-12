@@ -276,7 +276,6 @@ config_files = function(which = generator()) {
   all = list(
     hugo = c('config.toml', 'config.yaml'),  # only support TOML and YAML (no JSON)
     jekyll = '_config.yml',
-    bundler_jekyll = '_config.yml',
     hexo = '_config.yml'
   )
   all$hugo = c(all$hugo, file.path('config', '_default', all$hugo))

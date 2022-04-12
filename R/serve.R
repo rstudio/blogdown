@@ -46,10 +46,6 @@ serve_site = function(..., .site_dir = NULL) {
       baseurl = get_config2('baseurl', ''),
       pdir = get_config2('destination', '_site')
     ),
-    bundler_jekyll = serve_it(
-      baseurl = get_config2('baseurl', ''),
-      pdir = get_config2('destination', '_site')
-    ),
     hexo = serve_it(
       baseurl = get_config2('root', ''),
       pdir = get_config2('public_dir', 'public')
@@ -120,25 +116,13 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     })
 
     # launch the hugo/jekyll/hexo server
-    cmd = if (g == 'hugo') find_hugo() else if (g == "bundler_jekyll") "bundler exec jekyll" else g
+    cmd = if (g == 'hugo') find_hugo() else g
     host = server$host; port = server$port; intv = server$interval
     if (!servr:::port_available(port, host)) stop(
       'The port ', port, ' at ', host, ' is unavailable', call. = FALSE
     )
-    if (g == "bundler_jekyll") {
-      args_fun = match.fun('jekyll_server_args')
-    }
-    else {
-      args_fun = match.fun(paste0(g, '_server_args'))
-    }
-    if (g == "bundler_jekyll") {
-      cmd_args = c("exec", "jekyll", args_fun(host, port))
-    } else {
-      cmd_args = args_fun(host, port)
-    }
-    if (g == "bundler_jekyll") {
-      cmd = "bundle"
-    }
+    args_fun = match.fun(paste0(g, '_server_args'))
+    cmd_args = args_fun(host, port)
     if (g == 'hugo') {
       # RStudio Server uses a proxy like http://localhost:8787/p/56a946ed/ for
       # http://localhost:4321, so we must use relativeURLs = TRUE:
@@ -196,9 +180,6 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     # server is correctly started so we record the directory served
     opts$append(served_dirs = root)
     Sys.setenv(BLOGDOWN_SERVING_DIR = root)
-    if (g == "bundler_jekyll") {
-      g = "jekyll"
-    }
     message(
       'Launched the ', g, ' server in the background (process ID: ', pid, '). ',
       'To stop it, call blogdown::stop_server() or restart the R session.'
