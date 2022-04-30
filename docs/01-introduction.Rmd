@@ -167,7 +167,7 @@ ggplot(Orange, aes(x = age,
                    color = Tree)) +
   geom_point() +
   geom_line() +
-  guides(color = FALSE) +
+  guides(color = "none") +
   theme_bw()
 ```
 ````
@@ -548,12 +548,15 @@ blogdown::new_site(theme = 'lxndrblz/anatole')
 
 To save you some time, we list a few themes below that match our taste:
 
-- Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) [Tanka,](https://themes.gohugo.io/hugo-tanka/)
-[Cupper,](https://themes.gohugo.io/cupper-hugo-theme/)
-[simple-a,](https://themes.gohugo.io/simple-a/) and [ghostwriter.](https://themes.gohugo.io/ghostwriter/)
+- Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) 
+[Tanka,](https://themes.gohugo.io/hugo-tanka/) 
+[Cupper,](https://themes.gohugo.io/cupper-hugo-theme/) and 
+[ghostwriter.](https://themes.gohugo.io/ghostwriter/)
 
-- Sophisticated themes: [Even,](https://themes.gohugo.io/hugo-theme-even/) [Tranquilpeak,](https://themes.gohugo.io/hugo-tranquilpeak-theme/)
-[Creative portfolio,](https://themes.gohugo.io/hugo-creative-portfolio-theme/) and [Universal.](https://themes.gohugo.io/hugo-universal-theme/)
+- Sophisticated themes: [Even,](https://themes.gohugo.io/hugo-theme-even/) 
+[Tranquilpeak,](https://themes.gohugo.io/hugo-tranquilpeak-theme/) 
+[Creative portfolio,](https://themes.gohugo.io/hugo-creative-portfolio-theme/) and 
+[Universal.](https://themes.gohugo.io/hugo-universal-theme/)
 
 - Multimedia content themes: If you are interested in adding multimedia content to your site (such as audio files of a podcast), the [castanet](https://github.com/mattstratton/castanet) theme provides an excellent framework tailored for this application.  An example of a site using **blogdown** with the castanet theme is the [R-Podcast.](https://www.r-podcast.org)
 
