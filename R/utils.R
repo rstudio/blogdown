@@ -180,9 +180,14 @@ filter_md5sum = function(files, db = 'blogdown/md5sum.txt') {
   files
 }
 
-# guess if the OS is 64bit
-is_64bit = function() {
-  length(grep('64', unlist(Sys.info()[c('machine', 'release')]))) > 0
+# detect architecture of the system
+detect_arch = function() {
+  info = Sys.info()
+  m = info['machine']
+  if (grepl('^(aarch|arm)', m)) {
+    if (grepl('^(aarch|arm)64', m)) 'arm64' else 'arm'
+  } else if (length(grep('64', unlist(info[c('machine', 'release')]))) > 0)
+    '64bit' else '32bit'
 }
 
 # build .Rmarkdown to .markdown, and .Rmd to .html unless the global option
@@ -205,7 +210,9 @@ load_config = function() in_root({
   f = find_config(); m = file.info(f)[, 'mtime']
   # read config only if it has been updated
   if (identical(attr(config, 'config_time'), m)) return(config)
-  parser = switch(f, 'config.toml' = read_toml, 'config.yaml' = yaml_load_file)
+  parser = switch(
+    basename(f), 'config.toml' = read_toml, 'config.yaml' = yaml_load_file
+  )
   config = parser(f)
   attr(config, 'config_time') = m
   opts$set(config = config)
@@ -271,11 +278,12 @@ config_files = function(which = generator()) {
     jekyll = '_config.yml',
     hexo = '_config.yml'
   )
+  all$hugo = c(all$hugo, file.path('config', '_default', all$hugo))
   if (is.null(which)) all else all[[which]]
 }
 
 find_config = function(files = config_files(), error = TRUE) {
-  f = existing_files(files, first = TRUE)
+  f = head(existing_files(files), 1)
   if (length(f) == 0 && error) stop(
     'Cannot find the configuration file ', paste(files, collapse = ' | '), ' of the website'
   )
@@ -405,7 +413,9 @@ read_toml = function(file, x = read_utf8(file), strict = TRUE) {
 #' @export
 #' @rdname read_toml
 write_toml = function(x, output = NULL) {
-  if (!hugo_available()) stop('Hugo is required but not found.')
+  if (!hugo_available('0.37')) stop(
+    'Hugo >= 0.37 is required but not found. Run blogdown::install_hugo()?'
+  )
   f = tempfile('yaml', fileext = '.md'); on.exit(unlink(f), add = TRUE)
   write_utf8(c('---', as.yaml(x), '---'), f)
   hugo_convert_one(f, 'TOML')
@@ -511,6 +521,23 @@ config_netlify = function(output = 'netlify.toml', new_config = list()) {
   }
 }
 
+#' Create the configuration file for Vercel
+#'
+#' Create \file{vercel.json} that contains the Hugo version currently used.
+#' @param output Path to the output file, or \code{NULL} to print the config.
+#' @references Vercel: \url{https://vercel.com}
+#' @export
+config_vercel = function(output = 'vercel.json') {
+  d = list(build = list(env = list(HUGO_VERSION = as.character(hugo_version()))))
+  d = jsonlite::toJSON(d, pretty = TRUE, auto_unbox = TRUE)
+  if (is.null(output)) return(d)
+  if (file.exists(output)) {
+    warning("The output file '", output, "' exists and will not be overwritten.")
+    return(d)
+  }
+  write_utf8(d, output)
+}
+
 #' Create or modify the \file{.Rprofile} file for a website project
 #'
 #' If the file \file{.Rprofile} does not exist in the current directory, copy
@@ -572,7 +599,7 @@ dash_filename = function(
   string, pattern = '[^[:alnum:]]+',
   pre = get_option('blogdown.filename.pre_processor', identity)
 ) {
-  tolower(gsub('^-+|-+$', '', gsub(pattern, '-', pre(string))))
+  tolower(gsub('^-+|-+$', '', gsub(pattern, '-', pre(string), perl = TRUE)))
 }
 
 # return a filename for a post based on title, date, etc
@@ -649,7 +676,7 @@ scan_yaml = function(warn = TRUE) {
   files = tryCatch(list_rmds(pattern = md_pattern), error = function(e) NULL)
   if (length(files) == 0) return(list())
   res = lapply(files, function(f) {
-    yaml = fetch_yaml(f)
+    yaml = mtime_cache(f, fetch_yaml(f), 'scan_yaml')
     if (length(yaml) == 0) return()
     yaml = yaml[-c(1, length(yaml))]
     if (length(yaml) == 0) return()
@@ -664,6 +691,20 @@ scan_yaml = function(warn = TRUE) {
   })
   setNames(res, files)
 }
+
+# cache a value computed from a file (if mtime has not changed, use the cache)
+mtime_cache = local({
+  global = list()
+  cached = function(file, db) {
+    (file %in% names(db)) && identical(db[[file]][['mtime']], file.mtime(file))
+  }
+  function(file, value, key) {
+    db = global[[key]]
+    if (cached(file, db)) return(db[[file]][['value']])
+    global[[key]][[file]] <<- list(mtime = file.mtime(file), value = value)
+    value
+  }
+})
 
 # collect specific fields of all YAML metadata
 collect_yaml = function(
@@ -759,7 +800,7 @@ yaml_load = function(x) yaml::yaml.load(
     seq = function(x) {
       # continue coerce into vector because many places of code already assume this
       if (length(x) > 0) {
-        x = unlist(x, recursive = FALSE)
+        x = flatten_seq(x)
         if (!is.null(x)) attr(x, 'yml_type') = 'seq'
       }
       x
@@ -767,20 +808,17 @@ yaml_load = function(x) yaml::yaml.load(
   )
 )
 
-yaml_load_file = function(...) yaml::yaml.load_file(...)
-
-# if YAML contains inline code, evaluate it and return the YAML
-fetch_yaml2 = function(f) {
-  yaml = fetch_yaml(f)
-  n = length(yaml)
-  if (n < 2) return()
-  if (n == 2 || !any(stringr::str_detect(yaml, knitr::all_patterns$md$inline.code)))
-    return(yaml)
-  res = local({
-    knitr::knit(text = yaml[-c(1, n)], quiet = TRUE)
-  })
-  c('---', res, '---')
+# flatten the list only if all elements are of length 1 and unnamed (e.g., post
+# categories and tags); should not flatten in other cases, e.g.,
+# https://github.com/rstudio/blogdown/issues/684
+flatten_seq = function(x) {
+  vec = is.list(x) && all(vapply(x, function(v) {
+    length(v) == 1 && is.null(names(v))
+  }, logical(1)))
+  if (vec) unlist(x, recursive = FALSE) else x
 }
+
+yaml_load_file = function(...) yaml::yaml.load_file(...)
 
 # a wrapper of yaml::as.yaml() to indent sublists by default and trim white spaces
 as.yaml = function(..., .trim_ws = TRUE) {
@@ -833,7 +871,7 @@ modify_yaml = function(
 
 # prepend YAML of one file to another file
 prepend_yaml = function(from, to, body = read_utf8(to), callback = identity) {
-  x = c(callback(fetch_yaml2(from)), '', body)
+  x = c(callback(fetch_yaml(from)), '', body)
   write_utf8(x, to)
 }
 
@@ -915,8 +953,10 @@ tweak_hugo_env = function(baseURL = NULL, relativeURLs = NULL, server = FALSE) {
 
   vars = c(HUGO_BASEURL = if (c2) '/' else b, HUGO_RELATIVEURLS = tolower(c2))
   if (server) {
-    vars = c(vars, BLOGDOWN_POST_RELREF = 'true')
+    vars = c(vars, HUGO_BLOGDOWN_POST_RELREF = 'true')
     c3 = get_config('ignoreErrors', NA, config)
+    # should also ignore error-missing-instagram-accesstoken, but I don't know
+    # how to configure ignoreErrors to be an array through the env var
     if (is.na(c3)) vars = c(vars, HUGO_IGNOREERRORS = 'error-remote-getjson')
   }
   v = set_envvar(vars)
@@ -971,6 +1011,15 @@ clean_hugo_cache = function() {
     unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
 }
 
+# add the time of now to a date
+format_datetime = function(date, time = TRUE) {
+  if (inherits(date, c('Date', 'POSIXct', 'POSIXlt'))) date = format(date, '%Y-%m-%d')
+  if (is.logical(time)) {
+    time = if (isTRUE(time)) format(Sys.time(), 'T%T%z') else ''
+  }
+  paste0(date, time)
+}
+
 unicode_capable = local({
   ok = NULL; x = '\u25ba'  # a test Unicode character
   function() {
@@ -1012,7 +1061,9 @@ na2null = function(x, default = NULL) {
   )
   # default them to I(NA) instead of NULL for reasons explained in .onLoad()
   x = setNames(rep(list(na_null), length(i)), i)
-  x = c(x, list(author = get_author(), subdir = 'post', title_case = FALSE, ext = '.md'))
+  x = c(x, list(
+    author = get_author(), subdir = 'post', title_case = FALSE, ext = '.md', time = FALSE
+  ))
   names(x) = paste0('blogdown.', names(x))
   x = x[sort(names(x))]
   x

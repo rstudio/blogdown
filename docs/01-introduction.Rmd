@@ -2,83 +2,287 @@
 
 # Get Started
 
-In this chapter, we show how to create a simple website from scratch. The website will contain a home page, an "About" page, one R Markdown post, and a plain Markdown post. You will learn the basic concepts for creating websites with **blogdown**. For beginners, we recommend that you get started with the RStudio IDE, but it is not really required. The RStudio IDE can make a few things easier, but you are free to use any editor if you do not care about the extra benefits in RStudio.
+In this chapter, we show how to create a simple website from scratch using **blogdown**. The website will contain a home page, an "About" page, one R Markdown post, and two plain Markdown posts. You will learn the basic concepts for creating websites with **blogdown**. 
+
+We recommend using the RStudio IDE with **blogdown** because there are a number of features built-in to the R package that RStudio users can take advantage of, but it is not required. Using the RStudio IDE will make some steps in this workflow easier, but you are free to use any editor.
 
 ## Installation
 
-We assume you have already installed R (https://www.r-project.org) [@R-base] and the RStudio IDE (https://www.rstudio.com). If you do not have RStudio IDE installed, please install Pandoc\index{Pandoc} (http://pandoc.org). Next we need to install the **blogdown** package in R. It is available on CRAN and GitHub, and you can install it with:
+We assume you have already installed:
+
++ R (https://www.r-project.org) [@R-base] and 
++ the RStudio IDE (https://rstudio.com/products/rstudio/download/). 
+
+If you are not using the RStudio IDE, please install Pandoc\index{Pandoc} (http://pandoc.org). Instructions are available on the reference site (https://pandoc.org/installing.html).
+
+The **blogdown** package is available on CRAN and you can install it with:
 
 ```{r eval=FALSE}
-## Install from CRAN
 install.packages('blogdown') 
-## Or, install from GitHub
-if (!requireNamespace("remotes")) install.packages('remotes')
+```
+
+### Installation troubleshooting
+
+Do you have an old version of **blogdown**? Compare your version against ours and upgrade if necessary.
+
+```{r eval=FALSE}
+packageVersion("blogdown")
+```
+
+```{r echo=FALSE}
+packageVersion("blogdown")[, 1:2]
+```
+
+To update **blogdown**, run `install.packages('blogdown')`.
+
+Do you have old versions of **blogdown**'s dependencies (such as **rmarkdown**)? If you are experiencing problems, you may first try to update all R packages:
+
+```{r eval = FALSE}
+update.packages(ask = FALSE, checkBuilt = TRUE)
+```
+
+If you are still experiencing issues with **blogdown**, you may try installing the development version from GitHub:
+
+```{r eval=FALSE}
+if (!requireNamespace('remotes')) install.packages('remotes')
 remotes::install_github('rstudio/blogdown')
 ```
 
-Since **blogdown** is based on the static site generator Hugo (https://gohugo.io), you also need to install Hugo\index{Hugo}. There is a helper function in **blogdown** to download and install it automatically on major operating systems (Windows, macOS, and Linux):
-
-```{r eval=FALSE}
-blogdown::install_hugo()
-```
-
-By default, it installs the latest version of Hugo, but you can choose a specific version through the `version` argument if you prefer.
-
-
-### Update
-
-To upgrade or reinstall Hugo, you may call `blogdown::install_hugo()` again. You can check the installed Hugo version via `blogdown::hugo_version()`, and find the available or latest version(s) of Hugo at <https://github.com/gohugoio/hugo/releases>.
-
-<!--
-To update **blogdown**, use `update.packages()` or `install.packages('blogdown')`.
--->
+If you use RStudio, it will remind you of restarting R before installing or updating any packages currently in use. If you do not use RStudio, you may need to restart R by yourself.
 
 ## A quick example
 
-From our experience, Hugo's documentation may be a little daunting to read and digest for beginners.^[One day I was almost ready to kill myself when I was trying to figure out how `_index.md` works by reading the documentation over and over again, and desperately searching on the Hugo forum.] For example, its "Quickstart" guide used to have 12 steps, and you can easily get lost if you have not used a static website generator before. For **blogdown**, we hope users of all levels can at least get started as quickly as possible. There are many things you may want to tweak for the website later, but the first step is actually fairly simple: create a new project under a new directory in the RStudio IDE (`File -> New Project`), and call the function in the R console of the new project\index{blogdown::new\_site()}:
+In this section, we aim to take you from no website to a basic **blogdown** website, with minimal time and friction. We will briefly run through the development of a working but simple website using the default theme used by the **blogdown** package. 
 
-```{r eval=FALSE}
+This section is designed to provide a beginner-friendly workflow. In later sections, we will present different workflows and dive deeper into details like advanced **blogdown** features, Hugo themes, the Hugo static site generator, version control, and deployment options. 
+
+### Prerequisites
+
+To keep this example *actually* quick, we will assume that you are using the RStudio IDE and will rely on some of the built-in features that help **blogdown** users.^[The instructions here rely on a recent RStudio IDE version, v1.4.1106. You may download all RStudio official releases from <https://www.rstudio.com/products/rstudio/download/>.]
+
+We also assume that you have followed the installation instructions in Section \@ref(installation).
+
+### Create project 
+
+The best home for your new **blogdown** website project is inside an RStudio project. A quick way to create one is to use the RStudio New Project Wizard (`File -> New Project -> New Directory`) (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
+
+```{r new-project, echo=FALSE, fig.cap='Create a new website project in RStudio.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/new-project.png')
+```
+
+```{r blogdown-project, echo=FALSE, fig.cap='Create a website project based on blogdown.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/blogdown-project.png')
+```
+
+Click "Create Project". The project wizard then runs a function that creates a new site for you by doing the following steps:
+
+1. Creates and opens a new [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) for the website;
+1. Downloads and installs the default theme (called [`hugo-lithium`](https://github.com/yihui/hugo-lithium)) with an example site;
+1. Adds a sample `.Rmd` post;
+1. Creates a `netlify.toml` file to help you deploy your site to [Netlify,](https://www.netlify.com) and
+1. Creates an `.Rprofile` file to set your **blogdown** options (some have been set up for you).
+
+If you are not using RStudio, you can create a new empty directory, and call the `new_site()` function in the directory in the R console to create a new site project:
+
+```{r, eval=FALSE, echo=TRUE}
 blogdown::new_site()
 ```
 
-Then wait for this function to create a new site, download the default theme, add some sample posts, open them, build the site, and launch it in the RStudio Viewer, so you can immediately preview it. If you do not use the RStudio IDE, you need to make sure you are currently in an empty directory,^[Check the output of `list.files('.')` in R, and make sure it does not include files other than `LICENSE`, the RStudio project file (`*.Rproj`), `README` or `README.md`.] in which case `new_site()` will do the same thing, but the website will be launched in your web browser instead of the RStudio Viewer.
+You should now see a bunch of directories and files under the site project. The project will include the following files:
 
-Now you should see a bunch of directories and files under the RStudio project or your current working directory. Before we explain these new directories and files, let's introduce an important and helpful technology first: _LiveReload._\index{LiveReload} This means your website^[Until you set up your website to be deployed, LiveReload only updates the *local* version of your website. This version is only visible to you. In order to make your website searchable, discoverable, and live on the internet you will need to upload your website's files to a site builder. See Chapter \@ref(deployment) for details.] will be automatically rebuilt and reloaded in your web browser^[You can also think of the RStudio Viewer as a web browser.] when you modify any source file of your website and save it. Basically, once you launch the website in a web browser, you do not need to rebuild it explicitly anymore. All you need to do is edit the source files, such as R Markdown documents, and save them. There is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()`\index{blogdown::serve\_site()}, which is based on the R package **servr** [@R-servr] by default.^[Hugo has its own LiveReload implementation. If you want to take advantage of it, you may set the global option `options(blogdown.generator.server = TRUE)`. See Section \@ref(livereload) for more information.]
+- `config.yaml`: Hugo and theme configuration file.
+- `.Rprofile`: File to set up your **blogdown** options.
+- `netlify.toml`: File to set up your Netlify options.
+- `content/`: Website source files to edit and add, such as blog posts.
+- `themes/`: Hugo theme assets like HTML layout files and CSS, etc. Do not edit!
 
-The `new_site()` function has several arguments, and you may check out its R help page (`?blogdown::new_site`) for details. A minimal default theme named "hugo-lithium" is provided as the default theme of the new site,^[You can find its source on GitHub: https://github.com/yihui/hugo-lithium. This theme was forked from https://github.com/jrutheiser/hugo-lithium-theme and modified to work better with **blogdown**.] and you can see what it looks like in Figure \@ref(fig:lithium).
+After all this, your new site is ready! 
+
+### Serve site
+
+Before we explain these new directories and files, let's use our first **blogdown** function. It's an important one, and it is often the first one you use when you open up a **blogdown** project to start a local preview of your website.
+
+You can use run `blogdown::serve_site()` from the console or equivalently, click on the RStudio addin "Serve Site" (see Figure \@ref(fig:addin-serve)).
+
+```{r addin-serve, echo=FALSE, fig.cap='Use the blogdown addin to serve the site.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/addin-serve.png')
+```
+
+Then you should see something that looks like Figure \@ref(fig:serve-site).
+
+```{r serve-site, echo=FALSE, fig.cap='Serving the site in RStudio.', out.width='80%', fig.align='center'}
+knitr::include_graphics('images/serve-site.png')
+```
+
+Serving the site did the following:
+
+1. Started a local Hugo server to help you preview your website, and 
+1. Knitted a sample `.Rmd` post to an `.html` page. You can see this from the progress message that printed to your console: `Rendering content/post/2020-12-01-r-rmarkdown/index.Rmd... Done.`
+
+If you want to preview your site locally in your web browser, you may click on the "Show in new window" icon at the top of your RStudio viewer pane (to the right of the broom icon). You can see what the site looks like in Figure \@ref(fig:lithium).
 
 ```{r lithium, fig.cap='The homepage of the default new site.', echo=FALSE, fig.align='center', out.width='90%'}
 knitr::include_graphics('images/lithium-theme.png')
 ```
 
-You have to know three most basic concepts for a Hugo-based website:
+Let's introduce an important and helpful technology that you just used: _LiveReload._\index{LiveReload} Serving your site uses LiveReload, which means your website^[Until you set up your website to be deployed, LiveReload only updates the *local* version of your website. This version is only visible to you. In order to make your website searchable, discoverable, and live on the Internet, you will need to upload your website's files to a site builder. See Chapter \@ref(deployment) for details.] will be automatically rebuilt and reloaded in your web browser^[You can also think of the RStudio Viewer as a web browser.] when you modify any source file of your website and save it. Basically, once you launch the website in a web browser, you do not need to rebuild it explicitly anymore. All you need to do is edit the source files, such as R Markdown documents, and save them. There is no need to click any buttons or run any commands. LiveReload is implemented via `blogdown::serve_site()`\index{blogdown::serve\_site()} and Hugo, and you will only need to use it once per work session.
 
-1. The configuration file `config.toml`\index{config.toml}, in which you can specify some global settings for your site. Even if you do not know what TOML is at this point (it will be introduced in Chapter \@ref(hugo)), you may still be able to change some obvious settings. For example, you may see configurations like these in `config.toml`:
+### Edit content
 
-    ```js
-    baseurl = "/"
-    languageCode = "en-us"
-    title = "A Hugo website"
-    theme = "hugo-lithium"
+Now let's see LiveReload *in action*. In your files pane, navigate inside the `content/` folder. This folder is where all your site's content lives. Find and open the file `content/post/2020-12-01-r-rmarkdown/index.Rmd`. This is a sample R Markdown post that is added by **blogdown** by default when you set up a new site. 
 
-    [[menu.main]]
-        name = "About"
-        url = "/about/"
-    [[menu.main]]
-        name = "GitHub"
-        url = "https://github.com/rstudio/blogdown"
-    [[menu.main]]
-        name = "Twitter"
-        url = "https://twitter.com/rstudio"
-    ```
+When you open that file, you will notice a YAML block at the top with familiar metadata like `title` and `author`, then code chunks and narrative text below the YAML as with your typical R Markdown file.
 
-    You can change the website title, e.g., `title = "My own cool website"`, and update the GitHub and Twitter URLs.\index{Directories}
+Let's edit this `index.Rmd` post. This post is a Hugo [page bundle.](https://gohugo.io/content-management/page-bundles/) Each post gets its own bundle, or folder. Inside the post bundle is where your static post-specific files like images and `.csv` data files should go. 
 
-1. The content directory (by default, `content/`). This is where you write the R Markdown or Markdown source files for your posts and pages. Under `content/` of the default site, you can see `about.md` and a `post/` directory containing a few posts. The organization of the content directory is up to you. You can have arbitrary files and directories there, depending on the website structure you want.
+```text
+content/
+├── post
+│   ├── 2020-12-01-r-rmarkdown
+│   │   ├── index.html <- blogdown knitted this for you
+│   │   └── index.Rmd
+│   ├── 2015-01-01-lorem-ipsum
+│   └── 2016-12-30-hello-markdown
+```
 
-1. The publishing directory (by default, `public/`). Your website will be generated to this directory, meaning that you do not need to manually add any files to this directory.^[By running either `serve_site()` or `build_site()`, files will be generated and published in your publishing directory automatically.] Typically it contains a lot of `*.html` files and dependencies like `*.css`, `*.js`, and images. You can upload everything under `public/` to any web server that can serve static websites, and your website will be up and running. There are many options for publishing static websites, and we will talk more about them in Chapter \@ref(deployment) if you are not familiar with deploying websites.
+The default behavior of **blogdown** is to automatically knit posts that have not been knitted before when you serve your site, so this file has already been knitted---that is why you can see it in your local preview. 
 
-If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! We will show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technologies like the Hugo templating language, HTML, CSS, and JavaScript.
+Go ahead and add an R code chunk to this file, like:
+
+````
+```{r}`r ''`
+summary(Orange)
+```
+````
+
+If you save the file with this edit, **blogdown** will re-knit the file on save, and your website preview should update after a few seconds once LiveReload kicks in.
+
+Try it again! Add another R code chunk like:
+
+````
+```{r echo=FALSE}`r ''`
+library(ggplot2)
+ggplot(Orange, aes(x = age, 
+                   y = circumference, 
+                   color = Tree)) +
+  geom_point() +
+  geom_line() +
+  guides(color = FALSE) +
+  theme_bw()
+```
+````
+
+You should see a blog post that looks like Figure \@ref(fig:edit-content).
+
+```{r edit-content, fig.cap='Adding new R code to an .Rmd post.', echo=FALSE, fig.align='center', out.width='80%'}
+knitr::include_graphics('images/edit-content.png')
+```
+
+### When in doubt, run `blogdown::check_site()`
+
+There are many possible reasons why a website does not work as expected. For example, you may have misconfigured certain options in the website configuration file (such as `config.yaml`), or marked a post as draft but forgetten to unmark it before publishing the site. It is easy to make these mistakes, and often hard to diagnose them.
+
+Fortunately, the function `blogdown::check_site()` can run a series of checks in your website project to help you identify common problems. It also provides tips on how to fix these problems. It is meant to be used during your interactive work sessions. You will see what files were checked, which checks were successful, and **blogdown** will offer `[TODO]` items when a check needs your attention, like this:
+
+```text
+-----------------------------------------------------------
+○ A successful check looks like this.
+● [TODO] A check that needs your attention looks like this.
+| Let's check out your blogdown site!
+-----------------------------------------------------------
+― Checking config.yaml
+| Checking "baseURL" setting for Hugo...
+○ Found baseURL = "https://yihui.org/"; nothing to do here!
+....
+― Check complete: config.yaml
+
+― Checking .gitignore
+| Checking for items to remove...
+○ Nothing to see here - found no items to remove.
+| Checking for items to change...
+● [TODO] Change items in .gitignore: public -> /public,
+  blogdown -> /blogdown
+| Checking for items you can safely ignore...
+● [TODO] You can safely add to .gitignore: .DS_Store, Thumbs.db
+....
+― Check complete: .gitignore
+
+― Checking Hugo
+| Checking Hugo version...
+○ Found 8 versions of Hugo. You are using Hugo 0.82.1.
+| Checking .Rprofile for Hugo version used by blogdown...
+| Hugo version not set in .Rprofile.
+● [TODO] Set options(blogdown.hugo.version = "0.82.1") in .Rprofile
+  and restart R.
+― Check complete: Hugo
+
+― Checking netlify.toml...
+○ Found HUGO_VERSION = 0.25.1 in [build] context of netlify.toml.
+....
+― Check complete: netlify.toml
+
+― Checking content files
+| Checking for validity of YAML metadata in posts...
+○ All YAML metadata appears to be syntactically valid.
+| Checking for previewed content that will not be published...
+○ Found 0 files with future publish dates.
+● [TODO] Found 2 files marked as drafts. To un-draft, run:
+
+  blogdown::edit_draft(c(
+  "content/foo.md",
+  "content/bar.md"
+  ))
+
+  and change a file's YAML from 'draft: true' to 'draft: false'.
+....
+― Check complete: Content
+```
+
+### Configure site
+
+We have just shown you how you can start adding `.Rmd` content to your website. However, when you are first setting up your site, you will want to edit a few other files to personalize your site. The `config.yaml` file stores your website configurations for Hugo and for your Hugo theme. You will usually only edit this file during the initial site setup.
+
+For example, you may see configurations like these in `config.yaml`:
+
+```yaml
+baseurl: /
+title: A Hugo website
+theme: hugo-lithium
+ignoreFiles:
+  - \.Rmd$
+  - \.Rmarkdown$
+  - _cache$
+  - \.knit\.md$
+  - \.utf8\.md$
+permalinks:
+  post: /:year/:month/:day/:slug/
+menu:
+  main:
+    - name: About
+      url: /about/
+    - name: GitHub
+      url: https://github.com/rstudio/blogdown
+    - name: Twitter
+      url: https://twitter.com/rstudio
+```
+
+You can change the website title, e.g., `title: "My own cool website"`, and update the GitHub and Twitter URLs.
+
+### Summary
+
+You have now learned three of the most basic concepts for a Hugo-based website:
+
+1. How to preview your Hugo site locally using `blogdown::serve_site()` or the RStudio addin "Serve Site."
+
+1. How to edit the Hugo configuration file `config.yaml`\index{config.yaml} to specify global settings for your site and your theme.
+
+1. How to edit contents inside the `content/` directory, where you write the R Markdown or Markdown source files for your posts and pages. Under `content/` of the default site, you can see `about.md` and a `post/` directory containing a few posts. The organization of the content directory is up to you. You can have arbitrary files and directories there, depending on the website structure you want.
+
+### What is next?
+
+If you are satisfied with this default theme, you are basically ready to start writing and publishing your new website! There are many options for publishing static websites like this one, and we will talk more about them in Chapter \@ref(deployment) if you are not familiar with deploying websites. 
+
+We will also show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technologies like the Hugo templating language, HTML, CSS, and JavaScript.
 
 ## A quick deploy
 
@@ -203,19 +407,9 @@ knitr::include_graphics('images/overwrite-image.png')
 
 With these addins, you should rarely need to run any R commands manually after you have set up your website, since all your posts will be automatically compiled whenever you create a new post or modify an existing post due to the LiveReload feature.
 
-If your RStudio version is at least v1.1.383,^[You may download all RStudio official releases including v1.1.383 from <https://www.rstudio.com/products/rstudio/download/>.] you can actually create a website project directly from the menu `File -> New Project -> New Directory` (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)).
+If your website was created using the function `blogdown::new_site()` instead of the RStudio menu (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)) for the first time, you can quit RStudio and open the project again. If you go to the menu `Tools -> Project Options`, your project type should be "Website" like what you can see in Figure \@ref(fig:project-options).
 
-```{r new-project, echo=FALSE, fig.cap='Create a new website project in RStudio.', out.width='80%', fig.align='center'}
-knitr::include_graphics('images/new-project.png')
-```
-
-```{r blogdown-project, echo=FALSE, fig.cap='Create a website project based on blogdown.', out.width='80%', fig.align='center'}
-knitr::include_graphics('images/blogdown-project.png')
-```
-
-If your website was created using the function `blogdown::new_site()` instead of the RStudio menu for the first time, you can quit RStudio and open the project again. If you go to the menu `Tools -> Project Options`, your project type should be "Website" like what you can see in Figure \@ref(fig:project-options).
-
-Then you will see a pane in RStudio named "Build," and there is a button "Build Website." When you click this button, RStudio will call `blogdown::build_site()` to build the website. This will automatically generate files in the `public/` directory.^[Or wherever your publishing directory is located. It is `public/` by default, but it can be changed by specifying the `publishDir = "myNewDirectory"` in the `config.toml` file.] If you want to build the website and publish the output files under the `public/` manually, you are recommended to restart your R session and click this "Build Website" button every time before you publish the website, instead of publishing the `public/` folder generated continuously and automatically by `blogdown::serve_site()`, because the latter calls `blogdown::build_site(local = TRUE)`, which has some subtle differences with `blogdown::build_site(local = FALSE)` (see Section \@ref(local-preview) for details).
+Then you will see a pane in RStudio named "Build," and there is a button "Build Website." When you click this button, RStudio will call `blogdown::build_site()` to build the website. This will automatically generate files in the `public/` directory.^[Or wherever your publishing directory is located. It is `public/` by default, but it can be changed by specifying the field `publishDir: "myNewDirectory"` in the `config.yaml` file.]
 
 We strongly recommend that you uncheck the option "Preview site after building" in your RStudio project options (Figure \@ref(fig:project-options)).^[In case you wonder why: unless you have set the option `relativeurls` to `true` in `config.toml`, it requires a web server to preview the website locally, otherwise even if you can see the homepage of your website in the RStudio Viewer, most links like those links to CSS and JavaScript files are unlikely to work. When the RStudio Viewer shows you the preview, it does not actually launch a web server.] You can also uncheck the option "Re-knit current preview when supporting files change," since this option is not really useful after you call `serve_site()`.
 
@@ -347,11 +541,13 @@ Table: (\#tab:md-diff) Differences among the three document formats.
     ```
     ````
 
-2. A plain Markdown post is rendered to HTML through [Blackfriday](https://gohugo.io/overview/configuration/) \index{Blackfriday}(a package written in the Go language and adopted by Hugo). An R Markdown document is compiled through the packages **rmarkdown**, **bookdown**, and Pandoc\index{Pandoc}, which means you can use most features of [Pandoc's Markdown](http://pandoc.org/MANUAL.html#pandocs-markdown) and [**bookdown**'s Markdown extensions](https://bookdown.org/yihui/bookdown/components.html) in **blogdown**. If you use R Markdown [@R-rmarkdown] with **blogdown**, we recommend that you read the documentation of Pandoc and **bookdown** at least once to know all the possible features. We will not repeat the details in this book, but list the features briefly below, which are also demonstrated on the example website https://blogdown-demo.rbind.io.
+2. A plain Markdown post is rendered to HTML through [Goldmark](https://github.com/yuin/goldmark) \index{Goldmark}(a Markdown parser written in the Go language and adopted by Hugo). An R Markdown document is compiled through the packages **rmarkdown**, **bookdown**, and Pandoc\index{Pandoc}, which means you can use most features of [Pandoc's Markdown](http://pandoc.org/MANUAL.html#pandocs-markdown) and [**bookdown**'s Markdown extensions](https://bookdown.org/yihui/bookdown/components.html) in **blogdown**. If you use R Markdown [@R-rmarkdown] with **blogdown**, we recommend that you read the documentation of Pandoc and **bookdown** at least once to know all the possible features. We will not repeat the details in this book, but list the features briefly below, which are also demonstrated on the example website https://blogdown-demo.rbind.io.
 
     - Inline formatting: `_italic_` / `**bold**` text and `` `inline code` ``.
     
-    - Inline elements: subscripts (e.g., `H~2~0`) and superscripts (e.g., `R^2^`); links (`[text](url)`) and images `![title](url)`; footnotes `text^[footnote]`.
+    - Inline elements: subscripts (e.g., `H~2~0`) and superscripts (e.g., `R^2^`); links (`[text](url)`) and images `![title](url)`.
+
+    - Footnotes: `text[^1]`; `[^1]: your footnote content`. Note that the inline footnote `text^[footnote]` is no longer supported by Hugo. As [Hugo switched the default Markdown renderer to Goldmark, since v0.60.0](https://gohugo.io/content-management/formats/), which doesn't support inline footnotes.
     
     - Block-level elements: paragraphs; numbered and unnumbered section headers; ordered and unordered lists; block quotations; fenced code blocks; tables; horizontal rules.
     

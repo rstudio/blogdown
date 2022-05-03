@@ -7,11 +7,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# User Guide
+## User Guide
 
 <a href="https://bookdown.org/yihui/blogdown/"><img src="https://bookdown.org/yihui/blogdown/images/cover.png" alt="blogdown: Creating Websites with R Markdown" width="250" style="padding: 0 15px; float: right;"/></a>
 
-Written by Yihui Xie, the package author, [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/bookdown/) introduces the R package and how to use it. The book is published by Chapman & Hall/CRC, and you can read it online for free.
+Written by Yihui Xie, the package author, [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/blogdown/) introduces the R package and how to use it. The book is published by Chapman & Hall/CRC, and you can read it online for free.
 
 The book is structured into 5 parts to guide the reader into the use of the R package **blogdown** to create and manage websites: 
 
@@ -39,7 +39,7 @@ cat(formatted, sep = "\n")
 
 **A note from the authors**: Some of the information and instructions in this book are now out of date because of changes to Hugo and the recent  **blogdown** package. Most of the book is still valid but some chapters may have less accurate informations
 
-# About R Markdown
+## About R Markdown
 
 <a href="https://bookdown.org/yihui/rmarkdown/"><img src="https://bookdown.org/yihui/rmarkdown/images/cover.png" alt="R Markdown: The Definitive Guide" width="250" style="padding: 0 15px; float: right;"/></a>
 
@@ -47,6 +47,6 @@ If you are new to **R Markdown**, we recommend you start with [R Markdown: The D
 
 Next, the chapter on [_Websites_](https://bookdown.org/yihui/rmarkdown/websites.html) will help orient you to how the **blogdown** package allows you to use R Markdown to create websites. 
 
-# Going further with examples
+## Going further with examples
 
 Look at the [Examples](articles/examples.html) page.

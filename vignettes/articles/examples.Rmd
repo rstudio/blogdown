@@ -21,7 +21,8 @@ blogs <- tribble(
   "https://isabella-b.com/", "https://github.com/isabellabenabaye/isabella-b.com",
   "https://robjhyndman.com/", "https://github.com/rbind/robjhyndman.com",
   "https://www.tidymodels.org/", "https://github.com/tidymodels/tidymodels.org",
-  "https://livefreeordichotomize.com/", "https://github.com/LFOD/real-blog"
+  "https://livefreeordichotomize.com/", "https://github.com/LFOD/real-blog",
+  "https://hugo-apero-docs.netlify.app/", "https://github.com/hugo-apero/hugo-apero-docs"
 )
 
 # get the title
@@ -57,9 +58,13 @@ blogs <- do.call(rbind, lapply(blogs, function(x) data.frame(site = x$href, img 
 # remotes::install_github("rstudio/webshot2")
 img_exists <- file.exists(blogs$img)
 if (any(!img_exists)) {
-  res <- webshot2::webshot(blogs$site[!img_exists], blogs$img[!img_exists], cliprect = "viewport")
-  # optimize image - require optipng
-  webshot2::shrink(res)
+  need_screenshot <- blogs[!img_exists, ]
+  purrr::pwalk(need_screenshot, function(site, img) {
+    message("Screenshoting ", site)
+    res <- webshot2::webshot(site, img, cliprect = "viewport")
+    # optimize image - require optipng
+    webshot2::shrink(res)
+  })
 }
 ```
 

@@ -19,6 +19,7 @@ check_site = function() in_root({
   check_gitignore()
   check_hugo()
   check_netlify()
+  check_vercel()
   check_content()
 })
 
@@ -42,13 +43,16 @@ check_config = function() {
   } else if (identical(base, '/')) {
     msg_todo('Update "baseURL" to your actual URL when ready to publish.')
     okay = FALSE
+  } else if (is_domain_url(base)) {
+    msg_todo('It seems you need to add a protocol (e.g., https://) to your "baseURL".')
+    okay = FALSE
   } else {
     msg_okay('Found baseURL = "', base, '"; nothing to do here!')
   }
 
   msg_next('Checking "ignoreFiles" setting for Hugo...')
   ignore = c(
-    '\\.Rmd$', '\\.Rmarkdown$', '_cache$', '\\.knit\\.md$', '\\.utf8\\.md$',
+    '\\.Rmd$', '\\.Rmarkdown$', '_cache$',
     if (length(grep('/renv$', list.dirs()))) c('(^|/)renv$', 'renv\\.lock$')
   )
   if (is.null(s <- config[['ignoreFiles']])) {
@@ -76,7 +80,7 @@ check_config = function() {
     h = config$markup$defaultMarkdownHandler
     if (is.null(h) || h == 'goldmark') {
       msg_next("You are using the Markdown renderer 'goldmark'.")
-      config_goldmark(f)
+      config_goldmark(f, config)
       okay = FALSE
     } else if (!is.null(h)) {
       msg_next("You are using the Markdown renderer '", h, "'.")
@@ -93,6 +97,12 @@ is_example_url = function(url) {
   is.character(url) && grepl(
     '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?', url
   )
+}
+
+# a URL without the http protocol
+is_domain_url = function(url) {
+  is.character(url) && !grepl('(^https?:)?//', url) &&
+    grepl('^((?!-)[A-Za-z0-9-]{1,63}(?<!-)[.])+[A-Za-z]{2,6}(/?|/.*)$', url, perl = TRUE)
 }
 
 #' @details \code{check_gitignore()} checks if necessary files are incorrectly
@@ -119,7 +129,7 @@ check_gitignore = function() {
   ) else msg_okay('Nothing to see here - found no items to change.')
 
   msg_next('Checking for items you can safely ignore...')
-  x3 = c('.DS_Store', 'Thumbs.db')
+  x3 = c('.DS_Store', 'Thumbs.db', if (hugo_available('0.89.0')) '.hugo_build.lock')
   if (any(i <- x %in% x3))
     msg_okay('Found! You have safely ignored: ', paste(x[i], collapse = ', '))
   x4 = setdiff(x3, x)
@@ -162,9 +172,9 @@ check_gitignore = function() {
   msg_done(f)
 }
 
-config_goldmark = function(f, silent = FALSE) {
+config_goldmark = function(f, cfg = list(), silent = FALSE) {
   x = switch(
-    xfun::file_ext(f),
+    ext <- xfun::file_ext(f),
     yaml = '
 markup:
   goldmark:
@@ -179,11 +189,17 @@ markup:
 '
   )
   if (is.null(x)) return()
+  m = ext == 'yaml' && 'markup' %in% names(cfg)  # merge or append?
   if (!silent) msg_todo(
     'Allow goldmark to render raw HTML by adding this setting to ', f,
-    ' (see https://github.com/rstudio/blogdown/issues/447 for more info):\n', x
+    ' (see https://github.com/rstudio/blogdown/issues/447 for more info):\n', x,
+    if (m) c(
+      '\nNote that the "markup" key already exists, so you have to merge the ',
+      'above goldmark setting into the existing "markup" key instead of appending ',
+      'it to the end of the file.'
+    )
   )
-  if (silent || yes_no("Do you want blogdown to set this for you?")) {
+  if (!m && (silent || yes_no("Do you want blogdown to set this for you?"))) {
     cat(x, file = f, append = TRUE)
   }
 }
@@ -240,44 +256,18 @@ check_hugo = function() {
 check_netlify = function() {
   msg_init('Checking netlify.toml...')
   if (!file.exists(f <- 'netlify.toml')) return(
-    msg_todo(f, ' was not found. Use blogdown::config_netlify() to create file.')
+    if (file.exists('vercel.json')) msg_okay(
+      'Found vercel.json. You are assumed to be using Vercel instead of Netlify.'
+    ) else msg_todo(
+      f, ' was not found. Use blogdown::config_netlify() to create file.'
+    )
   )
   cfg = find_config()
   x = read_toml(f)
   v = x$context$production$environment$HUGO_VERSION
-  v2 = as.character(hugo_version())
   if (is.null(v)) v = x$build$environment$HUGO_VERSION
 
-  okay = TRUE
-
-  if (is.null(v)) {
-    msg_next('HUGO_VERSION not found in ', f, '.')
-    msg_todo('Set HUGO_VERSION = ', v2, ' in [build] context of ', f, '.')
-    okay = FALSE
-  } else {
-    msg_okay('Found HUGO_VERSION = ', v, ' in [build] context of ', f, '.')
-    msg_next('Checking that Netlify & local Hugo versions match...')
-    if (v2 == v) {
-      msg_okay(
-        "It's a match! Blogdown and Netlify are using the same Hugo version (", v2, ")."
-      )
-    } else {
-      msg_next(
-        'Mismatch found:\n',
-        '  blogdown is using Hugo version (', v2, ') to build site locally.\n',
-        '  Netlify is using Hugo version (', v, ') to build site.'
-      )
-      msg_todo(
-        'Option 1: Change HUGO_VERSION = "', v2, '" in ', f, ' to match local version.'
-      )
-      msg_todo(
-        'Option 2: Use blogdown::install_hugo("', v, '") to match Netlify version, ',
-        'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin ',
-        'this Hugo version (also remember to restart R).'
-      )
-      okay = FALSE
-    }
-  }
+  okay = check_versions(f, v)
 
   msg_next('Checking that Netlify & local Hugo publish directories match...')
   if (!is.null(p1 <- x$build$publish)) {
@@ -296,6 +286,56 @@ check_netlify = function() {
       msg_okay('Good to go - blogdown and Netlify are using the same publish directory: ', p2)
     }
   }
+  open_file(f, interactive() && !okay)
+  msg_done(f)
+}
+
+# check if hugo versions in config file and system match
+check_versions = function(f, v, v2 = as.character(hugo_version())) {
+  if (is.null(v)) {
+    msg_next('HUGO_VERSION not found in ', f, '.')
+    nm = switch(f, 'netlify.toml' = 'netlify', 'vercel.json' = 'vercel')
+    msg_todo(
+      'Set HUGO_VERSION = ', v2, ' in [build] context of ', f, '.',
+      if (length(nm)) c(' See blogdown::config_', nm, '(NULL) for example.')
+    )
+    return(FALSE)
+  }
+  msg_okay('Found HUGO_VERSION = ', v, ' in [build] context of ', f, '.')
+  msg_next('Checking that remote & local Hugo versions match...')
+  if (v2 == v) {
+    msg_okay(
+      "It's a match! Local and remote Hugo versions are identical (", v2, ")."
+    )
+    return(TRUE)
+  }
+  msg_next(
+    'Mismatch found:\n',
+    '  blogdown is using Hugo version (', v2, ') to build site locally.\n',
+    '  ', f, ' is using Hugo version (', v, ') to build site.'
+  )
+  msg_todo(
+    'Option 1: Change HUGO_VERSION = "', v2, '" in ', f, ' to match local version.'
+  )
+  msg_todo(
+    'Option 2: Use blogdown::install_hugo("', v, '") to match the version in ', f, ', ',
+    'and set options(blogdown.hugo.version = "', v, '") in .Rprofile to pin ',
+    'this Hugo version (also remember to restart R).'
+  )
+  FALSE
+}
+
+#' @details \code{check_vercel()} checks if the Hugo version specified in
+#'   \file{vercel.json} (if it exists) matches the Hugo version used in the
+#'   current system.
+#' @rdname check_site
+#' @export
+check_vercel = function() {
+  if (!file.exists(f <- 'vercel.json')) return()
+  msg_init('Checking ', f, '...')
+  x = jsonlite::fromJSON(f, simplifyVector = FALSE)
+  v = x$build$env$HUGO_VERSION
+  okay = check_versions(f, v)
   open_file(f, interactive() && !okay)
   msg_done(f)
 }
@@ -468,19 +508,36 @@ clean_duplicates = function(preview = TRUE) in_root({
   x = list_duplicates()
   x1 = with_ext(x, 'Rmd');       i1 = file_exists(x1)
   x2 = with_ext(x, 'Rmarkdown'); i2 = file_exists(x2)
-  # if .Rmd exists, delete .md; if .Rmd does not exist or .Rmarkdown exists,
-  # delete .html
-  x = c(with_ext(x[i1], 'md'), x[i2 | !i1])
+  x = c(
+    # if .Rmd exists using 'html' method then delete '.md'
+    # if .Rmd exists using using 'markdown' method, deletes html
+    with_ext(x[i1], if (build_method() == 'markdown') 'html' else 'md'),
+    # if .Rmd does not exist or .Rmarkdown exists, delete html
+    x[i2 | !i1]
+  )
   x = x[file_exists(x)]
   if (length(x)) {
     if (preview) msg_cat(
       'Found possibly duplicate output files. Run blogdown::clean_duplicates(preview = FALSE)',
       ' if you are sure they can be deleted:\n\n', indent_list(x), '\n'
-    ) else file.remove(x)
+    ) else {
+      file.remove(x)
+      clean_html_deps(x)
+    }
   } else {
     msg_cat('No duplicated output files were found.\n')
   }
 })
+
+# delete unused HTML dependencies like header-attrs (#632)
+clean_html_deps = function(x) {
+  x = grep('[.]html$', x, value = TRUE)
+  if (length(x) == 0) return()
+  x = file.path(paste0(xfun::sans_ext(x), '_files'), 'header-attrs')
+  unlink(x, recursive = TRUE)
+  # delete empty *_files directories
+  for (d in dirname(x)) del_empty_dir(d)
+}
 
 check_garbage_html = function() {
   res = unlist(lapply(list_files('.', '[.]html$'), function(f) {

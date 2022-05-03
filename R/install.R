@@ -34,6 +34,16 @@
 #'   in which case it will not be downloaded again.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
+#'   Note that this feature is not available to Hugo version lower than v0.43.
+#'   It also requires a 64-bit system; if the system is based on the ARM
+#'   architecture, only macOS is supported at the moment.
+#' @param arch,os The architecture and operating system name. These arguments,
+#'   along with \code{version} and \code{extended}, determines the filename of
+#'   the Hugo installer. See \url{https://github.com/gohugoio/hugo/releases} for
+#'   all of Hugo's installers. By default, the argument values are automatically
+#'   detected. In case the detection should fail, you can provide the values
+#'   manually, e.g., \code{extended = FALSE}, \code{arch = 'ARM64'}, and
+#'   \code{os = 'FreeBSD'} would install \file{hugo_*_FreeBSD-ARM.tar.gz}.
 #' @param force Whether to reinstall Hugo if the specified version has been
 #'   installed.
 #' @param ... Ignored.
@@ -42,51 +52,73 @@
 #'   break your existing sites.
 #' @seealso \code{\link{remove_hugo}()} to remove Hugo.
 #' @export
-install_hugo = function(version = 'latest', extended = TRUE, force = FALSE, ...) {
+install_hugo = function(
+  version = 'latest', extended = TRUE, arch = 'auto', os = 'auto', force = FALSE, ...
+) {
   local_file = if (grepl('[.](zip|tar[.]gz)$', version) && file.exists(version))
     normalizePath(version)
 
-  # in theory, should access the Github API using httr/jsonlite but this
-  # poor-man's version may work as well
+  # get the latest version of Hugo
   if (version == 'latest') {
     version = xfun::github_releases('gohugoio/hugo', version)[1]
     message('The latest Hugo version is ', version)
+  } else {
+    if (!is.null(local_file)) version = gsub(
+      '^hugo(_extended)?_([0-9.]+)_.*', '\\2', basename(local_file)
+    )
   }
-
-  if (!is.null(local_file)) version = gsub(
-    '^hugo(_extended)?_([0-9.]+)_.*', '\\2', basename(local_file)
-  )
 
   version = gsub('^[vV]', '', version)  # pure version number
   if (!force && hugo_available(version, exact = TRUE)) return(message(
     'Hugo ', version, ' has already been installed. To reinstall, use the ',
     'argument force = TRUE.'
   ))
+  if (is.null(local_file)) {
+    if (grepl('^\\d+\\.\\d+$', version) && as.numeric_version(version) >= '0.54') {
+      # Hugo started to to use version number x.y.0 instead of x.y since 0.54.0
+      version3 = paste0(version, '.0')
+      xfun::try_silent(if (length(xfun::github_releases('gohugoio/hugo', paste0('v', version3)))) {
+        message('The version ', version, ' was automatically corrected to ', version3, '.')
+        version = version3
+      })
+    }
+    ver = tryCatch(
+      xfun::github_releases('gohugoio/hugo', sub('^[vV]?', 'v', version)),
+      error = function(e) NULL
+    )
+    if (length(ver) == 0) stop('The Hugo version ', version, ' does not seem to exist.')
+  }
   if (!is.null(ver <- get_option('blogdown.hugo.version')) && ver != version) message2(
     "You have set the option 'blogdown.hugo.version' to '", ver, "' (perhaps in .Rprofile), ",
     "but you are installing the Hugo version '", version, "' now. You may want to update ",
     "the option 'blogdown.hugo.version' accordingly.", files = existing_files('.Rprofile')
   )
   version2 = as.numeric_version(version)
-  bit = if (is_64bit()) '64bit' else '32bit'
-  if (extended) {
-    if (bit != '64bit') stop('The extended version of Hugo is only available on 64-bit platforms')
-    if (version2 < '0.43') {
-      if (!missing(extended)) stop('Only Hugo >= v0.43 provides the extended version')
-      extended = FALSE
-    }
-  }
+  if (arch == 'auto') arch = detect_arch()
+  # the extended version is only available for Hugo >= 0.43 and (64bit OS or arm64 macOS)
+  if (missing(extended)) extended = (version2 >= '0.43') &&
+    (arch == '64bit' || (is_macos() && arch == 'arm64'))
+  # hugo merged ARM64 and 64bit in the 0.89.0 release for macOS (#664)
+  if (version2 == '0.89.0' && is_macos()) arch = 'all'
   base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
   unlink(sprintf('hugo_%s*', version), recursive = TRUE)
 
   download_zip = function(OS, type = 'zip') {
+    if (os != 'auto') OS = os  # if user has provided the OS name, use that one
     if (is.null(local_file)) {
+      if (grepl('^arm', arch)) arch = toupper(arch)  # arm(64) -> ARM(64)
+      # v0.20.3 is a special case: it has 'v' in the filename
       zipfile = sprintf(
-        'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''), version, OS, bit, type
+        'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''),
+        paste0(if (version == '0.20.3') 'v', version), OS, arch, type
       )
-      xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb')
+      xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb', .error = c(
+        'Failed to download ', zipfile, ' from https://github.com/gohugoio/hugo/releases/tag/v',
+        version, '. Please check blogdown::hugo_installers("', version, '") for ',
+        'available Hugo installers.'
+      ))
     } else {
       zipfile = local_file
       type = xfun::file_ext(local_file)
@@ -143,6 +175,52 @@ install_hugo_bin = function(exec, version) {
       'for more info on .Rprofile: https://bookdown.org/yihui/blogdown/global-options.html'
     )
   )
+}
+
+#' Available Hugo installers of a version
+#'
+#' Given a version number, return the information of available installers. If
+#' \code{\link{install_hugo}()} fails, you may run this function to check the
+#' available installers and obtain their \code{os}/\code{arch} info.
+#' @param version A version number. The default is to automatically detect the
+#'   latest version. Versions before v0.17 are not supported.
+#' @return A data frame containing columns \code{os} (operating system),
+#'   \code{arch} (architecture), and \code{extended} (extended version or not).
+#'   If your R version is lower than 4.1.0, a character vector of the installer
+#'   filenames will be returned instead.
+#' @export
+#' @examplesIf interactive()
+#' blogdown::hugo_installers()
+#' blogdown::hugo_installers('0.89.0')
+#' blogdown::hugo_installers('0.17')
+hugo_installers = function(version = 'latest') {
+  repo = 'gohugoio/hugo'
+  if (version == 'latest') version = xfun::github_releases(repo, 'latest')
+  version = sub('^[vV]?', 'v', version)
+  json = xfun::loadable('jsonlite')
+  res = xfun::github_api(sprintf('/repos/%s/releases/tags/%s', repo, version), raw = !json)
+  res = if (json) {
+    lapply(res$assets, `[[`, 'browser_download_url')
+  } else {
+    res = strsplit(res, '"browser_download_url":"')
+    xfun::grep_sub('^(https://[^"]+)".*', '\\1', unlist(res))
+  }
+  res = grep('[.](zip|tar[.]gz)$', unlist(res), value = TRUE)
+  res = basename(res)
+  if (!'gregexec' %in% ls(baseenv())) {
+    warning('Your R version is too low (< 4.1.0) and does not have gregexec().')
+    return(res)
+    gregexec = regexec  # a hack to pass R CMD check without NOTE
+  }
+  m = gregexec('^hugo_(extended_)?([^_]+)_([^-]+)-([^.]+)[.](zip|tar[.]gz)$', res)
+  res = lapply(regmatches(res, m), function(x) if (length(x) >= 6) x[c(1, 3, 4, 5, 2)])
+  res = do.call(rbind, res)
+  colnames(res) = c('installer', 'version', 'os', 'arch', 'extended')
+  res = as.data.frame(res)
+  res$extended = res$extended == 'extended_'
+  rownames(res) = res$installer
+  res = res[, -1]
+  res
 }
 
 #' @export
@@ -259,7 +337,10 @@ uninstall_tip = function(p) {
 find_hugo = local({
   paths = list()  # cache the paths to hugo (there might be multiple versions)
   function(version = getOption('blogdown.hugo.version'), quiet = FALSE) {
-    i = if (is.null(version <- na2null(version))) 'default' else as.character(version)
+    i = if (is.null(version <- na2null(version))) 'default' else {
+      # in case the version number starts with v, remove it
+      version = sub('^[vV]([0-9.]+)$', '\\1', as.character(version))
+    }
     p = paths[[i]]
     if (!is.null(p) && file.exists(exec_path(p))) return(p)
     # if path not found, find it again

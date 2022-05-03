@@ -67,7 +67,10 @@ shiny::runGadget(
     })
     # update subdir in according to the title
     if (is.function(subdir_fun <- getOption('blogdown.subdir_fun'))) shiny::observe({
-      shiny::updateSelectizeInput(session, 'subdir', selected = subdir_fun(input$title))
+      sub2 = subdir_fun(input$title)
+      shiny::updateSelectizeInput(session, 'subdir', selected = sub2, choices = unique(c(
+        sub2, blogdown:::get_subdirs()
+      )))
     })
     shiny::observe({
       # calculate file path
@@ -94,7 +97,7 @@ shiny::runGadget(
         categories = input$cat, tags = input$tag,
         file = gsub('[-[:space:]]+', '-', input$file),
         slug = if (input$slug != '') input$slug, subdir = input$subdir,
-        date = input$date, kind = input$kind
+        date = input$date, kind = xfun::sans_ext(input$kind)
       )
       shiny::stopApp()
     })

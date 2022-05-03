@@ -5,7 +5,7 @@
 #' @describeIn hugo_cmd Run an arbitrary Hugo command.
 hugo_cmd = function(...) {
   on.exit(clean_hugo_cache(), add = TRUE)
-  system2(find_hugo(), ...)
+  xfun::system3(find_hugo(), ...)
 }
 
 #' @export
@@ -24,7 +24,7 @@ hugo_version = local({
 })
 
 .hugo_version = function(cmd) {
-  x = system2(cmd, 'version', stdout = TRUE)
+  x = xfun::system3(cmd, 'version', stdout = TRUE)
   r = '^.* v([0-9.]{2,}).*$'
   if (!isTRUE(grepl(r, x))) stop(paste(
     c("Cannot extract the version number from '", cmd, "':\n", x), collapse = '\n'
@@ -88,10 +88,11 @@ theme_dir = function(...) {
 change_config = function(name, value) {
   f = find_config()
   x = read_utf8(f)
-  if (f == 'config.toml') {
+  b = basename(f)
+  if (b == 'config.toml') {
     r = sprintf('^%s\\s*=.+', name)
     v = if (!is.na(value)) paste(name, value, sep = ' = ')
-  } else if (f == 'config.yaml') {
+  } else if (b == 'config.yaml') {
     r = sprintf('^%s\\s*:.+', name)
     v = if (!is.na(value)) paste(name, value, sep = ': ')
   }
@@ -224,7 +225,10 @@ new_site = function(
     if (getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
   if (!file.exists('index.Rmd')) {
-    writeLines(c('---', 'site: blogdown:::blogdown_site', '---'), 'index.Rmd')
+    writeLines(c(
+      '---', 'site: blogdown:::blogdown_site', '---', '',
+      '<!-- This file is for blogdown only. Please do not edit it. -->'
+    ), 'index.Rmd')
     Sys.chmod('index.Rmd', '444')
   }
 
@@ -232,8 +236,10 @@ new_site = function(
     msg_next('Converting all metadata to the YAML format')
     hugo_convert('YAML', unsafe = TRUE)
   }
-  if (format == 'yaml' && file.exists(cfg <- 'config.toml')) {
-    toml2yaml(cfg, 'config.yaml'); unlink(cfg)
+  # convert config.[toml|yaml] to config.[yaml|toml] if necessary
+  if (length(cfg <- find_config(error = FALSE)) == 1 && file_ext(cfg) != format) {
+    (if (format == 'yaml') toml2yaml else yaml2toml)(cfg, with_ext(cfg, format))
+    unlink(cfg)
   }
   if (netlify) {
     msg_next('Adding netlify.toml in case you want to deploy the site to Netlify')
@@ -329,6 +335,9 @@ install_theme = function(
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]
     expdir = file.path(zipdir, 'exampleSite')
+    if (length(expdir) == 0) stop(
+      'Failed to download or extract the theme from ', url, call. = FALSE
+    )
     is_theme = file.exists(theme_cfg <- file.path(zipdir, 'theme.toml'))
     if (dir_exists(expdir)) if (theme_example) {
       # post-process go.mod so that users don't need to install Go (it sounds
@@ -379,8 +388,12 @@ install_theme = function(
     unlink(c(zipfile, file.path(newdir, '*.Rproj')))
     theme = gsub('^[.][\\/]+', '', newdir)
     if (is_theme) {
-      # we don't need the content/ directory from the theme
-      unlink(file.path(theme, 'content'), recursive = TRUE)
+      # we don't need the content/ directory from the theme or config/ if it
+      # already exists in root dir
+      unlink(
+        file.path(theme, c('content', if (dir_exists('../config')) 'config')),
+        recursive = TRUE
+      )
     } else {
       # download modules if not a theme, and copy "theme" content to root dir
       download_modules(file.path(theme, 'go.mod'))
@@ -388,8 +401,8 @@ install_theme = function(
       unlink(theme, recursive = TRUE)
     }
     in_dir('..', {
-      # move the possible config/_default/config.toml to the root dir
-      move_config()
+      # remove config.toml if config/_default/config.toml exists
+      remove_config()
       # remove the themesDir setting; it is unlikely that you need it
       change_config('themesDir', NA)
     })
@@ -442,26 +455,34 @@ download_modules = function(mod) {
     tmps <<- c(tmps, tmp <- wd_tempfile())
     utils::untar(gz, exdir = tmp)
     root = file.path(tmp, files[1])
-    if (v[4] != '') {
-      root = file.path(root, v[4])
-      v[2] = file.path(v[2], v[4])
+    # see if a module contains a replace directive
+    r2 = '^replace\\s+(github[.]com/[^[:space:]]+)\\s+=>\\s+(.+?)\\s*$'
+    if (file_exists(f <- file.path(root, 'go.mod')) && length(grep(r2, x2 <- read_utf8(f)))) {
+      lapply(regmatches(x2, regexec(r2, x2)), function(v2) {
+        if (length(v2) < 3) return()
+        dir_create(v2[2])
+        file.copy(list.files(file.path(root, v2[3]), full.names = TRUE), v2[2], recursive = TRUE)
+      })
+    } else {
+      if (v[4] != '') {
+        root = file.path(root, v[4])
+        v[2] = file.path(v[2], v[4])
+      }
+      dir_create(v[2])
+      file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
     }
-    dir_create(v[2])
-    file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
   })
   unlink(with_ext(mod, c('.mod', '.sum')))
 }
 
-# themes may use config/_default/config.toml, e.g. hugo-academic; we need to
-# move this config to the root dir, because blogdown assumes the config file
-# is under the root dir
-move_config = function() {
-  f1 = config_files()
-  f2 = file.path('config', '_default', f1)
-  if (!any(i <- file_exists(f2))) return()
-  file.rename(f2[i], f1[i])
+# themes may use config/_default/config.toml, e.g. hugo-academic; in that case,
+# we remove the config file under the root dir
+remove_config = function() {
+  f1 = config_files(); f1 = f1[dirname(f1) == '.']
   # delete config.yaml if config.toml exists
   if (length(f1) >= 2 && file_exists(f1[1])) unlink(f1[2])
+  f2 = file.path('config', '_default', f1)
+  if (any(file_exists(f2))) unlink(f1)
 }
 
 #' @param path The path to the new file under the \file{content} directory.
@@ -475,7 +496,7 @@ move_config = function() {
 #'   (e.g. a post or a page).
 new_content = function(path, kind = '', open = interactive()) {
   if (missing(kind)) kind = default_kind(path)
-  path2 = with_ext(path, '.md')
+  path2 = path3 = with_ext(path, '.md')
   # for a new content file to be created with a bundle archetype, its path
   # should not contain index.md but only the dir name, otherwise the archetype
   # will not be used
@@ -488,14 +509,14 @@ new_content = function(path, kind = '', open = interactive()) {
     c('new', shQuote(path2), if (kind != '') c('-k', kind), theme_flag()),
     stdout = TRUE
   )
-  if (length(i <- grep(r <- ' created$', file2)) == 1) {
-    file2 = sub(r, '', file2[i])
+  if (length(i <- grep(r <- '^Content "?|"? created$', file2)) == 1) {
+    file2 = gsub(r, '', file2[i])
     if (!grepl('[.]md$', file2)) file2 = file.path(file2, 'index.md')
   } else {
     # should the above method fail to identify the newly created .md, search for
     # the new file with brute force
     files = setdiff(list_mds(), files)  # new file(s) created
-    file2 = files[basename(files) == basename(path2)]
+    file2 = files[basename(files) == basename(path3)]
   }
   if (length(file2) != 1) stop("Failed to create the file '", path, "'.")
   hugo_convert_one(file2)
@@ -548,6 +569,15 @@ content_file = function(...) file.path(
 #' @param categories A character vector of category names.
 #' @param tags A character vector of tag names.
 #' @param date The date of the post.
+#' @param time Whether to include the time of the day in the \code{date} field
+#'   of the post. If \code{TRUE}, the \code{date} will be of the format
+#'   \samp{\%Y-\%m-\%dT\%H:\%M:\%S\%z} (e.g., \samp{2001-02-03T04:05:06-0700}).
+#'   Alternatively, it can take a character string to be appended to the
+#'   \code{date}. It can be important and helpful to include the time in the
+#'   date of a post. For example, if your website is built on a server (such as
+#'   Netlify or Vercel) and your local timezone is ahead of UTC, your local date
+#'   may be a \emph{future} date on the server, and Hugo will not build future
+#'   posts by default (unless you use the \command{-F} flag).
 #' @param file The filename of the post. By default, the filename will be
 #'   automatically generated from the title by replacing non-alphanumeric
 #'   characters with dashes, e.g. \code{title = 'Hello World'} may create a file
@@ -576,8 +606,8 @@ content_file = function(...) file.path(
 #'   that the author field is automatically filled out when creating a new post.
 new_post = function(
   title, kind = '', open = interactive(), author = getOption('blogdown.author'),
-  categories = NULL, tags = NULL, date = Sys.Date(), file = NULL, slug = NULL,
-  title_case = getOption('blogdown.title_case'),
+  categories = NULL, tags = NULL, date = Sys.Date(), time = getOption('blogdown.time', FALSE),
+  file = NULL, slug = NULL, title_case = getOption('blogdown.title_case'),
   subdir = getOption('blogdown.subdir', 'post'), ext = getOption('blogdown.ext', '.md')
 ) {
   if (is.null(file)) file = post_filename(title, subdir, ext, date)
@@ -600,10 +630,19 @@ new_post = function(
     )
   }
 
+  # for categories/tags, use new values if they are not empty, otherwise use old
+  # values in the post if they are non-empty (respect archetypes)
+  modify_field = function(val) {
+    val
+    function(old, yaml) {
+      as.list(if (length(val) > 0) val else if (length(old) > 0) old)
+    }
+  }
+
   do.call(modify_yaml, c(list(
-    file, title = title, author = author, date = format(date), slug = slug,
-    categories = as.list(categories), tags = as.list(tags)
-  ), if (!file.exists('archetypes/default.md')) list(draft = NULL)
+    file, title = title, author = author, date = format_datetime(date, time),
+    slug = slug, categories = modify_field(categories), tags = modify_field(tags)
+  ), if (kind == '' && !file.exists('archetypes/default.md')) list(draft = NULL)
   ))
   open_file(file, open)
   file
