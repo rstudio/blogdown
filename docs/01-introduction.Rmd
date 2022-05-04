@@ -288,20 +288,15 @@ We will also show how to use other themes in Section \@ref(other-themes). Howeve
 
 Publishing a **blogdown** website involves copying the output directory containing all your rendered site files (typically, a bunch of `*.html` files and site assets like fonts, CSS, JavaScript, and images) to a web server or web hosting service.
 
-In this section, we'll walk you through a quick deploy to publish your website using a drag-and-drop tool from \index{Netlify} https://www.netlify.com. Netlify is a platform that offers cloud hosting and serverless backend services for static websites. Lucky for us, that is exactly what we need- since **blogdown** helps us create static websites using Hugo. 
+In this section, we will walk you through a quick deploy to publish your website using a drag-and-drop tool from \index{Netlify} https://www.netlify.com. Netlify is a platform that offers cloud hosting and serverless backend services for static websites. Lucky for us, that is exactly what we need---since **blogdown** helps us create static websites using Hugo. 
 
-If you followed along with Chapter \@ref(a-quick-example), you should now have:
+If you followed along with Section \@ref(a-quick-example), you should now have s static website using the Hugo lithium theme with knitted `.Rmd` content for one post and served locally using **blogdown**.
 
-1. A static website...
-1. Using the Hugo Lithium theme...
-1. With knitted `.Rmd` content for one post...
-1. Served locally using **blogdown**. 
-
-The drag-and-drop method we describe next is a good workflow to start with if you are not familiar with GIT or GitHub, and if you are not familiar with deploying websites. There are many options for publishing static websites, and we will talk more about them plus advanced workflows involving version control and continuous deployment in Chapter \@ref(deployment).
+The drag-and-drop method we describe next is a good workflow to start with if you are not familiar with GIT or GitHub or deploying websites. There are many options for publishing static websites, and we will talk more about them plus advanced workflows involving version control and continuous deployment in Chapter \@ref(deployment).
 
 ### Build site
 
-The publishing directory of a Hugo site is `public/` by default. Your *built* website will be generated to this directory, meaning that you do not need to manually add any files to this directory. You can upload everything under `public/` to any web server that can serve static websites, and your website will be up and running. 
+The publishing directory of a Hugo site is `public/` by default. Your *built* website will be generated to this directory, which you can upload to any web server that can serve static websites, and your website will be up and running.
 
 Serving your Hugo site locally using `blogdown::serve_site()` does not generate the `public/` directory. To follow this drag-and-drop method, you'll need to build your site locally first.
 
@@ -313,35 +308,29 @@ blogdown::build_site()
 
 Alternatively, if you use RStudio, you may use:
 
-+ the "Build Website" button in the Build pane, or 
+- the "Build Website" button in the Build pane, or 
 
-+ press `Ctrl + Shift + B` or `Cmd + Shift + B` to build the website.
+- press `Ctrl + Shift + B` (`Cmd + Shift + B` on macOS) to build the website.
 
 You should see a new `public/` directory under the root directory of your project. Never edit files in this directory, as your changes will always be overwritten whenever you re-build your site.
 
-Note that this function does not re-knit R Markdown files by default, because it may be expensive and often undesirable to render `.Rmd` files that have been knitted before. Given that R package upgrades have a tendency to break older code, continuously re-knitting old content is nearly impossible to do without errors, especially over longer periods of time. 
+Note that this function does not re-knit R Markdown files by default, because it may be expensive and often undesirable to render `.Rmd` files that have been knitted before. Given that R package upgrades have a tendency to break older code, continuously re-knitting old content is nearly impossible to do without errors, especially over longer periods of time.
 
-We recommend always using `blogdown::serve_site()` first to preview your site before building it. That function will knit your unknitted R Markdown content by default. As mentioned earlier, we also recommend running `blogdown::check_content()`. Among other things, we check if you have content that needs to be re-knit:
+We recommend always using `blogdown::serve_site()` first to preview your site before building it. By default, that function will knit your R Markdown content that has not been knitted yet. As mentioned earlier, we also recommend running `blogdown::check_content()`. Among other things, we check if you have content that needs to be re-knit:
 
-```
+```default
 | Checking your R Markdown content...
 ○ All R Markdown files have been knitted.
 ○ All R Markdown output files are up to date with their source files.
 ```
 
-
-
 ### Use Netlify Drop
 
-Next, go online to\index{Netlify} Netlify Drop https://app.netlify.com/drop. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag and drop your site folder here." 
+Next, go online to\index{Netlify} Netlify Drop at https://app.netlify.com/drop. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag and drop your site output folder here."
 
-```{r netlify-drop, fig.cap='Drag and drop deploy via Netlify.', echo=FALSE, fig.align='center', out.width='90%'}
-knitr::include_graphics('images/netlify-drop.png')
-```
+Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.app` to you. After your site is live, you will be able to share the link to your new **blogdown** site if you would like to.
 
-Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.com` to you. After your site is live, you'll have a shareable link to your new blogdown site. 
-
-You'll notice a disclaimer that this site will be deleted after 24 hours. You'll need to create an account to save this link and keep your site online. 
+You will notice a disclaimer that this site will be deleted after 24 hours. You need to create an account to save this link and keep your site online.
 
 ### Sign up for Netlify
 
@@ -351,15 +340,11 @@ Netlify has a free plan with plenty of useful features, so we recommend signing 
 
 1. Click on the "Sign Up" button. 
 
-1. If you have a GitHub account (https://github.com/), we recommend signing up using your existing GitHub account (no need to create another account), so select "GitHub" (you may need to sign in), and click to "Authorize Netlify."
-    
-    ```{r netlify-github, fig.cap='Sign up for Netlify using an existing GitHub account.', echo=FALSE,   fig.align='center', out.width='90%'}
-    knitr::include_graphics('images/netlify-github.png')
-    ```
-    
+1. If you have a GitHub account (https://github.com), we recommend signing up using your existing GitHub account (no need to create another account), so select "GitHub" (you may need to sign in), and click to "Authorize Netlify."
+
 1. From your account, if you used Netlify Drop, you can (and should) change your random subdomain to a more meaningful one. You may read the docs for changing a site's default Netlify subdomain here: https://docs.netlify.com/domains-https/custom-domains/#assign-a-domain-to-a-site
 
-1. Also from your account, you may update your existing site by making changes locally, reknitting if necessary, then rebuilding your site with `blogdown::build_site()`. In the "Deploys" tab on Netlify, scroll down to where you see "Need to update your site? Drag and drop your site output folder here". Drop your updated `public/` folder there to update the deployed website.
+1. Also from your account, you may update your existing site by making changes locally, reknitting if necessary, then rebuilding your site with `blogdown::build_site()`. In the "Deploys" tab on Netlify, scroll down to where you see "Need to update your site? Drag and drop your site output folder here." Drop your updated `public/` folder there to update the deployed website.
 
 ### What is next?
 
