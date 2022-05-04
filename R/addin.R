@@ -7,7 +7,15 @@ new_post_addin = function() source_addin('new_post.R')
 
 update_meta_addin = function() source_addin('update_meta.R')
 
-insert_image_addin = function() source_addin('insert_image.R')
+insert_image_addin = function() {
+  # when the addin is not used inside a site project
+  if (xfun::try_error(site_root())) {
+    old = opts$get()
+    opts$set(site_root = I('.'))
+    on.exit(opts$restore(old), add = TRUE)
+  }
+  source_addin('insert_image.R')
+}
 
 # use touch to update the timestamp of a file if available (not on Windows);
 # otherwise modify a file, undo it, and save it

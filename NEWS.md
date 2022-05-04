@@ -1,5 +1,106 @@
+# CHANGES IN blogdown VERSION 1.10
+
+- For Jekyll sites, a new global option can be used to determine whether to run `jekyll` directly or use the `bundler` gem to run `jekyll` (i.e., `bundle exec jekyll`). If you prefer the latter way, you may set `options(blogdown.jekyll.bundler = TRUE)` before running `blogdown::serve_site()` (thanks, @pat-s, #695).
+
+# CHANGES IN blogdown VERSION 1.9
+
+## NEW FEATURES
+
+- The RStudio addin "Insert Image" also works when the current document in RStudio does not belong to any site projects. Previously, it would throw an error if it is not used inside a site project. Now it works in any document in RStudio (thanks, @yufree, rstudio/rmarkdown#2280).
+
+## BUG FIXES
+
+- `knitr::current_input()` doesn't work in inline R expressions in YAML metadata of Rmd posts (thanks, @brshallo, #647).
+
+# CHANGES IN blogdown VERSION 1.8
+
+## NEW FEATURES
+
+- The **bookdown** config file `_bookdown.yml` under the site root directory is recognized now. For example, you can [customize the figure label in `_bookdown.yml`](https://bookdown.org/yihui/bookdown/internationalization.html) (thanks, @luofeicq, rbind/yihui#167).
+
+- The internal function `scan_yaml()` uses cache in the current R session now. Other functions (e.g., `find_yaml()`, `count_yaml()`, and the "New Post" addin in RStudio) based on this function should be much faster when there are a lot of files to scan for more than once.
+
+## BUG FIXES
+
+- For Hugo versions from 0.89.0 to 0.89.2, `new_content()` failed to identify new content files if they were created with archetypes (thanks, @maelle, #685).
+
+- When creating new posts, YAML metadata inherited from Hugo archetypes could be mangled (thanks, @llrs, #684).
+
+# CHANGES IN blogdown VERSION 1.7
+
+## MINOR CHANGES
+
+- The `version` argument of `find_hugo()` allows for the prefix `v` in the version number now, e.g., `find_hugo('v0.89.2')` is equivalent to `find_hugo('0.89.2')`. This is also true to other functions that use `find_hugo()`, such as `remove_hugo()`.
+
+- Clarified `write_toml()`'s error message that Hugo >= 0.37 is required to run this function (thanks, @pssguy, #665).
+
+## BUG FIXES
+
+- `install_hugo()` did not work for Hugo `v0.20.3`.
+
+- `new_post()` failed to correctly detect the path of the new post with Hugo >= 0.89.3 (thanks, @rcarboni, #667).
+
+- Deal with the new security policy in Hugo 0.91.0 by renaming the internal environment variable `BLOGDOWN_POST_RELREF` (in the shortcode `layouts/shortcodes/blogdown/postref.html`) to `HUGO_BLOGDOWN_POST_RELREF` (thanks, @Nitheshnirmal #672, @gergiu #673).
+
+# CHANGES IN blogdown VERSION 1.6
+
+## NEW FEATURES
+
+- The config file `config/_default/config.yaml` (or `.toml`) is supported now; **blogdown** no longer requires that `config.yaml` (or `.toml`) is under the root directory of the website project. Note that if `config.yaml` is present under both the root directory and the `config/_default/` directory, **blogdown** will only recognize the former, and you may want to delete the former if you actually intend to use the latter (thanks, @Athanasiamo @maelle #611, @diegouriarte #598).
+
+- `install_hugo()` can automatically correct the version number `X.Y` to `X.Y.0` when `X.Y` does not exist but `X.Y.0` does. For example, `install_hugo('0.87')` will actually install the version `0.87.0`.
+
+- Added a global option `blogdown.server.first`, which can be specified as a function to run before serving the site. For example, you can sync a JS file to the `static/` directory with `options(blogdown.server.first = function() { file.copy('../foo/bar.js', './static/js/', overwrite = TRUE) })` each time before you serve the site.
+
+- Added arguments `arch` and `os` to `install_hugo()` so that users can choose the architecture and operating system names manually. For example, `blogdown::install_hugo(extended = FALSE, arch = '64bit', os = 'FreeBSD')` would install `hugo_*_FreeBSD-64bit.tar.gz` (`*` denotes a version number) from https://github.com/gohugoio/hugo/releases.
+
+- Added a new function `hugo_installers()` to print out the information about available Hugo installers of a certain version. This can be helpful when `install_hugo()` fails, e.g., the installer for a certain `os` or `arch` is not available.
+
+## MAJOR CHANGES
+
+- When creating new posts (either with `new_post()` or the RStudio addin "New Post"), the default post filename will be generated from the post title but it will exclude all non-alphanumeric characters. Previously the exclusion of these characters failed under certain locales (e.g., UTF-8 or a locale that has native support for multibyte characters). Now the default filename will no longer contain non-alphanumeric characters except dashes (thanks, yingjie, https://d.cosx.org/d/422702).
+
+## MINOR CHANGES
+
+- The intermediate files `.knit.md$` and `.utf8.md$` no longer need to be ignored in `ignoreFiles` in the Hugo config file now. There is no harm to ignore them anyway. If you have ignored them, you do not need to update your config (#609).
+
+## BUG FIXES
+
+- The global option `blogdown.subdir_fun` can be a function that takes the post title as the input and returns a path of subdirectory under which the new post is to be created via the "New Post" addin in RStudio. The "New Post" addin failed to add the subdirectory defined by this function to the choices of the "Subdirectory" select input if the subdirectory does not exist in the choices, therefore it could not really be used. Now the subdirectory is corrected added, and can be used (thanks, @datawookie, #656).
+
+- `install_hugo()` stopped working with Hugo v0.89.0 (thanks, @martinolmos, #664).
+
+- On Windows, `new_post()` may fail to open the new post if the filename contains multibyte characters (thanks, yingjie, https://d.cosx.org/d/422702).
+
+# CHANGES IN blogdown VERSION 1.5
+
+## NEW FEATURES
+
+- Added a new function `check_vercel()` to check the Vercel config `vercel.json`, and a new function `config_vercel()` to create `vercel.json` that contains the Hugo version (thanks, @chuxinyuan, #648). Vercel (https://vercel.com) is service similar to Netlify.
+
+- Added an argument `time` to `new_post()` to optionally include the local time in the `date` field of the new post with `new_post(time = TRUE)`. The value of this argument can also be set via the global option in `.Rprofile`, e.g., `options(blogdown.time = TRUE)` (it is `FALSE` by default). See the help page `?blogdown::new_post` for more information (thanks, @earfanfan, #625).
+
+## BUG FIXES
+
+- The duplicated `config/` directory is deleted from the theme now (thanks, @shirdekel, #644).
+
+- The `categories` and `tags` fields in archetypes were not respected when creating new posts (thanks, Conor Neilson, https://stackoverflow.com/q/68879106/559676).
+
 # CHANGES IN blogdown VERSION 1.4
 
+## NEW FEATURES
+
+- `check_config()` now checks for `baseURL` that only provides a domain name but lacks the `https` (or `http`) protocol, e.g., `baseURL: example.com/` is typically not a valid URL, but should be `https://example.com/` instead (thanks, @apreshill, #616).
+
+## BUG FIXES
+
+- Fixed a new issue with `blogdown::new_site(theme = "wowchemy/starter-hugo-academic")` (#638). To avoid similar issues with the academic theme in the future, we recommend that you consider using the [`hugo-apero/hugo-apero`](https://hugo-apero-docs.netlify.app) theme instead.
+
+- `install_hugo()` can install the correct version of Hugo on a machine with an ARM processor now (thanks, @r-saikat, #636).
+
+- `clean_duplicates()` now correctly deletes duplicated `.html` file instead of `.md` when `blogdown.method` option is set to `markdown` (thanks, @apreshill, #628).
+
+- `clean_duplicates()` also correctly deletes unused directories like `*_files/header-attrs` associated with `.html` output files (thanks, @apreshill, #632).
 
 # CHANGES IN blogdown VERSION 1.3
 

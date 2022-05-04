@@ -6,6 +6,7 @@
 \alias{check_gitignore}
 \alias{check_hugo}
 \alias{check_netlify}
+\alias{check_vercel}
 \alias{check_content}
 \title{Provide diagnostics for a website project}
 \usage{
@@ -18,6 +19,8 @@ check_gitignore()
 check_hugo()
 
 check_netlify()
+
+check_vercel()
 
 check_content()
 }
@@ -44,6 +47,10 @@ page against a website project. See \sQuote{Details} for what each
   \var{HUGO_VERSION}), and if the \var{publish} setting in
   \file{netlify.toml} matches the \var{publishDir} setting in Hugo's config
   file (if it is set).
+
+\code{check_vercel()} checks if the Hugo version specified in
+  \file{vercel.json} (if it exists) matches the Hugo version used in the
+  current system.
 
 \code{check_content()} checks for possible problems in the content
   files. First, it checks for the validity of YAML metadata of all posts.

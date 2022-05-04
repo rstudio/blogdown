@@ -19,6 +19,9 @@ cover-image: images/cover.png
 ---
 
 ```{r setup, include=FALSE, tidy = FALSE}
+# NOTE: the maximum line width for PDF output is 69. Please make sure that
+# verbatim code blocks contain less than 70 characters per line.
+
 options(
   htmltools.dir.version = FALSE, formatR.indent = 2,
   width = 55, digits = 4, warnPartialMatchAttr = FALSE, warnPartialMatchDollar = FALSE

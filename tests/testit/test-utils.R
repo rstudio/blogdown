@@ -51,22 +51,57 @@ assert('bundle_index() checks if a file path points to the index page of a bundl
 })
 
 test_rmd_file = tempfile()
-test_rmd = '---
-date: \'2017-05-01\'
+test_rmd = "---
+date: '2017-05-01'
 string: text
+empty_value: ~
 empty_list: []
 unit_list:
   - 1
 multi_list:
   - 1
   - 2
+links:
+  - icon: images
+    icon_pack: fas
+    name: slides
+    url: ~
+  - icon: github
+    icon_pack: fab
+    name: code
+    url: ~
 ---
-'
+"
 
-assert('modify_yaml perserves original values properly', {
+assert('modify_yaml() perserves original values properly', {
   write(test_rmd, test_rmd_file)
   old_content = readLines(test_rmd_file)
+  res = yaml_load(test_rmd)
+  (!is.list(res$multi_list))  # should be flattened
 
   modify_yaml(test_rmd_file, .keep_empty = TRUE)
   (readLines(test_rmd_file) %==% old_content)
+})
+
+assert('is_example_url() detects example URLs', {
+  '^https?://(www[.])?(example.(org|com)|replace-this-with-your-hugo-site.com)/?'
+  (!is_example_url(NULL))
+  (!is_example_url('https://www.rstudio.com'))
+  (is_example_url('http://www.example.com'))
+  (is_example_url('https://www.example.org'))
+  (is_example_url('http://replace-this-with-your-hugo-site.com/'))
+  (is_example_url('https://www.replace-this-with-your-hugo-site.com/'))
+})
+
+assert('is_domain_url() detects URLs that look like domain names', {
+  (!is_domain_url(NULL))
+  (!is_domain_url('https://example.org'))
+  (!is_domain_url('/'))
+  (!is_domain_url('foo/'))
+  (is_domain_url('example.com'))
+  (is_domain_url('www.example.com'))
+  (is_domain_url('www.example.com/'))
+  (is_domain_url('www.example.com/foo'))
+  (!is_domain_url('-example.com'))
+  (!is_domain_url('example-.com'))
 })
