@@ -216,7 +216,7 @@ blogdown::shortcode('tweet', '852205086956818432')
 
 A Hugo theme\index{Themes} is a collection of template files and optional website assets such as CSS and JavaScript files. In a nutshell, a theme defines what your website looks like after your source content is rendered through the templates.
 
-Hugo has provided a large number of user-contributed themes at https://themes.gohugo.io. Unless you are an experienced web designer, you'd better start from an existing theme here. The quality and complexity of these themes vary a lot, and you should choose one with caution. For example, you may take a look at the number of stars of a theme repository on GitHub, as well as whether the repository is still relatively active. We do not recommend that you use a theme that has not been updated for more than a year.
+Hugo has provided a large number of user-contributed themes at https://themes.gohugo.io. Unless you are an experienced web designer, you'd better start from an existing theme here. The quality and complexity of these themes vary a lot, and you should choose one with caution. For example, you may take a look at the number of stars of a theme repository on GitHub, as well as whether the repository is still relatively active. Themes that have not been updated for a long time (e.g., a couple of years) may or may not still work with a later version of Hugo. You will have to test them carefully.
 
 In this section, we will explain how the default theme in **blogdown** works, which may also give you some ideas about how to get started with other themes.
 
