@@ -611,7 +611,7 @@ In Hugo, themes\index{Themes} control the entire appearance and functionality of
 
 1. Configuration files. This may be a single `config.yaml` or `config.toml` file in the root of your website project. Some themes also use a configuration directory, located in `config/_default/`. Read more about these files in Chapter \@ref(configuration).
 
-1. Layout files, located for example in `themes/hugo-lithium/layouts/`. Hugo is a templating system, so layout files are `*.html` files, with a specific file and naming structure. Read more about these files in Chapter \@ref(templates).
+1. Layout files, located for example in `themes/hugo-lithium/layouts/`. Hugo is a templating system, so layout files are `*.html` files, with a specific file and naming structure. Read more about these files in Section \@ref(templates).
 
 1. Style asset files like fonts and CSS.
 
@@ -623,7 +623,7 @@ All of these files are contained in the `themes/` folder, and are kept separate 
 
 If you care a lot about the appearance of your website, you will probably spend quite a bit of time in the beginning looking for a Hugo theme that you like from the collection listed at https://themes.gohugo.io. Please note that not all themes have been tested with **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason, but it can be time-consuming to learn and understand how a new theme works, so we recommend that you learn more about Hugo by yourself before asking, and we also encourage users to help each other there.
 
-There are now over 250 Hugo themes to choose from. To save you some time, we list a few themes below that match our taste:
+There are now about 400 Hugo themes to choose from. To save you some time, we list a few themes below that match our taste:
 
 - Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) [Tanka,](https://themes.gohugo.io/hugo-tanka/)
 [Cupper,](https://themes.gohugo.io/cupper-hugo-theme/)
@@ -644,11 +644,11 @@ Another thing to keep in mind is that the more effort you make in a complicated 
 
 ### New site, new theme
 
-To use a Hugo theme other than `hugo-lithium` with a new site (which we showed in Chapter \@ref(a-quick-example)), we recommend the following workflow:
+To use a Hugo theme other than `hugo-lithium` with a new site (which we showed in Section \@ref(a-quick-example)), we recommend the following workflow:
 
-1. Carefully pick a theme at https://themes.gohugo.io, and find the link to its GitHub repository^[For most themes, you can find this by navigating to the theme of your choice from http://themes.gohugo.io and then clicking on `Homepage`.], which is of the form `https://github.com/user/repo`. For example, the source of the [Hugo theme Anatole](https://themes.gohugo.io/anatole/) is located at https://github.com/lxndrblz/anatole.
+1. Carefully pick a theme at https://themes.gohugo.io, and find the link to its GitHub repository,^[For most themes, you can find this by navigating to the theme of your choice from http://themes.gohugo.io and then clicking on "Download."] which is of the form `https://github.com/user/repo`. For example, the source of the [Hugo theme Anatole](https://themes.gohugo.io/anatole/) is located at https://github.com/lxndrblz/anatole.
 
-1. Create a new project in RStudio (`File -> New Project -> New Directory -> Website using blogdown`) (see Figure \@ref(fig:new-project) and \@ref(fig:blogdown-project)). 
+1. Create a new project in RStudio (`File -> New Project -> New Directory -> Website using blogdown`) (see Figures \@ref(fig:new-project) and \@ref(fig:blogdown-project)). 
 
 1. In the "Hugo theme" field, enter the `user/repo` from the link in Step 1. Click "Create Project". 
 
@@ -664,7 +664,7 @@ To use a Hugo theme other than `hugo-lithium` with a new site (which we showed i
 
 ### Existing site, new theme
 
-Generally, we do not advise you to switch themes, as each Hugo theme depends on different variables that you provide in the theme-specific configuration file (`config.yaml` or `config.toml`) and in the YAML of the `content/` files. Example sites are often provided for individual themes, so we recommend using `blogdown::new_site()`, then editing the provided example site as a starting point. However, if you do want to test a different Hugo theme with an existing site, the following workflow is a good place to start:
+Generally, we do not advise you to switch themes, as each Hugo theme depends on different variables that you provide in the theme-specific configuration file (`config.yaml` or `config.toml`) and in the YAML of the `content/` files. Example sites are often provided for individual themes, so we recommend using `blogdown::new_site()`, then editing the provided example site as a starting point. However, if you do want to test a different Hugo theme with an existing site, you can start with the following workflow:
 
 1. In the R console, install the theme via\index{blogdown::install\_theme()} `blogdown::install_theme()`.
 
@@ -674,7 +674,7 @@ Generally, we do not advise you to switch themes, as each Hugo theme depends on 
 
 1. Manually move the configuration file (`config.yaml` or `config.toml`) from the `themes/theme-name/exampleSite/` directory to the root directory of your website to match the newly installed theme.
 
-1. Carefully inspect the differences between your new theme's `exampleSite` and the files inside your `content/` folder. A theme's `exampleSite` content is tailored to a specific theme, so changing themes without changing your `content/` is a bit like wearing someone else's clothes- they just may not fit right.
+1. Carefully inspect the differences between your new theme's `exampleSite` and the files inside your `content/` folder. A theme's `exampleSite` content is tailored to a specific theme, so changing themes without changing your `content/` is a bit like wearing someone else's clothes---they just may not fit right.
 
 ### Existing site, update theme
 
@@ -691,7 +691,6 @@ blogdown::install_theme(theme = 'lxndrblz/anatole', force = TRUE)
 ```
 
 Then slowly work through what changed in the site configuration files and the `content/` frontmatter (YAML metadata) by comparing the updated theme's `exampleSite`. As stated earlier, we recommend doing this work in a different branch (i.e., not `main`) before merging.
-
 
 ## A recommended workflow {#workflow}
 
