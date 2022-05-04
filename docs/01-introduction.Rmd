@@ -167,7 +167,7 @@ ggplot(Orange, aes(x = age,
                    color = Tree)) +
   geom_point() +
   geom_line() +
-  guides(color = FALSE) +
+  guides(color = "none") +
   theme_bw()
 ```
 ````
@@ -658,7 +658,6 @@ To use a Hugo theme other than `hugo-lithium` with a new site (which we showed i
     # for example, create a new site with the anatole theme
     blogdown::new_site(theme = 'lxndrblz/anatole')
     ```
-
 
 1. Play with the new site for a while and if you do not like it, you can repeat the above steps, otherwise edit the options in the configuration file (`config.yaml` or `config.toml`). If you do not understand certain options, go to the documentation of the theme, which is often the README page of the GitHub repository. Not all options have to be changed.
 
