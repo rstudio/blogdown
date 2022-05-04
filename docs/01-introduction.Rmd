@@ -284,6 +284,76 @@ If you are satisfied with this default theme, you are basically ready to start w
 
 We will also show how to use other themes in Section \@ref(other-themes). However, please keep in mind that a more complicated and fancier theme may require you to learn more about all the underlying technologies like the Hugo templating language, HTML, CSS, and JavaScript.
 
+## A quick deploy
+
+Publishing a **blogdown** website involves copying the output directory containing all your rendered site files (typically, a bunch of `*.html` files and site assets like fonts, CSS, JavaScript, and images) to a web server or web hosting service.
+
+In this section, we will walk you through a quick deploy to publish your website using a drag-and-drop tool from \index{Netlify} https://www.netlify.com. Netlify is a platform that offers cloud hosting and serverless backend services for static websites. Lucky for us, that is exactly what we need---since **blogdown** helps us create static websites using Hugo. 
+
+If you followed along with Section \@ref(a-quick-example), you should now have s static website using the Hugo lithium theme with knitted `.Rmd` content for one post and served locally using **blogdown**.
+
+The drag-and-drop method we describe next is a good workflow to start with if you are not familiar with GIT or GitHub or deploying websites. There are many options for publishing static websites, and we will talk more about them plus advanced workflows involving version control and continuous deployment in Chapter \@ref(deployment).
+
+### Build site
+
+The publishing directory of a Hugo site is `public/` by default. Your *built* website will be generated to this directory, which you can upload to any web server that can serve static websites, and your website will be up and running.
+
+Serving your Hugo site locally using `blogdown::serve_site()` does not generate the `public/` directory. To follow this drag-and-drop method, you'll need to build your site locally first.
+
+Restart the R session, and run:
+
+```{r eval=FALSE}
+blogdown::build_site()
+```
+
+Alternatively, if you use RStudio, you may use:
+
+- the "Build Website" button in the Build pane, or 
+
+- press `Ctrl + Shift + B` (`Cmd + Shift + B` on macOS) to build the website.
+
+You should see a new `public/` directory under the root directory of your project. Never edit files in this directory, as your changes will always be overwritten whenever you re-build your site.
+
+Note that this function does not re-knit R Markdown files by default, because it may be expensive and often undesirable to render `.Rmd` files that have been knitted before. Given that R package upgrades have a tendency to break older code, continuously re-knitting old content is nearly impossible to do without errors, especially over longer periods of time.
+
+We recommend always using `blogdown::serve_site()` first to preview your site before building it. By default, that function will knit your R Markdown content that has not been knitted yet. As mentioned earlier, we also recommend running `blogdown::check_content()`. Among other things, we check if you have content that needs to be re-knit:
+
+```default
+| Checking your R Markdown content...
+○ All R Markdown files have been knitted.
+○ All R Markdown output files are up to date with their source files.
+```
+
+### Use Netlify Drop
+
+Next, go online to\index{Netlify} Netlify Drop at https://app.netlify.com/drop. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag and drop your site output folder here."
+
+Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.app` to you. After your site is live, you will be able to share the link to your new **blogdown** site if you would like to.
+
+You will notice a disclaimer that this site will be deleted after 24 hours. You need to create an account to save this link and keep your site online.
+
+### Sign up for Netlify
+
+Netlify has a free plan with plenty of useful features, so we recommend signing up for an account. To sign up:
+
+1. Go online to \index{Netlify} https://www.netlify.com.
+
+1. Click on the "Sign Up" button. 
+
+1. If you have a GitHub account (https://github.com), we recommend signing up using your existing GitHub account (no need to create another account), so select "GitHub" (you may need to sign in), and click to "Authorize Netlify."
+
+1. From your account, if you used Netlify Drop, you can (and should) change your random subdomain to a more meaningful one. You may read the docs for changing a site's default Netlify subdomain here: https://docs.netlify.com/domains-https/custom-domains/#assign-a-domain-to-a-site
+
+1. Also from your account, you may update your existing site by making changes locally, reknitting if necessary, then rebuilding your site with `blogdown::build_site()`. In the "Deploys" tab on Netlify, scroll down to where you see "Need to update your site? Drag and drop your site output folder here." Drop your updated `public/` folder there to update the deployed website.
+
+### What is next?
+
+The workflow described above can be cumbersome the more you work on your website. It can be much easier to publish a website if you are familiar with GIT and GitHub. 
+
+We recommend that you create a new site on Netlify from your GitHub repository that contains the source files of your website, so that you can enjoy the benefits of continuous deployment instead of manually uploading the `public/` folder every time. 
+
+With this advanced workflow, you do not need to run `blogdown::hugo_build()` locally, because the website can be built on Netlify via Hugo. Instead, you would rely on `blogdown::serve_site()` locally to preview your site before pushing your changes to GitHub. See Chapter \@ref(deployment) for more information.
+
 ## RStudio IDE
 
 There are a few essential RStudio addins\index{RStudio addins} to make it easy to edit and preview your website, and you can find them in the menu "Addins" on the RStudio toolbar:
@@ -537,16 +607,23 @@ If you are working on an R Markdown post, but do not want **blogdown** to compil
 
 ## Other themes
 
-In Hugo, themes\index{Themes} control the entire appearance and functionality of your site. So, if you care a lot about the appearance of your website, you will probably spend quite a bit of time in the beginning looking for a Hugo theme that you like from the collection listed at https://themes.gohugo.io. Please note that not all themes have been tested against **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason, but it can be time-consuming to learn and understand how a new theme works, so we recommend that you learn more about Hugo by yourself before asking, and we also encourage users to help each other there.
+In Hugo, themes\index{Themes} control the entire appearance and functionality of your site. A Hugo theme is made with the following elements:
 
-After you have found a satisfactory theme, you need to figure out its GitHub username and repository name,^[For most themes, you can find this by navigating to the theme of your choice from http://themes.gohugo.io and then clicking on `Homepage`.] then either install the theme via\index{blogdown::install\_theme()} `blogdown::install_theme()`, or just create a new site under another new directory and pass the GitHub repository name to the `theme` argument of `new_site()`. We recommend that you use the second approach, because Hugo themes could be very complicated and the usage of each theme can be very different and highly dependent on `config.toml`. If you install a theme using `install_theme()` instead of `new_site()` you’ll need to manually create the `config.toml` file in the root directory of your website to match the newly installed theme.^[In a workaround, if you used `install_theme()` and set the `theme_example` argument to TRUE, then you can access an example `config.toml` file. In the `themes/` directory, navigate to the file for your newly downloaded theme and find `exampleSite/config.toml`. This file can be copied to your root directory (to replace the `config.toml` file from your original theme) or used as a template to correctly write a new `config.toml` file for your new theme.]
+1. Configuration files. This may be a single `config.yaml` or `config.toml` file in the root of your website project. Some themes also use a configuration directory, located in `config/_default/`. Read more about these files in Chapter \@ref(configuration).
 
-```{r eval=FALSE}
-# for example, create a new site with the anatole theme
-blogdown::new_site(theme = 'lxndrblz/anatole')
-```
+1. Layout files, located for example in `themes/hugo-lithium/layouts/`. Hugo is a templating system, so layout files are `*.html` files, with a specific file and naming structure. Read more about these files in Section \@ref(templates).
 
-To save you some time, we list a few themes below that match our taste:
+1. Style asset files like fonts and CSS.
+
+1. HTML dependencies like JavaScript files. 
+
+All of these files are contained in the `themes/` folder, and are kept separate from your website `content/`. However, all Hugo themes rely on specific `content/` and YAML frontmatter, so do not be fooled into thinking that themes and content are not dependent on each other---they are! In this section, we provide some opinionated advice on choosing themes, as well as recommended workflows for working with Hugo themes using **blogdown**.
+
+### Choosing themes
+
+If you care a lot about the appearance of your website, you will probably spend quite a bit of time in the beginning looking for a Hugo theme that you like from the collection listed at https://themes.gohugo.io. Please note that not all themes have been tested with **blogdown**. If you find a certain theme does not work well with **blogdown**, you may report to https://github.com/rstudio/blogdown/issues, and we will try to investigate the reason, but it can be time-consuming to learn and understand how a new theme works, so we recommend that you learn more about Hugo by yourself before asking, and we also encourage users to help each other there.
+
+There are now about 400 Hugo themes to choose from. To save you some time, we list a few themes below that match our taste:
 
 - Simple/minimal themes: [XMin,](https://themes.gohugo.io/hugo-xmin/) 
 [Tanka,](https://themes.gohugo.io/hugo-tanka/) 
@@ -568,6 +645,56 @@ Another thing to keep in mind is that the more effort you make in a complicated 
 >
 > --- Liyun Chen^[Translated from her Chinese Weibo.]
 
+### New site, new theme
+
+To use a Hugo theme other than `hugo-lithium` with a new site (which we showed in Section \@ref(a-quick-example)), we recommend the following workflow:
+
+1. Carefully pick a theme at https://themes.gohugo.io, and find the link to its GitHub repository,^[For most themes, you can find this by navigating to the theme of your choice from http://themes.gohugo.io and then clicking on "Download."] which is of the form `https://github.com/user/repo`. For example, the source of the [Hugo theme Anatole](https://themes.gohugo.io/anatole/) is located at https://github.com/lxndrblz/anatole.
+
+1. Create a new project in RStudio (`File -> New Project -> New Directory -> Website using blogdown`) (see Figures \@ref(fig:new-project) and \@ref(fig:blogdown-project)). 
+
+1. In the "Hugo theme" field, enter the `user/repo` from the link in Step 1. Click "Create Project". 
+
+    Alternatively, in the R console, you may type `blogdown::new_site(theme = 'user/repo')`:
+    
+    ```{r eval=FALSE}
+    # for example, create a new site with the anatole theme
+    blogdown::new_site(theme = 'lxndrblz/anatole')
+    ```
+
+
+1. Play with the new site for a while and if you do not like it, you can repeat the above steps, otherwise edit the options in the configuration file (`config.yaml` or `config.toml`). If you do not understand certain options, go to the documentation of the theme, which is often the README page of the GitHub repository. Not all options have to be changed.
+
+### Existing site, new theme
+
+Generally, we do not advise you to switch themes, as each Hugo theme depends on different variables that you provide in the theme-specific configuration file (`config.yaml` or `config.toml`) and in the YAML of the `content/` files. Example sites are often provided for individual themes, so we recommend using `blogdown::new_site()`, then editing the provided example site as a starting point. However, if you do want to test a different Hugo theme with an existing site, you can start with the following workflow:
+
+1. In the R console, install the theme via\index{blogdown::install\_theme()} `blogdown::install_theme()`.
+
+    ```{r eval=FALSE}
+    blogdown::install_theme(theme = 'lxndrblz/anatole')
+    ```
+
+1. Manually move the configuration file (`config.yaml` or `config.toml`) from the `themes/theme-name/exampleSite/` directory to the root directory of your website to match the newly installed theme.
+
+1. Carefully inspect the differences between your new theme's `exampleSite` and the files inside your `content/` folder. A theme's `exampleSite` content is tailored to a specific theme, so changing themes without changing your `content/` is a bit like wearing someone else's clothes---they just may not fit right.
+
+### Existing site, update theme
+
+Updating Hugo theme files is not for the faint of heart, and we also do not recommend doing this unless you must. We also generally recommend you only do this when you integrate GIT and GitHub for version control, and that you attempt to update your theme in a branch first.
+
+The main reason this is difficult is that Hugo theme files can require changes in your website configuration file (`config.yaml` or `config.toml`) and in the YAML of individual content files, depending on the extent of the theme update. So updating a theme can be quite a hassle. 
+
+Why do theme developers update their themes? Three reasons. One, Hugo changes. As a result, Hugo theme developers must change their themes to keep up with deprecated Hugo functions. Two, Hugo theme developers fix their themes when bugs are reported. Three, popular Hugo themes often field lots of feature requests, and some theme developers are responsive to adding new features.
+
+If you find yourself needing to update your theme, you may do the following:
+
+```{r eval=FALSE}
+blogdown::install_theme(theme = 'lxndrblz/anatole', force = TRUE)
+```
+
+Then slowly work through what changed in the site configuration files and the `content/` frontmatter (YAML metadata) by comparing the updated theme's `exampleSite`. As stated earlier, we recommend doing this work in a different branch (i.e., not `main`) before merging.
+
 ## A recommended workflow {#workflow}
 
 There are a lot of ways to start building a website and deploy it. Because of the sheer number of technologies that you need to learn to fully understand how a website works, we'd like to recommend one workflow to beginners, so that hopefully they do not need to digest the rest of this book. This is definitely not the most optimal workflow, but requires you to know the fewest technical details.
@@ -588,12 +715,4 @@ To edit a website:
 
 1. Use the "Update Metadata" addin to modify the YAML metadata if necessary.
 
-To publish a website if you are not familiar with GIT or GitHub:
-
-1. Restart the R session, and run `blogdown::hugo_build()`. You should get a `public/` directory under the root directory of your project.
-
-1. Log into\index{Netlify} https://www.netlify.com (you can use a GitHub account if you have one). If this is the first time you have published this website, you can create a new site, otherwise you may update the existing site you created last time. You can drag and drop the `public/` folder from your file viewer to the indicated area on the Netlify web page, where it says "Drag a folder with a static site here."
-
-1. Wait for a few seconds for Netlify to deploy the files, and it will assign a random subdomain of the form `random-word-12345.netlify.com` to you. You can (and should) change this random subdomain to a more meaningful one if it is still available.
-
-It can be much easier to publish a website if you are familiar with GIT and GitHub. We recommend that you create a new site on Netlify from your GitHub repository that contains the source files of your website, so that you can enjoy the benefits of continuous deployment instead of manually uploading the `public/` folder every time. With this approach, you do not need to run `blogdown::hugo_build()` locally, because the website can be built on Netlify via Hugo. See Chapter \@ref(deployment) for more information.
+To publish a website, see Section \@ref(a-quick-deploy).
