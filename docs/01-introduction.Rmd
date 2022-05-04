@@ -655,3 +655,4 @@ To edit a website:
 
 1. Use the "Update Metadata" addin to modify the YAML metadata if necessary.
 
+To publish a website, see Section \@ref(a-quick-deploy).
