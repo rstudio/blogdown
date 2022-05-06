@@ -387,19 +387,17 @@ install_theme = function(
     file.rename(zipdir, newdir)
     unlink(c(zipfile, file.path(newdir, '*.Rproj')))
     theme = gsub('^[.][\\/]+', '', newdir)
-    if (is_theme) {
-      # we don't need the content/ directory from the theme or config/ if it
-      # already exists in root dir
-      unlink(
-        file.path(theme, c('content', if (dir_exists('../config')) 'config')),
-        recursive = TRUE
-      )
-    } else {
-      # download modules if not a theme, and copy "theme" content to root dir
-      download_modules(file.path(theme, 'go.mod'))
-      file.copy(list.files(theme, full.names = TRUE), '../', recursive = TRUE)
-      unlink(theme, recursive = TRUE)
-    }
+    # download modules if necessary
+    download_modules(file.path(theme, 'go.mod'))
+    # move content/ and config/ to root if they do not already exist there
+    lapply(c('content', 'config'), function(d) {
+      if (!dir_exists(d1 <- file.path(theme, d))) return()
+      if (dir_exists(d2 <- file.path('..', d))) {
+        unlink(d1, recursive = TRUE)
+      } else {
+        file.rename(d1, d2)
+      }
+    })
     in_dir('..', {
       # remove config.toml if config/_default/config.toml exists
       remove_config()

@@ -2,6 +2,8 @@
 
 - For Jekyll sites, a new global option can be used to determine whether to run `jekyll` directly or use the `bundler` gem to run `jekyll` (i.e., `bundle exec jekyll`). If you prefer the latter way, you may set `options(blogdown.jekyll.bundler = TRUE)` before running `blogdown::serve_site()` (thanks, @pat-s, #695).
 
+- Adapted to some breaking changes in the wowchemy academic theme again (thanks, @bjsmith, #704). As mentioned in [**blogdown** v1.4](https://github.com/rstudio/blogdown/releases/tag/v1.4), we recommend **blogdown** users to consider using the [hugo-apero](https://github.com/hugo-apero/hugo-apero) theme when creating new sites. This theme is maintained by **blogdown** authors and much more stable.
+
 # CHANGES IN blogdown VERSION 1.9
 
 ## NEW FEATURES
