@@ -199,16 +199,18 @@ knitr::include_graphics('images/jtleek-tweet.png')
 If you use the shortcode, all you need in the Markdown source document is:
 
 ```go
-{{< tweet 852205086956818432 >}}
+{{< tweet user="jtleek", id="852205086956818432" >}}
 ```
 
-Basically, you only need to pass the ID of the tweet to a shortcode named `tweet`. Hugo will fetch the tweet automatically and render the HTML snippet for you. For more about shortcodes, see https://gohugo.io/extras/shortcodes/.
+Basically, you only need to pass the username and ID of the tweet to a shortcode named `tweet`.^[Before Hugo v0.89.0, you only need to pass the ID. Since Twitter has started to require the username since late 2021, this means that you have to use Hugo >= 0.89.0 and provide the username if you want to use the Twitter shortcode. For older versions of Hugo, the shortcodes will be broken, unfortunately.] Hugo will fetch the tweet automatically and render the HTML snippet for you. For more about shortcodes, see https://gohugo.io/extras/shortcodes/.
 
 Shortcodes are supposed to work in plain Markdown documents only. To use shortcodes in R Markdown instead of plain Markdown, you have to call the function `blogdown::shortcode()`, e.g.,
 
 ````markdown
 `r ''````{r echo=FALSE}
-blogdown::shortcode('tweet', '852205086956818432')
+blogdown::shortcode(
+  "tweet", user = "jtleek", id = "852205086956818432"
+)
 ```
 ````
 

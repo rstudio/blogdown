@@ -67,8 +67,9 @@ Since Hugo v0.60, Hugo has switched its default Markdown rendering
 \examples{
 library(blogdown)
 
-shortcode("tweet", "1234567")
-shortcodes("tweet", as.character(1:5))  # multiple tweets
+shortcode("tweet", user = "SanDiegoZoo", id = "1453110110599868418")
+# multiple tweets (id's are fake)
+shortcodes("tweet", user = "SanDiegoZoo", id = as.character(1:5))
 shortcode("figure", src = "/images/foo.png", alt = "A nice figure")
 shortcode("highlight", "bash", .content = "echo hello world;")
 

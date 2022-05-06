@@ -4,6 +4,8 @@
 
 - Adapted to some breaking changes in the wowchemy academic theme again (thanks, @bjsmith, #704). As mentioned in [**blogdown** v1.4](https://github.com/rstudio/blogdown/releases/tag/v1.4), we recommend **blogdown** users to consider using the [hugo-apero](https://github.com/hugo-apero/hugo-apero) theme when creating new sites. This theme is maintained by **blogdown** authors and much more stable.
 
+- Updated documentation to mention that the `tweet` shortcode (or the R wrapper function `blogdown::shortcode('tweet')`) will require the Twitter username for Hugo >= v0.89.0. Previously only the tweet ID is required, e.g., `{{< tweet 852205086956818432 >}}`, but now it also requires the user, e.g., `{{< tweet user="jtleek", id="852205086956818432" >}}` (thanks, @lcolladotor, #701).
+
 # CHANGES IN blogdown VERSION 1.9
 
 ## NEW FEATURES
