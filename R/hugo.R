@@ -161,6 +161,7 @@ new_site = function(
   serve = if (interactive()) 'ask' else FALSE
 ) {
   msg_init('Creating your new site')
+  opts$set(site_root = NULL)  # invalidate the previously stored site root
   if (is.na(force)) {
     files = grep(
       '([.]Rproj|/(LICENSE|README)([.][a-z]+)?)$', list_files(dir),
