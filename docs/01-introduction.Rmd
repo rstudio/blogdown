@@ -629,7 +629,7 @@ There are now about 400 Hugo themes to choose from. To save you some time, we li
 [Cupper,](https://themes.gohugo.io/cupper-hugo-theme/)
 [simple-a,](https://themes.gohugo.io/simple-a/) and [ghostwriter.](https://themes.gohugo.io/ghostwriter/)
 
-- Sophisticated themes: [Even,](https://themes.gohugo.io/hugo-theme-even/) [Tranquilpeak,](https://themes.gohugo.io/hugo-tranquilpeak-theme/)
+- Sophisticated themes: [Jane,](https://themes.gohugo.io/themes/hugo-theme-jane/) [Tranquilpeak,](https://themes.gohugo.io/hugo-tranquilpeak-theme/)
 [Creative portfolio,](https://themes.gohugo.io/hugo-creative-portfolio-theme/) and [Universal.](https://themes.gohugo.io/hugo-universal-theme/)
 
 - Multimedia content themes: If you are interested in adding multimedia content to your site (such as audio files of a podcast), the [castanet](https://github.com/mattstratton/castanet) theme provides an excellent framework tailored for this application.  An example of a site using **blogdown** with the castanet theme is the [R-Podcast.](https://www.r-podcast.org)
