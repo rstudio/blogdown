@@ -360,7 +360,7 @@ Note that Netlify has provided the optimization features on the server side for 
 
 Once your site is up and running, you probably want people to find it. SEO --- Search Engine Optimization --- is the art of making a website easy for search engines like Google to understand. And, hopefully, if the search engine knows what you are writing about, it will present links to your site high in results when someone searches for topics you cover.
 
-Entire books have been written about SEO, not to mention the many companies that are in the business of offering (paid) technical and strategic advice to help get sites atop search-engine rankings. If you are interested in finding out more, a good place to start is the Google Search Engine Optimization Starter Guide (http://bit.ly/google-seo-starter). Below are a few key points:
+Entire books have been written about SEO, not to mention the many companies that are in the business of offering (paid) technical and strategic advice to help get sites atop search-engine rankings. If you are interested in finding out more, a good place to start is the Google Search Engine Optimization Starter Guide (https://developers.google.com/search/docs/beginner/seo-starter-guide). Below are a few key points:
 
 1. The title that you select for each page and post is a very important signal to Google and other search engines telling them what that page is about.
 
