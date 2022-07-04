@@ -19,10 +19,11 @@ blogs <- tribble(
   "https://shinydevseries.com/", "https://github.com/shinydevseries/shinydevseries_site",
   "https://r-podcast.org/", "https://github.com/rbind/r-podcast",
   "https://isabella-b.com/", "https://github.com/isabellabenabaye/isabella-b.com",
-  "https://robjhyndman.com/", "https://github.com/rbind/robjhyndman.com",
+  # "https://robjhyndman.com/", "https://github.com/rbind/robjhyndman.com",
   "https://www.tidymodels.org/", "https://github.com/tidymodels/tidymodels.org",
   "https://livefreeordichotomize.com/", "https://github.com/LFOD/real-blog",
-  "https://hugo-apero-docs.netlify.app/", "https://github.com/hugo-apero/hugo-apero-docs"
+  "https://hugo-apero-docs.netlify.app/", "https://github.com/hugo-apero/hugo-apero-docs",
+  "https://prose.yihui.org/",  "https://github.com/yihui/hugo-prose/tree/master/exampleSite"
 )
 
 # get the title

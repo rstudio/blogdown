@@ -23,11 +23,6 @@
   title: Isabella Benabaye
   img: images/isabella-b.png
   showcase: yes
-- href: https://robjhyndman.com/
-  source: https://github.com/rbind/robjhyndman.com
-  title: Rob J Hyndman
-  img: images/robjhyndman.png
-  showcase: yes
 - href: https://www.tidymodels.org/
   source: https://github.com/tidymodels/tidymodels.org
   title: Tidymodels
@@ -42,4 +37,9 @@
   source: https://github.com/hugo-apero/hugo-apero-docs
   title: Hugo Apéro
   img: images/hugo-apero-docs.netlify.png
+  showcase: yes
+- href: https://prose.yihui.org/
+  source: https://github.com/yihui/hugo-prose/tree/master/exampleSite
+  title: Home | Hugo Prose
+  img: images/prose.yihui.png
   showcase: yes
