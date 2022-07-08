@@ -957,7 +957,7 @@ tweak_hugo_env = function(baseURL = NULL, relativeURLs = NULL, server = FALSE) {
     c3 = get_config('ignoreErrors', NA, config)
     # should also ignore error-missing-instagram-accesstoken, but I don't know
     # how to configure ignoreErrors to be an array through the env var
-    if (is.na(c3)) vars = c(vars, HUGO_IGNOREERRORS = 'error-remote-getjson')
+    if (all(is.na(c3))) vars = c(vars, HUGO_IGNOREERRORS = 'error-remote-getjson')
   }
   v = set_envvar(vars)
   exit_call(function() set_envvar(v))

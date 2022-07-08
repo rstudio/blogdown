@@ -1,5 +1,6 @@
 # CHANGES IN blogdown VERSION 1.11
 
+- Fixed a bug that `blogdown::serve_site()` fails with the `ignoreErrors` option is configured as an array in `config.yaml` (thanks, @CongLiu-CN, #714).
 
 # CHANGES IN blogdown VERSION 1.10
 
