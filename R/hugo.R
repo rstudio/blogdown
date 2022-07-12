@@ -511,8 +511,14 @@ new_content = function(path, kind = '', open = interactive()) {
   }
   if (length(file2) != 1) stop("Failed to create the file '", path, "'.")
   hugo_convert_one(file2)
-  file = with_ext(file2, file_ext(path))
-  if (file != file2) file.rename(file2, file)
+  file = content_file(path)  # the expected location of the new file
+  if (!xfun::same_path(file, file2)) {
+    dir_create(dirname(file))
+    file.rename(file2, file)
+    # after the new file created by hugo is moved, clean up possible empty dirs
+    d = dirname(file2)
+    while (d != '.' && !is.null(xfun::del_empty_dir(d))) d = dirname(d)
+  }
   open_file(file, open)
   file
 }
