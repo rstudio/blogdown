@@ -225,13 +225,7 @@ new_site = function(
     file.copy(f1, f2)
     if (getOption('blogdown.open_sample', TRUE)) open_file(f2)
   }
-  if (!file.exists('index.Rmd')) {
-    writeLines(c(
-      '---', 'site: blogdown:::blogdown_site', '---', '',
-      '<!-- This file is for blogdown only. Please do not edit it. -->'
-    ), 'index.Rmd')
-    Sys.chmod('index.Rmd', '444')
-  }
+  if (!file_exists('index.Rmd')) create_index()
 
   if (to_yaml) {
     msg_next('Converting all metadata to the YAML format')
@@ -276,6 +270,14 @@ new_site = function(
     xfun::try_silent(rstudioapi::initializeProject())
   }
   invisible(getwd())
+}
+
+create_index = function() {
+  writeLines(c(
+    '---', 'site: blogdown:::blogdown_site', '---', '',
+    '<!-- This file is for blogdown only. Please do not edit it. -->'
+  ), 'index.Rmd')
+  Sys.chmod('index.Rmd', '444')
 }
 
 #' Install a Hugo theme from Github

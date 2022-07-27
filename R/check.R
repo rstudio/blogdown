@@ -91,6 +91,16 @@ check_config = function() {
   }
   open_file(f, open = interactive() && !okay)
   msg_done(f)
+
+  msg_init('Checking index.Rmd in the root directory')
+  if (!file_exists('index.Rmd')) {
+    msg_todo('index.Rmd is missing; create one with blogdown:::create_index().')
+  } else if (!identical(rmarkdown::yaml_front_matter('index.Rmd')[['site']], 'blogdown:::blogdown_site')) {
+    msg_todo('Add "site: blogdown:::blogdown_site" to the YAML header of index.Rmd.')
+  } else {
+    msg_okay('index.Rmd is correctly configured.')
+  }
+  msg_done('index.Rmd')
 }
 
 is_example_url = function(url) {
