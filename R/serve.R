@@ -144,11 +144,16 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     # which will block the R session
     if (!server$daemon) return(system2(cmd, cmd_args))
 
-    pid = if (server_processx()) {
-      proc = processx::process$new(cmd, cmd_args, stderr = '|', cleanup_tree = TRUE)
+    verbose = get_option('blogdown.server.verbose', FALSE)
+    pid = if (getOption('blogdown.use.processx', xfun::loadable('processx'))) {
+      proc = processx::process$new(
+        cmd, cmd_args, cleanup_tree = TRUE,
+        stdout = if (verbose && processx::is_valid_fd(1L)) '',
+        stderr = if (verbose && processx::is_valid_fd(2L)) '' else '|'
+      )
       I(proc$get_pid())
     } else {
-      xfun::bg_process(cmd, cmd_args)
+      xfun::bg_process(cmd, cmd_args, verbose)
     }
     opts$append(pids = list(pid))
 
@@ -237,17 +242,6 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     return(invisible())
   }
-}
-
-server_processx = function() {
-  v = get_option('blogdown.server.verbose', FALSE)
-  # to see verbose output, don't use processx but xfun::bg_process() instead;
-  # TODO: we may use the polling method in #555 to have processx output, too
-  if (v) {
-    options(xfun.bg_process.verbose = TRUE)
-    return(FALSE)
-  }
-  getOption('blogdown.use.processx', xfun::loadable('processx'))
 }
 
 jekyll_server_args = function(host, port) {
