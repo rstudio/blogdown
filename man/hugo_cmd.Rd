@@ -200,37 +200,37 @@ Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',
 }
 \section{Functions}{
 \itemize{
-\item \code{hugo_cmd}: Run an arbitrary Hugo command.
+\item \code{hugo_cmd()}: Run an arbitrary Hugo command.
 
-\item \code{hugo_version}: Return the version number of Hugo if possible, which is
+\item \code{hugo_version()}: Return the version number of Hugo if possible, which is
 extracted from the output of \code{hugo_cmd('version')}.
 
-\item \code{hugo_available}: Check if Hugo of a certain version (or above if
+\item \code{hugo_available()}: Check if Hugo of a certain version (or above if
 \code{exact = FALSE}) is available.
 
-\item \code{hugo_build}: Build a plain Hugo website. Note that the function
+\item \code{hugo_build()}: Build a plain Hugo website. Note that the function
 \code{\link{build_site}()} first compiles Rmd files, and then calls Hugo
 via \code{hugo_build()} to build the site.
 
-\item \code{new_site}: Create a new site (skeleton) via \command{hugo new
+\item \code{new_site()}: Create a new site (skeleton) via \command{hugo new
 site}. The directory of the new site should be empty,
 
-\item \code{new_content}: Create a new (R) Markdown file via \command{hugo new}
+\item \code{new_content()}: Create a new (R) Markdown file via \command{hugo new}
 (e.g. a post or a page).
 
-\item \code{new_post}: A wrapper function to create a new post under the
+\item \code{new_post()}: A wrapper function to create a new post under the
 \file{content/post/} directory via \code{new_content()}. If your post will
 use R code chunks, you can set \code{ext = '.Rmd'} or the global option
 \code{options(blogdown.ext = '.Rmd')} in your \file{~/.Rprofile}.
 Similarly, you can set \code{options(blogdown.author = 'Your Name')} so
 that the author field is automatically filled out when creating a new post.
 
-\item \code{hugo_convert}: A wrapper function to convert source content to
+\item \code{hugo_convert()}: A wrapper function to convert source content to
 different formats via \command{hugo convert}.
 
-\item \code{hugo_server}: Start a Hugo server.
-}}
+\item \code{hugo_server()}: Start a Hugo server.
 
+}}
 \examples{
 blogdown::hugo_available("1.2.3")
 if (interactive()) blogdown::new_site()
