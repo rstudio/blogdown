@@ -126,6 +126,9 @@ build_rmds = function(files, knitting = is_knitting()) {
       message('Rendering ', f, '... ', appendLF = FALSE)
     } else message('Done.')
   }
+  # try to make absolute paths to relative
+  i = xfun::is_abs_path(files)
+  files[i] = rel_path(files[i])
 
   i = xfun::is_sub_path(files, rel_path(content_file()))
   # use rmarkdown::render() when a file is outside the content/ dir

@@ -2,6 +2,8 @@
 
 - `blogdown::check_site()` also checks `index.Rmd` in the website root directory now (thanks, @maelle, #719).
 
+- The `build_rmd` argument of `blogdown::build_site()` also accepts absolute paths under the `content` directory now (thanks, @maelle, #717).
+
 - Fixed a bug that `blogdown::serve_site()` fails with the `ignoreErrors` option is configured as an array in `config.yaml` (thanks, @CongLiu-CN, #714).
 
 - Fixed a bug for multilingual sites that have separate `contentDir` settings for each language, in which case `blogdown::new_post()` and the "New Post" addin in RStudio may create new post files in wrong locations (thanks, @pensivedog, #712).
