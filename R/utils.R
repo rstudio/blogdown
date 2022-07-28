@@ -981,12 +981,6 @@ get_subdirs = function() {
   for (d in dirname(files[bundle_index(files)])) {
     dirs = dirs[substr(dirs, 1, nchar(d)) != d]
   }
-
-  # for multilingual sites, remove language prefixes from dirs
-  if (length(lang <- get_lang())) {
-    dirs = gsub(sprintf('^[a-z]{%s}(/|$)', nchar(lang)), '', dirs)
-  }
-
   unique(dirs)
 }
 
