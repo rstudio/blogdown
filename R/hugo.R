@@ -392,8 +392,8 @@ install_theme = function(
     theme = gsub('^[.][\\/]+', '', newdir)
     # download modules if necessary
     download_modules(file.path(theme, 'go.mod'))
-    # move content/ and config/ to root if they do not already exist there
-    lapply(c('content', 'config'), function(d) {
+    # move content/, config/, etc to root if they do not already exist there
+    lapply(c('content', 'config', 'data', 'assets'), function(d) {
       if (!dir_exists(d1 <- file.path(theme, d))) return()
       if (dir_exists(d2 <- file.path('..', d))) {
         unlink(d1, recursive = TRUE)
@@ -437,7 +437,7 @@ default_branch = function(repo, hostname = 'github.com') {
 download_modules = function(mod) {
   if (!file.exists(mod)) return()
   x = read_utf8(mod)
-  r = '.*?\\b(github.com/([^/]+/[^/]+))/?([^[:space:]]*)\\s+(v[^-]+)-?([^[:space:]]*?-([[:xdigit:]]{12,}))?\\s*.*'
+  r = '.*?\\b(github.com/([^/]+/[^/]+))/?([^[:space:]]*)\\s+(v[^-[:space:]]+)-?([^[:space:]]*?-([[:xdigit:]]{12,}))?\\s*.*'
   gzs = NULL; tmps = NULL  # gz files and temp dirs
   on.exit(unlink(c(gzs, tmps), recursive = TRUE), add = TRUE)
   # x is of the form: github.com/user/repo/folder v0.0.0-2020-e58ee0ffc576;
@@ -445,7 +445,7 @@ download_modules = function(mod) {
   # user/repo; 4. subfolder; 5. version (tag/branch); 6. date+sha; 7. sha
   lapply(regmatches(x, regexec(r, x)), function(v) {
     if (length(v) < 7) return()
-    url = sprintf('https://%s/archive/%s.tar.gz', v[2], if (v[7] == '') v[5] else v[7])
+    url = sprintf('https://%s/archive/%s.tar.gz', v[2], if (v[7] == '') 'HEAD' else v[7])
     gz = paste0(gsub('/', '-', v[3]), '-', basename(url))
     if (!file.exists(gz)) {
       gzs <<- c(gzs, gz)

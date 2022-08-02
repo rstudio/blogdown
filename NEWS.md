@@ -8,6 +8,8 @@
 
 - Fixed a bug for multilingual sites that have separate `contentDir` settings for each language, in which case `blogdown::new_post()` and the "New Post" addin in RStudio may create new post files in wrong locations (thanks, @pensivedog, #712).
 
+- Fixed an issue with the `wowchemy/starter-hugo-online-course` theme (thanks, @bayeslearner, #722).
+
 # CHANGES IN blogdown VERSION 1.10
 
 - For Jekyll sites, a new global option can be used to determine whether to run `jekyll` directly or use the `bundler` gem to run `jekyll` (i.e., `bundle exec jekyll`). If you prefer the latter way, you may set `options(blogdown.jekyll.bundler = TRUE)` before running `blogdown::serve_site()` (thanks, @pat-s, #695).
