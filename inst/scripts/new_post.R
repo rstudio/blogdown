@@ -5,11 +5,7 @@ sel_input = function(...) shiny::selectizeInput(
 )
 meta = blogdown:::collect_yaml()
 lang = blogdown:::get_lang()
-adir = blogdown:::theme_dir()
-adir = if (length(adir)) file.path(adir, 'archetypes')
-adir = c('archetypes', adir)
-adir = dir(adir, full.names = TRUE)
-adir = paste0(basename(adir), ifelse(utils::file_test('-d', adir), '/', ''))
+adir = blogdown:::archetypes()
 
 shiny::runGadget(
   miniUI::miniPage(miniUI::miniContentPanel(

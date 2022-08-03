@@ -85,6 +85,18 @@ theme_dir = function(...) {
   if (length(x <- theme_flag()) == 4) file.path(x[2], x[4])
 }
 
+# search for archetypes under the theme dir and all imported modules
+archetypes = function() {
+  if (length(a <- theme_flag()) != 4) return()
+  d = unlist(lapply(load_config()[['module']][['imports']], function(x) {
+    if (is.character(p <- x[['path']])) p
+  }))
+  d = file.path(a[2], c(a[4], d), 'archetypes')
+  d = c('archetypes', d)
+  d = dir(d, full.names = TRUE)
+  paste0(basename(d), ifelse(utils::file_test('-d', d), '/', ''))
+}
+
 change_config = function(name, value) {
   f = find_config()
   x = read_utf8(f)

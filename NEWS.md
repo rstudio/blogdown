@@ -10,6 +10,8 @@
 
 - Fixed an issue with the `wowchemy/starter-hugo-online-course` theme (thanks, @bayeslearner, #722).
 
+- Archetypes in modules were not found previously in the "New Post" addin (thanks, @atakanekiz, #670).
+
 # CHANGES IN blogdown VERSION 1.10
 
 - For Jekyll sites, a new global option can be used to determine whether to run `jekyll` directly or use the `bundler` gem to run `jekyll` (i.e., `bundle exec jekyll`). If you prefer the latter way, you may set `options(blogdown.jekyll.bundler = TRUE)` before running `blogdown::serve_site()` (thanks, @pat-s, #695).
