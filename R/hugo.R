@@ -408,6 +408,7 @@ install_theme = function(
     lapply(c('content', 'config', 'data', 'assets'), function(d) {
       if (!dir_exists(d1 <- file.path(theme, d))) return()
       if (dir_exists(d2 <- file.path('..', d))) {
+        file.copy(list_files(d1, recursive = FALSE), d2, recursive = TRUE)
         unlink(d1, recursive = TRUE)
       } else {
         file.rename(d1, d2)
