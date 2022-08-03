@@ -349,6 +349,18 @@ install_theme = function(
     }
     zipdir = dirname(files)
     zipdir = zipdir[which.min(nchar(zipdir))]
+    # when the repo contains git submodules, we have to use `git clone --recursive`
+    if (file_exists(file.path(zipdir, '.gitmodules'))) {
+      unlink(list_files(zipdir, recursive = FALSE, all.files = TRUE), recursive = TRUE)
+      if (system2('git', c(
+        'clone', '--recursive', '--depth', '1', if (branch != 'HEAD') c('-b', branch),
+        sub('/$', '.git', sub('(https://([^/]+/){3}).*', '\\1', url)), zipdir
+      )) != 0) stop(
+        'The theme contains git submodules, but ', if (Sys.which('git') == '') {
+          'git is not found in your system.'
+        } else 'git failed to clone the repo.'
+      )
+    }
     expdir = file.path(zipdir, 'exampleSite')
     if (length(expdir) == 0) stop(
       'Failed to download or extract the theme from ', url, call. = FALSE
@@ -376,7 +388,7 @@ install_theme = function(
       del_empty_dir(thndir)
     }
     # delete the .Rprofile and .github folder if they exist, since they are unlikely to be useful
-    unlink(file.path(zipdir, c('.Rprofile', '.github')), recursive = TRUE)
+    unlink(file.path(zipdir, c('.Rprofile', '.github', '.git')), recursive = TRUE)
     # check the minimal version of Hugo required by the theme
     if (update_hugo && is_theme) {
       if (!is.null(minver <- read_toml(theme_cfg)[['min_version']])) {
