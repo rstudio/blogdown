@@ -623,6 +623,7 @@ new_post = function(
   if (is.null(slug) && auto_slug()) slug = post_slug(file)
   slug = trim_ws(slug)
   if (generator() == 'hugo') file = new_content(file, kind, FALSE) else {
+    file = content_file(file)
     writeLines(c('---', '', '---'), file)
   }
   if (isTRUE(title_case)) title_case = tools::toTitleCase
