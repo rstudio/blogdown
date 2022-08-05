@@ -14,6 +14,8 @@
 
 - `blogdown::install_theme()` works with themes that contain `git` submodules now (thanks, @pensivedog, #712).
 
+- The global option `blogdown.warn.future` has been removed. It was originally introduced in **blogdown** 0.12 to warn against posts that have dates in the future, which can cause posts to be ignored by Hugo. This option was removed because `blogdown::check_site()` can identify this problem.
+
 # CHANGES IN blogdown VERSION 1.10
 
 - For Jekyll sites, a new global option can be used to determine whether to run `jekyll` directly or use the `bundler` gem to run `jekyll` (i.e., `bundle exec jekyll`). If you prefer the latter way, you may set `options(blogdown.jekyll.bundler = TRUE)` before running `blogdown::serve_site()` (thanks, @pat-s, #695).
