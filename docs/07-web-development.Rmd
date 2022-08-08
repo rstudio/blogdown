@@ -356,7 +356,19 @@ You can also optimize images on your website. I frequently use a command-line to
 
 Note that Netlify has provided the optimization features on the server side for free at the moment, so you may just want to enable them there instead of doing all the hard work by yourself.
 
-If you prefer optimizing images using R packages instead of online tools, you may consider using the functions `xfun::tinify()` and `xfun::shrink_images()`. The former compresses PNG/JPEG/WebP images using TinyPNG (https://tinypng.com), and the latter shrinks images to a maximum width (800px by default) using the **magick** package. If you want to use the TinyPNG service, you will need an API key, and I also recommend that you set `options(xfun.tinify.history = normalizePath('blogdown/tinify.txt'))` in your `.Rprofile` to avoid unnecessary API calls to TinyPNG. See the help page `?xfun::tinify` for more information. If you want to both compress images and shrink them, you may call `xfun::shrink_images(tinify = TRUE)`.
+If you prefer optimizing images using R packages instead of online tools, you may consider using the functions `xfun::tinify()` and `xfun::shrink_images()`. The former compresses PNG/JPEG/WebP images using TinyPNG (https://tinypng.com), and the latter shrinks images to a maximum width (800px by default) using the **magick** package. If you want to use the TinyPNG service, you will need an API key, and I also recommend that you set a global option in your `.Rprofile` to avoid unnecessary API calls to TinyPNG:
+
+```{r, eval=FALSE}
+# create a tinify history file if it does not exist
+dir.create('blogdown', showWarnings = FALSE)
+file.create('blogdown/tinify.txt')
+# set the global option
+options(
+  xfun.tinify.history = normalizePath('blogdown/tinify.txt')
+)
+```
+
+See the help page `?xfun::tinify` for more information. If you want to both compress images and shrink them, you may call `xfun::shrink_images(tinify = TRUE)`.
 
 ### Helping people find your site
 
