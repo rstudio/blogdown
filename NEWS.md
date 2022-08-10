@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.12
+
+
 # CHANGES IN blogdown VERSION 1.11
 
 - `blogdown::check_site()` also checks `index.Rmd` in the website root directory now (thanks, @maelle, #719).
