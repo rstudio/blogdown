@@ -19,10 +19,6 @@ template:
       creator: "@rstudio"
       card: summary
 
-development:
-  mode: devel
-  destination: "."
-
 home:
   links:
   - text: Learn more about R Markdown
