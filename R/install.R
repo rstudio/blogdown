@@ -94,12 +94,15 @@ install_hugo = function(
     "the option 'blogdown.hugo.version' accordingly.", files = existing_files('.Rprofile')
   )
   version2 = as.numeric_version(version)
+  # hugo merged ARM64 and 64bit in 0.89.0 (#664) and >= 0.102.0 (#727) releases for macOS
+  if (arch == 'auto' && is_macos()) {
+    if (version2 == '0.89.0') arch = 'all'
+    if (version2 > '0.101.0') arch = 'universal'
+  }
   if (arch == 'auto') arch = detect_arch()
-  # the extended version is only available for Hugo >= 0.43 and (64bit OS or arm64 macOS)
+  # the extended version is only available for Hugo >= 0.43 and (64bit OS or non-32bit macOS)
   if (missing(extended)) extended = (version2 >= '0.43') &&
-    (arch == '64bit' || (is_macos() && arch == 'arm64'))
-  # hugo merged ARM64 and 64bit in the 0.89.0 release for macOS (#664)
-  if (version2 == '0.89.0' && is_macos()) arch = 'all'
+    (arch == '64bit' || (is_macos() && arch != '32bit'))
   base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)
@@ -117,7 +120,8 @@ install_hugo = function(
       xfun::download_file(paste0(base, zipfile), zipfile, mode = 'wb', .error = c(
         'Failed to download ', zipfile, ' from https://github.com/gohugoio/hugo/releases/tag/v',
         version, '. Please check blogdown::hugo_installers("', version, '") for ',
-        'available Hugo installers.'
+        'available Hugo installers, and use the appropriate os/arch/extended arguments ',
+        'for blogdown::install_hugo().'
       ))
     } else {
       zipfile = local_file
