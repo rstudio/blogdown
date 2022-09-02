@@ -2,6 +2,8 @@
 
 - Hugo changed the names of installers on macOS since 0.102.0, causing `blogdown::install_hugo()` to fail (thanks, @tianfeiwei, #727).
 
+- Fixed a missing module problem with the `wowchemy/starter-hugo-academic` theme (thanks, @PsyYaoxiaoqiang #723, @oushujun #728).
+
 # CHANGES IN blogdown VERSION 1.11
 
 - `blogdown::check_site()` also checks `index.Rmd` in the website root directory now (thanks, @maelle, #719).

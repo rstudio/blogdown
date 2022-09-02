@@ -435,7 +435,16 @@ install_theme = function(
       remove_config()
       # remove the themesDir setting; it is unlikely that you need it
       change_config('themesDir', NA)
+      # read module:imports:path from config
+      mods = module_paths()
     })
+    mods = mods[!dir_exists(mods)]
+    # in case any modules are not downloaded, try to download them
+    if (length(mods)) {
+      tmpmod = tempfile(fileext = '.mod')
+      write_utf8(paste(mods, 'v1'), tmpmod)  # dirty hack
+      download_modules(tmpmod)
+    }
   })
   if (is_theme) if (update_config) {
     change_config('theme', sprintf('"%s"', theme))
