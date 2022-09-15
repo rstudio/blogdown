@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.13
+
+
 # CHANGES IN blogdown VERSION 1.12
 
 - Hugo changed the names of installers on macOS since 0.102.0, causing `blogdown::install_hugo()` to fail (thanks, @tianfeiwei, #727).
