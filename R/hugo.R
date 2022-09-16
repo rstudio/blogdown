@@ -95,11 +95,15 @@ archetypes = function() {
   paste0(basename(d), ifelse(utils::file_test('-d', d), '/', ''))
 }
 
-module_paths = function() {
-  x = lapply(load_config()[['module']][['imports']], function(x) {
-    if (is.character(p <- x[['path']])) p
+module_paths = function(dir = '.') {
+  fs = unique(basename(config_files()))
+  rx = paste0('^', paste(gsub('[.]', '[.]', fs), collapse = '|'), '$')
+  fs = list_files(dir, rx)
+  ps = lapply(fs, function(f) {
+    x = read_config(f)[['module']][['imports']]
+    lapply(x, function(v) if (is.character(p <- v[['path']])) p)
   })
-  as.character(unlist(x))
+  as.character(unlist(ps))
 }
 
 change_config = function(name, value) {
@@ -437,15 +441,8 @@ install_theme = function(
       # remove the themesDir setting; it is unlikely that you need it
       change_config('themesDir', NA)
       # read module:imports:path from config
-      mods = module_paths()
     })
-    mods = mods[!dir_exists(mods)]
-    # in case any modules are not downloaded, try to download them
-    if (length(mods)) {
-      tmpmod = tempfile(fileext = '.mod')
-      write_utf8(paste(mods, 'v1'), tmpmod)  # dirty hack
-      download_modules(tmpmod)
-    }
+    check_modules('..')
   })
   if (is_theme) if (update_config) {
     change_config('theme', sprintf('"%s"', theme))
@@ -488,6 +485,26 @@ download_modules = function(mod) {
     file.copy(list.files(root, full.names = TRUE), v[2], recursive = TRUE)
   })
   unlink(with_ext(mod, c('.mod', '.sum')))
+}
+
+# make sure all modules specified in config files are downloaded
+check_modules = function(dir = '.') {
+  detect = function() {
+    p = module_paths(dir)
+    p[!dir_exists(p)]
+  }
+  m1 = NULL
+  # in case any modules are not downloaded, try to download them
+  while (length(m2 <- detect())) {
+    if (identical(m1, m2)) {
+      warning('Failed to download modues (the site may not work):\n', paste(' ', m2, collapse = '\n'))
+      break
+    }
+    f = tempfile(fileext = '.mod')
+    write_utf8(paste(m2, 'v1'), f)  # dirty hack
+    download_modules(f)
+    m1 = m2
+  }
 }
 
 # themes may use config/_default/config.toml, e.g. hugo-academic; in that case,
