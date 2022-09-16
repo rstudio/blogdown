@@ -108,10 +108,17 @@ install_hugo = function(
   on.exit(setwd(owd), add = TRUE)
   unlink(sprintf('hugo_%s*', version), recursive = TRUE)
 
+  v103 = version2 >= '0.103.0'
   download_zip = function(OS, type = 'zip') {
-    if (os != 'auto') OS = os  # if user has provided the OS name, use that one
+    if (os == 'auto') {
+      if (v103) OS = tolower(OS)
+    } else OS = os  # if user has provided the OS name, use that one
     if (is.null(local_file)) {
       if (grepl('^arm', arch)) arch = toupper(arch)  # arm(64) -> ARM(64)
+      if (v103) {
+        arch = tolower(arch)
+        if (arch == '64bit') arch = 'amd64'
+      }
       # v0.20.3 is a special case: it has 'v' in the filename
       zipfile = sprintf(
         'hugo_%s%s_%s-%s.%s', ifelse(extended, 'extended_', ''),
@@ -138,7 +145,7 @@ install_hugo = function(
     download_zip('Windows')
   } else if (is_macos()) {
     download_zip(
-      if (version2 >= '0.18') 'macOS' else 'MacOS',
+      if (v103) 'darwin' else if (version2 >= '0.18') 'macOS' else 'MacOS',
       if (version2 >= '0.20.3') 'tar.gz' else 'zip'
     )
   } else {
