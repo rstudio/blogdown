@@ -96,9 +96,10 @@ archetypes = function() {
 }
 
 module_paths = function() {
-  unlist(lapply(load_config()[['module']][['imports']], function(x) {
+  x = lapply(load_config()[['module']][['imports']], function(x) {
     if (is.character(p <- x[['path']])) p
-  }))
+  })
+  as.character(unlist(x))
 }
 
 change_config = function(name, value) {

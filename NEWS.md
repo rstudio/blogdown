@@ -2,6 +2,8 @@
 
 - Hugo has changed the installer filenames since v0.103.0, which caused failure in `blogdown::install_hugo()`. Now it can correctly find the installers (thanks, @giorgiatosoni, #729).
 
+- Fixed a bug when a Hugo theme does not contain imported module paths in the config file, which caused failure in `blogdown::new_site()` (thanks, Nil, https://stackoverflow.com/q/73741045/559676).
+
 # CHANGES IN blogdown VERSION 1.12
 
 - Hugo changed the names of installers on macOS since 0.102.0, causing `blogdown::install_hugo()` to fail (thanks, @tianfeiwei, #727).
