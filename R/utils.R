@@ -210,14 +210,18 @@ load_config = function() in_root({
   f = find_config(); m = file.info(f)[, 'mtime']
   # read config only if it has been updated
   if (identical(attr(config, 'config_time'), m)) return(config)
-  parser = switch(
-    basename(f), 'config.toml' = read_toml, 'config.yaml' = yaml_load_file
-  )
-  config = parser(f)
+  config = read_config(f)
   attr(config, 'config_time') = m
   opts$set(config = config)
   config
 })
+
+read_config = function(f) {
+  parser = switch(
+    basename(f), 'config.toml' = read_toml, 'config.yaml' = yaml_load_file
+  )
+  parser(f)
+}
 
 # check if the user has configured Multilingual Mode for Hugo in config.toml
 get_lang = function(config = load_config()) {
