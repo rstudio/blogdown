@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.14
+
+
 # CHANGES IN blogdown VERSION 1.13
 
 - Hugo has changed the installer filenames since v0.103.0, which caused failure in `blogdown::install_hugo()`. Now it can correctly find the installers (thanks, @giorgiatosoni, #729).
