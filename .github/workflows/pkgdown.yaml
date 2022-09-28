@@ -32,6 +32,9 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
+      - name: Add brew to PATH
+        run: echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
+
       - name: Install optipng
         # required to optimize images
         run: brew install optipng
