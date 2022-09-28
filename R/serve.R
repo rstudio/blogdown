@@ -145,7 +145,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     if (!server$daemon) return(system2(cmd, cmd_args))
 
     verbose = get_option('blogdown.server.verbose', FALSE)
-    pid = if (getOption('blogdown.use.processx', xfun::loadable('processx'))) {
+    pid = if (is_psx <- getOption('blogdown.use.processx', xfun::loadable('processx'))) {
       proc = processx::process$new(
         cmd, cmd_args, cleanup_tree = TRUE,
         stdout = if (verbose && processx::is_valid_fd(1L)) '',
@@ -165,7 +165,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     repeat {
       Sys.sleep(1)
       # for a process started with processx, check if it has died with an error
-      if (inherits(pid, 'AsIs') && !proc$is_alive()) {
+      if (is_psx && !proc$is_alive()) {
         err = tryCatch(
           paste(gsub('^Error: ', '', proc$read_error()), collapse = '\n'),
           error = function(e) ''
@@ -235,10 +235,16 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       i = if (g == 'hugo') !xfun::is_sub_path(files, rel_path(publish_dir())) else TRUE
       rmd_files <<- files[i]
     })
+    unix = xfun::is_unix()
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
-      if (watch()) try({rebuild(rmd_files); refresh_viewer()})
+      if (watch()) try({
+        if (is_psx) proc$suspend() else if (unix) tools::pskill(pid, tools::SIGSTOP)
+        rebuild(rmd_files)
+        if (is_psx) proc$resume() else if (unix) tools::pskill(pid, tools::SIGCONT)
+        refresh_viewer()
+      })
       if (get_option('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()
