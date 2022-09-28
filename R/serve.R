@@ -239,12 +239,12 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
     watch_build = function() {
       # stop watching if stop_server() has cleared served_dirs
       if (is.null(opts$get('served_dirs'))) return(invisible())
-      if (watch()) try({
+      if (watch()) {
         if (is_psx) proc$suspend() else if (unix) tools::pskill(pid, tools::SIGSTOP)
-        rebuild(rmd_files)
+        try(rebuild(rmd_files))
         if (is_psx) proc$resume() else if (unix) tools::pskill(pid, tools::SIGCONT)
         refresh_viewer()
-      })
+      }
       if (get_option('blogdown.knit.on_save', TRUE)) later::later(watch_build, intv)
     }
     watch_build()
