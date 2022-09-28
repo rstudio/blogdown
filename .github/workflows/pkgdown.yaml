@@ -34,7 +34,9 @@ jobs:
 
       - name: Install optipng
         # required to optimize images
-        run: brew install optipng
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y optipng
 
       - name: Cache some pkgdown assets
         uses: actions/cache@v2
