@@ -236,8 +236,6 @@ relativeurls = false
 languageCode = "en-us"
 title = "A Hugo website"
 theme = "hugo-lithium"
-googleAnalytics = ""
-disqusShortname = ""
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown", "_files$", "_cache$"]
 
 [permalinks]
@@ -280,10 +278,6 @@ Some of these options may be obvious to understand, and some may need explanatio
 - `title`: The title of your website. Typically this is displayed in a web browser's title bar or on a page tab.
 
 - `theme`: The directory name of the theme. You need to be very careful when changing themes, because one theme can be drastically different from another theme in terms of the configurations. It is quite possible that a different theme will not work with your current `config.toml`. Again, you have to read the documentation of a theme to know what options are supported or required.
-
-- `googleAnalytics`: The Google Analytics\index{Google Analytics} tracking ID (like `UA-000000-2`). You can sign up at https://analytics.google.com to obtain a tracking ID.
-
-- `disqusShortname`: The Disqus ID\index{Disqus Comments} that you created during the account setup process at https://disqus.com. This is required to enable commenting on your site.^[As we mentioned in Section \@ref(static-sites), **blogdown** generates static and unchanging content. To add something dynamic and always changing (like the ability for your fans to leave comments), you must incorporate an outside commenting system like Disqus.] Please note that you have to set up a functional `baseurl` and publish your website before Disqus comments can work.
 
 - `ignoreFiles` and `permalinks`: These options have been explained in Section \@ref(options).
 
@@ -703,7 +697,7 @@ The example site provides a sample `config.toml`, a home page `_index.md`, an ab
 
 The XMin is actually a highly functional theme, but we understand that it may be too minimal for you. There are a few commonly used features (intentionally) missing in this theme, and we will teach you how to add them by yourself if desired. All these features and the source code can be applied to other themes, too.
 
-- **Enable Google Analytics.** Hugo\index{Google Analytics} has provided a built-in partial template. For XMin, you can add
+- **Enable Google Analytics.** Hugo has provided a built-in partial template. For XMin, you can add
 
     ```html
     {{ template "_internal/google_analytics.html" . }}
@@ -711,7 +705,7 @@ The XMin is actually a highly functional theme, but we understand that it may be
 
     to `layouts/partials/foot_custom.html` under the root directory of your website (instead of `themes/hugo-xmin/`), and configure `googleAnalytics` in the `config.toml`. See https://github.com/yihui/hugo-xmin/pull/3 for details, and the HTML source of this page for the JavaScript rendered from the template: https://deploy-preview-3--hugo-xmin.netlify.com.
 
-- **Enable Disqus comments.** Similar to Google Analytics\index{Disqus Comments}, you can add the built-in template
+- **Enable Disqus comments.** Similar to Google Analytics, you can add the built-in template
 
     ```html
     {{ template "_internal/disqus.html" . }}
