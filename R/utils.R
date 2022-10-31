@@ -955,7 +955,7 @@ tweak_hugo_env = function(baseURL = NULL, relativeURLs = NULL, server = FALSE) {
   c2 = if (is.null(relativeURLs)) get_config('relativeurls', FALSE, config) else relativeURLs
   if (server && c1) b = paste0(if (grepl('^//', b)) 'http:' else 'http://example.org/', b)
 
-  vars = c(HUGO_BASEURL = if (c2) '/' else b, HUGO_RELATIVEURLS = tolower(c2))
+  vars = c(HUGO_BASEURL = if (c2 && !server) '/' else b, HUGO_RELATIVEURLS = tolower(c2))
   if (server) {
     vars = c(vars, HUGO_BLOGDOWN_POST_RELREF = 'true')
     c3 = get_config('ignoreErrors', NA, config)
