@@ -1,5 +1,7 @@
 # CHANGES IN blogdown VERSION 1.14
 
+- `blogdown::serve_site()` works fully on RStudio server now. Previously, Hugo's LiveReload and absolute URLs on pages did not work. Both problems have been fixed. The former issue requires the Hugo version to be equal to or greater than `0.80.0`.
+
 - When rendering Rmd posts that involve time-consuming and intensive computing while serving the site, the `hugo` process can die (for unknown reasons). Now the `hugo` process will be suspended before rendering Rmd posts, and resumed after the rendering is done. Hopefully this will keep the server process alive (thanks, @XiangyunHuang, https://d.cosx.org/d/423509).
 
 # CHANGES IN blogdown VERSION 1.13

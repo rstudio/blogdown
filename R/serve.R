@@ -127,7 +127,11 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       # RStudio Server uses a proxy like http://localhost:8787/p/56a946ed/ for
       # http://localhost:4321, so we must use relativeURLs = TRUE:
       # https://github.com/rstudio/blogdown/issues/124
-      tweak_hugo_env(server = TRUE, relativeURLs = if (is_rstudio_server()) TRUE)
+      tweak_hugo_env(
+        baseURL = if (is_rstudio_server())
+          rstudioapi::translateLocalUrl(server$url, TRUE),
+        relativeURLs = if (is_rstudio_server()) TRUE, server = TRUE
+      )
       if (length(list_rmds(pattern = bundle_regex('.R(md|markdown)$'))))
         create_shortcode('postref.html', 'blogdown/postref')
     }
@@ -287,10 +291,10 @@ get_config2 = function(key, default) {
 }
 
 # refresh the viewer because hugo's livereload doesn't work on RStudio
-# Server: https://github.com/rstudio/rstudio/issues/8096 (TODO: check if
-# it's fixed in the future: https://github.com/gohugoio/hugo/pull/6698)
+# Server: https://github.com/rstudio/rstudio/issues/8096
 refresh_viewer = function() {
-  if (!is_rstudio_server()) return()
+  # Hugo 0.80.0 has fixed this issue: https://github.com/gohugoio/hugo/pull/6698
+  if (!is_rstudio_server() || hugo_available('0.80.0')) return()
   server_wait()
   rstudioapi::executeCommand('viewerRefresh')
 }
