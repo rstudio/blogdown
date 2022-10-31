@@ -58,6 +58,11 @@ serve_site = function(..., .site_dir = NULL) {
 server_ready = function(url) {
   # for some reason, R cannot read localhost, but 127.0.0.1 works
   url = sub('^http://localhost:', 'http://127.0.0.1:', url)
+  # need to tweak the url to include the subpath from RStudio translation
+  if (is_rstudio_server()) {
+    b = rstudioapi::translateLocalUrl(url)
+    url = paste0(sub('^(http://127[.]0[.]0[.]1:[0-9]+).*', '\\1/', url), b)
+  }
   !inherits(
     xfun::try_silent(suppressWarnings(readLines(url))), 'try-error'
   )
