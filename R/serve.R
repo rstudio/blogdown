@@ -55,14 +55,11 @@ serve_site = function(..., .site_dir = NULL) {
   serve(..., .site_dir = .site_dir)
 }
 
-server_ready = function(url) {
+server_ready = function(url, base = NULL) {
   # for some reason, R cannot read localhost, but 127.0.0.1 works
   url = sub('^http://localhost:', 'http://127.0.0.1:', url)
-  # need to tweak the url to include the subpath from RStudio translation
-  if (is_rstudio_server()) {
-    b = rstudioapi::translateLocalUrl(url)
-    url = paste0(sub('^(http://127[.]0[.]0[.]1:[0-9]+).*', '\\1/', url), b)
-  }
+  # need to include a subpath from RStudio translation
+  if (!is.null(base)) url = paste0(url, '/', rstudioapi::translateLocalUrl(base))
   !inherits(
     xfun::try_silent(suppressWarnings(readLines(url))), 'try-error'
   )
@@ -116,9 +113,19 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
+    rsv = is_rstudio_server()
+    if (rsv) baseurl = ''  # don't use baseurl on RStudio Server
+
     server = servr::server_config(..., baseurl = baseurl, hosturl = function(host) {
       if (g == 'hugo' && host == '127.0.0.1') 'localhost' else host
     })
+
+    if (rsv) {
+      port2 = servr::random_port(exclude = server$port)
+      server2 = servr::create_server(
+        port = port2, browser = FALSE, handler = proxy_handler(server$port, port2)
+      )
+    }
 
     # launch the hugo/jekyll/hexo server
     cmd = if (g == 'hugo') find_hugo() else g
@@ -133,9 +140,8 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       # http://localhost:4321, so we must use relativeURLs = TRUE:
       # https://github.com/rstudio/blogdown/issues/124
       tweak_hugo_env(
-        baseURL = if (is_rstudio_server())
-          rstudioapi::translateLocalUrl(server$url, TRUE),
-        relativeURLs = if (is_rstudio_server()) TRUE, server = TRUE
+        baseURL = if (rsv) rstudioapi::translateLocalUrl(server2$url, TRUE),
+        relativeURLs = if (rsv) TRUE, server = TRUE
       )
       if (length(list_rmds(pattern = bundle_regex('.R(md|markdown)$'))))
         create_shortcode('postref.html', 'blogdown/postref')
@@ -183,7 +189,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
           'Failed to serve the site; see if blogdown::build_site() gives more info.'
         } else err, call. = FALSE)
       }
-      if (server_ready(server$url)) break
+      if (server_ready(server$url, if (rsv) server2$url)) break
       if (i >= get_option('blogdown.server.timeout', 30)) {
         s = proc_kill(pid)  # if s == 0, the server must have been started successfully
         stop(if (s == 0) c(
@@ -198,7 +204,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       }
       i = i + 1
     }
-    server$browse()
+    if (rsv) server2$browse(TRUE) else server$browse()
     # server is correctly started so we record the directory served
     opts$append(served_dirs = root)
     Sys.setenv(BLOGDOWN_SERVING_DIR = root)
@@ -306,4 +312,31 @@ refresh_viewer = function() {
 
 server_wait = function() {
   Sys.sleep(get_option('blogdown.server.wait', 2))
+}
+
+# port is hugo's port; port2 is servr proxy's port
+proxy_handler = function(port, port2) {
+  # hugo's base url
+  b1 = rstudioapi::translateLocalUrl(sprintf('http://localhost:%d', port))
+  b2 = rstudioapi::translateLocalUrl(sprintf('http://localhost:%d', port2))
+  function(req) {
+    path = req$PATH_INFO
+    # for HTML pages, read their content; for other resources, redirect to hugo
+    if (grepl('[.]html?|/$', path)) {
+      tryCatch({
+        u = sprintf('http://127.0.0.1:%d/%s%s', port, b2, path)
+        list(
+          status = 200L, headers = list('Content-Type' = 'text/html'),
+          body = paste(readLines(u, encoding = 'UTF-8', warn = FALSE), collapse = TRUE)
+        )
+      }, error = function(e) {
+        list(
+          status = 404L, headers = list('Content-Type' = 'text/plain'),
+          body = paste0('Not found:', path)
+        )
+      })
+    } else {
+      servr::redirect(sprintf('/%s%s%s', b1, b2, path))
+    }
+  }
 }
