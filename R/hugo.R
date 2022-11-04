@@ -701,7 +701,8 @@ hugo_server = function(host, port) {
 hugo_server_args = function(host, port) {
   c(
     'server', '--bind', host, '-p', port, theme_flag(), get_option('blogdown.hugo.server', c(
-      '-D', '-F', if (hugo_available('0.25')) '--navigateToChanged'
+      '-D', '-F', if (hugo_available('0.25')) '--navigateToChanged',
+      if (is_rstudio_server()) c('--liveReloadPort', '443')
     ))
   )
 }
