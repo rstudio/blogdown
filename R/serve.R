@@ -55,9 +55,11 @@ serve_site = function(..., .site_dir = NULL) {
   serve(..., .site_dir = .site_dir)
 }
 
-server_ready = function(url) {
+server_ready = function(url, base = NULL) {
   # for some reason, R cannot read localhost, but 127.0.0.1 works
   url = sub('^http://localhost:', 'http://127.0.0.1:', url)
+  # need to include a subpath from RStudio translation
+  if (!is.null(base)) url = paste0(url, '/', rstudioapi::translateLocalUrl(base))
   !inherits(
     xfun::try_silent(suppressWarnings(readLines(url))), 'try-error'
   )
@@ -111,9 +113,19 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
 
     owd = setwd(root); on.exit(setwd(owd), add = TRUE)
 
+    rsv = is_rstudio_server()
+    if (rsv) baseurl = ''  # don't use baseurl on RStudio Server
+
     server = servr::server_config(..., baseurl = baseurl, hosturl = function(host) {
       if (g == 'hugo' && host == '127.0.0.1') 'localhost' else host
     })
+
+    if (rsv) {
+      port2 = servr::random_port(exclude = server$port)
+      server2 = servr::create_server(
+        port = port2, browser = FALSE, handler = proxy_handler(server$port, port2)
+      )
+    }
 
     # launch the hugo/jekyll/hexo server
     cmd = if (g == 'hugo') find_hugo() else g
@@ -127,7 +139,10 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       # RStudio Server uses a proxy like http://localhost:8787/p/56a946ed/ for
       # http://localhost:4321, so we must use relativeURLs = TRUE:
       # https://github.com/rstudio/blogdown/issues/124
-      tweak_hugo_env(server = TRUE, relativeURLs = if (is_rstudio_server()) TRUE)
+      tweak_hugo_env(
+        baseURL = if (rsv) rstudioapi::translateLocalUrl(server2$url, TRUE),
+        relativeURLs = if (rsv) TRUE, server = TRUE
+      )
       if (length(list_rmds(pattern = bundle_regex('.R(md|markdown)$'))))
         create_shortcode('postref.html', 'blogdown/postref')
     }
@@ -174,7 +189,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
           'Failed to serve the site; see if blogdown::build_site() gives more info.'
         } else err, call. = FALSE)
       }
-      if (server_ready(server$url)) break
+      if (server_ready(server$url, if (rsv) server2$url)) break
       if (i >= get_option('blogdown.server.timeout', 30)) {
         s = proc_kill(pid)  # if s == 0, the server must have been started successfully
         stop(if (s == 0) c(
@@ -189,7 +204,7 @@ serve_it = function(pdir = publish_dir(), baseurl = site_base_dir()) {
       }
       i = i + 1
     }
-    server$browse()
+    if (rsv) server2$browse(TRUE) else server$browse()
     # server is correctly started so we record the directory served
     opts$append(served_dirs = root)
     Sys.setenv(BLOGDOWN_SERVING_DIR = root)
@@ -287,14 +302,54 @@ get_config2 = function(key, default) {
 }
 
 # refresh the viewer because hugo's livereload doesn't work on RStudio
-# Server: https://github.com/rstudio/rstudio/issues/8096 (TODO: check if
-# it's fixed in the future: https://github.com/gohugoio/hugo/pull/6698)
+# Server: https://github.com/rstudio/rstudio/issues/8096
 refresh_viewer = function() {
-  if (!is_rstudio_server()) return()
+  # Hugo 0.80.0 has fixed this issue: https://github.com/gohugoio/hugo/pull/6698
+  if (!is_rstudio_server() || hugo_available('0.80.0')) return()
   server_wait()
   rstudioapi::executeCommand('viewerRefresh')
 }
 
 server_wait = function() {
   Sys.sleep(get_option('blogdown.server.wait', 2))
+}
+
+# port is hugo's port; port2 is servr proxy's port
+proxy_handler = function(port, port2) {
+  # hugo and proxy's base urls
+  b1 = rstudioapi::translateLocalUrl(sprintf('http://localhost:%d', port))
+  b2 = rstudioapi::translateLocalUrl(sprintf('http://localhost:%d', port2))
+  function(req) {
+    path = req$PATH_INFO
+    # add proxy's base url and remove redundant base urls if absent
+    path = gsub(sprintf('^/(%s)*', b2), b2, path, perl = TRUE)
+    path = paste0('/', path)
+    u = sprintf('http://127.0.0.1:%d%s', port, path)
+    # for HTML pages, read their content; for other resources, redirect to hugo
+    if (grepl('[.]html?|/$', path)) {
+      fix_livereload(proxy_response(u), b1, b2)
+    } else {
+      servr::redirect(rstudioapi::translateLocalUrl(u, TRUE))
+    }
+  }
+}
+
+proxy_response = function(url, status = 200L, type = mime::guess_type(url, empty = 'text/html')) {
+  tryCatch(list(
+    status = status, headers = list('Content-Type' = type),
+    body = paste(readLines(url, encoding = 'UTF-8', warn = FALSE), collapse = '\n')
+  ), error = function(e) list(
+    status = 404L, headers = list('Content-Type' = 'text/plain'),
+    body = paste('Not found:', url)
+  ))
+}
+
+# fix the location of hugo's livereload.js: re-route from the proxy to hugo
+# (unfortunately RStudio Server seems to interfere with loading livereload.js;
+# all other assets can be loaded correctly, but I don't know why livereload.js
+# is an exception)
+fix_livereload = function(res, b1, b2) {
+  if (!identical(res$headers[['Content-Type']], 'text/html')) return(res)
+  res$body = gsub(sprintf('(src="/)(%slivereload[.]js)', b2), sprintf('\\1%s\\2', b1), res$body)
+  res
 }
