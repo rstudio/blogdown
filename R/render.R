@@ -90,7 +90,7 @@ build_site = function(local = FALSE, run_hugo = TRUE, build_rmd = FALSE, ...) {
 }
 
 build_method = function() {
-  methods = c('html', 'markdown', 'custom')
+  methods = c('markdown', 'html', 'custom')
   match.arg(get_option('blogdown.method', methods), methods)
 }
 

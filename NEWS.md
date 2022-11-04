@@ -1,5 +1,7 @@
 # CHANGES IN blogdown VERSION 1.14
 
+- For R Markdown posts, the default rendering method has been changed from `html` to `markdown`. If `options('blogdown.method')` is not set, it will be set to `'markdown'`. This option will also be set in `.Rprofile` for newly created sites via `blogdown::new_site()`. Users who have already set this `blogdown.method` option will not be affected. The motivation for this change is that `markdown` output often works better with Hugo themes and is less surprising, even though the `html` method allows for richer Markdown features because of Pandoc (thanks, @SebPouliot #737, @austinwpearce #591).
+
 - When rendering Rmd posts that involve time-consuming and intensive computing while serving the site, the `hugo` process can die (for unknown reasons). Now the `hugo` process will be suspended before rendering Rmd posts, and resumed after the rendering is done. Hopefully this will keep the server process alive (thanks, @XiangyunHuang, https://d.cosx.org/d/423509).
 
 # CHANGES IN blogdown VERSION 1.13
