@@ -316,27 +316,40 @@ server_wait = function() {
 
 # port is hugo's port; port2 is servr proxy's port
 proxy_handler = function(port, port2) {
-  # hugo's base url
+  # hugo and proxy's base urls
   b1 = rstudioapi::translateLocalUrl(sprintf('http://localhost:%d', port))
   b2 = rstudioapi::translateLocalUrl(sprintf('http://localhost:%d', port2))
   function(req) {
     path = req$PATH_INFO
+    # add proxy's base url and remove redundant base urls if absent
+    path = gsub(sprintf('^/(%s)*', b2), b2, path, perl = TRUE)
+    path = paste0('/', path)
+    u = sprintf('http://127.0.0.1:%d%s', port, path)
     # for HTML pages, read their content; for other resources, redirect to hugo
     if (grepl('[.]html?|/$', path)) {
-      tryCatch({
-        u = sprintf('http://127.0.0.1:%d/%s%s', port, b2, path)
-        list(
-          status = 200L, headers = list('Content-Type' = 'text/html'),
-          body = paste(readLines(u, encoding = 'UTF-8', warn = FALSE), collapse = TRUE)
-        )
-      }, error = function(e) {
-        list(
-          status = 404L, headers = list('Content-Type' = 'text/plain'),
-          body = paste0('Not found:', path)
-        )
-      })
+      fix_livereload(proxy_response(u), b1, b2)
     } else {
-      servr::redirect(sprintf('/%s%s%s', b1, b2, path))
+      servr::redirect(rstudioapi::translateLocalUrl(u, TRUE))
     }
   }
+}
+
+proxy_response = function(url, status = 200L, type = mime::guess_type(url, empty = 'text/html')) {
+  tryCatch(list(
+    status = status, headers = list('Content-Type' = type),
+    body = paste(readLines(url, encoding = 'UTF-8', warn = FALSE), collapse = '\n')
+  ), error = function(e) list(
+    status = 404L, headers = list('Content-Type' = 'text/plain'),
+    body = paste('Not found:', url)
+  ))
+}
+
+# fix the location of hugo's livereload.js: re-route from the proxy to hugo
+# (unfortunately RStudio Server seems to interfere with loading livereload.js;
+# all other assets can be loaded correctly, but I don't know why livereload.js
+# is an exception)
+fix_livereload = function(res, b1, b2) {
+  if (!identical(res$headers[['Content-Type']], 'text/html')) return(res)
+  res$body = gsub(sprintf('(src="/)(%slivereload[.]js)', b2), sprintf('\\1%s\\2', b1), res$body)
+  res
 }
