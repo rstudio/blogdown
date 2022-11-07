@@ -412,7 +412,7 @@ Options should be set using the syntax `options(name = value)`, and those includ
 knitr::kable(matrix(c(
   'blogdown.hugo.version', 'A valid Hugo version', 'A Hugo version number',
   'blogdown.knit.on_save', 'TRUE', 'Knit Rmd files automatically on save?',
-  'blogdown.method', 'html', 'The output format of .Rmd posts',
+  'blogdown.method', 'markdown', 'The output format of .Rmd posts',
   'blogdown.serve_site.startup', 'FALSE', 'Serve the site on RStudio startup?',
   NULL
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Global options for configured for new blogdown sites.')
@@ -424,7 +424,7 @@ Three of these options are worth further explanations:
 
 - `blogdown.knit.on_save`: By default, the Rmd file is automatically knitted when it is saved. If you prefer clicking the `Knit` button in RStudio to manually knit the file, you may set this option to `FALSE`. If this option is unset, **blogdown** will set it to `TRUE` for the current R session (with a reminder message) when you click the `Knit` button.
 
-- `blogdown.method`: By default, an `Rmd` post is compiled to `.html` via **rmarkdown** and Pandoc. You may set this option to `"markdown"` to bypass Pandoc, knit to `.md` (plain Markdown), and use Hugo's Markdown renderer (e.g., Goldmark) to render `.md` to `.html`. Basically, this option decides whether you want to use Pandoc or Hugo's Markdown renderer to render Markdown to HTML.
+- `blogdown.method`: By default, an `Rmd` post is compiled to `.md` (Markdown) via **rmarkdown**, which will be rendered to HTML by Hugo's Markdown renderer (e.g., Goldmark). You may set this option to `"html"` to pre-render `.md` to `.html` and bypass Hugo's Markdown renderer. Basically, this option decides whether you want to use Pandoc or Hugo's Markdown renderer to render Markdown to HTML. See Section \@ref{blogdown-method} for more information.
 
 We recommend that you set these options in your R startup profile file. If you have never used a startup profile file before, you can check out the help page `?Rprofile`. Here, we provide a brief but incomplete introduction to orient you quickly.
 
@@ -498,41 +498,45 @@ One inconvenience when using startup profile files is the case of the team-autho
 
 If you are not familiar with R Markdown\index{R Markdown}, please see Appendix \@ref(r-markdown) for a quick tutorial. When you create a new post, you have to decide whether you want to use R Markdown or plain Markdown\index{Markdown}, as you can see from Figure \@ref(fig:new-post). 
 
-Table \@ref(tab:md-diff) summarizes the main differences between the three options, followed by detailed explanations below.
+Table \@ref(tab:md-diff) summarizes the main differences among the three file extensions. Note that `.Rmarkdown` is always rendered to Markdown (`.markdown`), yet `.Rmd` may be rendered to HTML or Markdown, depending on the global option `blogdown.method = "html"` or `"markdown"`.
 
 Table: (\#tab:md-diff) Differences among the three document formats.
 
-|Feature      |.Rmd |.Rmarkdown |.md  |
+|Feature      |.Rmd |.Rmarkdown |.md/.markdown  |
 |:------------|:----|:----------|:----|
 |Run R code   |yes  |yes        |no   |
 |Bibliography |yes  |yes        |no   |
-|Task list    |maybe|yes        |yes  |
-|MathJax      |yes  |maybe      |maybe|
+|Cross references | yes | yes   |no   |
+|LaTeX math   |yes  |maybe      |maybe|
 |HTML widgets |yes  |yes        |no   |
 
-1. You cannot execute any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```` ```{r} ````). However, you can still embed R code in plain Markdown using the syntax for fenced code blocks ```` ```r ```` (note there are no curly braces `{}`). Such code blocks will not be executed and may be suitable for pure demonstration purposes. Below is an example of an R code chunk in R Markdown:
+Basically, you cannot execute any R code in a plain Markdown document (`.md` or `.markdown`), whereas in an R Markdown document (`.Rmd` or `.Rmarkdown`), you can embed R code chunks (```` ```{r} ````). However, you can still embed R code in plain Markdown using the syntax for fenced code blocks ```` ```r ```` (note there are no curly braces `{}`). Such code blocks will not be executed and may be suitable for pure demonstration purposes. Below is an example of an R code chunk in R Markdown:
 
-    ````markdown
-    `r ''````{r cool-plot, fig.cap='A cool plot.'}
-    plot(cars, pch = 20)  # not really cool
-    ```
-    ````
-    
-    And here is an example of an R code block in plain Markdown:
-    
-    ````markdown
-    ```r
-    1 + 1  # not executed
-    ```
-    ````
+````{verbatim, lang='markdown'}
+```{r cool-plot, fig.cap='A cool plot.'}
+plot(cars, pch = 20)  # not really cool
+```
+````
 
-2. A plain Markdown post is rendered to HTML through [Goldmark](https://github.com/yuin/goldmark) \index{Goldmark}(a Markdown parser written in the Go language and adopted by Hugo). An R Markdown document is compiled through the packages **rmarkdown**, **bookdown**, and Pandoc\index{Pandoc}, which means you can use most features of [Pandoc's Markdown](http://pandoc.org/MANUAL.html#pandocs-markdown) and [**bookdown**'s Markdown extensions](https://bookdown.org/yihui/bookdown/components.html) in **blogdown**. If you use R Markdown [@R-rmarkdown] with **blogdown**, we recommend that you read the documentation of Pandoc and **bookdown** at least once to know all the possible features. We will not repeat the details in this book, but list the features briefly below, which are also demonstrated on the example website https://blogdown-demo.rbind.io.
+And here is an example of an R code block in plain Markdown:
+
+````{verbatim, lang='markdown'}
+```r
+1 + 1  # not executed
+```
+````
+
+A plain Markdown post is directly rendered to HTML through [Goldmark](https://github.com/yuin/goldmark) \index{Goldmark}(a Markdown renderer written in the Go language and adopted by Hugo). An R Markdown post is first compiled to Markdown through the R packages **rmarkdown** and **bookdown**, which means you can use most features of [**bookdown**'s Markdown extensions](https://bookdown.org/yihui/bookdown/components.html) in **blogdown**. Then the Markdown post can be rendered to HTML by either Goldmark or Pandoc\index{Pandoc}. For the latter case, you can also use richer features in [Pandoc's Markdown](http://pandoc.org/MANUAL.html#pandocs-markdown) (see Section \@ref(blogdown-method) for more information).
+
+### Basic features of R Markdown
+
+If you use R Markdown [@R-rmarkdown] with **blogdown**, we recommend that you read the documentation of Pandoc and **bookdown** at least once to know all the possible features. We will not repeat the details in this book, but list the features briefly below, which are also demonstrated on the example website https://blogdown-demo.rbind.io.
 
     - Inline formatting: `_italic_` / `**bold**` text and `` `inline code` ``.
     
     - Inline elements: subscripts (e.g., `H~2~0`) and superscripts (e.g., `R^2^`); links (`[text](url)`) and images `![title](url)`.
 
-    - Footnotes: `text[^1]`; `[^1]: your footnote content`. Note that the inline footnote `text^[footnote]` is no longer supported by Hugo. As [Hugo switched the default Markdown renderer to Goldmark, since v0.60.0](https://gohugo.io/content-management/formats/), which doesn't support inline footnotes.
+    - Footnotes: `text[^1]`; `[^1]: your footnote content`. Note that the inline footnote `text^[footnote]` is no longer supported by Hugo. As [Hugo switched the default Markdown renderer to Goldmark since v0.60.0,](https://gohugo.io/content-management/formats/) which does not support inline footnotes.
     
     - Block-level elements: paragraphs; numbered and unnumbered section headers; ordered and unordered lists; block quotations; fenced code blocks; tables; horizontal rules.
     
@@ -546,32 +550,31 @@ Table: (\#tab:md-diff) Differences among the three document formats.
     
     - HTML widgets, and Shiny apps embedded via `<iframe>`.
 
-There are many differences in syntax between Blackfriday's Markdown and Pandoc's Markdown. For example, you can write a task list with Blackfriday but you could not with Pandoc until recently:^[Support for task lists was added to Pandoc with [version 2.6, released on January 2019](https://github.com/jgm/pandoc/releases/tag/2.6).]
+If you do not need the extra features in Table \@ref(tab:md-diff), you can just write a plain Markdown post (`.md`), otherwise you need to use R Markdown. As we mentioned before, there are two possible formats of R Markdown: one with the file extension `.Rmd`, and one with `.Rmarkdown`. The latter is always rendered to Markdown, which will be processed by Hugo's Markdown renderer (Goldmark). The former can be rendered to either HTML or Markdown, which we will explain in the next section.
 
-```markdown
-- [x] Write an R package.
-- [ ] Write a book.
-- [ ] ...
-- [ ] Profit!
-```
+### Render R Markdown to Markdown or HTML? {#blogdown-method}
 
-Similarly, Blackfriday does not support LaTeX math and Pandoc does. We have added the [MathJax](https://www.mathjax.org/#docs) \index{MathJax} support to the default theme ([hugo-lithium](https://github.com/yihui/hugo-lithium)) in **blogdown** to render LaTeX math on HTML pages, but there is a caveat for plain Markdown posts: you have to include inline math expressions in a pair of backticks `` `$math$` ``, e.g., `` `$S_n = \sum_{i=1}^n X_i$` ``. Similarly, math expressions of the display style have to be written in `` `$$math$$` ``. For R Markdown posts, you can use `$math$` for inline math expressions, and `$$math$$` for display-style expressions.^[The reason that we need the backticks for plain Markdown documents is that we have to prevent the LaTeX code from being interpreted as Markdown by Blackfriday. Backticks will make sure the inner content is not translated as Markdown to HTML, e.g., `` `$$x *y* z$$` `` will be converted to `<code>$$x *y* z$$</code>`. Without the backticks, it will be converted to `$$x <em>y</em> z$$`, which is not a valid LaTeX math expression for MathJax. Similar issues can arise when you have other special characters like underscores in your math expressions.]
+If you use the file extension `.Rmd` for a post, you need to make a decision on whether to render it to `.html` or `.md`. Essentially, that means whether you want to use Pandoc or Goldmark to render the post. To render to `.html` via Pandoc, you need to set the global option `options(blogdown.method = "html")`. To render to `.md`, you can set `options(blogdown.method = "markdown")`.
 
-If you find it is a pain to have to remember the differences between R Markdown and Markdown, a conservative choice is to always use R Markdown, even if your document does not contain any R code chunks. Pandoc's Markdown is much richer than Blackfriday, and there are only a small number of features unavailable in Pandoc but present in Blackfriday. The main disadvantages of using R Markdown are:
+In general, Pandoc's Markdown features are richer than Goldmark's. For example, Goldmark does not support LaTeX math and Pandoc does. We have added the [MathJax](https://www.mathjax.org/#docs) \index{MathJax} support to the default theme ([hugo-lithium](https://github.com/yihui/hugo-lithium)) in **blogdown** to render LaTeX math on HTML pages, but there is a caveat for plain Markdown posts: you have to include inline math expressions in a pair of backticks `` `$math$` ``, e.g., `` `$S_n = \sum_{i=1}^n X_i$` ``. Similarly, math expressions of the display style have to be written in `` `$$math$$` ``. For `.Rmd` posts to be rendered to `.html`, you can use `$math$` for inline math expressions, and `$$math$$` for display-style expressions.^[The reason that we need the backticks for plain Markdown documents is that we have to prevent the LaTeX code from being interpreted as Markdown by Blackfriday. Backticks will make sure the inner content is not translated as Markdown to HTML, e.g., `` `$$x *y* z$$` `` will be converted to `<code>$$x *y* z$$</code>`. Without the backticks, it will be converted to `$$x <em>y</em> z$$`, which is not a valid LaTeX math expression for MathJax. Similar issues can arise when you have other special characters like underscores in your math expressions.]
 
-1. You may sacrifice some speed in rendering the website, but this may not be noticeable due to a caching mechanism in **blogdown** (more on this in Section \@ref(local-preview)). Hugo is very fast when processing plain Markdown files, and typically it should take less than one second to render a few hundred Markdown files.
+The main disadvantages of rendering `.Rmd` to `.html` are:
+
+1. You may sacrifice some speed in rendering the website, but this may not be noticeable due to a caching mechanism in **blogdown** (more on this in Section \@ref(local-preview)). Hugo is very fast when processing plain Markdown files, and typically it should take less than one second to render a few hundred posts.
 
 1. You will have some intermediate HTML files in the source directory of your website, because **blogdown** has to call **rmarkdown** to pre-render `*.Rmd` files into `*.html`. You will also have intermediate folders for figures (`*_files/`) and cache (`*_cache/`) if you have plot output in R code chunks or have enabled **knitr**'s caching. Unless you care a lot about the "cleanness" of the source repository of your website (especially when you use a version control tool like GIT), these intermediate files should not matter.
 
-In this book, we usually mean `.Rmd` files when we say "R Markdown documents," which are compiled to `.html` by default. However, there is another type of R Markdown document with the filename extension `.Rmarkdown`. Such R Markdown documents are compiled to Markdown documents with the extension `.markdown`, which will be processed by Hugo instead of Pandoc. There are two major limitations of using `.Rmarkdown` compared to `.Rmd`:
+There are two major limitations of rendering `.Rmd` to `.md` (or `.Rmarkdown` to `.markdown`):
 
 - You cannot use Markdown features only supported by Pandoc, such as fenced `Div`s.
 
 - Math expressions only work if you apply the JavaScript solution mentioned in Section \@ref(javascript).
 
-The main advantage of using `.Rmarkdown` is that the output files are cleaner because they are Markdown files. It can be easier for you to read the output of your posts without looking at the actual web pages rendered. This can be particularly helpful when reviewing GitHub pull requests. Note that numbered tables, figures, equations, and theorems are also supported. You cannot directly use Markdown syntax in table or figure captions, but you can use text references as a workaround (see **bookdown**'s documentation).
+The main advantage of rendering posts to Markdown instead of HTML is that the output files are cleaner because they are Markdown files (by comparison, HTML files often contain a lot of HTML tags, which are hard for humans to read). It can be easier for you to read the output of your posts without looking at the actual web pages rendered. This can be particularly helpful when reviewing GitHub pull requests. Note that numbered tables, figures, equations, and theorems are also supported. You cannot directly use Markdown syntax in table or figure captions, but you can use text references as a workaround (see **bookdown**'s documentation).
 
-For any R Markdown documents (not specific to **blogdown**), you have to specify an output format. There are many [possible output formats](http://rmarkdown.rstudio.com/lesson-9.html) in the **rmarkdown** package (such as `html_document` and `pdf_document`) and other extension packages (such as `tufte::tufte_html` and `bookdown::gitbook`). Of course, the output format for websites should be HTML. We have provided an output format function `blogdown::html_page` in **blogdown**, and all R Markdown files are rendered using this format. It is based on the output format `bookdown::html_document2`, which means it has inherited a lot of features from **bookdown** in addition to features in Pandoc. For example, you can number and cross-reference math equations, figures, tables, and theorems, etc. See Chapter 2 of the **bookdown** book [@xie2016] for more details on the syntax.
+### Customize the R Markdown output format
+
+For any R Markdown documents (not specific to **blogdown**), you have to specify an output format. There are many [possible output formats](https://rmarkdown.rstudio.com/lesson-9.html) in the **rmarkdown** package (such as `html_document` and `pdf_document`) and other extension packages (such as `tufte::tufte_html` and `bookdown::gitbook`). Of course, the output format for websites should be HTML. We have provided an output format function `blogdown::html_page` in **blogdown**, and all R Markdown files are rendered using this format. It is based on the output format `bookdown::html_document2`, which means it has inherited a lot of features from **bookdown** in addition to features in Pandoc. For example, you can number and cross-reference math equations, figures, tables, and theorems, etc. See Chapter 2 of the **bookdown** book [@xie2016] for more details on the syntax.
 
 Note that the output format `bookdown::html_document2` in turn inherits from `rmarkdown::html_document`, so you need to see the help page `?rmarkdown::html_document` for all possible options for the format `blogdown::html_page`. If you want to change the default values of the options of this output format, you can add an `output` field to your YAML metadata. For example, we can add a table of contents to a page, set the figure width to be 6 inches, and use the `svg` device for plots by setting these options in YAML:
 
