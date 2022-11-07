@@ -1,3 +1,7 @@
+# CHANGES IN blogdown VERSION 1.15
+
+- Restored the old default `options(blogdown.method = "html")` (thanks, @pachadotdev, #739).
+
 # CHANGES IN blogdown VERSION 1.14
 
 - For R Markdown posts, the default rendering method has been changed from `html` to `markdown`. If `options('blogdown.method')` is not set, it will be set to `'markdown'`. This option will also be set in `.Rprofile` for newly created sites via `blogdown::new_site()`. Users who have already set this `blogdown.method` option will not be affected. The motivation for this change is that `markdown` output often works better with Hugo themes and is less surprising, even though the `html` method allows for richer Markdown features because of Pandoc (thanks, @SebPouliot #737, @austinwpearce #591).
