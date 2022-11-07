@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.16
+
+
 # CHANGES IN blogdown VERSION 1.15
 
 - Restored the old default `options(blogdown.method = "html")` (thanks, @pachadotdev, #739).
