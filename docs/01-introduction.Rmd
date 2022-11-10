@@ -532,23 +532,23 @@ A plain Markdown post is directly rendered to HTML through [Goldmark](https://gi
 
 If you use R Markdown [@R-rmarkdown] with **blogdown**, we recommend that you read the documentation of Pandoc and **bookdown** at least once to know all the possible features. We will not repeat the details in this book, but list the features briefly below, which are also demonstrated on the example website https://blogdown-demo.rbind.io.
 
-    - Inline formatting: `_italic_` / `**bold**` text and `` `inline code` ``.
-    
-    - Inline elements: subscripts (e.g., `H~2~0`) and superscripts (e.g., `R^2^`); links (`[text](url)`) and images `![title](url)`.
+- Inline formatting: `_italic_` / `**bold**` text and `` `inline code` ``.
 
-    - Footnotes: `text[^1]`; `[^1]: your footnote content`. Note that the inline footnote `text^[footnote]` is no longer supported by Hugo. As [Hugo switched the default Markdown renderer to Goldmark since v0.60.0,](https://gohugo.io/content-management/formats/) which does not support inline footnotes.
-    
-    - Block-level elements: paragraphs; numbered and unnumbered section headers; ordered and unordered lists; block quotations; fenced code blocks; tables; horizontal rules.
-    
-    - Math expressions and equations.
-    
-    - Theorems and proofs.
-    
-    - R code blocks that can be used to produce text output (including tables) and graphics. Note that equations, theorems, tables, and figures can be numbered and cross-referenced.
-    
-    - Citations and bibliography.
-    
-    - HTML widgets, and Shiny apps embedded via `<iframe>`.
+- Inline elements: subscripts (e.g., `H~2~0`) and superscripts (e.g., `R^2^`); links (`[text](url)`) and images `![title](url)`.
+
+- Footnotes: `text[^1]`; `[^1]: your footnote content`. Note that the inline footnote `text^[footnote]` is no longer supported by Hugo. As [Hugo switched the default Markdown renderer to Goldmark since v0.60.0,](https://gohugo.io/content-management/formats/) which does not support inline footnotes.
+
+- Block-level elements: paragraphs; numbered and unnumbered section headers; ordered and unordered lists; block quotations; fenced code blocks; tables; horizontal rules.
+
+- Math expressions and equations.
+
+- Theorems and proofs.
+
+- R code blocks that can be used to produce text output (including tables) and graphics. Note that equations, theorems, tables, and figures can be numbered and cross-referenced.
+
+- Citations and bibliography.
+
+- HTML widgets, and Shiny apps embedded via `<iframe>`.
 
 If you do not need the extra features in Table \@ref(tab:md-diff), you can just write a plain Markdown post (`.md`), otherwise you need to use R Markdown. As we mentioned before, there are two possible formats of R Markdown: one with the file extension `.Rmd`, and one with `.Rmarkdown`. The latter is always rendered to Markdown, which will be processed by Hugo's Markdown renderer (Goldmark). The former can be rendered to either HTML or Markdown, which we will explain in the next section.
 
