@@ -248,7 +248,7 @@ process_markdown = function(res, x = read_utf8(res)) {
     write_utf8(x, mds[1])
     rmarkdown::pandoc_convert(
       mds[1], from = 'markdown', to = paste(markdown_format(), collapse = ''), output = mds[2],
-      options = c('--wrap=preserve'),
+      options = c('--wrap=preserve', '--preserve-tabs'),
       citeproc = TRUE
     )
     x = c(bookdown:::fetch_yaml(x), '', read_utf8(mds[2]))

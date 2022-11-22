@@ -32,8 +32,8 @@
 #' @export
 html_page = function(
   ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
-  template = NULL, pandoc_args = NULL, keep_md = FALSE,
-  pre_knit = NULL, post_processor = NULL
+  template = NULL, pandoc_args = c('-M', 'link-citations=true', '--preserve-tabs'),
+  keep_md = FALSE, pre_knit = NULL, post_processor = NULL
 ) {
   if (identical(template, 'default')) stop(
     'blogdown::html_page() does not support template = "default"'
@@ -67,7 +67,7 @@ html_page = function(
     base_format = bookdown::html_document2(
       ..., number_sections = number_sections, theme = NULL,
       self_contained = self_contained, highlight = highlight,
-      pandoc_args = c('-M', 'link-citations=true', pandoc_args),
+      pandoc_args = pandoc_args,
       template = template %n% pkg_file('resources', 'template-minimal.html')
     )
   )

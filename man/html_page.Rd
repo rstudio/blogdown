@@ -10,7 +10,7 @@ html_page(
   self_contained = FALSE,
   highlight = NULL,
   template = NULL,
-  pandoc_args = NULL,
+  pandoc_args = c("-M", "link-citations=true", "--preserve-tabs"),
   keep_md = FALSE,
   pre_knit = NULL,
   post_processor = NULL
