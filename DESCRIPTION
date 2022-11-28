@@ -52,7 +52,7 @@ Imports:
     later,
     rmarkdown (>= 2.8),
     servr (>= 0.21),
-    xfun (>= 0.29),
+    xfun (>= 0.34),
     yaml (>= 2.1.19)
 Suggests:
     miniUI,
