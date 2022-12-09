@@ -97,7 +97,7 @@ archetypes = function() {
 
 module_paths = function(dir = '.') {
   fs = unique(basename(config_files()))
-  rx = paste0('^', paste(gsub('[.]', '[.]', fs), collapse = '|'), '$')
+  rx = paste0('^(', paste(gsub('[.]', '[.]', fs), collapse = '|'), ')$')
   fs = list_files(dir, rx)
   ps = lapply(fs, function(f) {
     x = read_config(f)[['module']][['imports']]

@@ -2,6 +2,8 @@
 
 - Added the command-line option `--preserve-tabs` to the `pandoc_args` argument of `blogdown::html_page()`, so that tabs are preserved by default in code blocks (thanks, @amarakon, #740).
 
+- Fixed a bug that caused `config.toml.bak.toml` to be recognized as the config file mistakenly, which led to an obscure error (thanks, @CerebralMastication, #742).
+
 # CHANGES IN blogdown VERSION 1.15
 
 - Restored the old default `options(blogdown.method = "html")` (thanks, @pachadotdev, #739).
