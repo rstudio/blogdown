@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.17
+
+
 # CHANGES IN blogdown VERSION 1.16
 
 - Added the command-line option `--preserve-tabs` to the `pandoc_args` argument of `blogdown::html_page()`, so that tabs are preserved by default in code blocks (thanks, @amarakon, #740).
