@@ -68,7 +68,7 @@ build_site = function(local = FALSE, run_hugo = TRUE, build_rmd = FALSE, ...) {
   if (!knitting) on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (build_method() == 'custom') return()
 
-  if (!xfun::isFALSE(build_rmd)) {
+  if (!isFALSE(build_rmd)) {
     if (is.character(build_rmd) && length(build_rmd) == 1) {
       build_rmd = switch(
         build_rmd, timestamp = filter_timestamp, md5sum = filter_md5sum,
