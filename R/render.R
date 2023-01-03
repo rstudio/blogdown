@@ -65,6 +65,7 @@
 #' @export
 build_site = function(local = FALSE, run_hugo = TRUE, build_rmd = FALSE, ...) {
   knitting = is_knitting()
+  renders = getOption("blogdown.ouputs")
   if (!knitting) on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (build_method() == 'custom') return()
 
@@ -81,7 +82,7 @@ build_site = function(local = FALSE, run_hugo = TRUE, build_rmd = FALSE, ...) {
         if (length(files)) get_option('blogdown.files_filter', identity)(files)
       }
     }
-    build_rmds(files, knitting)
+    build_rmds(files, knitting, renders)
   }
   if (run_hugo) on.exit(hugo_build(local, ...), add = TRUE)
   if (!knitting) on.exit(run_script('R/build2.R', as.character(local)), add = TRUE)
@@ -117,7 +118,7 @@ list_mds = function() list_files(content_file(), '[.]md$')
 is_knitting = function() isTRUE(opts$get('render_one'))
 
 # build R Markdown posts
-build_rmds = function(files, knitting = is_knitting()) {
+build_rmds = function(files, knitting = is_knitting(), renders) {
   # emit a message indicating that a file is being knitted when the knitting is
   # not triggered by the Knit button
   msg_knit = function(f, start = TRUE) {
@@ -182,7 +183,7 @@ build_rmds = function(files, knitting = is_knitting()) {
     copy_output_yml(d)
     msg_knit(f)
     x = xfun::Rscript_call(
-      build_one, list(f, I(basename(out2)), to_md, !knitting),
+      build_one, list(f, I(basename(out2)), to_md, !knitting, renders),
       fail = c('Failed to render ', f)
     )
 
@@ -201,14 +202,17 @@ build_rmds = function(files, knitting = is_knitting()) {
   }
 }
 
-build_one = function(input, output, to_md = file_ext(output) != 'html', quiet = TRUE) {
+build_one = function(input, output, to_md = file_ext(output) != 'html', quiet = TRUE, renders) {
   options(htmltools.dir.version = FALSE, rmarkdown.knit.ext = 'md~')
   setwd(dirname(input))
   input = basename(input)
   # for bookdown's theorem environments generated from bookdown:::eng_theorem
   if (to_md) options(bookdown.output.markdown = TRUE)
+  output_fmt = unname(unlist(renders[rmarkdown::yaml_front_matter(input)$type]))
+  if (is.null(output_fmt)) output_fmt = renders$default
+  if (is.null(output_fmt)) output_fmt = 'blogdown::html_page'
   res = rmarkdown::render(
-    input, 'blogdown::html_page', output_file = output, envir = globalenv(),
+    input, output_fmt, output_file = output, envir = globalenv(),
     quiet = quiet, run_pandoc = !to_md, clean = !to_md
   )
   x = read_utf8(res)
@@ -318,6 +322,12 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, output) {
   libs = file.path(parent, if (need_encode) decode_uri(libs) else libs)
   x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
   to = file.path('static', 'rmarkdown-libs', basename(libs))
+  # hack to stop figures being overwritten by any other Rmd doc
+  content_dir <- sub("/$", "", sub(".*?/", "/", parent))
+  if (!grepl("\\d{2}", content_dir)) content_dir = file.path(content_dir, tools::file_path_sans_ext(basename(output)))
+  x = gsub("/figure-html5", content_dir, x)
+  to = gsub("/figure-html5", content_dir, to)
+  
   dirs_rename(libs, to, clean = TRUE)
   x
 }
