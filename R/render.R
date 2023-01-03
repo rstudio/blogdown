@@ -322,6 +322,12 @@ encode_paths = function(x, deps, parent, base = '/', to_md = FALSE, output) {
   libs = file.path(parent, if (need_encode) decode_uri(libs) else libs)
   x = gsub(r2, sprintf('\\1\\2%srmarkdown-libs/\\4/', base), x)
   to = file.path('static', 'rmarkdown-libs', basename(libs))
+  # hack to stop figures being overwritten by any other Rmd doc
+  content_dir <- sub("/$", "", sub(".*?/", "/", parent))
+  if (!grepl("\\d{2}", content_dir)) content_dir = file.path(content_dir, tools::file_path_sans_ext(basename(output)))
+  x = gsub("/figure-html5", content_dir, x)
+  to = gsub("/figure-html5", content_dir, to)
+  
   dirs_rename(libs, to, clean = TRUE)
   x
 }
