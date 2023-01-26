@@ -64,7 +64,7 @@
 #' @param ... Other arguments to be passed to \code{\link{hugo_build}()}.
 #' @export
 build_site = function(local = FALSE, run_hugo = TRUE, build_rmd = FALSE, ...) {
-  knitting = is_knitting()
+  knitting = is_knitting() || preview_mode()
   if (!knitting) on.exit(run_script('R/build.R', as.character(local)), add = TRUE)
   if (build_method() == 'custom') return()
 
