@@ -32,13 +32,15 @@ touch_file_rstudio = function() {
 
 touch_file = function(path, time = Sys.time()) Sys.setFileTime(path, time)
 
-# add > to the beginning of every paragraph, and two trailing spaces to every line
+# add > to the beginning of every line, and two trailing spaces to every line
 quote_poem = function(x) {
   x = paste(x, collapse = '\n')
   if (grepl('^\\s*$', x)) return(x)
   x = gsub(' *\n', '  \n', x)
-  x = gsub('( *\n){2,}', '\n\n> ', x)
-  paste('>', gsub(' *(\n*) *$', '\\1', x))
+  x = unlist(strsplit(x, '( *\n){2,}'))
+  x = gsub('(^|  \n)', '\\1> ', x)
+  x = paste(x, collapse = '\n>\n')
+  gsub('  \n> $', '\n', x)
 }
 
 quote_poem_addin = function() {

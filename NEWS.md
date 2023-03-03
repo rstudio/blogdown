@@ -1,5 +1,6 @@
 # CHANGES IN blogdown VERSION 1.17
 
+- The RStudio addin "Quote Poem" adds `>` to every line instead of only the beginning of every paragraph now.
 
 # CHANGES IN blogdown VERSION 1.16
 

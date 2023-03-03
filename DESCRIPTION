@@ -66,5 +66,5 @@ Suggests:
     whoami
 Config/Needs/website: pkgdown, tidyverse/tidytemplate, rstudio/quillt, rstudio/webshot2
 Encoding: UTF-8
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 SystemRequirements: Hugo (<https://gohugo.io>) and Pandoc (<https://pandoc.org>)
