@@ -1,9 +1,9 @@
 # blogdown <a href="https://pkgs.rstudio.com/blogdown/"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/rstudio/blogdown/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/blogdown/actions)
+[![R-CMD-check](https://github.com/rstudio/blogdown/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rstudio/blogdown/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/blogdown)](https://CRAN.R-project.org/package=blogdown)
-[![Coverage status](https://codecov.io/gh/rstudio/blogdown/branch/master/graph/badge.svg)](https://codecov.io/github/rstudio/blogdown?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/rstudio/blogdown/branch/main/graph/badge.svg)](https://app.codecov.io/gh/rstudio/blogdown?branch=main)
 <!-- badges: end -->
 
 The goal of the blogdown package is to provide a powerful and customizable website output format for [R Markdown](https://rmarkdown.rstudio.com/). Use dynamic R Markdown documents to build webpages featuring:
