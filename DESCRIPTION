@@ -4,7 +4,7 @@ Title: Create Blogs and Websites with R Markdown
 Version: 1.16.1
 Authors@R: c(
     person("Yihui", "Xie", role = c("aut", "cre"), email = "xie@yihui.name", comment = c(ORCID = "0000-0003-0645-5666")),
-    person("Christophe", "Dervieux", role = "aut", email = "cderv@rstudio.com", comment = c(ORCID = "0000-0003-4474-2498")),
+    person("Christophe", "Dervieux", role = "aut", email = "cderv@posit.co", comment = c(ORCID = "0000-0003-4474-2498")),
     person("Alison", "Presmanes Hill", role = "aut", comment = c(ORCID = "0000-0002-8082-1890")),
     # Contributors, ordered alphabetically
     person("Amber", "Thomas", role = "ctb"),
@@ -32,7 +32,7 @@ Authors@R: c(
     person("Raniere", "Silva", role = "ctb"),
     person("TC", "Zhang", role = "ctb"),
     person("Xianying", "Tan", role = "ctb"),
-    person(family = "RStudio, PBC", role = "cph"),
+    person(given = "Posit Software, PBC", role = c("cph", "fnd")),
     person()
     )
 Description: Write blog posts and web pages in R Markdown. This package

@@ -34,6 +34,6 @@ Pandoc supports a large variety of output document formats. For **blogdown**, th
 
 You are strongly recommended to go through the documentation of **knitr** chunk options and Pandoc's manual at least once to have an idea of all possibilities. The basics of Markdown are simple enough, but there are many less well-known features in Pandoc's Markdown, too. As we mentioned in Section \@ref(output-format), **blogdown**'s output format is based on **bookdown** [@R-bookdown], which contains several other Markdown extensions, such as numbered equations and theorem environments, and you need to read Chapter 2 of the **bookdown** book [@xie2016] to learn more about these features.
 
-You can find an R Markdown cheat sheet and a reference guide at https://www.rstudio.com/resources/cheatsheets/, which can be handy after you are more familiar with R Markdown.
+You can find an R Markdown cheat sheet and a reference guide at https://posit.co/resources/cheatsheets/, which can be handy after you are more familiar with R Markdown.
 
 With R Markdown, you only need to maintain the source documents; all output pages can be automatically generated from source documents. This makes it much easier to maintain a website, especially when the website is related to data analysis or statistical computing and graphics. When the source code is updated (e.g., the model or data is changed), your web pages can be updated accordingly and automatically. There is no need to run the code separately and cut-and-paste again. Besides the convenience, you gain reproducibility at the same time.

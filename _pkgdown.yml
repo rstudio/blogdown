@@ -63,9 +63,9 @@ news:
   - text: "Version 1.6"
     href: https://yihui.org/en/2021/11/blogdown-v1-6/
   - text: "Version 1.0"
-    href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
+    href: https://posit.co/blog/blogdown-v1-0/
   - text: "Version 0.1"
-    href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
+    href: https://posit.co/blog/announcing-blogdown/
 
 reference:
 - title: Output formats

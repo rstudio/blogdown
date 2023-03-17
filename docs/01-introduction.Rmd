@@ -11,7 +11,7 @@ We recommend using the RStudio IDE with **blogdown** because there are a number 
 We assume you have already installed:
 
 + R (https://www.r-project.org) [@R-base] and 
-+ the RStudio IDE (https://rstudio.com/products/rstudio/download/). 
++ the RStudio IDE (https://posit.co/download/rstudio-desktop/). 
 
 If you are not using the RStudio IDE, please install Pandoc\index{Pandoc} (http://pandoc.org). Instructions are available on the reference site (https://pandoc.org/installing.html).
 
@@ -58,7 +58,7 @@ This section is designed to provide a beginner-friendly workflow. In later secti
 
 ### Prerequisites
 
-To keep this example *actually* quick, we will assume that you are using the RStudio IDE and will rely on some of the built-in features that help **blogdown** users.^[The instructions here rely on a recent RStudio IDE version, v1.4.1106. You may download all RStudio official releases from <https://www.rstudio.com/products/rstudio/download/>.]
+To keep this example *actually* quick, we will assume that you are using the RStudio IDE and will rely on some of the built-in features that help **blogdown** users.^[The instructions here rely on a recent RStudio IDE version, v1.4.1106. You may download all RStudio official releases from <https://posit.co/download/rstudio-desktop/>.]
 
 We also assume that you have followed the installation instructions in Section \@ref(installation).
 
@@ -76,7 +76,7 @@ knitr::include_graphics('images/blogdown-project.png')
 
 Click "Create Project". The project wizard then runs a function that creates a new site for you by doing the following steps:
 
-1. Creates and opens a new [RStudio Project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) for the website;
+1. Creates and opens a new [RStudio Project](https://support.posit.co/hc/en-us/articles/200526207-Using-Projects) for the website;
 1. Downloads and installs the default theme (called [`hugo-lithium`](https://github.com/yihui/hugo-lithium)) with an example site;
 1. Adds a sample `.Rmd` post;
 1. Creates a `netlify.toml` file to help you deploy your site to [Netlify,](https://www.netlify.com) and
