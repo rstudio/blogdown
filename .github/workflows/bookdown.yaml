@@ -58,7 +58,7 @@ jobs:
           CONTENT_ID: 463
         run: make -C docs all
 
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v3
         env:
           URL: https://bookdown.org/yihui/blogdown
         with:
