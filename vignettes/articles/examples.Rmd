@@ -17,7 +17,7 @@ blogs <- tribble(
   "https://metadocencia.netlify.app/", "https://github.com/MetaDocencia/SitioWeb",
   "https://mariadermit.netlify.app/", "https://github.com/demar01/mariadermit",
   "https://shinydevseries.com/", "https://github.com/shinydevseries/shinydevseries_site",
-  # "https://r-podcast.org/", "https://github.com/rbind/r-podcast",
+  "https://r-podcast.org/", "https://github.com/rbind/r-podcast",
   "https://isabella-b.com/", "https://github.com/isabellabenabaye/isabella-b.com",
   # "https://robjhyndman.com/", "https://github.com/rbind/robjhyndman.com",
   "https://www.tidymodels.org/", "https://github.com/tidymodels/tidymodels.org",

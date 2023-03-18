@@ -13,11 +13,11 @@
   title: Shiny Developer Series
   img: images/shinydevseries.png
   showcase: yes
-#- href: https://r-podcast.org/
-#  source: https://github.com/rbind/r-podcast
-#  title: The R-Podcast
-#  img: images/r-podcast.png
-#  showcase: yes
+- href: https://r-podcast.org/
+  source: https://github.com/rbind/r-podcast
+  title: The R-Podcast
+  img: images/r-podcast.png
+  showcase: yes
 - href: https://isabella-b.com/
   source: https://github.com/isabellabenabaye/isabella-b.com
   title: Isabella Benabaye
