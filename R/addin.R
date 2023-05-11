@@ -3,7 +3,10 @@ source_addin = function(file) in_root(sys.source(
   keep.source = FALSE
 ))
 
-new_post_addin = function() source_addin('new_post.R')
+new_post_addin = function() {
+  if (generator() == 'hugo') find_hugo()
+  source_addin('new_post.R')
+}
 
 update_meta_addin = function() source_addin('update_meta.R')
 

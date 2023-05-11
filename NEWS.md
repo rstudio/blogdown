@@ -2,6 +2,8 @@
 
 - The RStudio addin "Quote Poem" adds `>` to every line instead of only the beginning of every paragraph now.
 
+- The "New Post" addin will verify if Hugo has been installed before launching (thanks, @LukasWallrich, #750).
+
 # CHANGES IN blogdown VERSION 1.16
 
 - Added the command-line option `--preserve-tabs` to the `pandoc_args` argument of `blogdown::html_page()`, so that tabs are preserved by default in code blocks (thanks, @amarakon, #740).
