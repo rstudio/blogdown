@@ -202,7 +202,7 @@ new_site = function(
   }
   if (is.logical(format)) format = if (format) 'yaml' else 'toml'
   if (hugo_cmd(
-    c('new', 'site', shQuote(path.expand(dir)), if (force) '--force', '-f', format),
+    c('new', 'site', shQuote(path.expand(dir)), if (force) '--force', '--format', format),
     stdout = FALSE
   ) != 0) return(invisible())
 

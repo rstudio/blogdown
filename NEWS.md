@@ -1,5 +1,6 @@
 # CHANGES IN blogdown VERSION 1.18
 
+- `new_site()` uses the command-line flag `--format` instead of `-f` now for `hugo new site`, because the `-f` flag has been removed since Hugo v0.112.0 (thanks, @residualsun1 https://d.cosx.org/d/424434, gohugoio/hugo#11015).
 
 # CHANGES IN blogdown VERSION 1.17
 
