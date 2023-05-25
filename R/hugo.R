@@ -77,7 +77,7 @@ theme_flag = function(config = load_config()) {
   t = if (length(t) > 0) t[1]
   t = get_config('theme', t, config)
   a = c('--themesDir', d)
-  if (length(t) == 1) a = c(a, '-t', t)
+  if (length(t) == 1) a = c(a, '--theme', t)
   a
 }
 
