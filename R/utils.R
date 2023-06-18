@@ -278,7 +278,7 @@ generator = function() get_option('blogdown.generator', 'hugo')
 # config files for different site generators
 config_files = function(which = generator()) {
   all = list(
-    hugo = c('config.toml', 'config.yaml'),  # only support TOML and YAML (no JSON)
+    hugo = c('hugo.toml', 'hugo.yaml', 'config.toml', 'config.yaml'),  # no support for JSON
     jekyll = '_config.yml',
     hexo = '_config.yml'
   )

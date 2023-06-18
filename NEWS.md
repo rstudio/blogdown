@@ -2,6 +2,8 @@
 
 - `new_site()` no longer uses the command-line flag `-f` for `hugo new site`, because the `-f` flag has a different meaning since Hugo v0.112.4 (thanks, @residualsun1 https://d.cosx.org/d/424434, gohugoio/hugo#11015).
 
+- Supports `hugo.toml`/`hugo.yaml` as the new config file for Hugo >= 0.110.0 (thanks, @mengjiezhang4ds, #753).
+
 # CHANGES IN blogdown VERSION 1.17
 
 - The RStudio addin "Quote Poem" adds `>` to every line instead of only the beginning of every paragraph now.

@@ -215,7 +215,14 @@ new_site = function(
   if (!empty_dirs) for (d in list.dirs(recursive = FALSE)) del_empty_dir(d)
   if (is.character(theme) && length(theme) == 1 && !is.na(theme)) {
     msg_next('Installing the theme ', theme, ' from ', hostname)
+    # delete hugo.toml if the theme has provided a config file
+    if (file_exists('hugo.toml')) file.rename('hugo.toml', 'hugo.toml~')
     install_theme(theme, theme_example, hostname = hostname)
+    if (length(find_config(error = FALSE)) == 0) {
+      file.rename('hugo.toml~', 'hugo.toml')
+    } else {
+      file.remove('hugo.toml~')
+    }
   }
   # remove the .gitignore that ignores everything under static/:
   # https://github.com/rstudio/blogdown/issues/320
@@ -512,7 +519,7 @@ check_modules = function(dir = '.') {
 remove_config = function() {
   f1 = config_files(); f1 = f1[dirname(f1) == '.']
   # delete config.yaml if config.toml exists
-  if (length(f1) >= 2 && file_exists(f1[1])) unlink(f1[2])
+  if (length(f1) >= 2 && file_exists(f1[1])) unlink(f1[-1])
   f2 = file.path('config', '_default', f1)
   if (any(file_exists(f2))) unlink(f1)
 }
