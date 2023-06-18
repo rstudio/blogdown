@@ -218,7 +218,7 @@ load_config = function() in_root({
 
 read_config = function(f) {
   parser = switch(
-    basename(f), 'config.toml' = read_toml, 'config.yaml' = yaml_load_file
+    file_ext(f), 'toml' = read_toml, 'yaml' = yaml_load_file
   )
   parser(f)
 }

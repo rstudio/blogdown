@@ -110,13 +110,13 @@ change_config = function(name, value) {
   f = find_config()
   x = read_utf8(f)
   b = basename(f)
-  if (b == 'config.toml') {
+  switch(file_ext(b), toml = {
     r = sprintf('^%s\\s*=.+', name)
     v = if (!is.na(value)) paste(name, value, sep = ' = ')
-  } else if (b == 'config.yaml') {
+  }, yaml = {
     r = sprintf('^%s\\s*:.+', name)
     v = if (!is.na(value)) paste(name, value, sep = ': ')
-  }
+  })
   i = grep(r, x, ignore.case = TRUE)
   if (length(i) > 1) stop("Duplicated configuration for '", name, "' in ", f)
   x0 = x
