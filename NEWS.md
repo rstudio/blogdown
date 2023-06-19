@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.19
+
+
 # CHANGES IN blogdown VERSION 1.18
 
 - `new_site()` no longer uses the command-line flag `-f` for `hugo new site`, because the `-f` flag has a different meaning since Hugo v0.112.4 (thanks, @residualsun1 https://d.cosx.org/d/424434, gohugoio/hugo#11015).
