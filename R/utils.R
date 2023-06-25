@@ -306,7 +306,7 @@ site_root = function(config = config_files(), .site_dir = NULL) {
     w1 = getwd(); w2 = dirname(w1)
     paths = c(paths, w1)
     if (w1 == w2) stop(
-      'Could not find ', paste(config, collapse = ' / '), ' under\n',
+      'Could not find ', paste0("'", config, "'", collapse = ' / '), ' under\n',
       paste('  ', paths, collapse = '\n')
     )
     setwd('..')
