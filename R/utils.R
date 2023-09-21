@@ -1006,7 +1006,7 @@ clean_hugo_cache = function() {
   if (!file.exists(tmp <- Sys.getenv('TMPDIR'))) return()
   # clean up the hugo cache dir during R CMD check
   if (xfun::is_R_CMD_check())
-    unlink(file.path(tmp, 'hugo_cache'), recursive = TRUE)
+    unlink(file.path(tmp, 'hugo_cache_runner'), recursive = TRUE)
 }
 
 # add the time of now to a date
