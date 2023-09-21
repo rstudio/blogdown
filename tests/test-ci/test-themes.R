@@ -15,5 +15,6 @@ assert('new_site() and build_site() work with selected themes', {
     sprintf('wowchemy/starter-hugo-%s', c('academic', 'online-course', 'research-group')),
     sprintf('yihui/hugo-%s', c('lithium', 'prose', 'xmag', 'xmin'))
   )
-  (sapply(themes, test_site))
+  status = !sapply(themes, test_site)
+  if (any(status)) stop('Theme(s) failed: ', paste(themes[status], collapse = ' '))
 })
