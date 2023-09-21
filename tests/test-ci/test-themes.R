@@ -1,6 +1,8 @@
 library(testit)
 
 test_site = function(theme) {
+  o = options(blogdown.hugo.args = c('--panicOnWarning', '--quiet'))
+  on.exit(options(o), add = TRUE)
   dir.create(d1 <- tempfile())
   on.exit(unlink(d1, recursive = TRUE), add = TRUE)
   d2 = new_site(d1, theme = theme, serve = FALSE)
@@ -16,5 +18,7 @@ assert('new_site() and build_site() work with selected themes', {
     sprintf('yihui/hugo-%s', c('lithium', 'prose', 'xmag', 'xmin'))
   )
   status = !sapply(themes, test_site)
-  if (any(status)) stop('Theme(s) failed: ', paste(themes[status], collapse = ' '))
+  if (any(status)) stop(
+    'Theme(s) failed: ', paste(themes[status], collapse = ' '), call. = FALSE
+  )
 })
