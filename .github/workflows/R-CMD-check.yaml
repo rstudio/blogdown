@@ -23,6 +23,8 @@ on:
       - '_pkgdown.yml'
       - 'pkgdown/**'
       - '.github/workflows/pkgdown.yaml'
+  schedule:
+    - cron: '0 10 * * 1'
 
 name: R-CMD-check
 
