@@ -8,7 +8,7 @@ test_site = function(theme) {
   d2 = new_site(d1, theme = theme, serve = FALSE)
   xfun::in_dir(d2, blogdown::build_site(build_rmd = 'newfile'))
   (xfun::normalize_path(d1) %==% xfun::normalize_path(d2) &&
-    xfun::in_dir(d2, blogdown::hugo_build()) == 0)
+    xfun::in_dir(d2, blogdown::hugo_build(args = '--panicOnWarning')) == 0)
 }
 
 assert('new_site() and build_site() work with selected themes', {
