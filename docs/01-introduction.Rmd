@@ -424,7 +424,7 @@ Three of these options are worth further explanations:
 
 - `blogdown.knit.on_save`: By default, the Rmd file is automatically knitted when it is saved. If you prefer clicking the `Knit` button in RStudio to manually knit the file, you may set this option to `FALSE`. If this option is unset, **blogdown** will set it to `TRUE` for the current R session (with a reminder message) when you click the `Knit` button.
 
-- `blogdown.method`: By default, an `Rmd` post is compiled to `.md` (Markdown) via **rmarkdown**, which will be rendered to HTML by Hugo's Markdown renderer (e.g., Goldmark). You may set this option to `"html"` to pre-render `.md` to `.html` and bypass Hugo's Markdown renderer. Basically, this option decides whether you want to use Pandoc or Hugo's Markdown renderer to render Markdown to HTML. See Section \@ref{blogdown-method} for more information.
+- `blogdown.method`: By default, an `Rmd` post is compiled to `.md` (Markdown) via **rmarkdown**, which will be rendered to HTML by Hugo's Markdown renderer (e.g., Goldmark). You may set this option to `"html"` to pre-render `.md` to `.html` and bypass Hugo's Markdown renderer. Basically, this option decides whether you want to use Pandoc or Hugo's Markdown renderer to render Markdown to HTML. See Section \@ref{method} for more information.
 
 We recommend that you set these options in your R startup profile file. If you have never used a startup profile file before, you can check out the help page `?Rprofile`. Here, we provide a brief but incomplete introduction to orient you quickly.
 
