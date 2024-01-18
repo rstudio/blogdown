@@ -251,7 +251,13 @@ process_markdown = function(res, x = read_utf8(res)) {
       options = c('--wrap=preserve', '--preserve-tabs'),
       citeproc = TRUE
     )
-    x = c(bookdown:::fetch_yaml(x), '', read_utf8(mds[2]))
+    x2 = read_utf8(mds[2])
+    # pandoc will escape < and > in shortcodes, and below is a hack to restore them
+    if (get_option('blogdown.restore.shortcode', TRUE)) {
+      x2 = gsub('^\\{\\{\\\\< ([^ ])', '{{< \\1', x2)
+      x2 = gsub('([^ ]) \\\\>\\}\\}$', '\\1 >}}', x2)
+    }
+    x = c(bookdown:::fetch_yaml(x), '', x2)
   }
   x
 }

@@ -1,5 +1,6 @@
 # CHANGES IN blogdown VERSION 1.19
 
+- Fixed the bug that shortcodes were mangled when there are raw HTML blocks in the Markdown output from R Markdown (thanks, @Redcozmo, #759).
 
 # CHANGES IN blogdown VERSION 1.18
 
