@@ -16,9 +16,9 @@
 NULL
 
 with_ext = function(...) xfun::with_ext(...)
-dir_exists = bookdown:::dir_exists
-dir_create = bookdown:::dir_create
-existing_files = bookdown:::existing_files
+dir_exists = xfun:::dir_exists
+dir_create = xfun:::dir_create
+existing_files = xfun:::existing_files
 fetch_yaml = function(f) bookdown:::fetch_yaml(read_utf8(f))
 Rscript = bookdown:::Rscript
 
