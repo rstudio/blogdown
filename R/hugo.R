@@ -343,7 +343,7 @@ install_theme = function(
     branch = sub('^@', '', gsub(r, '\\2', theme))
     theme = gsub(r, '\\1', theme)
     # the hugo-academic theme has moved
-    if (theme == 'gcushen/hugo-academic') theme = 'wowchemy/starter-hugo-academic'
+    if (theme == 'gcushen/hugo-academic') theme = 'HugoBlox/theme-academic-cv'
     if (branch == '') branch = 'HEAD'
   }
 
