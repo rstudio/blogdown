@@ -218,9 +218,9 @@ build_one = function(input, output, to_md = file_ext(output) != 'html', quiet = 
 }
 
 process_markdown = function(res, x = read_utf8(res)) {
-  unlink(xfun::attr(res, 'intermediates'))
+  unlink(attr(res, 'intermediates'))
   # write HTML dependencies to the body of Markdown
-  if (length(meta <- xfun::attr(res, 'knit_meta'))) {
+  if (length(meta <- attr(res, 'knit_meta'))) {
     m = rmarkdown:::html_dependencies_as_string(meta, attr(res, 'files_dir'), '.')
     if (length(i <- grep('^---\\s*$', x)) >= 2) {
       x = append(x, m, i[2])

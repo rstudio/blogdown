@@ -11,7 +11,7 @@
 #' @aliases blogdown-package
 #' @import utils
 #' @import stats
-#' @importFrom xfun attr in_dir read_utf8 write_utf8 is_windows is_macos
+#' @importFrom xfun in_dir read_utf8 write_utf8 is_windows is_macos
 #'   file_exists dir_exists file_ext msg_cat dir_create del_empty_dir proc_kill
 #'   set_envvar exit_call existing_files
 #' @examples if (interactive()) blogdown::new_site()

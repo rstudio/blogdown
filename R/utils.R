@@ -36,6 +36,8 @@ pkg_file = function(..., mustWork = TRUE) {
   system.file(..., package = 'blogdown', mustWork = mustWork)
 }
 
+attr = function(...) base::attr(..., exact = TRUE)
+
 # tempfile under the current working directory
 wd_tempfile = function(..., pattern = '') {
   basename(tempfile(pattern, '.', ...))
