@@ -95,7 +95,7 @@ require_rebuild = function(html, rmd, N = get_option('blogdown.time_diff', 0)) {
 #' Build all Rmd files under a directory
 #'
 #' List all Rmd files recursively under a directory, and compile them using
-#' \code{rmarkdown::\link{render}()}.
+#' [rmarkdown::render()].
 #' @param dir A directory path.
 #' @param force Whether to force building all Rmd files. By default, an Rmd file
 #'   is built only if it is newer than its output file(s).
@@ -103,6 +103,7 @@ require_rebuild = function(html, rmd, N = get_option('blogdown.time_diff', 0)) {
 #'   ignored when testing if the modification time of the Rmd source file is
 #'   newer than its output files.
 #' @export
+#' @md
 build_dir = function(dir = '.', force = FALSE, ignore = '[.]Rproj$') {
   for (f in list_rmds(dir)) {
     if (force) { render_new(f); next }
@@ -319,30 +320,31 @@ site_root = function(config = config_files(), .site_dir = NULL) {
 
 #' Read and write TOML data (Tom's Obvious Markup Language)
 #'
-#' The function \code{read_toml()} reads TOML data from a file or a character
-#' vector, and the function \code{write_toml()} converts an R object to TOML.
+#' The function `read_toml()` reads TOML data from a file or a character vector,
+#' and the function `write_toml()` converts an R object to TOML.
 #'
-#' For \code{read_toml()}, it first tries to use the R package \pkg{RcppTOML} to
-#' read the TOML data. If \pkg{RcppTOML} is not available, it uses Hugo to
-#' convert the TOML data to YAML, and reads the YAML data via the R package
-#' \pkg{yaml}. If Hugo is not available, it falls back to a naive parser, which
-#' is only able to parse top-level fields in the TOML data, and it only supports
-#' character, logical, and numeric (including integer) scalars.
+#' For `read_toml()`, it first tries to use the R package \pkg{RcppTOML} to read
+#' the TOML data. If \pkg{RcppTOML} is not available, it uses Hugo to convert
+#' the TOML data to YAML, and reads the YAML data via the R package \pkg{yaml}.
+#' If Hugo is not available, it falls back to a naive parser, which is only able
+#' to parse top-level fields in the TOML data, and it only supports character,
+#' logical, and numeric (including integer) scalars.
 #'
-#' For \code{write_toml()}, it converts an R object to YAML via the R package
+#' For `write_toml()`, it converts an R object to YAML via the R package
 #' \pkg{yaml}, and uses Hugo to convert the YAML data to TOML.
 #' @param file Path to an input (TOML or YAML) file.
-#' @param x For \code{read_toml()}, the TOML data as a character vector (it is
-#'   read from \code{file} by default; if provided, \code{file} will be
-#'   ignored). For \code{write_toml()}, an R object to be converted to TOML.
+#' @param x For `read_toml()`, the TOML data as a character vector (it is read
+#'   from `file` by default; if provided, `file` will be ignored). For
+#'   `write_toml()`, an R object to be converted to TOML.
 #' @param strict Whether to try \pkg{RcppTOML} and Hugo only (i.e., not to use
-#'   the naive parser). If \code{FALSE}, only the naive parser is used (this is
-#'   not recommended, unless you are sure your TOML data is really simple).
-#' @return For \code{read_toml()}, an R object. For \code{write_toml()},
-#'   \code{toml2yaml()}, and \code{yaml2toml()}, a character vector (marked by
-#'   \code{xfun::\link{raw_string}()}) of the TOML/YAML data if \code{output =
-#'   NULL}, otherwise the TOML/YAML data is written to the output file.
+#'   the naive parser). If `FALSE`, only the naive parser is used (this is not
+#'   recommended, unless you are sure your TOML data is really simple).
+#' @return For `read_toml()`, an R object. For `write_toml()`, `toml2yaml()`,
+#'   and `yaml2toml()`, a character vector (marked by [xfun::raw_string()]) of
+#'   the TOML/YAML data if `output = NULL`, otherwise the TOML/YAML data is
+#'   written to the output file.
 #' @export
+#' @md
 #' @examples
 #' \dontrun{
 #' v = blogdown::read_toml(x = c('a = 1', 'b = true', 'c = "Hello"', 'd = [1, 2]'))

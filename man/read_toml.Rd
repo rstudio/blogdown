@@ -18,34 +18,34 @@ yaml2toml(file, output = NULL)
 \arguments{
 \item{file}{Path to an input (TOML or YAML) file.}
 
-\item{x}{For \code{read_toml()}, the TOML data as a character vector (it is
-read from \code{file} by default; if provided, \code{file} will be
-ignored). For \code{write_toml()}, an R object to be converted to TOML.}
+\item{x}{For \code{read_toml()}, the TOML data as a character vector (it is read
+from \code{file} by default; if provided, \code{file} will be ignored). For
+\code{write_toml()}, an R object to be converted to TOML.}
 
 \item{strict}{Whether to try \pkg{RcppTOML} and Hugo only (i.e., not to use
-the naive parser). If \code{FALSE}, only the naive parser is used (this is
-not recommended, unless you are sure your TOML data is really simple).}
+the naive parser). If \code{FALSE}, only the naive parser is used (this is not
+recommended, unless you are sure your TOML data is really simple).}
 
 \item{output}{Path to an output file. If \code{NULL}, the TOML data is
 returned, otherwise the data is written to the specified file.}
 }
 \value{
-For \code{read_toml()}, an R object. For \code{write_toml()},
-  \code{toml2yaml()}, and \code{yaml2toml()}, a character vector (marked by
-  \code{xfun::\link{raw_string}()}) of the TOML/YAML data if \code{output =
-  NULL}, otherwise the TOML/YAML data is written to the output file.
+For \code{read_toml()}, an R object. For \code{write_toml()}, \code{toml2yaml()},
+and \code{yaml2toml()}, a character vector (marked by \code{\link[xfun:raw_string]{xfun::raw_string()}}) of
+the TOML/YAML data if \code{output = NULL}, otherwise the TOML/YAML data is
+written to the output file.
 }
 \description{
-The function \code{read_toml()} reads TOML data from a file or a character
-vector, and the function \code{write_toml()} converts an R object to TOML.
+The function \code{read_toml()} reads TOML data from a file or a character vector,
+and the function \code{write_toml()} converts an R object to TOML.
 }
 \details{
-For \code{read_toml()}, it first tries to use the R package \pkg{RcppTOML} to
-read the TOML data. If \pkg{RcppTOML} is not available, it uses Hugo to
-convert the TOML data to YAML, and reads the YAML data via the R package
-\pkg{yaml}. If Hugo is not available, it falls back to a naive parser, which
-is only able to parse top-level fields in the TOML data, and it only supports
-character, logical, and numeric (including integer) scalars.
+For \code{read_toml()}, it first tries to use the R package \pkg{RcppTOML} to read
+the TOML data. If \pkg{RcppTOML} is not available, it uses Hugo to convert
+the TOML data to YAML, and reads the YAML data via the R package \pkg{yaml}.
+If Hugo is not available, it falls back to a naive parser, which is only able
+to parse top-level fields in the TOML data, and it only supports character,
+logical, and numeric (including integer) scalars.
 
 For \code{write_toml()}, it converts an R object to YAML via the R package
 \pkg{yaml}, and uses Hugo to convert the YAML data to TOML.

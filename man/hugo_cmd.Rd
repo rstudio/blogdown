@@ -192,7 +192,7 @@ Markdown source documents. If you have backed up the website, or the
 website is under version control, you may try \code{unsafe = TRUE}.}
 
 \item{host, port}{The host IP address and port; see
-\code{servr::\link{server_config}()}.}
+\code{servr::\link[servr]{server_config}()}.}
 }
 \description{
 Wrapper functions to run Hugo commands via \code{\link{system2}('hugo',

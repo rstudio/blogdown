@@ -698,7 +698,7 @@ hugo_convert = function(to = c('YAML', 'TOML', 'JSON'), unsafe = FALSE, ...) {
 }
 
 #' @param host,port The host IP address and port; see
-#'   \code{servr::\link{server_config}()}.
+#'   \code{servr::\link[servr]{server_config}()}.
 #' @export
 #' @describeIn hugo_cmd Start a Hugo server.
 hugo_server = function(host, port) {

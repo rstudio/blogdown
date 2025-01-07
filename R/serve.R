@@ -24,9 +24,9 @@
 #' (see the documentation of Hugo server at
 #' \url{https://gohugo.io/commands/hugo_server/} for the meaning of these
 #' arguments).
-#' @param ... Arguments passed to \code{servr::\link{server_config}()} (only
-#'   arguments \code{host}, \code{port}, \code{browser}, \code{daemon}, and
-#'   \code{interval} are supported).
+#' @param ... Arguments passed to \code{servr::\link[servr]{server_config}()}
+#'   (only arguments \code{host}, \code{port}, \code{browser}, \code{daemon},
+#'   and \code{interval} are supported).
 #' @param .site_dir Directory to search for site configuration file. It defaults
 #'   to \code{getwd()}, and can also be specified via the global option
 #'   \code{blogdown.site_root}.

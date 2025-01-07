@@ -1,9 +1,9 @@
 #' An R Markdown output format for \pkg{blogdown} web pages
 #'
-#' This function is a simple wrapper of \code{bookdown::\link{html_document2}()}
-#' with different default arguments, and more importantly, a special HTML
-#' template designed only for \pkg{blogdown} to render R Markdown to HTML pages
-#' that can be processed by Hugo.
+#' This function is a simple wrapper of [bookdown::html_document2()] with
+#' different default arguments, and more importantly, a special HTML template
+#' designed only for \pkg{blogdown} to render R Markdown to HTML pages that can
+#' be processed by Hugo.
 #'
 #' The HTML output is not a complete HTML document, and only meaningful to
 #' \pkg{blogdown} (it will be post-processed to render valid HTML pages). The
@@ -14,22 +14,21 @@
 #' figures/tables.
 #'
 #' @param ...,number_sections,self_contained,highlight,template,pandoc_args
-#'   Arguments passed to \code{bookdown::html_document2()} (note the option
-#'   \code{theme} is not supported and set to \code{NULL} internally, and when
-#'   \code{template = NULL}, a default template in \pkg{blogdown} will be used).
-#' @param keep_md,pre_knit,post_processor Passed to
-#'   \code{rmarkdown::\link{output_format}}.
+#'   Arguments passed to `bookdown::html_document2()` (note the option `theme`
+#'   is not supported and set to `NULL` internally, and when `template = NULL`,
+#'   a default template in \pkg{blogdown} will be used).
+#' @param keep_md,pre_knit,post_processor Passed to [rmarkdown::output_format].
 #'
 #' @note Do not use a custom template unless you understand how the default
 #'   template actually works (see the \pkg{blogdown} book).
 #'
-#'   The argument \code{highlight} does not support the value \code{"textmate"},
-#'   and the argument \code{template} does not support the value
-#'   \code{"default"}.
+#'   The argument `highlight` does not support the value `"textmate"`, and the
+#'   argument `template` does not support the value `"default"`.
 #' @references See Chapter 2 of the \pkg{bookdown} book for the Markdown syntax:
-#'   \url{https://bookdown.org/yihui/bookdown}. See the \pkg{blogdown} book for
-#'   full details: \url{https://bookdown.org/yihui/blogdown}.
+#'   <https://bookdown.org/yihui/bookdown>. See the \pkg{blogdown} book for full
+#'   details: <https://bookdown.org/yihui/blogdown>.
 #' @export
+#' @md
 html_page = function(
   ..., number_sections = FALSE, self_contained = FALSE, highlight = NULL,
   template = NULL, pandoc_args = c('-M', 'link-citations=true', '--preserve-tabs'),

@@ -18,5 +18,5 @@ newer than its output files.}
 }
 \description{
 List all Rmd files recursively under a directory, and compile them using
-\code{rmarkdown::\link{render}()}.
+\code{\link[rmarkdown:render]{rmarkdown::render()}}.
 }

@@ -10,9 +10,9 @@ serve_site(..., .site_dir = NULL)
 stop_server()
 }
 \arguments{
-\item{...}{Arguments passed to \code{servr::\link{server_config}()} (only
-arguments \code{host}, \code{port}, \code{browser}, \code{daemon}, and
-\code{interval} are supported).}
+\item{...}{Arguments passed to \code{servr::\link[servr]{server_config}()}
+(only arguments \code{host}, \code{port}, \code{browser}, \code{daemon},
+and \code{interval} are supported).}
 
 \item{.site_dir}{Directory to search for site configuration file. It defaults
 to \code{getwd()}, and can also be specified via the global option

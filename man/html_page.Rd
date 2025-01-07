@@ -17,18 +17,17 @@ html_page(
 )
 }
 \arguments{
-\item{..., number_sections, self_contained, highlight, template, pandoc_args}{Arguments passed to \code{bookdown::html_document2()} (note the option
-\code{theme} is not supported and set to \code{NULL} internally, and when
-\code{template = NULL}, a default template in \pkg{blogdown} will be used).}
+\item{..., number_sections, self_contained, highlight, template, pandoc_args}{Arguments passed to \code{bookdown::html_document2()} (note the option \code{theme}
+is not supported and set to \code{NULL} internally, and when \code{template = NULL},
+a default template in \pkg{blogdown} will be used).}
 
-\item{keep_md, pre_knit, post_processor}{Passed to
-\code{rmarkdown::\link{output_format}}.}
+\item{keep_md, pre_knit, post_processor}{Passed to \link[rmarkdown:output_format]{rmarkdown::output_format}.}
 }
 \description{
-This function is a simple wrapper of \code{bookdown::\link{html_document2}()}
-with different default arguments, and more importantly, a special HTML
-template designed only for \pkg{blogdown} to render R Markdown to HTML pages
-that can be processed by Hugo.
+This function is a simple wrapper of \code{\link[bookdown:html_document2]{bookdown::html_document2()}} with
+different default arguments, and more importantly, a special HTML template
+designed only for \pkg{blogdown} to render R Markdown to HTML pages that can
+be processed by Hugo.
 }
 \details{
 The HTML output is not a complete HTML document, and only meaningful to
@@ -41,14 +40,13 @@ figures/tables.
 }
 \note{
 Do not use a custom template unless you understand how the default
-  template actually works (see the \pkg{blogdown} book).
+template actually works (see the \pkg{blogdown} book).
 
-  The argument \code{highlight} does not support the value \code{"textmate"},
-  and the argument \code{template} does not support the value
-  \code{"default"}.
+The argument \code{highlight} does not support the value \code{"textmate"}, and the
+argument \code{template} does not support the value \code{"default"}.
 }
 \references{
 See Chapter 2 of the \pkg{bookdown} book for the Markdown syntax:
-  \url{https://bookdown.org/yihui/bookdown}. See the \pkg{blogdown} book for
-  full details: \url{https://bookdown.org/yihui/blogdown}.
+\url{https://bookdown.org/yihui/bookdown}. See the \pkg{blogdown} book for full
+details: \url{https://bookdown.org/yihui/blogdown}.
 }
