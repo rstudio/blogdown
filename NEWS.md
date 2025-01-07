@@ -1,5 +1,9 @@
 # CHANGES IN blogdown VERSION 1.20
 
+- Redirect the wowchemy themes to HugoBlox.
+
+- No longer use `xfun::attr()` (which will be removed from **xfun**).
+
 # CHANGES IN blogdown VERSION 1.19
 
 - Fixed the bug that shortcodes were mangled when there are raw HTML blocks in the Markdown output from R Markdown (thanks, @Redcozmo, #759).
