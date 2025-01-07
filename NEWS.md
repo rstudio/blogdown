@@ -1,3 +1,5 @@
+# CHANGES IN blogdown VERSION 1.21
+
 # CHANGES IN blogdown VERSION 1.20
 
 - Redirect the wowchemy themes to HugoBlox.
