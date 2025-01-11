@@ -480,6 +480,7 @@ knitr::kable(matrix(c(
   'blogdown.ext', '.md', 'Default extension of new posts: .md / .Rmd / .Rmarkdown',
   'blogdown.subdir', 'post', 'Default subdirectory under content/ for new posts',
   'blogdown.yaml.empty', TRUE, 'Preserve empty fields in YAML?',
+  'servr.port', 3469, 'Default port used when you serve your site',
   NULL
 ), ncol = 3, byrow = TRUE, dimnames = list(NULL, c('Option name', 'Default', 'Meaning'))), booktabs = TRUE, caption = 'Additional global options that affect the behavior of blogdown.')
 ```
