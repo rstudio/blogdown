@@ -33,11 +33,7 @@
 #' @note For the Hugo server, the argument \command{--navigateToChanged} is used
 #'   by default, which means when you edit and save a source file, Hugo will
 #'   automatically navigate the web browser to the page corresponding to this
-#'   source file (if the page exists). However, due to a Hugo bug
-#'   (\url{https://github.com/gohugoio/hugo/issues/3811}), this automatic
-#'   navigation may not always work for R Markdown posts, and you may have to
-#'   manually refresh your browser. It should work reliably for pure Markdown
-#'   posts, though.
+#'   source file (if the page exists).
 #' @export
 serve_site = function(..., .site_dir = NULL) {
   serve = switch(
