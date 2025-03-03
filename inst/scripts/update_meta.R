@@ -6,10 +6,12 @@ sel_input = function(...) shiny::selectizeInput(
 meta = blogdown:::collect_yaml()
 
 ctxt = rstudioapi::getSourceEditorContext(); txt = ctxt$contents
-res = blogdown:::split_yaml_body(txt); yml = res$yaml_list; rng = res$yaml_range
-if (length(yml) == 0) return(
-  warning("The current document does not seem to contain YAML metadata", call. = FALSE)
+if (length(ctxt$selection) == 0) stop(
+  'The document seems to be in the visual editor. Please put the cursor in YAML ',
+  'or switch to the source editor.', call. = FALSE
 )
+res = blogdown:::split_yaml_body(txt); yml = res$yaml_list; rng = res$yaml_range
+if (length(rng) != 2) stop('Cannot find YAML metadata in the current document.', call. = FALSE)
 rstudioapi::setSelectionRanges(list(c(rng[1] + 1, 1, rng[2], 1)))
 slct = rstudioapi::getSourceEditorContext()$selection[[1]]
 
