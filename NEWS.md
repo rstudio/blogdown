@@ -1,3 +1,5 @@
+# CHANGES IN blogdown VERSION 1.22
+
 # CHANGES IN blogdown VERSION 1.21
 
 - Use the `--renderToMemory` flag by default for Hugo >= 0.123.0 when starting `hugo server` (thanks, @drmowinckels, #772). If you do not wish to use this flag by default, please see https://bookdown.org/yihui/blogdown/livereload.html on how to configure your own default flags for `hugo server`.
