@@ -1,6 +1,6 @@
 # CHANGES IN blogdown VERSION 1.22
 
-- Due to the complexity, HugoBlox themes are no longer tested against blogdown, hence are not guaranteed to work with blogdown any more.
+- Due to the complexity, HugoBlox themes are no longer tested against **blogdown**, hence are not guaranteed to work with blogdown any more.
 
 - When converting metadata to YAML (e.g., in `new_site(to_yaml = TRUE)`), logical values are converted to `true`/`false` instead of `yes`/`no` now. This is because [Hugo v0.152.0](https://github.com/gohugoio/hugo/releases/tag/v0.152.0) no longer supports `yes`/`no` as logical values.
 
