@@ -830,7 +830,9 @@ yaml_load_file = function(...) yaml::yaml.load_file(...)
 
 # a wrapper of yaml::as.yaml() to indent sublists by default and trim white spaces
 as.yaml = function(..., .trim_ws = TRUE) {
-  res = yaml::as.yaml(..., indent.mapping.sequence = TRUE)
+  res = yaml::as.yaml(..., indent.mapping.sequence = TRUE, handlers = list(
+    logical = yaml::verbatim_logical
+  ))
   Encoding(res) = 'UTF-8'
   if (.trim_ws) sub('\\s+$', '', res) else res
 }
