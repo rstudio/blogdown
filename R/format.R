@@ -46,9 +46,9 @@ html_page = function(
     post = eval(parse(text = post_processor))
   post_processor = function(metadata, input, output, ...) {
     if (is.function(post)) output = post(metadata, input, output, ...)
-    # the output .html file contains no YAML metadata; need to prepend from .md
-    if (grepl('[.]html~', output) && file_exists(f <- with_ext(output, '.knit.md~'))) {
-      prepend_yaml(f, output, callback = function(s) {
+    # the output .html file contains no YAML metadata; need to prepend from input
+    if (grepl('[.]html~', output)) {
+      prepend_yaml(input, output, callback = function(s) {
         if (!getOption('blogdown.draft.output', FALSE)) return(s)
         if (length(s) < 2 || length(grep('^draft: ', s)) > 0) return(s)
         append(s, 'draft: true', 1)
