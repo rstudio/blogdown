@@ -4,6 +4,8 @@
 
 - When converting metadata to YAML (e.g., in `new_site(to_yaml = TRUE)`), logical values are converted to `true`/`false` instead of `yes`/`no` now. This is because [Hugo v0.152.0](https://github.com/gohugoio/hugo/releases/tag/v0.152.0) no longer supports `yes`/`no` as logical values.
 
+- Fixed a bug where using `math_method: "r-katex"` in R Markdown YAML would cause malformed YAML to be prepended to HTML output. The post-processor now extracts YAML from the original input file instead of the intermediate `.knit.md~` file.
+
 # CHANGES IN blogdown VERSION 1.21
 
 - Use the `--renderToMemory` flag by default for Hugo >= 0.123.0 when starting `hugo server` (thanks, @drmowinckels, #772). If you do not wish to use this flag by default, please see https://bookdown.org/yihui/blogdown/livereload.html on how to configure your own default flags for `hugo server`.
