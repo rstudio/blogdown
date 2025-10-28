@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.23
+
+
 # CHANGES IN blogdown VERSION 1.22
 
 - Due to the complexity, HugoBlox themes are no longer tested against **blogdown**, hence are not guaranteed to work with blogdown any more.
