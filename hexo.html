@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5.2 Hexo | blogdown: Creating Websites with R Markdown</title>
+  <meta name="description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5.2 Hexo | blogdown: Creating Websites with R Markdown" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://bookdown.org/yihui/blogdown//images/cover.png" />
+  <meta property="og:description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="github-repo" content="rstudio/blogdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5.2 Hexo | blogdown: Creating Websites with R Markdown" />
+  
+  <meta name="twitter:description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="twitter:image" content="https://bookdown.org/yihui/blogdown//images/cover.png" />
+
+<meta name="author" content="Yihui Xie, Amber Thomas, Alison Presmanes Hill" />
+
+
+<meta name="date" content="2025-12-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="jekyll.html"/>
+<link rel="next" href="rmd-website.html"/>
+<script src="libs/jquery/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Creating Websites with R Markdown</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="structure-of-the-book.html"><a href="structure-of-the-book.html"><i class="fa fa-check"></i>Structure of the book</a></li>
+<li class="chapter" data-level="" data-path="software-info.html"><a href="software-info.html"><i class="fa fa-check"></i>Software information and conventions</a></li>
+<li class="chapter" data-level="" data-path="acknowledgments.html"><a href="acknowledgments.html"><i class="fa fa-check"></i>Acknowledgments</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>About the Authors</a>
+<ul>
+<li class="chapter" data-level="" data-path="yihui-xie.html"><a href="yihui-xie.html"><i class="fa fa-check"></i>Yihui Xie</a></li>
+<li class="chapter" data-level="" data-path="amber-thomas.html"><a href="amber-thomas.html"><i class="fa fa-check"></i>Amber Thomas</a></li>
+<li class="chapter" data-level="" data-path="alison-presmanes-hill.html"><a href="alison-presmanes-hill.html"><i class="fa fa-check"></i>Alison Presmanes Hill</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i><b>1</b> Get Started</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i><b>1.1</b> Installation</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="installation.html"><a href="installation.html#installation-troubleshooting"><i class="fa fa-check"></i><b>1.1.1</b> Installation troubleshooting</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="a-quick-example.html"><a href="a-quick-example.html"><i class="fa fa-check"></i><b>1.2</b> A quick example</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="a-quick-example.html"><a href="a-quick-example.html#prerequisites"><i class="fa fa-check"></i><b>1.2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.2.2" data-path="a-quick-example.html"><a href="a-quick-example.html#create-project"><i class="fa fa-check"></i><b>1.2.2</b> Create project</a></li>
+<li class="chapter" data-level="1.2.3" data-path="a-quick-example.html"><a href="a-quick-example.html#serve-site"><i class="fa fa-check"></i><b>1.2.3</b> Serve site</a></li>
+<li class="chapter" data-level="1.2.4" data-path="a-quick-example.html"><a href="a-quick-example.html#edit-content"><i class="fa fa-check"></i><b>1.2.4</b> Edit content</a></li>
+<li class="chapter" data-level="1.2.5" data-path="a-quick-example.html"><a href="a-quick-example.html#when-in-doubt-run-blogdowncheck_site"><i class="fa fa-check"></i><b>1.2.5</b> When in doubt, run <code>blogdown::check_site()</code></a></li>
+<li class="chapter" data-level="1.2.6" data-path="a-quick-example.html"><a href="a-quick-example.html#configure-site"><i class="fa fa-check"></i><b>1.2.6</b> Configure site</a></li>
+<li class="chapter" data-level="1.2.7" data-path="a-quick-example.html"><a href="a-quick-example.html#summary"><i class="fa fa-check"></i><b>1.2.7</b> Summary</a></li>
+<li class="chapter" data-level="1.2.8" data-path="a-quick-example.html"><a href="a-quick-example.html#what-is-next"><i class="fa fa-check"></i><b>1.2.8</b> What is next?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html"><i class="fa fa-check"></i><b>1.3</b> A quick deploy</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#build-site"><i class="fa fa-check"></i><b>1.3.1</b> Build site</a></li>
+<li class="chapter" data-level="1.3.2" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#use-netlify-drop"><i class="fa fa-check"></i><b>1.3.2</b> Use Netlify Drop</a></li>
+<li class="chapter" data-level="1.3.3" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#sign-up-for-netlify"><i class="fa fa-check"></i><b>1.3.3</b> Sign up for Netlify</a></li>
+<li class="chapter" data-level="1.3.4" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#what-is-next-1"><i class="fa fa-check"></i><b>1.3.4</b> What is next?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="rstudio-ide.html"><a href="rstudio-ide.html"><i class="fa fa-check"></i><b>1.4</b> RStudio IDE</a></li>
+<li class="chapter" data-level="1.5" data-path="global-options.html"><a href="global-options.html"><i class="fa fa-check"></i><b>1.5</b> Global options</a></li>
+<li class="chapter" data-level="1.6" data-path="output-format.html"><a href="output-format.html"><i class="fa fa-check"></i><b>1.6</b> R Markdown vs. Markdown</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="output-format.html"><a href="output-format.html#basic-features-of-r-markdown"><i class="fa fa-check"></i><b>1.6.1</b> Basic features of R Markdown</a></li>
+<li class="chapter" data-level="1.6.2" data-path="output-format.html"><a href="output-format.html#blogdown-method"><i class="fa fa-check"></i><b>1.6.2</b> Render R Markdown to Markdown or HTML?</a></li>
+<li class="chapter" data-level="1.6.3" data-path="output-format.html"><a href="output-format.html#customize-the-r-markdown-output-format"><i class="fa fa-check"></i><b>1.6.3</b> Customize the R Markdown output format</a></li>
+</ul></li>
+<li class="chapter" data-level="1.7" data-path="other-themes.html"><a href="other-themes.html"><i class="fa fa-check"></i><b>1.7</b> Other themes</a>
+<ul>
+<li class="chapter" data-level="1.7.1" data-path="other-themes.html"><a href="other-themes.html#choosing-themes"><i class="fa fa-check"></i><b>1.7.1</b> Choosing themes</a></li>
+<li class="chapter" data-level="1.7.2" data-path="other-themes.html"><a href="other-themes.html#new-site-new-theme"><i class="fa fa-check"></i><b>1.7.2</b> New site, new theme</a></li>
+<li class="chapter" data-level="1.7.3" data-path="other-themes.html"><a href="other-themes.html#existing-site-new-theme"><i class="fa fa-check"></i><b>1.7.3</b> Existing site, new theme</a></li>
+<li class="chapter" data-level="1.7.4" data-path="other-themes.html"><a href="other-themes.html#existing-site-update-theme"><i class="fa fa-check"></i><b>1.7.4</b> Existing site, update theme</a></li>
+</ul></li>
+<li class="chapter" data-level="1.8" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>1.8</b> A recommended workflow</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="hugo.html"><a href="hugo.html"><i class="fa fa-check"></i><b>2</b> Hugo</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="static-sites.html"><a href="static-sites.html"><i class="fa fa-check"></i><b>2.1</b> Static sites and Hugo</a></li>
+<li class="chapter" data-level="2.2" data-path="configuration.html"><a href="configuration.html"><i class="fa fa-check"></i><b>2.2</b> Configuration</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="configuration.html"><a href="configuration.html#toml-syntax"><i class="fa fa-check"></i><b>2.2.1</b> TOML Syntax</a></li>
+<li class="chapter" data-level="2.2.2" data-path="configuration.html"><a href="configuration.html#options"><i class="fa fa-check"></i><b>2.2.2</b> Options</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="content.html"><a href="content.html"><i class="fa fa-check"></i><b>2.3</b> Content</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="content.html"><a href="content.html#yaml-metadata"><i class="fa fa-check"></i><b>2.3.1</b> YAML metadata</a></li>
+<li class="chapter" data-level="2.3.2" data-path="content.html"><a href="content.html#body"><i class="fa fa-check"></i><b>2.3.2</b> Body</a></li>
+<li class="chapter" data-level="2.3.3" data-path="content.html"><a href="content.html#shortcode"><i class="fa fa-check"></i><b>2.3.3</b> Shortcode</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="themes.html"><a href="themes.html"><i class="fa fa-check"></i><b>2.4</b> Themes</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="themes.html"><a href="themes.html#the-default-theme"><i class="fa fa-check"></i><b>2.4.1</b> The default theme</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="templates.html"><a href="templates.html"><i class="fa fa-check"></i><b>2.5</b> Templates</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="templates.html"><a href="templates.html#a-minimal-example"><i class="fa fa-check"></i><b>2.5.1</b> A minimal example</a></li>
+<li class="chapter" data-level="2.5.2" data-path="templates.html"><a href="templates.html#how-to"><i class="fa fa-check"></i><b>2.5.2</b> Implementing more features</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="custom-layouts.html"><a href="custom-layouts.html"><i class="fa fa-check"></i><b>2.6</b> Custom layouts</a></li>
+<li class="chapter" data-level="2.7" data-path="static-files.html"><a href="static-files.html"><i class="fa fa-check"></i><b>2.7</b> Static files</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="deployment.html"><a href="deployment.html"><i class="fa fa-check"></i><b>3</b> Deployment</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="netlify.html"><a href="netlify.html"><i class="fa fa-check"></i><b>3.1</b> Netlify</a></li>
+<li class="chapter" data-level="3.2" data-path="github-pages.html"><a href="github-pages.html"><i class="fa fa-check"></i><b>3.2</b> GitHub Pages</a></li>
+<li class="chapter" data-level="3.3" data-path="gitlab-pages.html"><a href="gitlab-pages.html"><i class="fa fa-check"></i><b>3.3</b> GitLab Pages</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="migration.html"><a href="migration.html"><i class="fa fa-check"></i><b>4</b> Migration</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="from-jekyll.html"><a href="from-jekyll.html"><i class="fa fa-check"></i><b>4.1</b> From Jekyll</a></li>
+<li class="chapter" data-level="4.2" data-path="from-wordpress.html"><a href="from-wordpress.html"><i class="fa fa-check"></i><b>4.2</b> From WordPress</a></li>
+<li class="chapter" data-level="4.3" data-path="from-other-systems.html"><a href="from-other-systems.html"><i class="fa fa-check"></i><b>4.3</b> From other systems</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="other-generators.html"><a href="other-generators.html"><i class="fa fa-check"></i><b>5</b> Other Generators</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="jekyll.html"><a href="jekyll.html"><i class="fa fa-check"></i><b>5.1</b> Jekyll</a></li>
+<li class="chapter" data-level="5.2" data-path="hexo.html"><a href="hexo.html"><i class="fa fa-check"></i><b>5.2</b> Hexo</a></li>
+<li class="chapter" data-level="5.3" data-path="rmd-website.html"><a href="rmd-website.html"><i class="fa fa-check"></i><b>5.3</b> Default site generator in rmarkdown</a></li>
+<li class="chapter" data-level="5.4" data-path="pkgdown.html"><a href="pkgdown.html"><i class="fa fa-check"></i><b>5.4</b> pkgdown</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="r-markdown.html"><a href="r-markdown.html"><i class="fa fa-check"></i><b>A</b> R Markdown</a></li>
+<li class="chapter" data-level="B" data-path="website-basics.html"><a href="website-basics.html"><i class="fa fa-check"></i><b>B</b> Website Basics</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="html.html"><a href="html.html"><i class="fa fa-check"></i><b>B.1</b> HTML</a></li>
+<li class="chapter" data-level="B.2" data-path="css.html"><a href="css.html"><i class="fa fa-check"></i><b>B.2</b> CSS</a></li>
+<li class="chapter" data-level="B.3" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>B.3</b> JavaScript</a></li>
+<li class="chapter" data-level="B.4" data-path="useful-resources.html"><a href="useful-resources.html"><i class="fa fa-check"></i><b>B.4</b> Useful resources</a>
+<ul>
+<li class="chapter" data-level="B.4.1" data-path="useful-resources.html"><a href="useful-resources.html#file-optimization"><i class="fa fa-check"></i><b>B.4.1</b> File optimization</a></li>
+<li class="chapter" data-level="B.4.2" data-path="useful-resources.html"><a href="useful-resources.html#helping-people-find-your-site"><i class="fa fa-check"></i><b>B.4.2</b> Helping people find your site</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="domain-name.html"><a href="domain-name.html"><i class="fa fa-check"></i><b>C</b> Domain Name</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="registration.html"><a href="registration.html"><i class="fa fa-check"></i><b>C.1</b> Registration</a></li>
+<li class="chapter" data-level="C.2" data-path="nameservers.html"><a href="nameservers.html"><i class="fa fa-check"></i><b>C.2</b> Nameservers</a></li>
+<li class="chapter" data-level="C.3" data-path="dns-records.html"><a href="dns-records.html"><i class="fa fa-check"></i><b>C.3</b> DNS records</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>D</b> Advanced Topics</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="more-global-options.html"><a href="more-global-options.html"><i class="fa fa-check"></i><b>D.1</b> More global options</a></li>
+<li class="chapter" data-level="D.2" data-path="livereload.html"><a href="livereload.html"><i class="fa fa-check"></i><b>D.2</b> LiveReload</a></li>
+<li class="chapter" data-level="D.3" data-path="local-preview.html"><a href="local-preview.html"><i class="fa fa-check"></i><b>D.3</b> Building a website for local preview</a></li>
+<li class="chapter" data-level="D.4" data-path="functions.html"><a href="functions.html"><i class="fa fa-check"></i><b>D.4</b> Functions in the blogdown package</a>
+<ul>
+<li class="chapter" data-level="D.4.1" data-path="functions.html"><a href="functions.html#exported-functions"><i class="fa fa-check"></i><b>D.4.1</b> Exported functions</a></li>
+<li class="chapter" data-level="D.4.2" data-path="functions.html"><a href="functions.html#non-exported-functions"><i class="fa fa-check"></i><b>D.4.2</b> Non-exported functions</a></li>
+</ul></li>
+<li class="chapter" data-level="D.5" data-path="dep-path.html"><a href="dep-path.html"><i class="fa fa-check"></i><b>D.5</b> Paths of figures and other dependencies</a></li>
+<li class="chapter" data-level="D.6" data-path="html-widgets.html"><a href="html-widgets.html"><i class="fa fa-check"></i><b>D.6</b> HTML widgets</a></li>
+<li class="chapter" data-level="D.7" data-path="version-control.html"><a href="version-control.html"><i class="fa fa-check"></i><b>D.7</b> Version control</a></li>
+<li class="chapter" data-level="D.8" data-path="default-template.html"><a href="default-template.html"><i class="fa fa-check"></i><b>D.8</b> The default HTML template</a></li>
+<li class="chapter" data-level="D.9" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>D.9</b> Different building methods</a></li>
+</ul></li>
+<li class="chapter" data-level="E" data-path="personal-experience.html"><a href="personal-experience.html"><i class="fa fa-check"></i><b>E</b> Personal Experience</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">blogdown: Creating Websites with R Markdown</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div class="caution">
+<p><strong>A note from the authors:</strong> Some of the information and instructions in this book are now out of date because of changes to Hugo and the blogdown package.
+If you have suggestions for improving this book, please file an issue in our <a href= "https://github.com/rstudio/blogdown/issues/new?template=documentation.md" target="_blank">GitHub repository</a>.
+Thanks for your patience while we work to update the book, and please stay tuned for the revised version!</p>
+<p>In the meantime, you can find an introduction to the changes and new features in the <a href="https://posit.co/blog/blogdown-v1.0/" target = "_blank">v1.0 release blog post</a> and this <a href="https://www.apreshill.com/blog/2020-12-new-year-new-blogdown/" target="_blank">"Up & running with blogdown in 2021"</a> blog post.</p>
+<p class="flushright">&mdash; Yihui, Amber, & Alison</p>
+</div>
+<div id="hexo" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Hexo<a href="hexo.html#hexo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The ideas of using Hexo (<a href="https://hexo.io" class="uri">https://hexo.io</a>) are very similar to what we have applied to Jekyll in the previous section. I have also prepared a minimal example in the GitHub repository <a href="https://github.com/yihui/blogdown-hexo">yihui/blogdown-hexo.</a></p>
+<p>The key components of this repository are still <code>.Rprofile</code>, <code>R/build.R</code>, and <code>R/build_one.R</code>. We set the option <code>blogdown.generator</code> to <code>hexo</code>, the <code>build.method</code> to <code>custom</code>, and the default subdirectory for new posts to <code>source/_posts</code>.</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="hexo.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(</span>
+<span id="cb93-2"><a href="hexo.html#cb93-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">blogdown.generator =</span> <span class="st">&#39;hexo&#39;</span>,</span>
+<span id="cb93-3"><a href="hexo.html#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">blogdown.method =</span> <span class="st">&#39;custom&#39;</span>,</span>
+<span id="cb93-4"><a href="hexo.html#cb93-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">blogdown.subdir =</span> <span class="st">&#39;source/_posts&#39;</span></span>
+<span id="cb93-5"><a href="hexo.html#cb93-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>The script <code>R/build.R</code> is similar to the one in the <code>blogdown-jekyll</code> repository. The main differences are:</p>
+<ol style="list-style-type: decimal">
+<li><p>We find all Rmd files under the <code>source/</code> directory instead of the root directory, because Hexo’s convention is to put all source files under <code>source/</code>.</p></li>
+<li><p>We call <code>system2('hexo', 'generate')</code> to build the website.</p></li>
+</ol>
+<p>For the script <code>R/build_one.R</code>, the major difference with the script in the <code>blogdown-jekyll</code> repository is that we set the <code>base.dir</code> option for <strong>knitr</strong>, so that all R figures are generated to the <code>source/</code> directory. This is because Hexo copies everything under <code>source/</code> to <code>public/</code>, whereas Jekyll copies everything under the root directory to <code>_site/</code>.</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="hexo.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">local</span>({</span>
+<span id="cb94-2"><a href="hexo.html#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fall back on &#39;/&#39; if baseurl is not specified</span></span>
+<span id="cb94-3"><a href="hexo.html#cb94-3" aria-hidden="true" tabindex="-1"></a>  baseurl <span class="ot">=</span> blogdown<span class="sc">:::</span><span class="fu">get_config2</span>(<span class="st">&#39;root&#39;</span>, <span class="st">&#39;/&#39;</span>)</span>
+<span id="cb94-4"><a href="hexo.html#cb94-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(</span>
+<span id="cb94-5"><a href="hexo.html#cb94-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">base.url =</span> baseurl, <span class="at">base.dir =</span> <span class="fu">normalizePath</span>(<span class="st">&#39;source&#39;</span>)</span>
+<span id="cb94-6"><a href="hexo.html#cb94-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb94-7"><a href="hexo.html#cb94-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-8"><a href="hexo.html#cb94-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># input/output filenames as two arguments to Rscript</span></span>
+<span id="cb94-9"><a href="hexo.html#cb94-9" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">=</span> <span class="fu">commandArgs</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb94-10"><a href="hexo.html#cb94-10" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">&#39;^source/_?|[.][a-zA-Z]+$&#39;</span>, <span class="st">&#39;&#39;</span>, a[<span class="dv">1</span>])</span>
+<span id="cb94-11"><a href="hexo.html#cb94-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(</span>
+<span id="cb94-12"><a href="hexo.html#cb94-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fig.path   =</span> <span class="fu">sprintf</span>(<span class="st">&#39;figure/%s/&#39;</span>, d),</span>
+<span id="cb94-13"><a href="hexo.html#cb94-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cache.path =</span> <span class="fu">sprintf</span>(<span class="st">&#39;cache/%s/&#39;</span>, d)</span>
+<span id="cb94-14"><a href="hexo.html#cb94-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb94-15"><a href="hexo.html#cb94-15" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">knit</span>(</span>
+<span id="cb94-16"><a href="hexo.html#cb94-16" aria-hidden="true" tabindex="-1"></a>    a[<span class="dv">1</span>], a[<span class="dv">2</span>], <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">encoding =</span> <span class="st">&#39;UTF-8&#39;</span>, <span class="at">envir =</span> .GlobalEnv</span>
+<span id="cb94-17"><a href="hexo.html#cb94-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb94-18"><a href="hexo.html#cb94-18" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>This repository is also automatically built and deployed through Netlify when I push changes to it. Since Hexo is a Node package, and Netlify supports Node, you can easily install Hexo on Netlify. For example, this example repository uses the command <code>npm install &amp;&amp; hexo generate</code> to build the website; <code>npm install</code> will install the Node packages specified in <code>packages.json</code> (a file under the root directory of the repository), and <code>hexo generate</code> is the command to build the website from <code>source/</code> to <code>public/</code>.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="jekyll.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rmd-website.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": true,
+    "facebook": false,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/rstudio/blogdown/edit/main/docs/05-custom.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["blogdown.pdf", "blogdown.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "none"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

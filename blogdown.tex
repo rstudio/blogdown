@@ -1,0 +1,746 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
+\documentclass[
+  12pt,
+]{krantz}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={blogdown: Creating Websites with R Markdown},
+  pdfauthor={Yihui Xie, Amber Thomas, Alison Presmanes Hill},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=Blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\usepackage[normalem]{ulem}
+% Avoid problems with \sout in headers with hyperref
+\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[bf,singlelinecheck=off]{caption}
+
+\usepackage{Alegreya}
+\usepackage[scale=.7]{sourcecodepro}
+
+\usepackage{framed,color}
+\definecolor{shadecolor}{RGB}{248,248,248}
+
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\floatpagefraction}{0.75}
+
+\renewenvironment{quote}{\begin{VF}}{\end{VF}}
+\let\oldhref\href
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+
+\ifxetex
+  \usepackage{letltxmacro}
+  \setlength{\XeTeXLinkMargin}{1pt}
+  \LetLtxMacro\SavedIncludeGraphics\includegraphics
+  \def\includegraphics#1#{% #1 catches optional stuff (star/opt. arg.)
+    \IncludeGraphicsAux{#1}%
+  }%
+  \newcommand*{\IncludeGraphicsAux}[2]{%
+    \XeTeXLinkBox{%
+      \SavedIncludeGraphics#1{#2}%
+    }%
+  }%
+\fi
+
+\makeatletter
+\newenvironment{kframe}{%
+\medskip{}
+\setlength{\fboxsep}{.8em}
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\renewenvironment{Shaded}{\begin{kframe}}{\end{kframe}}
+
+\usepackage{makeidx}
+\makeindex
+
+\urlstyle{tt}
+
+\usepackage{amsthm}
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=8pt plus 2pt minus 4pt
+  \thm@postskip=\thm@preskip
+}
+\makeatother
+
+\frontmatter
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage[]{natbib}
+\bibliographystyle{apalike}
+
+\title{blogdown: Creating Websites with R Markdown}
+\author{Yihui Xie, Amber Thomas, Alison Presmanes Hill}
+\date{2025-12-02}
+
+\begin{document}
+\maketitle
+
+%\cleardoublepage\newpage\thispagestyle{empty}\null
+%\cleardoublepage\newpage\thispagestyle{empty}\null
+%\cleardoublepage\newpage
+\thispagestyle{empty}
+\begin{center}
+\includegraphics{images/dedication.pdf}
+\end{center}
+
+\setlength{\abovedisplayskip}{-5pt}
+\setlength{\abovedisplayshortskip}{-5pt}
+
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\listoftables
+\listoffigures
+\hypertarget{preface}{%
+\chapter*{Preface}\label{preface}}
+
+
+In the summer of 2012, I did my internship at AT\&T Labs Research,\footnote{In this book, ``I'' and ``my'' refer to Yihui unless otherwise noted.} where I attended a talk given by Carlos Scheidegger (\url{https://cscheid.net}), and Carlos said something along the lines of ``if you don't have a website nowadays, you don't exist.'' Later I paraphrased it as:
+
+\begin{quote}
+``I web, therefore I am \sout{a spiderman}.''
+\end{quote}
+
+Carlos's words resonated very well with me, although they were a little exaggerated. A well-designed and maintained website can be extremely helpful for other people to know you, and you do not need to wait for suitable chances at conferences or other occasions to introduce yourself in person to other people. On the other hand, a website is also highly useful for yourself to keep track of what you have done and thought. Sometimes you may go back to a certain old post of yours to relearn the tricks or methods you once mastered in the past but have forgotten.
+
+We introduce an R package, \textbf{blogdown}, in this short book, to teach you how to create websites using R Markdown and Hugo. If you have experience with creating websites, you may naturally ask what the benefits of using R Markdown are, and how \textbf{blogdown} is different from existing popular website platforms, such as WordPress. There are two major highlights of \textbf{blogdown}:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  It produces a static website, meaning the website only consists of static files such as HTML, CSS, JavaScript, and images, etc. You can host the website on any web server (see Chapter \ref{deployment} for details). The website does not require server-side scripts such as PHP or databases like WordPress does. It is just one folder of static files. We will explain more benefits of static websites in Chapter \ref{hugo}, when we introduce the static website generator Hugo.
+\item
+  The website is generated from R Markdown documents (R is optional, i.e., you can use plain Markdown documents without R code chunks). This brings a huge amount of benefits, especially if your website is related to data analysis or (R) programming. Being able to use Markdown implies simplicity and more importantly, \emph{portability} (e.g., you are giving yourself the chance to convert your blog posts to PDF and publish to journals or even books in the future). R Markdown gives you the benefits of dynamic documents --- all your results, such as tables, graphics, and inline values, can be computed and rendered dynamically from R code, hence the results you present on your website are more likely to be reproducible. An additional yet important benefit of using R Markdown is that you will be able to write technical documents easily, due to the fact that \textbf{blogdown} inherits the HTML output format from \textbf{bookdown} \citep{xie2016}. For example, it is possible to write LaTeX math equations, citations, and even theorems and proofs if you want.
+\end{enumerate}
+
+Please do not be misled by the word ``blog'' in the package name: \textbf{blogdown} is for general-purpose websites, and not only for blogs. For example, all authors of this book have their personal websites, where you can find information about their projects, blogs, package documentations, and so on.\footnote{Yihui's homepage is at \url{https://yihui.org}. He writes blog posts in both Chinese (\url{https://yihui.org/cn/}) and English (\url{https://yihui.org/en/}), and documents his software packages such as \textbf{knitr} (\url{https://yihui.org/knitr/}) and \textbf{animation} (\url{https://yihui.org/animation/}). Occasionally he also writes articles like \url{https://yihui.org/rlp/} when he finds interesting topics but does not bother with a formal journal submission. Amber's homepage is at \url{https://amber.rbind.io}, where you can find her blog and project pages. Alison's website is at \url{https://alison.rbind.io}, which uses an academic theme at the moment.} All their pages are built from \textbf{blogdown} and Hugo.
+
+If you do not prefer using Hugo, there are other options, too. Chapter \ref{other-generators} presents possibilities of using other site generators, such as Jekyll and \textbf{rmarkdown}'s default site generator.
+
+This book has been published by \href{https://www.crcpress.com/p/book/9780815363729}{Chapman \& Hall/CRC}. The online version of this book is licensed under the \href{http://creativecommons.org/licenses/by-nc-sa/4.0/}{Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License}.
+
+\hypertarget{structure-of-the-book}{%
+\section*{Structure of the book}\label{structure-of-the-book}}
+
+
+Chapter \ref{get-started} aims at getting you started with a new website based on \textbf{blogdown}: it contains an installation guide, a quick example, an introduction to RStudio addins related to \textbf{blogdown}, and comparisons of different source document formats. All readers of this book should finish at least this chapter (to know how to create a website locally) and Section \ref{netlify} (to know how to publish a website). The rest of the book is mainly for those who want to further customize their websites.
+
+Chapter \ref{hugo} briefly introduces the static website generator Hugo, on which \textbf{blogdown} is based. We tried to summarize the official Hugo documentation in a short chapter. You should consult the official documentation when in doubt. You may skip Section \ref{templates} if you do not have basic knowledge of web technologies. However, this section is critical for you to fully understand Hugo. We have spent the most time on this section in this chapter. It is very technical, but should be helpful nonetheless. Once you have learned how to create Hugo templates, you will have the full freedom to customize your website.
+
+Chapter \ref{deployment} tells you how to publish a website, so that other people can visit it through a link. Chapter \ref{migration} shows how to migrate existing websites from other platforms to Hugo and \textbf{blogdown}. Chapter \ref{other-generators} gives a few other options if you do not wish to use Hugo as your site generator.
+
+Appendix \ref{r-markdown} is a quick tutorial on R Markdown, the prerequisite of \textbf{blogdown} if you are going to write R code in your posts. Appendix \ref{website-basics} contains basic knowledge about websites, such as HTML, CSS, and JavaScript. If you really care about your website, you will have to learn them someday. If you want to have your own domain name, Appendix \ref{domain-name} provides an introduction to how it works. We have also covered some optional topics in Appendix \ref{advanced-topics} for advanced users.
+
+\hypertarget{software-info}{%
+\section*{Software information and conventions}\label{software-info}}
+
+
+The R session information when compiling this book is shown below:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sessionInfo}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## R version 4.5.2 (2025-10-31)
+## Platform: aarch64-apple-darwin20
+## Running under: macOS Sequoia 15.7.2
+## 
+## Matrix products: default
+##   LAPACK version 3.12.1
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: UTC
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets 
+## [6] methods   base     
+## 
+## loaded via a namespace (and not attached):
+## [1] bookdown_0.45     htmltools_0.5.8.1
+## [3] rmarkdown_2.30    blogdown_1.22.1  
+## [5] knitr_1.50
+\end{verbatim}
+
+We do not add prompts (\texttt{\textgreater{}} and \texttt{+}) to R source code in this book, and we comment out the text output with two hashes \texttt{\#\#} by default, as you can see from the R session information above. This is for your convenience when you want to copy and run the code (the text output will be ignored since it is commented out). Package names are in bold text (e.g., \textbf{rmarkdown}), and inline code and filenames are formatted in a typewriter font (e.g., \texttt{knitr::knit(\textquotesingle{}foo.Rmd\textquotesingle{})}). Function names are followed by parentheses (e.g., \texttt{blogdown::serve\_site()}). The double-colon operator \texttt{::} means accessing an object from a package.
+
+A trailing slash often indicates a directory name, e.g., \texttt{content/} means a directory named \texttt{content} instead of a file named \texttt{content}. A leading slash in a path indicates the root directory of the website, e.g., \texttt{/static/css/style.css} means the file \texttt{static/css/style.css} under the root directory of your website project instead of your operating system. Please note that some directory names are configurable, such as \texttt{public/}, but we will use their default values throughout the book. For example, your website will be rendered to the \texttt{public/} directory by default, and when you see \texttt{public/} in this book, you should think of it as the actual publishing directory you set if you have changed the default value. \texttt{Rmd} stands for R Markdown in this book, and it is the filename extension of R Markdown files.
+
+A ``post'' often does not literally mean a blog post, but refers to any source documents (Markdown or R Markdown) in the website project, including blog posts and normal pages. Typically blog posts are stored under the \texttt{content/post/} directory, and pages are under other directories (including the root \texttt{content/} directory and its subdirectories), but Hugo does not require this structure.
+
+The URL \texttt{http://www.example.com} is used only for illustration purposes. We do not mean you should actually visit this website. In most cases, you should replace \texttt{www.example.com} with your actual domain name.
+
+An asterisk \texttt{*} in a character string often means an arbitrary string. For example, \texttt{*.example.com} denotes an arbitrary subdomain of \texttt{example.com}. It could be \texttt{foo.example.com} or \texttt{123.example.com}. Actually, \texttt{foo} and \texttt{bar} also indicate arbitrary characters or objects.
+
+\hypertarget{acknowledgments}{%
+\section*{Acknowledgments}\label{acknowledgments}}
+
+
+Originally I planned to write only one sentence in this section: ``I thank Tareef.'' This book and the \textbf{blogdown} package would not have been finished without Tareef, the president of RStudio. He has been ``gently nudging'' me every week since Day 1 of \textbf{blogdown}. As a person without strong self-discipline and working remotely, I benefited a lot from weekly meetings with him. He also gave me a lot of good technical suggestions on improving the package. Actually, he was one of the very earliest users of \textbf{blogdown}.
+
+Of course, I'd like to thank RStudio for the wonderful opportunity to work on this new project. I was even more excited about \textbf{blogdown} than \textbf{bookdown} (my previous project). I started blogging 12 years ago, and have used and quit several tools for building websites. Finally I feel satisfied with my own dog food.
+
+Many users have provided helpful feedback and bug reports through GitHub issues (\url{https://github.com/rstudio/blogdown/issues}). Two of my favorites are \url{https://github.com/rstudio/blogdown/issues/40} and \url{https://github.com/rstudio/blogdown/issues/97}. Some users have also contributed code and improved this book through pull requests (\url{https://github.com/rstudio/blogdown/pulls}). You can find the list of contributors at \url{https://github.com/rstudio/blogdown/graphs/contributors}. Many users followed my suggestion to ask questions on StackOverflow (\url{https://stackoverflow.com/tags/blogdown}) instead of using GitHub issues or Emails. I appreciate all your help, patience, and understanding. I also want to make special mention of my little friend Jerry Han, who was probably the youngest \textbf{blogdown} user.
+
+For this book, I was fortunate enough to work with my co-authors Amber and Alison, who are exceptionally good at explaining things to beginners. That is the ability I desire most. Needless to say, they have made this book friendlier to beginners. In addition, Sharon Machlis contributed some advice on search engine optimization in this book (\url{https://github.com/rstudio/blogdown/issues/193}). Raniere Silva contributed Section \ref{gitlab-pages} (\url{https://github.com/rstudio/blogdown/pull/225}).
+
+I'd like to thank all Hugo authors and contributors (Bjørn Erik Pedersen and Steve Francia \emph{et al.}) for such a powerful static site generator. At least it made me enjoy building static websites and blogging again.
+
+For some reason, a part of the R community started to adopt the ``sticker-driven development'' model when developing packages. I was hoping \textbf{blogdown} could have a hexbin sticker, too, so I asked for help on Twitter (\url{https://twitter.com/xieyihui/status/907269861574930432}) and got tons of draft logos. In particular, I want to thank Thomas Lin Pedersen for his hard work on a very clever design. The final version of the logo was provided by Taras Kaduk and Angelina Kaduk, and I truly appreciate it.
+
+This is the third book I have published with my editor at Chapman \& Hall/CRC, John Kimmel. I always love working with him. Rebecca Condit and Suzanne Lassandro proofread the manuscript, and I learned a lot from their comments and professional suggestions.
+
+\begin{flushright}
+Yihui Xie\\
+Elkhorn, Nebraska
+\end{flushright}
+
+\hypertarget{author}{%
+\chapter*{About the Authors}\label{author}}
+
+
+Yihui is the main developer of the \textbf{blogdown} package. He did not start working on the systematic documentation (i.e., this book) until four months after he started the \textbf{blogdown} project. One day, he found a very nice \textbf{blogdown} tutorial on Twitter written by Amber Thomas. Being surprised that she could create a great personal website using \textbf{blogdown} and write a tutorial \emph{when there was no official documentation}, Yihui immediately invited her to join him to write this book, although they had never met each other before. This definitely would not have happened if Amber did not have a website. By the way, Amber asked \href{https://stackoverflow.com/q/41176194/559676}{the very first question} with the \texttt{blogdown} tag on StackOverflow.
+
+About half a year later, Yihui noticed another very well-written \textbf{blogdown} tutorial by Alison on her personal website, when this book was still not complete. The same story happened, and Alison became the third author of this book. The three authors have never met each other.
+
+Hopefully, you can better see why you should have a website now.
+
+\hypertarget{yihui-xie}{%
+\section*{Yihui Xie}\label{yihui-xie}}
+
+
+Yihui Xie (\url{https://yihui.org}) is a software engineer at Posit Software, PBC (\url{https://www.posit.co}). He earned his PhD from the Department of Statistics, Iowa State University. He is interested in interactive statistical graphics and statistical computing. As an active R user, he has authored several R packages, such as \textbf{knitr}, \textbf{bookdown}, \textbf{blogdown}, \textbf{xaringan}, \textbf{animation}, \textbf{DT}, \textbf{tufte}, \textbf{formatR}, \textbf{fun}, \textbf{mime}, \textbf{highr}, \textbf{servr}, and \textbf{Rd2roxygen}, among which the \textbf{animation} package won the 2009 John M. Chambers Statistical Software Award (ASA). He also co-authored a few other R packages, including \textbf{shiny}, \textbf{rmarkdown}, and \textbf{leaflet}.
+
+In 2006, he founded the Capital of Statistics (\url{https://cosx.org}), which has grown into a large online community on statistics in China. He initiated the Chinese R conference in 2008, and has been involved in organizing R conferences in China since then. During his PhD training at Iowa State University, he won the Vince Sposito Statistical Computing Award (2011) and the Snedecor Award (2012) in the Department of Statistics.
+
+He occasionally rants on Twitter (\url{https://twitter.com/xieyihui}), and most of the time you can find him on GitHub (\url{https://github.com/yihui}).
+
+He enjoys spicy food as much as classical Chinese literature.
+
+\hypertarget{amber-thomas}{%
+\section*{Amber Thomas}\label{amber-thomas}}
+
+
+Amber Thomas (\url{https://amber.rbind.io}) is a data journalist and ``maker'' at the online publication of visual essays: The Pudding (\url{https://pudding.cool}). Her educational background, however, was in quite a different field altogether: marine biology. She has a bachelor's degree in marine biology and chemistry from Roger Williams University and a master's degree in marine sciences from the University of New England. Throughout her academic and professional career as a marine biologist, she realized that she had a love of data analysis, visualization, and storytelling and thus, she switched career paths to something a bit more data focused.
+
+While looking for work, she began conducting personal projects to expand her knowledge of R's inner workings. She decided to put all of her projects in a single place online (so that she could be discovered, naturally) and after lots of searching, she stumbled upon an early release of the \textbf{blogdown} package. She was hooked right away and spent a few days setting up her personal website and writing a tutorial on how she did it. You can find that tutorial and some of her other projects and musings on her blogdown site.
+
+When she is not crunching numbers and trying to stay on top of her email inbox, Amber is usually getting some fresh Seattle air or cuddling with her dog, Sherlock. If you are looking for her in the digital world, try \url{https://twitter.com/ProQuesAsker}.
+
+\hypertarget{alison-presmanes-hill}{%
+\section*{Alison Presmanes Hill}\label{alison-presmanes-hill}}
+
+
+Alison (\url{https://alison.rbind.io}) is a professor of pediatrics at Oregon Health and Science University's (OHSU) Center for Spoken Language Understanding in Portland, Oregon. Alison earned her PhD in developmental psychology with a concentration in quantitative methods from Vanderbilt University in 2008. Her current research focuses on developing better outcome measures to evaluate the impact of new treatments for children with autism and other neurodevelopmental disorders, using natural language processing and other computational methods. Alison is the author of numerous journal articles and book chapters, and her work has been funded by the National Institutes of Health, the Oregon Clinical and Translational Research Institute, and Autism Speaks.
+
+In addition to research, Alison teaches graduate-level courses in OHSU's Computer Science program (\url{https://www.ohsu.edu/csee}) on statistics, data science, and data visualization using R. She has also developed and led several R workshops and smaller team-based training sessions, and loves to train new ``useRs.'' You can find some of her workshop and teaching materials on GitHub (\url{https://github.com/apreshill}) and, of course, on her \textbf{blogdown} site.
+
+Being a new mom, Alison's current favorite books are \emph{The Circus Ship} and \emph{Bats at the Ballgame}. She also does rousing renditions of most Emily Arrow songs (for private audiences only).
+
+\mainmatter
+\chapter{Get Started}\label{get-started}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Installation}\label{installation}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Installation troubleshooting}\label{installation-troubleshooting}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{A quick example}\label{a-quick-example}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Prerequisites}\label{prerequisites}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Create project}\label{create-project}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Create a new website project in RStudio.}\end{figure}
+
+\begin{figure}\caption{Create a website project based on blogdown.}\end{figure}
+
+\subsection{Serve site}\label{serve-site}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Use the blogdown addin to serve the site.}\end{figure}
+
+\begin{figure}\caption{Serving the site in RStudio.}\end{figure}
+
+\begin{figure}\caption{The homepage of the default new site.}\end{figure}
+
+\subsection{Edit content}\label{edit-content}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Adding new R code to an .Rmd post.}\end{figure}
+
+\subsection{\texorpdfstring{When in doubt, run \texttt{blogdown::check\_site()}}{When in doubt, run blogdown::check\_site()}}\label{when-in-doubt-run-blogdowncheck_site}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Configure site}\label{configure-site}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Summary}\label{summary}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{What is next?}\label{what-is-next}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{A quick deploy}\label{a-quick-deploy}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Build site}\label{build-site}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Use Netlify Drop}\label{use-netlify-drop}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Sign up for Netlify}\label{sign-up-for-netlify}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{What is next?}\label{what-is-next-1}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{RStudio IDE}\label{rstudio-ide}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Create a new post using the RStudio addin.}\end{figure}
+
+\begin{figure}\caption{Update the metadata of an existing post using the RStudio addin.}\end{figure}
+
+\begin{figure}\caption{Insert an image to an existing post using the RStudio addin.}\end{figure}
+
+\begin{figure}\caption{Overwrite the image you are inserting in your blog post.}\end{figure}
+
+\begin{figure}\caption{RStudio project options.}\end{figure}
+
+\section{\texorpdfstring{Global options\index{Global Options}}{Global options}}\label{global-options}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{table}\caption{\label{tab:global-options-new}Global options for configured for new blogdown sites.}\end{table}
+
+\begin{table}\caption{\label{tab:global-options-2}Additional global options that affect the behavior of blogdown.}\end{table}
+
+\section{R Markdown vs.~Markdown}\label{output-format}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{table}\caption{\label{tab:md-diff} Differences among the three document formats.}\end{table}
+
+\subsection{Basic features of R Markdown}\label{basic-features-of-r-markdown}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Render R Markdown to Markdown or HTML?}\label{blogdown-method}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Customize the R Markdown output format}\label{customize-the-r-markdown-output-format}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Other themes}\label{other-themes}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Choosing themes}\label{choosing-themes}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{New site, new theme}\label{new-site-new-theme}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Existing site, new theme}\label{existing-site-new-theme}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Existing site, update theme}\label{existing-site-update-theme}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{A recommended workflow}\label{workflow}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\chapter{Hugo}\label{hugo}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Static sites and Hugo}\label{static-sites}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Possible files and folders created when you create a new site using \textbf{blogdown}.}\end{figure}
+
+\section{Configuration}\label{configuration}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{TOML Syntax}\label{toml-syntax}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Options}\label{options}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Content}\label{content}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{YAML metadata}\label{yaml-metadata}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Body}\label{body}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Shortcode}\label{shortcode}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{A tweet by Jeff Leek.}\end{figure}
+
+\section{Themes}\label{themes}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{The default theme}\label{the-default-theme}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Templates}\label{templates}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{A minimal example}\label{a-minimal-example}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Implementing more features}\label{how-to}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Edit a text file online on GitHub.}\end{figure}
+
+\section{Custom layouts}\label{custom-layouts}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Static files}\label{static-files}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\chapter{Deployment}\label{deployment}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Netlify}\label{netlify}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Example settings of a website deployed on Netlify.}\end{figure}
+
+\section{GitHub Pages}\label{github-pages}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{GitLab Pages}\label{gitlab-pages}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\chapter{Migration}\label{migration}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{From Jekyll}\label{from-jekyll}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{From WordPress}\label{from-wordpress}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{From other systems}\label{from-other-systems}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\chapter{Other Generators}\label{other-generators}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Jekyll}\label{jekyll}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Hexo}\label{hexo}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Default site generator in rmarkdown}\label{rmd-website}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{pkgdown}\label{pkgdown}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\chapter{R Markdown}\label{r-markdown}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\chapter{Website Basics}\label{website-basics}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Developer Tools in Google Chrome.}\end{figure}
+
+\section{HTML}\label{html}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{CSS}\label{css}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{JavaScript}\label{javascript}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Useful resources}\label{useful-resources}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{File optimization}\label{file-optimization}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Helping people find your site}\label{helping-people-find-your-site}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\chapter{Domain Name}\label{domain-name}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Registration}\label{registration}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Nameservers}\label{nameservers}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{DNS records}\label{dns-records}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{figure}\caption{Some DNS records of the domain yihui.org on Cloudflare.}\end{figure}
+
+\chapter{Advanced Topics}\label{advanced-topics}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{More global options}\label{more-global-options}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\begin{table}\caption{\label{tab:global-options2}A few more advanced global options.}\end{table}
+
+\section{LiveReload}\label{livereload}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Building a website for local preview}\label{local-preview}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Functions in the blogdown package}\label{functions}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Exported functions}\label{exported-functions}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\subsection{Non-exported functions}\label{non-exported-functions}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Paths of figures and other dependencies}\label{dep-path}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{HTML widgets}\label{html-widgets}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Version control}\label{version-control}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{The default HTML template}\label{default-template}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\section{Different building methods}\label{methods}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\chapter{Personal Experience}\label{personal-experience}
+
+This PDF is only a skeleton. Please either read the free online HTML version, or purchase a hard-copy of this book.
+
+\end{document}

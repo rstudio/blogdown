@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.2 Configuration | blogdown: Creating Websites with R Markdown</title>
+  <meta name="description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.2 Configuration | blogdown: Creating Websites with R Markdown" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://bookdown.org/yihui/blogdown//images/cover.png" />
+  <meta property="og:description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="github-repo" content="rstudio/blogdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.2 Configuration | blogdown: Creating Websites with R Markdown" />
+  
+  <meta name="twitter:description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="twitter:image" content="https://bookdown.org/yihui/blogdown//images/cover.png" />
+
+<meta name="author" content="Yihui Xie, Amber Thomas, Alison Presmanes Hill" />
+
+
+<meta name="date" content="2025-12-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="static-sites.html"/>
+<link rel="next" href="content.html"/>
+<script src="libs/jquery/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Creating Websites with R Markdown</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="structure-of-the-book.html"><a href="structure-of-the-book.html"><i class="fa fa-check"></i>Structure of the book</a></li>
+<li class="chapter" data-level="" data-path="software-info.html"><a href="software-info.html"><i class="fa fa-check"></i>Software information and conventions</a></li>
+<li class="chapter" data-level="" data-path="acknowledgments.html"><a href="acknowledgments.html"><i class="fa fa-check"></i>Acknowledgments</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>About the Authors</a>
+<ul>
+<li class="chapter" data-level="" data-path="yihui-xie.html"><a href="yihui-xie.html"><i class="fa fa-check"></i>Yihui Xie</a></li>
+<li class="chapter" data-level="" data-path="amber-thomas.html"><a href="amber-thomas.html"><i class="fa fa-check"></i>Amber Thomas</a></li>
+<li class="chapter" data-level="" data-path="alison-presmanes-hill.html"><a href="alison-presmanes-hill.html"><i class="fa fa-check"></i>Alison Presmanes Hill</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i><b>1</b> Get Started</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i><b>1.1</b> Installation</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="installation.html"><a href="installation.html#installation-troubleshooting"><i class="fa fa-check"></i><b>1.1.1</b> Installation troubleshooting</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="a-quick-example.html"><a href="a-quick-example.html"><i class="fa fa-check"></i><b>1.2</b> A quick example</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="a-quick-example.html"><a href="a-quick-example.html#prerequisites"><i class="fa fa-check"></i><b>1.2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.2.2" data-path="a-quick-example.html"><a href="a-quick-example.html#create-project"><i class="fa fa-check"></i><b>1.2.2</b> Create project</a></li>
+<li class="chapter" data-level="1.2.3" data-path="a-quick-example.html"><a href="a-quick-example.html#serve-site"><i class="fa fa-check"></i><b>1.2.3</b> Serve site</a></li>
+<li class="chapter" data-level="1.2.4" data-path="a-quick-example.html"><a href="a-quick-example.html#edit-content"><i class="fa fa-check"></i><b>1.2.4</b> Edit content</a></li>
+<li class="chapter" data-level="1.2.5" data-path="a-quick-example.html"><a href="a-quick-example.html#when-in-doubt-run-blogdowncheck_site"><i class="fa fa-check"></i><b>1.2.5</b> When in doubt, run <code>blogdown::check_site()</code></a></li>
+<li class="chapter" data-level="1.2.6" data-path="a-quick-example.html"><a href="a-quick-example.html#configure-site"><i class="fa fa-check"></i><b>1.2.6</b> Configure site</a></li>
+<li class="chapter" data-level="1.2.7" data-path="a-quick-example.html"><a href="a-quick-example.html#summary"><i class="fa fa-check"></i><b>1.2.7</b> Summary</a></li>
+<li class="chapter" data-level="1.2.8" data-path="a-quick-example.html"><a href="a-quick-example.html#what-is-next"><i class="fa fa-check"></i><b>1.2.8</b> What is next?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html"><i class="fa fa-check"></i><b>1.3</b> A quick deploy</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#build-site"><i class="fa fa-check"></i><b>1.3.1</b> Build site</a></li>
+<li class="chapter" data-level="1.3.2" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#use-netlify-drop"><i class="fa fa-check"></i><b>1.3.2</b> Use Netlify Drop</a></li>
+<li class="chapter" data-level="1.3.3" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#sign-up-for-netlify"><i class="fa fa-check"></i><b>1.3.3</b> Sign up for Netlify</a></li>
+<li class="chapter" data-level="1.3.4" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#what-is-next-1"><i class="fa fa-check"></i><b>1.3.4</b> What is next?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="rstudio-ide.html"><a href="rstudio-ide.html"><i class="fa fa-check"></i><b>1.4</b> RStudio IDE</a></li>
+<li class="chapter" data-level="1.5" data-path="global-options.html"><a href="global-options.html"><i class="fa fa-check"></i><b>1.5</b> Global options</a></li>
+<li class="chapter" data-level="1.6" data-path="output-format.html"><a href="output-format.html"><i class="fa fa-check"></i><b>1.6</b> R Markdown vs. Markdown</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="output-format.html"><a href="output-format.html#basic-features-of-r-markdown"><i class="fa fa-check"></i><b>1.6.1</b> Basic features of R Markdown</a></li>
+<li class="chapter" data-level="1.6.2" data-path="output-format.html"><a href="output-format.html#blogdown-method"><i class="fa fa-check"></i><b>1.6.2</b> Render R Markdown to Markdown or HTML?</a></li>
+<li class="chapter" data-level="1.6.3" data-path="output-format.html"><a href="output-format.html#customize-the-r-markdown-output-format"><i class="fa fa-check"></i><b>1.6.3</b> Customize the R Markdown output format</a></li>
+</ul></li>
+<li class="chapter" data-level="1.7" data-path="other-themes.html"><a href="other-themes.html"><i class="fa fa-check"></i><b>1.7</b> Other themes</a>
+<ul>
+<li class="chapter" data-level="1.7.1" data-path="other-themes.html"><a href="other-themes.html#choosing-themes"><i class="fa fa-check"></i><b>1.7.1</b> Choosing themes</a></li>
+<li class="chapter" data-level="1.7.2" data-path="other-themes.html"><a href="other-themes.html#new-site-new-theme"><i class="fa fa-check"></i><b>1.7.2</b> New site, new theme</a></li>
+<li class="chapter" data-level="1.7.3" data-path="other-themes.html"><a href="other-themes.html#existing-site-new-theme"><i class="fa fa-check"></i><b>1.7.3</b> Existing site, new theme</a></li>
+<li class="chapter" data-level="1.7.4" data-path="other-themes.html"><a href="other-themes.html#existing-site-update-theme"><i class="fa fa-check"></i><b>1.7.4</b> Existing site, update theme</a></li>
+</ul></li>
+<li class="chapter" data-level="1.8" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>1.8</b> A recommended workflow</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="hugo.html"><a href="hugo.html"><i class="fa fa-check"></i><b>2</b> Hugo</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="static-sites.html"><a href="static-sites.html"><i class="fa fa-check"></i><b>2.1</b> Static sites and Hugo</a></li>
+<li class="chapter" data-level="2.2" data-path="configuration.html"><a href="configuration.html"><i class="fa fa-check"></i><b>2.2</b> Configuration</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="configuration.html"><a href="configuration.html#toml-syntax"><i class="fa fa-check"></i><b>2.2.1</b> TOML Syntax</a></li>
+<li class="chapter" data-level="2.2.2" data-path="configuration.html"><a href="configuration.html#options"><i class="fa fa-check"></i><b>2.2.2</b> Options</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="content.html"><a href="content.html"><i class="fa fa-check"></i><b>2.3</b> Content</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="content.html"><a href="content.html#yaml-metadata"><i class="fa fa-check"></i><b>2.3.1</b> YAML metadata</a></li>
+<li class="chapter" data-level="2.3.2" data-path="content.html"><a href="content.html#body"><i class="fa fa-check"></i><b>2.3.2</b> Body</a></li>
+<li class="chapter" data-level="2.3.3" data-path="content.html"><a href="content.html#shortcode"><i class="fa fa-check"></i><b>2.3.3</b> Shortcode</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="themes.html"><a href="themes.html"><i class="fa fa-check"></i><b>2.4</b> Themes</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="themes.html"><a href="themes.html#the-default-theme"><i class="fa fa-check"></i><b>2.4.1</b> The default theme</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="templates.html"><a href="templates.html"><i class="fa fa-check"></i><b>2.5</b> Templates</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="templates.html"><a href="templates.html#a-minimal-example"><i class="fa fa-check"></i><b>2.5.1</b> A minimal example</a></li>
+<li class="chapter" data-level="2.5.2" data-path="templates.html"><a href="templates.html#how-to"><i class="fa fa-check"></i><b>2.5.2</b> Implementing more features</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="custom-layouts.html"><a href="custom-layouts.html"><i class="fa fa-check"></i><b>2.6</b> Custom layouts</a></li>
+<li class="chapter" data-level="2.7" data-path="static-files.html"><a href="static-files.html"><i class="fa fa-check"></i><b>2.7</b> Static files</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="deployment.html"><a href="deployment.html"><i class="fa fa-check"></i><b>3</b> Deployment</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="netlify.html"><a href="netlify.html"><i class="fa fa-check"></i><b>3.1</b> Netlify</a></li>
+<li class="chapter" data-level="3.2" data-path="github-pages.html"><a href="github-pages.html"><i class="fa fa-check"></i><b>3.2</b> GitHub Pages</a></li>
+<li class="chapter" data-level="3.3" data-path="gitlab-pages.html"><a href="gitlab-pages.html"><i class="fa fa-check"></i><b>3.3</b> GitLab Pages</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="migration.html"><a href="migration.html"><i class="fa fa-check"></i><b>4</b> Migration</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="from-jekyll.html"><a href="from-jekyll.html"><i class="fa fa-check"></i><b>4.1</b> From Jekyll</a></li>
+<li class="chapter" data-level="4.2" data-path="from-wordpress.html"><a href="from-wordpress.html"><i class="fa fa-check"></i><b>4.2</b> From WordPress</a></li>
+<li class="chapter" data-level="4.3" data-path="from-other-systems.html"><a href="from-other-systems.html"><i class="fa fa-check"></i><b>4.3</b> From other systems</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="other-generators.html"><a href="other-generators.html"><i class="fa fa-check"></i><b>5</b> Other Generators</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="jekyll.html"><a href="jekyll.html"><i class="fa fa-check"></i><b>5.1</b> Jekyll</a></li>
+<li class="chapter" data-level="5.2" data-path="hexo.html"><a href="hexo.html"><i class="fa fa-check"></i><b>5.2</b> Hexo</a></li>
+<li class="chapter" data-level="5.3" data-path="rmd-website.html"><a href="rmd-website.html"><i class="fa fa-check"></i><b>5.3</b> Default site generator in rmarkdown</a></li>
+<li class="chapter" data-level="5.4" data-path="pkgdown.html"><a href="pkgdown.html"><i class="fa fa-check"></i><b>5.4</b> pkgdown</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="r-markdown.html"><a href="r-markdown.html"><i class="fa fa-check"></i><b>A</b> R Markdown</a></li>
+<li class="chapter" data-level="B" data-path="website-basics.html"><a href="website-basics.html"><i class="fa fa-check"></i><b>B</b> Website Basics</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="html.html"><a href="html.html"><i class="fa fa-check"></i><b>B.1</b> HTML</a></li>
+<li class="chapter" data-level="B.2" data-path="css.html"><a href="css.html"><i class="fa fa-check"></i><b>B.2</b> CSS</a></li>
+<li class="chapter" data-level="B.3" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>B.3</b> JavaScript</a></li>
+<li class="chapter" data-level="B.4" data-path="useful-resources.html"><a href="useful-resources.html"><i class="fa fa-check"></i><b>B.4</b> Useful resources</a>
+<ul>
+<li class="chapter" data-level="B.4.1" data-path="useful-resources.html"><a href="useful-resources.html#file-optimization"><i class="fa fa-check"></i><b>B.4.1</b> File optimization</a></li>
+<li class="chapter" data-level="B.4.2" data-path="useful-resources.html"><a href="useful-resources.html#helping-people-find-your-site"><i class="fa fa-check"></i><b>B.4.2</b> Helping people find your site</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="domain-name.html"><a href="domain-name.html"><i class="fa fa-check"></i><b>C</b> Domain Name</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="registration.html"><a href="registration.html"><i class="fa fa-check"></i><b>C.1</b> Registration</a></li>
+<li class="chapter" data-level="C.2" data-path="nameservers.html"><a href="nameservers.html"><i class="fa fa-check"></i><b>C.2</b> Nameservers</a></li>
+<li class="chapter" data-level="C.3" data-path="dns-records.html"><a href="dns-records.html"><i class="fa fa-check"></i><b>C.3</b> DNS records</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>D</b> Advanced Topics</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="more-global-options.html"><a href="more-global-options.html"><i class="fa fa-check"></i><b>D.1</b> More global options</a></li>
+<li class="chapter" data-level="D.2" data-path="livereload.html"><a href="livereload.html"><i class="fa fa-check"></i><b>D.2</b> LiveReload</a></li>
+<li class="chapter" data-level="D.3" data-path="local-preview.html"><a href="local-preview.html"><i class="fa fa-check"></i><b>D.3</b> Building a website for local preview</a></li>
+<li class="chapter" data-level="D.4" data-path="functions.html"><a href="functions.html"><i class="fa fa-check"></i><b>D.4</b> Functions in the blogdown package</a>
+<ul>
+<li class="chapter" data-level="D.4.1" data-path="functions.html"><a href="functions.html#exported-functions"><i class="fa fa-check"></i><b>D.4.1</b> Exported functions</a></li>
+<li class="chapter" data-level="D.4.2" data-path="functions.html"><a href="functions.html#non-exported-functions"><i class="fa fa-check"></i><b>D.4.2</b> Non-exported functions</a></li>
+</ul></li>
+<li class="chapter" data-level="D.5" data-path="dep-path.html"><a href="dep-path.html"><i class="fa fa-check"></i><b>D.5</b> Paths of figures and other dependencies</a></li>
+<li class="chapter" data-level="D.6" data-path="html-widgets.html"><a href="html-widgets.html"><i class="fa fa-check"></i><b>D.6</b> HTML widgets</a></li>
+<li class="chapter" data-level="D.7" data-path="version-control.html"><a href="version-control.html"><i class="fa fa-check"></i><b>D.7</b> Version control</a></li>
+<li class="chapter" data-level="D.8" data-path="default-template.html"><a href="default-template.html"><i class="fa fa-check"></i><b>D.8</b> The default HTML template</a></li>
+<li class="chapter" data-level="D.9" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>D.9</b> Different building methods</a></li>
+</ul></li>
+<li class="chapter" data-level="E" data-path="personal-experience.html"><a href="personal-experience.html"><i class="fa fa-check"></i><b>E</b> Personal Experience</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">blogdown: Creating Websites with R Markdown</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div class="caution">
+<p><strong>A note from the authors:</strong> Some of the information and instructions in this book are now out of date because of changes to Hugo and the blogdown package.
+If you have suggestions for improving this book, please file an issue in our <a href= "https://github.com/rstudio/blogdown/issues/new?template=documentation.md" target="_blank">GitHub repository</a>.
+Thanks for your patience while we work to update the book, and please stay tuned for the revised version!</p>
+<p>In the meantime, you can find an introduction to the changes and new features in the <a href="https://posit.co/blog/blogdown-v1.0/" target = "_blank">v1.0 release blog post</a> and this <a href="https://www.apreshill.com/blog/2020-12-new-year-new-blogdown/" target="_blank">"Up & running with blogdown in 2021"</a> blog post.</p>
+<p class="flushright">&mdash; Yihui, Amber, & Alison</p>
+</div>
+<div id="configuration" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Configuration<a href="configuration.html#configuration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The first file that you may want to look at is the configuration or <code>config</code> file in your root directory, in which you can set global configurations of your site. It may contain options like the title and description of your site, as well as other global options like links to your social networks, the navigation menu, and the base URL for your website.</p>
+<p>When generating your site, Hugo will search for a file called <code>config.toml</code> first. If it cannot find one, it will continue to search for <code>config.yaml</code>.<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a> Since most Hugo themes contain example sites that ship <code>config.toml</code> files, and the TOML (Tom’s Obvious, Minimal Language) format appears to be more popular in the Hugo community, we will mainly discuss <code>config.toml</code> here.</p>
+<p>We recommend that you use the TOML syntax only for the config file (you can also use YAML if you prefer), and use YAML as the data format for the metadata of (R) Markdown pages and posts, because R Markdown and <strong>blogdown</strong> fully support only YAML.<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> If you have a website that has already used TOML, you may use <code>blogdown::hugo_convert(unsafe = TRUE)</code> to convert TOML data to YAML, but please first make sure you have backed up the website because it will overwrite your Markdown files.</p>
+<p>The Hugo documentation does not use TOML or YAML consistently in its examples, which can be confusing. Please pay close attention to the configuration format when copying examples to your own website.</p>
+<div id="toml-syntax" class="section level3 hasAnchor" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> TOML Syntax<a href="configuration.html#toml-syntax" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If you are not familiar with the TOML Syntax, we will give a brief overview and you may read the <a href="https://github.com/toml-lang/toml">full documentation</a> to know the details.</p>
+<p>TOML is made up of key-value pairs separated by equal signs:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb27-1"><a href="configuration.html#cb27-1" aria-hidden="true" tabindex="-1"></a>key <span class="op">=</span> value</span></code></pre></div>
+<p>When you want to edit a configuration in the TOML file, simply change the value. Values that are character strings should be in quotes, whereas Boolean values should be lowercase and bare.</p>
+<p>For example, if you want to give your website the title “My Awesome Site,” and use relative URLs instead of the default absolute URLs, you may have the following entries in your <code>config.toml</code> file.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb28-1"><a href="configuration.html#cb28-1" aria-hidden="true" tabindex="-1"></a>title <span class="op">=</span> <span class="st">&quot;My Awesome Site&quot;</span></span>
+<span id="cb28-2"><a href="configuration.html#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="configuration.html#cb28-3" aria-hidden="true" tabindex="-1"></a>relativeURLs <span class="op">=</span> <span class="kw">true</span></span></code></pre></div>
+<p>Most of your website’s global variables are entered in the <code>config.toml</code> file in exactly this manner.</p>
+<p>Further into your <code>config</code> file, you may notice some values in brackets like this:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb29-1"><a href="configuration.html#cb29-1" aria-hidden="true" tabindex="-1"></a>[social]</span>
+<span id="cb29-2"><a href="configuration.html#cb29-2" aria-hidden="true" tabindex="-1"></a>    github  <span class="op">=</span> <span class="st">&quot;https://github.com/rstudio/blogdown&quot;</span></span>
+<span id="cb29-3"><a href="configuration.html#cb29-3" aria-hidden="true" tabindex="-1"></a>    twitter <span class="op">=</span> <span class="st">&quot;https://twitter.com/rstudio&quot;</span></span></code></pre></div>
+<p>This is a table in the TOML language and Hugo uses them to fill in information on other pages within your site. For instance, the above table will populate the <code>.Site.Social</code> variable in your site’s templates (more information on this in Section <a href="templates.html#templates">2.5</a>).</p>
+<p>Lastly, you may find some values in double brackets like this:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb30-1"><a href="configuration.html#cb30-1" aria-hidden="true" tabindex="-1"></a>[[menu<span class="op">.</span><span class="at">main</span>]]</span>
+<span id="cb30-2"><a href="configuration.html#cb30-2" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> <span class="st">&quot;Blog&quot;</span></span>
+<span id="cb30-3"><a href="configuration.html#cb30-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">&quot;/blog/&quot;</span></span>
+<span id="cb30-4"><a href="configuration.html#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="configuration.html#cb30-5" aria-hidden="true" tabindex="-1"></a>[[menu<span class="op">.</span><span class="at">main</span>]]</span>
+<span id="cb30-6"><a href="configuration.html#cb30-6" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> <span class="st">&quot;Categories&quot;</span></span>
+<span id="cb30-7"><a href="configuration.html#cb30-7" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">&quot;/categories/&quot;</span></span>
+<span id="cb30-8"><a href="configuration.html#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="configuration.html#cb30-9" aria-hidden="true" tabindex="-1"></a>[[menu<span class="op">.</span><span class="at">main</span>]]</span>
+<span id="cb30-10"><a href="configuration.html#cb30-10" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> <span class="st">&quot;About&quot;</span></span>
+<span id="cb30-11"><a href="configuration.html#cb30-11" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">&quot;/about/&quot;</span></span></code></pre></div>
+<p>In TOML, double brackets are used to indicate an array of tables. Hugo interprets this information as a menu. If the code above was found in a <code>config.toml</code> file, the resulting website would have links to Blog, Categories, and About pages in the site’s main menu. The location and styling of that menu are specified elsewhere, but the names of each menu’s choices and the links to each section are defined here.</p>
+<p>The <code>config.toml</code> file is different for each theme. Make sure that when you choose a theme, you read its documentation thoroughly to get an understanding of what each of the configuration options does (more on themes in Section <a href="themes.html#themes">2.4</a>).</p>
+</div>
+<div id="options" class="section level3 hasAnchor" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Options<a href="configuration.html#options" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>All built-in options that you may set for Hugo are listed at <a href="https://gohugo.io/overview/configuration/" class="uri">https://gohugo.io/overview/configuration/</a>. You can change any of these options except <code>contentDir</code>, which is hard-coded to <code>content</code> in <strong>blogdown</strong>. Our general recommendation is that you’d better not modify the defaults unless you understand the consequences. We list a few options that may be of interest to you:</p>
+<ul>
+<li><p><code>baseURL</code>: Normally you have to change the value of this option to the base URL of your website. Some Hugo themes may have it set to <code>http://replace-this-with-your-hugo-site.com/</code> or <code>http://www.example.com/</code> in their example sites, but please make sure to replace them with your own URL (see Chapter <a href="deployment.html#deployment">3</a> and Appendix <a href="domain-name.html#domain-name">C</a> for more information on publishing websites and obtaining domain names). Note that this option can be a URL with a subpath, if your website is to be published under a subpath of a domain name, e.g., <code>http://www.example.com/docs/</code>.</p></li>
+<li><p><code>enableEmoji</code>: You may set it to <code>true</code> so that you can use <a href="http://www.emoji-cheat-sheet.com">Emoji emoticons</a> like <code>:smile:</code> in Markdown.</p></li>
+<li><p><code>permalinks</code>: Rules to generate permanent links of your pages. By default, Hugo uses full filenames under <code>content/</code> to generate links, e.g., <code>content/about.md</code> will be rendered to <code>public/about/index.html</code>, and <code>content/post/2015-07-23-foo.md</code> will be rendered to <code>public/post/2015-07-23-foo/index.html</code>, so the actual links are <code>/about/</code> and <code>/post/2015-07-23-foo/</code> on the website. Although it is not required to set custom rules for permanent links, it is common to see links of the form <code>/YYYY/mm/dd/post-title/</code>. Hugo allows you to use several pieces of information about a source file to generate a link, such as the date (year, month, and day), title, and filename, etc. The link can be independent of the actual filename. For example, you may ask Hugo to render pages under <code>content/post/</code> using the date and title for their links:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb31-1"><a href="configuration.html#cb31-1" aria-hidden="true" tabindex="-1"></a>[permalinks]</span>
+<span id="cb31-2"><a href="configuration.html#cb31-2" aria-hidden="true" tabindex="-1"></a>    post <span class="op">=</span> <span class="st">&quot;/:year/:month/:day/:title/&quot;</span></span></code></pre></div>
+<p>Personally, I recommend that you use the <code>:slug</code> variable<a href="#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a> instead of <code>:title</code>:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb32-1"><a href="configuration.html#cb32-1" aria-hidden="true" tabindex="-1"></a>[permalinks]</span>
+<span id="cb32-2"><a href="configuration.html#cb32-2" aria-hidden="true" tabindex="-1"></a>    post <span class="op">=</span> <span class="st">&quot;/:year/:month/:day/:slug/&quot;</span></span></code></pre></div>
+<p>This is because your post title may change, and you probably do not want the link to the post to change, otherwise you have to redirect the old link to the new link, and there will be other types of trouble like Disqus comments. The <code>:slug</code> variable falls back to <code>:title</code> if a field named <code>slug</code> is not set in the YAML metadata of the post. You can set a fixed slug so that the link to the post is always fixed and you will have the freedom to update the title of your post.</p>
+<p>You may find a list of all possible variables that you can use in the <code>permalinks</code> option at <a href="https://gohugo.io/extras/permalinks/" class="uri">https://gohugo.io/extras/permalinks/</a>.</p></li>
+<li><p><code>publishDir</code>: The directory under which you want to generate the website.</p></li>
+<li><p><code>theme</code>: The directory name of the Hugo theme under <code>themes/</code>.</p></li>
+<li><p><code>ignoreFiles</code>: A list of filename patterns (regular expressions) for Hugo to ignore certain files when building the site. I recommend that you specify at least these patterns <code>["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]</code>. You should ignore <code>.Rmd</code> files because Hugo should only recognize their output files (such as <code>.html</code> or <code>.md</code> files). Directories with the suffix <code>_cache</code> should be ignored because they contain auxiliary files after an <code>Rmd</code> file is compiled, which are useless to Hugo.</p></li>
+<li><p><code>uglyURLs</code>: By default, Hugo generates “clean” URLs. This may be a little surprising and requires that you understand how URLs work when your browser fetches a page from a server. Basically, Hugo generates <code>foo/index.html</code> for <code>foo.md</code> by default instead of <code>foo.html</code>, because the former allows you to visit the page via the clean URL <code>foo/</code> without <code>index.html</code>. Most web servers understand requests like <code>http://www.example.com/foo/</code> and will present <code>index.html</code> under <code>foo/</code> to you. If you prefer the strict mapping from <code>*.md</code> to <code>*.html</code>, you may enable “ugly” URLs by setting <code>uglyURLs</code> to <code>true</code>.</p></li>
+<li><p><code>hasCJKLanguage</code>: If your website is primarily in CJK (Chinese, Korean, and Japanese), I recommend that you set this option to <code>true</code>, so that Hugo’s automatic summary and word count work better.</p></li>
+</ul>
+<p>Besides the built-in Hugo options, you can set other arbitrary options in <code>config.toml</code>. For example, it is very common to see an option named <code>params</code>, which is widely used in many Hugo themes. When you see a variable <code>.Site.Params.FOO</code> in a Hugo theme, it means an option <code>FOO</code> that you set under <code>[params]</code> in <code>config.toml</code>, e.g., <code>.Site.Params.author</code> is <code>Frida Gomam</code> with the following config file:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb33-1"><a href="configuration.html#cb33-1" aria-hidden="true" tabindex="-1"></a>[params]</span>
+<span id="cb33-2"><a href="configuration.html#cb33-2" aria-hidden="true" tabindex="-1"></a>    author <span class="op">=</span> <span class="st">&quot;Frida Gomam&quot;</span></span>
+<span id="cb33-3"><a href="configuration.html#cb33-3" aria-hidden="true" tabindex="-1"></a>    dateFormat <span class="op">=</span> <span class="st">&quot;2006/01/02&quot;</span></span></code></pre></div>
+<p>The goal of all these options is to avoid hard-coding anything in Hugo themes, so that users can easily edit a single config file to apply the theme to their websites, instead of going through many HTML files and making changes one by one.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="16">
+<li id="fn16"><p>Hugo also supports <code>config.json</code>, but <strong>blogdown</strong> does not support it, so we do not recommend that you use it.<a href="configuration.html#fnref16" class="footnote-back">↩︎</a></p></li>
+<li id="fn17"><p>TOML has its advantages, but I feel they are not significant in the context of Hugo websites. It is a pain to have to know yet another language, TOML, when YAML stands for “Yet Another Markup Language.” I’m not sure if the XKCD comic applies in this case: <a href="https://xkcd.com/927/" class="uri">https://xkcd.com/927/</a>.<a href="configuration.html#fnref17" class="footnote-back">↩︎</a></p></li>
+<li id="fn18"><p>A slug is simply a character string that you can use to identify a specific post. A slug will not change, even if the title changes. For instance, if you decide to change the title of your post from “I love blogdown” to “Why blogdown is the best package ever,” and you used the post’s title in the URL, your old links will now be broken. If instead, you specified the URL via a slug (something like “blogdown-love”), then you can change the title as many times as you’d like and you will not end up with any broken links.<a href="configuration.html#fnref18" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="static-sites.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="content.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": true,
+    "facebook": false,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/rstudio/blogdown/edit/main/docs/02-hugo.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["blogdown.pdf", "blogdown.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "none"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

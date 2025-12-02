@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5.1 Jekyll | blogdown: Creating Websites with R Markdown</title>
+  <meta name="description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5.1 Jekyll | blogdown: Creating Websites with R Markdown" />
+  <meta property="og:type" content="book" />
+  <meta property="og:image" content="https://bookdown.org/yihui/blogdown//images/cover.png" />
+  <meta property="og:description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="github-repo" content="rstudio/blogdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5.1 Jekyll | blogdown: Creating Websites with R Markdown" />
+  
+  <meta name="twitter:description" content="A guide to creating websites with R Markdown and the R package blogdown." />
+  <meta name="twitter:image" content="https://bookdown.org/yihui/blogdown//images/cover.png" />
+
+<meta name="author" content="Yihui Xie, Amber Thomas, Alison Presmanes Hill" />
+
+
+<meta name="date" content="2025-12-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="other-generators.html"/>
+<link rel="next" href="hexo.html"/>
+<script src="libs/jquery/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Creating Websites with R Markdown</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="structure-of-the-book.html"><a href="structure-of-the-book.html"><i class="fa fa-check"></i>Structure of the book</a></li>
+<li class="chapter" data-level="" data-path="software-info.html"><a href="software-info.html"><i class="fa fa-check"></i>Software information and conventions</a></li>
+<li class="chapter" data-level="" data-path="acknowledgments.html"><a href="acknowledgments.html"><i class="fa fa-check"></i>Acknowledgments</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>About the Authors</a>
+<ul>
+<li class="chapter" data-level="" data-path="yihui-xie.html"><a href="yihui-xie.html"><i class="fa fa-check"></i>Yihui Xie</a></li>
+<li class="chapter" data-level="" data-path="amber-thomas.html"><a href="amber-thomas.html"><i class="fa fa-check"></i>Amber Thomas</a></li>
+<li class="chapter" data-level="" data-path="alison-presmanes-hill.html"><a href="alison-presmanes-hill.html"><i class="fa fa-check"></i>Alison Presmanes Hill</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i><b>1</b> Get Started</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i><b>1.1</b> Installation</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="installation.html"><a href="installation.html#installation-troubleshooting"><i class="fa fa-check"></i><b>1.1.1</b> Installation troubleshooting</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="a-quick-example.html"><a href="a-quick-example.html"><i class="fa fa-check"></i><b>1.2</b> A quick example</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="a-quick-example.html"><a href="a-quick-example.html#prerequisites"><i class="fa fa-check"></i><b>1.2.1</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.2.2" data-path="a-quick-example.html"><a href="a-quick-example.html#create-project"><i class="fa fa-check"></i><b>1.2.2</b> Create project</a></li>
+<li class="chapter" data-level="1.2.3" data-path="a-quick-example.html"><a href="a-quick-example.html#serve-site"><i class="fa fa-check"></i><b>1.2.3</b> Serve site</a></li>
+<li class="chapter" data-level="1.2.4" data-path="a-quick-example.html"><a href="a-quick-example.html#edit-content"><i class="fa fa-check"></i><b>1.2.4</b> Edit content</a></li>
+<li class="chapter" data-level="1.2.5" data-path="a-quick-example.html"><a href="a-quick-example.html#when-in-doubt-run-blogdowncheck_site"><i class="fa fa-check"></i><b>1.2.5</b> When in doubt, run <code>blogdown::check_site()</code></a></li>
+<li class="chapter" data-level="1.2.6" data-path="a-quick-example.html"><a href="a-quick-example.html#configure-site"><i class="fa fa-check"></i><b>1.2.6</b> Configure site</a></li>
+<li class="chapter" data-level="1.2.7" data-path="a-quick-example.html"><a href="a-quick-example.html#summary"><i class="fa fa-check"></i><b>1.2.7</b> Summary</a></li>
+<li class="chapter" data-level="1.2.8" data-path="a-quick-example.html"><a href="a-quick-example.html#what-is-next"><i class="fa fa-check"></i><b>1.2.8</b> What is next?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html"><i class="fa fa-check"></i><b>1.3</b> A quick deploy</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#build-site"><i class="fa fa-check"></i><b>1.3.1</b> Build site</a></li>
+<li class="chapter" data-level="1.3.2" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#use-netlify-drop"><i class="fa fa-check"></i><b>1.3.2</b> Use Netlify Drop</a></li>
+<li class="chapter" data-level="1.3.3" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#sign-up-for-netlify"><i class="fa fa-check"></i><b>1.3.3</b> Sign up for Netlify</a></li>
+<li class="chapter" data-level="1.3.4" data-path="a-quick-deploy.html"><a href="a-quick-deploy.html#what-is-next-1"><i class="fa fa-check"></i><b>1.3.4</b> What is next?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="rstudio-ide.html"><a href="rstudio-ide.html"><i class="fa fa-check"></i><b>1.4</b> RStudio IDE</a></li>
+<li class="chapter" data-level="1.5" data-path="global-options.html"><a href="global-options.html"><i class="fa fa-check"></i><b>1.5</b> Global options</a></li>
+<li class="chapter" data-level="1.6" data-path="output-format.html"><a href="output-format.html"><i class="fa fa-check"></i><b>1.6</b> R Markdown vs. Markdown</a>
+<ul>
+<li class="chapter" data-level="1.6.1" data-path="output-format.html"><a href="output-format.html#basic-features-of-r-markdown"><i class="fa fa-check"></i><b>1.6.1</b> Basic features of R Markdown</a></li>
+<li class="chapter" data-level="1.6.2" data-path="output-format.html"><a href="output-format.html#blogdown-method"><i class="fa fa-check"></i><b>1.6.2</b> Render R Markdown to Markdown or HTML?</a></li>
+<li class="chapter" data-level="1.6.3" data-path="output-format.html"><a href="output-format.html#customize-the-r-markdown-output-format"><i class="fa fa-check"></i><b>1.6.3</b> Customize the R Markdown output format</a></li>
+</ul></li>
+<li class="chapter" data-level="1.7" data-path="other-themes.html"><a href="other-themes.html"><i class="fa fa-check"></i><b>1.7</b> Other themes</a>
+<ul>
+<li class="chapter" data-level="1.7.1" data-path="other-themes.html"><a href="other-themes.html#choosing-themes"><i class="fa fa-check"></i><b>1.7.1</b> Choosing themes</a></li>
+<li class="chapter" data-level="1.7.2" data-path="other-themes.html"><a href="other-themes.html#new-site-new-theme"><i class="fa fa-check"></i><b>1.7.2</b> New site, new theme</a></li>
+<li class="chapter" data-level="1.7.3" data-path="other-themes.html"><a href="other-themes.html#existing-site-new-theme"><i class="fa fa-check"></i><b>1.7.3</b> Existing site, new theme</a></li>
+<li class="chapter" data-level="1.7.4" data-path="other-themes.html"><a href="other-themes.html#existing-site-update-theme"><i class="fa fa-check"></i><b>1.7.4</b> Existing site, update theme</a></li>
+</ul></li>
+<li class="chapter" data-level="1.8" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>1.8</b> A recommended workflow</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="hugo.html"><a href="hugo.html"><i class="fa fa-check"></i><b>2</b> Hugo</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="static-sites.html"><a href="static-sites.html"><i class="fa fa-check"></i><b>2.1</b> Static sites and Hugo</a></li>
+<li class="chapter" data-level="2.2" data-path="configuration.html"><a href="configuration.html"><i class="fa fa-check"></i><b>2.2</b> Configuration</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="configuration.html"><a href="configuration.html#toml-syntax"><i class="fa fa-check"></i><b>2.2.1</b> TOML Syntax</a></li>
+<li class="chapter" data-level="2.2.2" data-path="configuration.html"><a href="configuration.html#options"><i class="fa fa-check"></i><b>2.2.2</b> Options</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="content.html"><a href="content.html"><i class="fa fa-check"></i><b>2.3</b> Content</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="content.html"><a href="content.html#yaml-metadata"><i class="fa fa-check"></i><b>2.3.1</b> YAML metadata</a></li>
+<li class="chapter" data-level="2.3.2" data-path="content.html"><a href="content.html#body"><i class="fa fa-check"></i><b>2.3.2</b> Body</a></li>
+<li class="chapter" data-level="2.3.3" data-path="content.html"><a href="content.html#shortcode"><i class="fa fa-check"></i><b>2.3.3</b> Shortcode</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="themes.html"><a href="themes.html"><i class="fa fa-check"></i><b>2.4</b> Themes</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="themes.html"><a href="themes.html#the-default-theme"><i class="fa fa-check"></i><b>2.4.1</b> The default theme</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="templates.html"><a href="templates.html"><i class="fa fa-check"></i><b>2.5</b> Templates</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="templates.html"><a href="templates.html#a-minimal-example"><i class="fa fa-check"></i><b>2.5.1</b> A minimal example</a></li>
+<li class="chapter" data-level="2.5.2" data-path="templates.html"><a href="templates.html#how-to"><i class="fa fa-check"></i><b>2.5.2</b> Implementing more features</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="custom-layouts.html"><a href="custom-layouts.html"><i class="fa fa-check"></i><b>2.6</b> Custom layouts</a></li>
+<li class="chapter" data-level="2.7" data-path="static-files.html"><a href="static-files.html"><i class="fa fa-check"></i><b>2.7</b> Static files</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="deployment.html"><a href="deployment.html"><i class="fa fa-check"></i><b>3</b> Deployment</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="netlify.html"><a href="netlify.html"><i class="fa fa-check"></i><b>3.1</b> Netlify</a></li>
+<li class="chapter" data-level="3.2" data-path="github-pages.html"><a href="github-pages.html"><i class="fa fa-check"></i><b>3.2</b> GitHub Pages</a></li>
+<li class="chapter" data-level="3.3" data-path="gitlab-pages.html"><a href="gitlab-pages.html"><i class="fa fa-check"></i><b>3.3</b> GitLab Pages</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="migration.html"><a href="migration.html"><i class="fa fa-check"></i><b>4</b> Migration</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="from-jekyll.html"><a href="from-jekyll.html"><i class="fa fa-check"></i><b>4.1</b> From Jekyll</a></li>
+<li class="chapter" data-level="4.2" data-path="from-wordpress.html"><a href="from-wordpress.html"><i class="fa fa-check"></i><b>4.2</b> From WordPress</a></li>
+<li class="chapter" data-level="4.3" data-path="from-other-systems.html"><a href="from-other-systems.html"><i class="fa fa-check"></i><b>4.3</b> From other systems</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="other-generators.html"><a href="other-generators.html"><i class="fa fa-check"></i><b>5</b> Other Generators</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="jekyll.html"><a href="jekyll.html"><i class="fa fa-check"></i><b>5.1</b> Jekyll</a></li>
+<li class="chapter" data-level="5.2" data-path="hexo.html"><a href="hexo.html"><i class="fa fa-check"></i><b>5.2</b> Hexo</a></li>
+<li class="chapter" data-level="5.3" data-path="rmd-website.html"><a href="rmd-website.html"><i class="fa fa-check"></i><b>5.3</b> Default site generator in rmarkdown</a></li>
+<li class="chapter" data-level="5.4" data-path="pkgdown.html"><a href="pkgdown.html"><i class="fa fa-check"></i><b>5.4</b> pkgdown</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="r-markdown.html"><a href="r-markdown.html"><i class="fa fa-check"></i><b>A</b> R Markdown</a></li>
+<li class="chapter" data-level="B" data-path="website-basics.html"><a href="website-basics.html"><i class="fa fa-check"></i><b>B</b> Website Basics</a>
+<ul>
+<li class="chapter" data-level="B.1" data-path="html.html"><a href="html.html"><i class="fa fa-check"></i><b>B.1</b> HTML</a></li>
+<li class="chapter" data-level="B.2" data-path="css.html"><a href="css.html"><i class="fa fa-check"></i><b>B.2</b> CSS</a></li>
+<li class="chapter" data-level="B.3" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>B.3</b> JavaScript</a></li>
+<li class="chapter" data-level="B.4" data-path="useful-resources.html"><a href="useful-resources.html"><i class="fa fa-check"></i><b>B.4</b> Useful resources</a>
+<ul>
+<li class="chapter" data-level="B.4.1" data-path="useful-resources.html"><a href="useful-resources.html#file-optimization"><i class="fa fa-check"></i><b>B.4.1</b> File optimization</a></li>
+<li class="chapter" data-level="B.4.2" data-path="useful-resources.html"><a href="useful-resources.html#helping-people-find-your-site"><i class="fa fa-check"></i><b>B.4.2</b> Helping people find your site</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="domain-name.html"><a href="domain-name.html"><i class="fa fa-check"></i><b>C</b> Domain Name</a>
+<ul>
+<li class="chapter" data-level="C.1" data-path="registration.html"><a href="registration.html"><i class="fa fa-check"></i><b>C.1</b> Registration</a></li>
+<li class="chapter" data-level="C.2" data-path="nameservers.html"><a href="nameservers.html"><i class="fa fa-check"></i><b>C.2</b> Nameservers</a></li>
+<li class="chapter" data-level="C.3" data-path="dns-records.html"><a href="dns-records.html"><i class="fa fa-check"></i><b>C.3</b> DNS records</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>D</b> Advanced Topics</a>
+<ul>
+<li class="chapter" data-level="D.1" data-path="more-global-options.html"><a href="more-global-options.html"><i class="fa fa-check"></i><b>D.1</b> More global options</a></li>
+<li class="chapter" data-level="D.2" data-path="livereload.html"><a href="livereload.html"><i class="fa fa-check"></i><b>D.2</b> LiveReload</a></li>
+<li class="chapter" data-level="D.3" data-path="local-preview.html"><a href="local-preview.html"><i class="fa fa-check"></i><b>D.3</b> Building a website for local preview</a></li>
+<li class="chapter" data-level="D.4" data-path="functions.html"><a href="functions.html"><i class="fa fa-check"></i><b>D.4</b> Functions in the blogdown package</a>
+<ul>
+<li class="chapter" data-level="D.4.1" data-path="functions.html"><a href="functions.html#exported-functions"><i class="fa fa-check"></i><b>D.4.1</b> Exported functions</a></li>
+<li class="chapter" data-level="D.4.2" data-path="functions.html"><a href="functions.html#non-exported-functions"><i class="fa fa-check"></i><b>D.4.2</b> Non-exported functions</a></li>
+</ul></li>
+<li class="chapter" data-level="D.5" data-path="dep-path.html"><a href="dep-path.html"><i class="fa fa-check"></i><b>D.5</b> Paths of figures and other dependencies</a></li>
+<li class="chapter" data-level="D.6" data-path="html-widgets.html"><a href="html-widgets.html"><i class="fa fa-check"></i><b>D.6</b> HTML widgets</a></li>
+<li class="chapter" data-level="D.7" data-path="version-control.html"><a href="version-control.html"><i class="fa fa-check"></i><b>D.7</b> Version control</a></li>
+<li class="chapter" data-level="D.8" data-path="default-template.html"><a href="default-template.html"><i class="fa fa-check"></i><b>D.8</b> The default HTML template</a></li>
+<li class="chapter" data-level="D.9" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>D.9</b> Different building methods</a></li>
+</ul></li>
+<li class="chapter" data-level="E" data-path="personal-experience.html"><a href="personal-experience.html"><i class="fa fa-check"></i><b>E</b> Personal Experience</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">blogdown: Creating Websites with R Markdown</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div class="caution">
+<p><strong>A note from the authors:</strong> Some of the information and instructions in this book are now out of date because of changes to Hugo and the blogdown package.
+If you have suggestions for improving this book, please file an issue in our <a href= "https://github.com/rstudio/blogdown/issues/new?template=documentation.md" target="_blank">GitHub repository</a>.
+Thanks for your patience while we work to update the book, and please stay tuned for the revised version!</p>
+<p>In the meantime, you can find an introduction to the changes and new features in the <a href="https://posit.co/blog/blogdown-v1.0/" target = "_blank">v1.0 release blog post</a> and this <a href="https://www.apreshill.com/blog/2020-12-new-year-new-blogdown/" target="_blank">"Up & running with blogdown in 2021"</a> blog post.</p>
+<p class="flushright">&mdash; Yihui, Amber, & Alison</p>
+</div>
+<div id="jekyll" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Jekyll<a href="jekyll.html#jekyll" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For Jekyll (<a href="https://jekyllrb.com" class="uri">https://jekyllrb.com</a>) users, I have prepared a minimal example in the GitHub repository <a href="https://github.com/yihui/blogdown-jekyll">yihui/blogdown-jekyll.</a> If you clone or download this repository and open <code>blogdown-jekyll.Rproj</code> in RStudio, you can still use all addins mentioned in Section <a href="rstudio-ide.html#rstudio-ide">1.4</a>, such as “New Post,” “Serve Site,” and “Update Metadata,” but it is Jekyll instead of Hugo that builds the website behind the scenes now.</p>
+<p>I assume you are familiar with Jekyll, and I’m not going to introduce the basics of Jekyll in this section. For example, you should know what the <code>_posts/</code> and <code>_site/</code> directories mean.</p>
+<p>The key pieces of this <strong>blogdown-jekyll</strong> project are the files <code>.Rprofile</code>, <code>R/build.R</code>, and <code>R/build_one.R</code>. I have set some global R options for this project in <code>.Rprofile</code>:<a href="#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a></p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="jekyll.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(</span>
+<span id="cb89-2"><a href="jekyll.html#cb89-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">blogdown.generator =</span> <span class="st">&quot;jekyll&quot;</span>,</span>
+<span id="cb89-3"><a href="jekyll.html#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">blogdown.method =</span> <span class="st">&quot;custom&quot;</span>,</span>
+<span id="cb89-4"><a href="jekyll.html#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">blogdown.subdir =</span> <span class="st">&quot;_posts&quot;</span></span>
+<span id="cb89-5"><a href="jekyll.html#cb89-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>First, the website generator was set to <code>jekyll</code> using the option <code>blogdown.generator</code>, so that <strong>blogdown</strong> knows that it should use Jekyll to build the site. Second, the build method <code>blogdown.method</code> was set to <code>custom</code>, so that we can define our custom R script <code>R/build.R</code> to build the Rmd files (I will explain the reason later). Third, the default subdirectory for new posts was set to <code>_posts</code>, which is Jekyll’s convention. After you set this option, the “New Post” addin will create new posts under the <code>_posts/</code> directory.</p>
+<p>When the option <code>blogdown.method</code> is <code>custom</code>, <strong>blogdown</strong> will call the R script <code>R/build.R</code> to build the site. You have full freedom to do whatever you want in this script. Below is an example script:</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="jekyll.html#cb90-1" aria-hidden="true" tabindex="-1"></a>build_one <span class="ot">=</span> <span class="cf">function</span>(io) {</span>
+<span id="cb90-2"><a href="jekyll.html#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># if output is not older than input, skip the</span></span>
+<span id="cb90-3"><a href="jekyll.html#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># compilation</span></span>
+<span id="cb90-4"><a href="jekyll.html#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>blogdown<span class="sc">:::</span><span class="fu">require_rebuild</span>(io[<span class="dv">2</span>], io[<span class="dv">1</span>]))</span>
+<span id="cb90-5"><a href="jekyll.html#cb90-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>()</span>
+<span id="cb90-6"><a href="jekyll.html#cb90-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-7"><a href="jekyll.html#cb90-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&quot;* knitting &quot;</span>, io[<span class="dv">1</span>])</span>
+<span id="cb90-8"><a href="jekyll.html#cb90-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (xfun<span class="sc">::</span><span class="fu">Rscript</span>(<span class="fu">shQuote</span>(<span class="fu">c</span>(<span class="st">&quot;R/build_one.R&quot;</span>, io))) <span class="sc">!=</span></span>
+<span id="cb90-9"><a href="jekyll.html#cb90-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>) {</span>
+<span id="cb90-10"><a href="jekyll.html#cb90-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unlink</span>(io[<span class="dv">2</span>])</span>
+<span id="cb90-11"><a href="jekyll.html#cb90-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">&quot;Failed to compile &quot;</span>, io[<span class="dv">1</span>], <span class="st">&quot; to &quot;</span>, io[<span class="dv">2</span>])</span>
+<span id="cb90-12"><a href="jekyll.html#cb90-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb90-13"><a href="jekyll.html#cb90-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb90-14"><a href="jekyll.html#cb90-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-15"><a href="jekyll.html#cb90-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Rmd files under the root directory</span></span>
+<span id="cb90-16"><a href="jekyll.html#cb90-16" aria-hidden="true" tabindex="-1"></a>rmds <span class="ot">=</span> <span class="fu">list.files</span>(<span class="st">&quot;.&quot;</span>, <span class="st">&quot;[.]Rmd$&quot;</span>, <span class="at">recursive =</span> T, <span class="at">full.names =</span> T)</span>
+<span id="cb90-17"><a href="jekyll.html#cb90-17" aria-hidden="true" tabindex="-1"></a>files <span class="ot">=</span> <span class="fu">cbind</span>(rmds, xfun<span class="sc">::</span><span class="fu">with_ext</span>(rmds, <span class="st">&quot;.md&quot;</span>))</span>
+<span id="cb90-18"><a href="jekyll.html#cb90-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-19"><a href="jekyll.html#cb90-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(files))) <span class="fu">build_one</span>(files[i, ])</span>
+<span id="cb90-20"><a href="jekyll.html#cb90-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-21"><a href="jekyll.html#cb90-21" aria-hidden="true" tabindex="-1"></a><span class="fu">system2</span>(<span class="st">&quot;jekyll&quot;</span>, <span class="st">&quot;build&quot;</span>)</span></code></pre></div>
+<ul>
+<li><p>Basically it contains a function <code>build_one()</code> that takes an argument <code>io</code>, which is a character vector of length 2. The first element is the input (Rmd) filename, and the second element is the output filename.</p></li>
+<li><p>Then we search for all Rmd files under the current directory, prepare the output filenames by substituting the Rmd file extensions with <code>.md</code>, and build the Rmd files one by one. Note there is a caching mechanism in <code>build_one()</code> that makes use of an internal <strong>blogdown</strong> function <code>require_rebuild()</code>. This function returns <code>FALSE</code> if the output file is not older than the input file in terms of the modification time. This can save you some time because those Rmd files that have been compiled before will not be compiled again every time. The key step in <code>build_one()</code> is to run the R script <code>R/build_one.R</code>, which we will explain later.</p></li>
+<li><p>Lastly, we build the website through a system call of the command <code>jekyll build</code>.</p></li>
+</ul>
+<p>The script <code>R/build_one.R</code> looks like this (I have omitted some non-essential settings for simplicity):</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="jekyll.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">local</span>({</span>
+<span id="cb91-2"><a href="jekyll.html#cb91-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fall back on &quot;/&quot; if baseurl is not specified</span></span>
+<span id="cb91-3"><a href="jekyll.html#cb91-3" aria-hidden="true" tabindex="-1"></a>  baseurl <span class="ot">=</span> blogdown<span class="sc">:::</span><span class="fu">get_config2</span>(<span class="st">&quot;baseurl&quot;</span>, <span class="at">default =</span> <span class="st">&quot;/&quot;</span>)</span>
+<span id="cb91-4"><a href="jekyll.html#cb91-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_knit<span class="sc">$</span><span class="fu">set</span>(<span class="at">base.url =</span> baseurl)</span>
+<span id="cb91-5"><a href="jekyll.html#cb91-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">render_jekyll</span>()  <span class="co"># set output hooks</span></span>
+<span id="cb91-6"><a href="jekyll.html#cb91-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-7"><a href="jekyll.html#cb91-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># input/output filenames as two arguments to Rscript</span></span>
+<span id="cb91-8"><a href="jekyll.html#cb91-8" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">=</span> <span class="fu">commandArgs</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb91-9"><a href="jekyll.html#cb91-9" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">&quot;^_|[.][a-zA-Z]+$&quot;</span>, <span class="st">&quot;&quot;</span>, a[<span class="dv">1</span>])</span>
+<span id="cb91-10"><a href="jekyll.html#cb91-10" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(</span>
+<span id="cb91-11"><a href="jekyll.html#cb91-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fig.path   =</span> <span class="fu">sprintf</span>(<span class="st">&quot;figure/%s/&quot;</span>, d),</span>
+<span id="cb91-12"><a href="jekyll.html#cb91-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">cache.path =</span> <span class="fu">sprintf</span>(<span class="st">&quot;cache/%s/&quot;</span>, d)</span>
+<span id="cb91-13"><a href="jekyll.html#cb91-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb91-14"><a href="jekyll.html#cb91-14" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">knit</span>(</span>
+<span id="cb91-15"><a href="jekyll.html#cb91-15" aria-hidden="true" tabindex="-1"></a>    a[<span class="dv">1</span>], a[<span class="dv">2</span>], <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">encoding =</span> <span class="st">&quot;UTF-8&quot;</span>,</span>
+<span id="cb91-16"><a href="jekyll.html#cb91-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">envir =</span> <span class="fu">globalenv</span>()</span>
+<span id="cb91-17"><a href="jekyll.html#cb91-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb91-18"><a href="jekyll.html#cb91-18" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<ul>
+<li><p>The script is wrapped in <code>local()</code> so that an Rmd file is knitted in a clean global environment, and the variables such as <code>baseurl</code>, <code>a</code>, and <code>d</code> will not be created in the global environment, i.e., <code>globalenv()</code> used by <code>knitr::knit()</code> below.</p></li>
+<li><p>The <strong>knitr</strong> package option <code>base.url</code> is a URL to be prepended to figure paths. We need to set this option to make sure figures generated from R code chunks can be found when they are displayed on a web page. A normal figure path is often like <code>figure/foo.png</code>, and it may not work when the image is rendered to an HTML file, because <code>figure/foo.png</code> is a relative path, and there is no guarantee that this image file will be copied to the directory of the final HTML file. For example, for an Rmd source file <code>_posts/2015-07-23-hello.Rmd</code> that generates <code>figure/foo.png</code> (under <code>_posts/</code>), the final HTML file may be <code>_site/2015/07/23/hello/index.html</code>. Jekyll knows how to render an HTML file to this location, but it does not understand the image dependency and will not copy the image file to this location. To solve this issue, we render figures at the root directory <code>/figure/</code>, which will be copied to <code>_site/</code> by Jekyll. To refer to an image under <code>_site/figure/</code>, we need the leading slash (<code>baseurl</code>), e.g., <code>&lt;img src="/figure/foo.png"&gt;</code>. This is an absolute path, so no matter where the HTML is rendered, this path always works.</p></li>
+<li><p>What <code>knitr::render_jekyll()</code> does is mainly to set up some <strong>knitr</strong> output hooks so that source code and text output from R code chunks will be wrapped in Liquid tags <code>{% highlight %}</code> and <code>{% end highlight %}</code>.</p></li>
+<li><p>Remember in <code>build.R</code>, we passed the variable <code>io</code> to the Rscript call <code>xfun::Rscript()</code>. Here in <code>build_one.R</code>, we can receive them from <code>commandArgs(TRUE)</code>. The variable <code>a</code> contains an <code>.Rmd</code> and an <code>.md</code> file path. We removed the possible leading underscore (<code>^_</code>) and the extension (<code>[.][a-zA-Z]$</code>) in the path. Next we set figure and cache paths using this string. For example, for a post <code>_posts/foo.Rmd</code>, its figures will be written to <code>figure/foo/</code> and its cache databases (if there are any) will be stored under <code>cache/foo/</code>. Both directories are under the root directory of the project.</p></li>
+<li><p>Lastly, we call <code>knitr::knit()</code> to knit the Rmd file to a Markdown output file, which will be processed by Jekyll later.</p></li>
+</ul>
+<p>A small caveat is that since we have both <code>.Rmd</code> and <code>.md</code> files, Jekyll will treat both types of files as Markdown files by default. You have to ask Jekyll to ignore <code>.Rmd</code> files and only build <code>.md</code> files. You can set the option <code>exclude</code> in <code>_config.yml</code>:</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb92-1"><a href="jekyll.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exclude</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">&#39;*.Rmd&#39;</span><span class="kw">]</span></span></code></pre></div>
+<p>Compared to the Hugo support in <strong>blogdown</strong>, this approach is limited in a few aspects:</p>
+<ol style="list-style-type: decimal">
+<li><p>It does not support Pandoc, so you cannot use Pandoc’s Markdown. Since it uses the <strong>knitr</strong> package instead of <strong>rmarkdown</strong>, you cannot use any of <strong>bookdown</strong>’s Markdown features, either. You are at the mercy of the Markdown renderers supported by Jekyll.</p></li>
+<li><p>Without <strong>rmarkdown</strong>, you cannot use HTML widgets. Basically, all you can have are dynamic text output and R graphics output from R code chunks. They may or may not suffice, depending on your specific use cases.</p></li>
+</ol>
+<p>It may be possible for us to remove these limitations in a future version of <strong>blogdown</strong>, if there are enough happy Jekyll users in the R community.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="35">
+<li id="fn35"><p>If you are not familiar with this file, please read Section <a href="global-options.html#global-options">1.5</a>.<a href="jekyll.html#fnref35" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="other-generators.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="hexo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": true,
+    "facebook": false,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/rstudio/blogdown/edit/main/docs/05-custom.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["blogdown.pdf", "blogdown.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "none"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>
