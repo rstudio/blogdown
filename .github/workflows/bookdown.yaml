@@ -6,6 +6,7 @@ on:
     paths:
       - 'docs/**'
       - '.github/workflows/bookdown.yaml'
+  workflow_dispatch:
 
 name: Build and deploy book
 
