@@ -6,7 +6,18 @@ on:
     paths:
       - 'docs/**'
       - '.github/workflows/bookdown.yaml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/bookdown.yaml'
   workflow_dispatch:
+    inputs:
+      publish:
+        description: 'publish the book to github pages for connect cloud deployment'
+        required: false
+        default: false
+        type: boolean
 
 name: Build and deploy book
 
@@ -51,28 +62,18 @@ jobs:
           key: bookdown-1-${{ hashFiles('docs/*Rmd') }}
           restore-keys: bookdown-1-
 
-      - name: Build and Deploy all book
-        if: github.event_name == 'push'
-        env:
-          CONNECT_API_KEY: ${{ secrets.RSC_BOOKDOWN_ORG_TOKEN }}
-          CONTENT_ID: 463
+      - name: Build all book
         run: make -C docs all
 
-      - uses: actions/github-script@v3
-        env:
-          URL: https://bookdown.org/yihui/blogdown
+      - name: Deploy Gitbook to gh-pages
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: "success",
-              target_url: "${{ env.URL}}",
-              description: "Book deployed!",
-              context: "bookdown.org"
-            })
+          branch: gh-pages
+          folder: docs/_book
+          clean: true
+          single-commit: true
+          dry-run: ${{ (github.event_name == 'workflow_dispatch' && (github.event.inputs.publish == 'false' || github.event.inputs.publish == false)) || false }}
 
       - name: Upload book folder for debug
         if: failure()
