@@ -64,7 +64,7 @@ install_hugo = function(
     message('The latest Hugo version is ', version)
   } else {
     if (!is.null(local_file)) version = gsub(
-      '^hugo(_extended)?_([0-9.]+)_.*', '\\2', basename(local_file)
+      '^hugo(_extended)(_withdeploy)?_([0-9.]+)_.*', '\\2', basename(local_file)
     )
   }
 
@@ -138,6 +138,14 @@ install_hugo = function(
       files = utils::untar(zipfile, list = TRUE)
       utils::untar(zipfile)
       files
+    }, pkg = {
+      if (interactive()) system2('open', shQuote(zipfile)) else {
+        if (system2('sudo', c('installer', '-pkg', zipfile, '-target', '/')) != 0) stop(
+          'The *.pkg installer requires password input. Please run this function ',
+          'in the terminal or in an interactive R session and input password.'
+        )
+      }
+      NULL
     })
   }
 
@@ -146,11 +154,13 @@ install_hugo = function(
   } else if (is_macos()) {
     download_zip(
       if (v103) 'darwin' else if (version2 >= '0.18') 'macOS' else 'MacOS',
-      if (version2 >= '0.20.3') 'tar.gz' else 'zip'
+      if (version2 >= '0.153.0') 'pkg' else if (version2 >= '0.20.3') 'tar.gz' else 'zip'
     )
   } else {
     download_zip('Linux', 'tar.gz')  # _might_ be Linux; good luck
   }
+  # can't tell if .pkg was successfully installed at this point
+  if (is.null(files)) return(invisible(NULL))
   # from a certain version of Hugo, the executable is no longer named
   # hugo_x.y.z, so exec could be NA here, but file.rename(NA_character) is fine
   exec = files[grep(sprintf('^hugo_%s.+', version), basename(files))][1]
