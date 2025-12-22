@@ -1,5 +1,6 @@
 # CHANGES IN blogdown VERSION 1.23
 
+- `hugo_installers()` can deal with Hugo installers containing the `withdeploy` feature for Hugo >= v0.137.0 now.
 
 # CHANGES IN blogdown VERSION 1.22
 

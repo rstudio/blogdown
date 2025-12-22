@@ -12,18 +12,19 @@ latest version. Versions before v0.17 are not supported.}
 }
 \value{
 A data frame containing columns \code{os} (operating system),
-  \code{arch} (architecture), and \code{extended} (extended version or not).
-  If your R version is lower than 4.1.0, a character vector of the installer
-  filenames will be returned instead.
+  \code{arch} (architecture), \code{extended} (extended version or not),
+  \code{withdeploy} (with the deploy feature or not). If your R version is
+  lower than 4.1.0, a character vector of the installer filenames will be
+  returned instead.
 }
 \description{
 Given a version number, return the information of available installers. If
 \code{\link{install_hugo}()} fails, you may run this function to check the
 available installers and obtain their \code{os}/\code{arch} info.
 }
-\examples{\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+\examples{\dontshow{if (interactive()) \{}
 blogdown::hugo_installers()
 blogdown::hugo_installers("0.89.0")
 blogdown::hugo_installers("0.17")
-\dontshow{\}) # examplesIf}
+\dontshow{\}}
 }
