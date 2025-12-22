@@ -64,7 +64,7 @@ install_hugo = function(
     message('The latest Hugo version is ', version)
   } else {
     if (!is.null(local_file)) version = gsub(
-      '^hugo(_extended)(_withdeploy)?_([0-9.]+)_.*', '\\2', basename(local_file)
+      '^hugo(_extended)(_withdeploy)?_([0-9.]+)_.*', '\\3', basename(local_file)
     )
   }
 
