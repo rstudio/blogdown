@@ -1,3 +1,6 @@
+# CHANGES IN blogdown VERSION 1.24
+
+
 # CHANGES IN blogdown VERSION 1.23
 
 - Added support for installing Hugo's `*.pkg` installers on macOS. Hugo has changed the installer from a tarball (containing the `hugo` binary) to `.pkg` since v0.153.0. Please note that installing `.pkg` requires password input, so this cannot be automated on macOS that requires password for `sudo` commands.
