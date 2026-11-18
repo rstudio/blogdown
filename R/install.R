@@ -34,6 +34,8 @@
 #'   in which case it will not be downloaded again.
 #' @param extended Whether to use extended version of Hugo that has SCSS/SASS
 #'   support. You only need the extended version if you want to edit SCSS/SASS.
+#'   This argument is ignored for Hugo >= v0.170.0, which no longer provides an
+#'   extended edition.
 #'   Note that this feature is not available to Hugo version lower than v0.43.
 #'   It also requires a 64-bit system; if the system is based on the ARM
 #'   architecture, only macOS is supported at the moment.
@@ -64,7 +66,7 @@ install_hugo = function(
     message('The latest Hugo version is ', version)
   } else {
     if (!is.null(local_file)) version = gsub(
-      '^hugo(_extended)(_withdeploy)?_([0-9.]+)_.*', '\\3', basename(local_file)
+      '^hugo(_extended)?(_withdeploy)?_([0-9.]+)_.*', '\\3', basename(local_file)
     )
   }
 
@@ -103,6 +105,9 @@ install_hugo = function(
   # the extended version is only available for Hugo >= 0.43 and (64bit OS or non-32bit macOS)
   if (missing(extended)) extended = (version2 >= '0.43') &&
     (arch == '64bit' || (is_macos() && arch != '32bit'))
+  # Hugo >= 0.170.0 no longer has an extended edition (LibSass was removed), and
+  # the standard build has all the remaining features of the former extended one
+  if (version2 >= '0.170.0') extended = FALSE
   base = sprintf('https://github.com/gohugoio/hugo/releases/download/v%s/', version)
   owd = setwd(tempdir())
   on.exit(setwd(owd), add = TRUE)

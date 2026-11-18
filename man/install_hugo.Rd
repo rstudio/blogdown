@@ -25,6 +25,8 @@ in which case it will not be downloaded again.}
 
 \item{extended}{Whether to use extended version of Hugo that has SCSS/SASS
 support. You only need the extended version if you want to edit SCSS/SASS.
+This argument is ignored for Hugo >= v0.170.0, which no longer provides an
+extended edition.
 Note that this feature is not available to Hugo version lower than v0.43.
 It also requires a 64-bit system; if the system is based on the ARM
 architecture, only macOS is supported at the moment.}
