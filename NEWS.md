@@ -1,5 +1,6 @@
 # CHANGES IN blogdown VERSION 1.25
 
+- `install_hugo()` no longer tries to install the extended edition of Hugo for Hugo >= v0.170.0, because Hugo has dropped the extended edition since [v0.170.0](https://github.com/gohugoio/hugo/releases/tag/v0.170.0) (it was only needed for LibSass, which has been removed). Previously, `install_hugo()` failed on macOS for these versions because no `hugo_extended_*` installer exists for macOS.
 
 # CHANGES IN blogdown VERSION 1.24
 
